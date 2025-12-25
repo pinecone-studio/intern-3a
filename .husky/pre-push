@@ -1,0 +1,16 @@
+#!/usr/bin/env sh
+
+# Prevent direct push to main/master branch
+branch="$(git rev-parse --abbrev-ref HEAD)"
+
+if [ "$branch" = "main" ] || [ "$branch" = "master" ]; then
+  echo "❌ Direct push to '$branch' is not allowed!"
+  echo ""
+  echo "Please create a feature branch and submit a pull request:"
+  echo "  git checkout -b feature/your-feature-name"
+  echo "  git push -u origin feature/your-feature-name"
+  echo ""
+  exit 1
+fi
+
+echo "✅ Pushing branch '$branch'..."

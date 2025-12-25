@@ -1,0 +1,18 @@
+{
+  "recommendations": [
+    "nrwl.angular-console",
+    "esbenp.prettier-vscode",
+    "firsttris.vscode-jest-runner",
+    "dbaeumer.vscode-eslint",
+    "github.vscode-github-actions",
+    "yzhang.markdown-all-in-one",
+    "ms-vscode-remote.remote-ssh",
+    "formulahendry.auto-rename-tag",
+    "eamodio.gitlens",
+    "streetsidesoftware.code-spell-checker",
+    "heybourn.headwind",
+    "bradlc.vscode-tailwindcss",
+    "apollographql.vscode-apollo",
+    "mongodb.mongodb-vscode"
+  ]
+}

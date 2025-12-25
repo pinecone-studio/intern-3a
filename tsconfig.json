@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compileOnSave": false,
+  "files": [],
+  "references": [
+    {
+      "path": "./libs/shared/ui"
+    },
+    {
+      "path": "./apps/todo-be"
+    },
+    {
+      "path": "./apps/todo-fe"
+    }
+  ]
+}

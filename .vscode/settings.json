@@ -1,0 +1,24 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.sortImports": "explicit",
+    "source.fixAll.eslint": "explicit"
+  },
+  "editor.formatOnSave": true,
+  "eslint.validate": ["json", "javascript", "typescript", "javascriptreact", "typescriptreact"],
+  "typescript.suggest.paths": false,
+  "javascript.suggest.paths": false,
+  "prettier.singleQuote": true,
+  "prettier.tabWidth": 2,
+  "prettier.semi": true,
+  "prettier.printWidth": 200,
+  "prettier.trailingComma": "all",
+  "workbench.editor.customLabels.patterns": {
+    "**/app/**/page.tsx": "${dirname}/page.tsx",
+    "**/e2e/**/page.cy.tsx": "${dirname}/page.cy.tsx",
+    "**/app/**/layout.tsx": "${dirname}/layout.tsx",
+    "apps/**/project.json": "${dirname}/project.json"
+  },
+  "cSpell.words": ["shadcn", "pinecone", "monorepo"],
+  "nxConsole.nxWorkspacePath": "",
+  "nxConsole.generateAiAgentRules": true
+}

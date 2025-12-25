@@ -1,0 +1,10 @@
+{
+  "projectId": "XXXXXX",
+  "orgId": "XXXXXX",
+  "settings": {
+    "framework": "nextjs",
+    "installCommand": "bun install",
+    "buildCommand": "nx build --skip-nx-cache todo-fe",
+    "outputDirectory": "./dist/apps/todo-fe/.next"
+  }
+}

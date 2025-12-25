@@ -1,0 +1,173 @@
+{
+  "root": true,
+  "ignorePatterns": [
+    "!**/*",
+    ".next/**/*",
+    "node_modules",
+    "dist",
+    ".cache",
+    "**/components/ui/**/*",
+    "*.config.js",
+    "*.config.ts",
+    "*.config.cjs",
+    "*.config.mjs",
+    "next.config.js",
+    "postcss.config.js",
+    "tailwind.config.js",
+    "jest.config.ts",
+    "cypress.config.js",
+    "rollup.config.cjs",
+    "**/*.d.ts",
+    "**/cypress/**/*"
+  ],
+  "plugins": ["@nx", "no-secrets", "promise", "@typescript-eslint", "import"],
+  "parser": "@typescript-eslint/parser",
+  "overrides": [
+    {
+      "files": ["**/_components/**/*.{ts,tsx,js,jsx}", "**/_features/**/*.{ts,tsx,js,jsx}"],
+      "rules": {
+        "import/no-default-export": "error"
+      }
+    },
+    {
+      "files": [
+        "**/app/**/page.tsx",
+        "**/app/**/layout.tsx",
+        "**/app/**/template.tsx",
+        "**/app/**/loading.tsx",
+        "**/app/**/error.tsx",
+        "**/app/**/global-error.tsx",
+        "**/app/**/not-found.tsx",
+        "**/app/**/route.ts",
+        "**/app/**/route.js",
+        "**/pages/**/*.tsx",
+        "**/pages/**/*.jsx"
+      ],
+      "rules": {
+        "@typescript-eslint/no-unused-vars": [
+          "error",
+          {
+            "vars": "all",
+            "args": "none",
+            "argsIgnorePattern": "^_",
+            "ignoreRestSiblings": true
+          }
+        ]
+      }
+    },
+    {
+      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+      "rules": {
+        "@nx/enforce-module-boundaries": [
+          "error",
+          {
+            "enforceBuildableLibDependency": true,
+            "allow": ["@pinecone-intern/ui"],
+            "depConstraints": [
+              {
+                "sourceTag": "type:app",
+                "onlyDependOnLibsWithTags": ["type:feature", "type:data-access", "type:util", "type:ui", "scope:shared"]
+              },
+              {
+                "sourceTag": "type:feature",
+                "onlyDependOnLibsWithTags": ["type:feature", "type:data-access", "type:util", "type:ui"]
+              },
+              {
+                "sourceTag": "type:data-access",
+                "onlyDependOnLibsWithTags": ["type:data-access", "type:util"]
+              },
+              {
+                "sourceTag": "type:ui",
+                "onlyDependOnLibsWithTags": ["type:ui", "type:util"]
+              },
+              {
+                "sourceTag": "type:util",
+                "onlyDependOnLibsWithTags": ["type:util"]
+              },
+              {
+                "sourceTag": "plugin:next",
+                "onlyDependOnLibsWithTags": ["plugin:next", "plugin:react", "plugin:node", "plugin:js", "scope:shared"]
+              },
+              {
+                "sourceTag": "plugin:react",
+                "onlyDependOnLibsWithTags": ["plugin:react", "plugin:js"]
+              },
+              {
+                "sourceTag": "plugin:express",
+                "onlyDependOnLibsWithTags": ["plugin:express", "plugin:node", "plugin:js"]
+              },
+              {
+                "sourceTag": "plugin:node",
+                "onlyDependOnLibsWithTags": ["plugin:node", "plugin:js"]
+              },
+              {
+                "sourceTag": "scope:shared",
+                "onlyDependOnLibsWithTags": ["scope:shared"]
+              }
+            ]
+          }
+        ],
+        "camelcase": [
+          "error",
+          {
+            "properties": "always",
+            "ignoreDestructuring": false,
+            "ignoreImports": false
+          }
+        ]
+      }
+    },
+    {
+      "files": ["*.tsx"],
+      "rules": {
+        "complexity": ["warn", { "max": 10 }]
+      }
+    },
+    {
+      "files": ["*.ts"],
+      "rules": {
+        "complexity": ["warn", { "max": 10 }]
+      }
+    },
+    {
+      "files": ["*.ts", "*.tsx"],
+      "extends": ["plugin:@nx/typescript"],
+      "rules": {
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars": [
+          "error",
+          {
+            "vars": "all",
+            "args": "after-used",
+            "argsIgnorePattern": "^_",
+            "ignoreRestSiblings": true
+          }
+        ],
+        "no-secrets/no-secrets": "error",
+        "max-lines": ["warn", { "max": 300, "skipBlankLines": true, "skipComments": true }],
+        "max-nested-callbacks": ["error", 3],
+        "max-depth": ["error", 4]
+      }
+    },
+    {
+      "files": ["*.js", "*.jsx"],
+      "extends": ["plugin:@nx/javascript"],
+      "rules": {}
+    },
+    {
+      "files": ["*.spec.ts", "*.spec.tsx", "*.spec.js", "*.spec.jsx"],
+      "env": {
+        "jest": true
+      },
+      "rules": {
+        "max-lines": "off",
+        "complexity": "off"
+      }
+    },
+    {
+      "files": "*.json",
+      "parser": "jsonc-eslint-parser",
+      "rules": {}
+    }
+  ]
+}

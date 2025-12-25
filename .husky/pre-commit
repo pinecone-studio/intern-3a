@@ -1,0 +1,24 @@
+#!/usr/bin/env sh
+
+# Run build and lint on affected projects before commit
+echo "🔍 Running pre-commit checks..."
+
+# Get the base reference - use origin/main if available, otherwise use first commit or HEAD~1
+if git rev-parse --verify origin/main >/dev/null 2>&1; then
+  BASE_REF="origin/main"
+elif git rev-parse --verify main >/dev/null 2>&1; then
+  BASE_REF="main"
+else
+  # Fallback to first commit if no main branch exists
+  BASE_REF=$(git rev-list --max-parents=0 HEAD 2>/dev/null || echo "HEAD~1")
+fi
+
+# Run build on affected projects
+echo "🔨 Building affected projects..."
+npx nx affected -t build --base=$BASE_REF --head=HEAD
+
+# Run lint on affected projects
+echo "📋 Linting affected projects..."
+npx nx affected -t lint --base=$BASE_REF --head=HEAD
+
+echo "✅ Pre-commit checks passed!"
