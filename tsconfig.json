@@ -11,6 +11,12 @@
     },
     {
       "path": "./apps/todo-fe"
+    },
+    {
+      "path": "./apps/skill-hub-e2e"
+    },
+    {
+      "path": "./apps/skill-hub"
     }
   ]
 }
