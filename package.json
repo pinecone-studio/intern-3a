@@ -157,6 +157,7 @@
   },
   "workspaces": [
     "libs/shared/*",
-    "apps/*"
+    "apps/*",
+    "app/*"
   ]
 }

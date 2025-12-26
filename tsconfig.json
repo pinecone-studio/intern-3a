@@ -17,6 +17,12 @@
     },
     {
       "path": "./apps/skill-hub"
+    },
+    {
+      "path": "./apps/unifind-e2e"
+    },
+    {
+      "path": "./apps/unifind"
     }
   ]
 }
