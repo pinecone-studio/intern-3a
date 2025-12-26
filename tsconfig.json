@@ -23,6 +23,9 @@
     },
     {
       "path": "./apps/unifind"
+    },
+    {
+      "path": "./libs/shared/shadcn"
     }
   ]
 }
