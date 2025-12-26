@@ -1,4 +1,4 @@
-import { Header } from './_components/Header';
+import { Button } from '@intern-3a/shadcn';
 
 export default function Index() {
   return (
