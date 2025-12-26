@@ -1,3 +1,5 @@
+import { Header } from './_components/Header';
+
 export default function Index() {
   /*
    * Replace the elements below with your own.
@@ -6,6 +8,7 @@ export default function Index() {
    */
   return (
     <div>
+      <Header />
       <div className="wrapper">
         <div className="container">
           <div id="welcome">
