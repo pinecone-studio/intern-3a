@@ -13,6 +13,7 @@ export const Header = () => {
         >
           Growly
         </span>
+        <div></div>
       </div>
     </div>
   );
