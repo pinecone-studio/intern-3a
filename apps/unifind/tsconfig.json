@@ -18,30 +18,14 @@
         "name": "next"
       }
     ],
-    "baseUrl": ".",
-    "rootDir": "../..",
     "paths": {
       "@/*": ["./src/*"]
     },
     "types": ["jest", "node"],
     "outDir": "dist",
-
+    "rootDir": "src",
     "tsBuildInfoFile": "dist/tsconfig.tsbuildinfo"
   },
-  "include": [
-    "../../apps/skill-hub/.next/types/**/*.ts",
-    "../../dist/apps/skill-hub/.next/types/**/*.ts",
-    "next-env.d.ts",
-    "src/**/*.js",
-    "src/**/*.jsx",
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": ["out-tsc", "dist", "node_modules", "jest.config.ts", "jest.config.cts", "src/**/*.spec.ts", "src/**/*.test.ts", ".next", "eslint.config.js", "eslint.config.cjs", "eslint.config.mjs"],
-  "references": [
-    {
-      "path": "../../libs/shared/shadcn"
-    }
-  ]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.js", "src/**/*.jsx", "../../apps/unifind/.next/types/**/*.ts", "../../dist/apps/unifind/.next/types/**/*.ts", "next-env.d.ts"],
+  "exclude": ["out-tsc", "dist", "node_modules", "jest.config.ts", "jest.config.cts", "src/**/*.spec.ts", "src/**/*.test.ts", ".next", "eslint.config.js", "eslint.config.cjs", "eslint.config.mjs"]
 }
