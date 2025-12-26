@@ -89,3 +89,4 @@ out
 
 # Cypress results
 apps/todo-be/cypress/results/
+/generated/prisma
