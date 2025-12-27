@@ -1,3 +1,6 @@
+import { ClerkProvider } from '@clerk/nextjs';
+import { Toaster } from '../../../../libs/shared/shadcn/src/components/ui/sonner';
+import { Header } from './_components/Header';
 import './global.css';
 
 export const metadata = {
@@ -7,8 +10,14 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body>{children}</body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body>
+          <Header />
+          <div className="max-w-\[1440px]\ m-auto">{children}</div>
+          <Toaster position="top-center" />
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

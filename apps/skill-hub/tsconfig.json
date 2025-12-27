@@ -26,7 +26,8 @@
     "types": ["jest", "node"],
     "outDir": "dist",
 
-    "tsBuildInfoFile": "dist/tsconfig.tsbuildinfo"
+    "tsBuildInfoFile": "dist/tsconfig.tsbuildinfo",
+    "skipLibCheck": true
   },
   "include": [
     "../../apps/skill-hub/.next/types/**/*.ts",

@@ -1,16 +1,18 @@
 'use client';
 
-import { Club } from '@/lib/mock-data';
+import { NewClubType } from '@/lib/utils/types';
 import { Button } from '@intern-3a/shadcn';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 
 const MapContent = dynamic(() => import('./MapContent'), { ssr: false });
 
-export default function Map({ filteredClubs }: { filteredClubs: Club[] }) {
+export default function Map() {
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const RADIUS_STEPS = [0.5, 1, 2, 3, 10];
   const [selectedRadius, setSelectedRadius] = useState<number>(0.5);
+  const filteredClubs: NewClubType[] = [];
+  const clubs: NewClubType[] = [];
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -36,9 +38,9 @@ export default function Map({ filteredClubs }: { filteredClubs: Club[] }) {
     return radius * c;
   }
 
-  const nearbyClubs: Club[] = userLocation
+  const nearbyClubs: NewClubType[] = userLocation
     ? filteredClubs.filter((club) => {
-        const distance = getDistanceFromLatLonInKm(userLocation[0], userLocation[1], club.lat, club.lon);
+        const distance = getDistanceFromLatLonInKm(userLocation[0], userLocation[1], club.clubLat, club.clubLong);
         return distance <= selectedRadius;
       })
     : [];
@@ -57,7 +59,7 @@ export default function Map({ filteredClubs }: { filteredClubs: Club[] }) {
           </Button>
         ))}
       </div>
-      <MapContent clubs={filteredClubs} userLocation={userLocation} nearbyClubs={nearbyClubs} selectedRadius={selectedRadius} />
+      <MapContent clubs={clubs} userLocation={userLocation} nearbyClubs={nearbyClubs} selectedRadius={selectedRadius} />
     </div>
   );
 }
