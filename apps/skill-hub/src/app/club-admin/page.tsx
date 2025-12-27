@@ -1,4 +1,5 @@
-// import { Card, CardContent } from '@pinecone-intern/ui';
+'use client';
+import { Card, CardContent } from '@intern-3a/shadcn';
 import { Mail, Phone, X } from 'lucide-react';
 import { useState } from 'react';
 
@@ -7,11 +8,12 @@ export default function SportClubCard() {
 
   return (
     <div className="max-w-lg mx-auto relative">
-      {/* <Card className="group overflow-hidden rounded-2xl shadow-lg transition-transform transform hover:-translate-y-1 hover:shadow-2xl">
+      <Card className="group overflow-hidden rounded-2xl shadow-lg transition-transform transform hover:-translate-y-1 hover:shadow-2xl">
+        {/* Image with gradient overlay and badges */}
         <div className="relative">
           <img src="wrestling-photo.jpeg" alt="Sport" className="w-full h-56 object-cover" />
 
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" aria-hidden />
+          <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent" aria-hidden />
 
           <div className="absolute left-4 bottom-4 text-white">
             <h2 className="text-2xl font-bold drop-shadow">Чөлөөт бөхийн дугуйлан</h2>
@@ -65,7 +67,7 @@ export default function SportClubCard() {
             </button>
           </div>
         </CardContent>
-      </Card> */}
+      </Card>
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
