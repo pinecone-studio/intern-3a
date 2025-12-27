@@ -1,5 +1,4 @@
 'use client';
-import { mockClubs } from '@/lib/mock-data';
 import { Calendar, Clock } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
@@ -10,7 +9,7 @@ export const FilteredClubs = () => {
   const [selectedSport, setSelectedSport] = useState<string>('');
   const [selectedGenre, setSelectedGenre] = useState<string>('');
 
-  const resetFilters = () => {
+  const ResetFilters = () => {
     setSelectedClass('');
     setSelectedDate('');
     setSelectedTime('');
