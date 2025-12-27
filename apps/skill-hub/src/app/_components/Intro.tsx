@@ -4,7 +4,7 @@ import { motion, useMotionValue, useSpring, Variants } from 'framer-motion';
 import { BookOpen, GraduationCap, Users } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
-export default function Intro() {
+export const Intro = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [trail, setTrail] = useState<{ x: number; y: number }[]>([]);
   const cursorX = useMotionValue(0);
@@ -335,7 +335,7 @@ export default function Intro() {
         </motion.div>
 
         {/* Decorative Spiral */}
-        <motion.div className="fixed top-[70%] left-[4%] -translate-y-1/2 z-20">
+        <motion.div className="absolute top-[70%] left-[4%] -translate-y-1/2 z-20">
           <motion.div initial={{ x: -300, y: 0 }} animate={{ x: 0, y: 0 }} transition={{ duration: 0.5, ease: 'easeOut' }}>
             <motion.div
               animate={{
@@ -407,7 +407,7 @@ export default function Intro() {
         </motion.div>
 
         {/* Decorative Rainbow */}
-        <motion.div className="fixed top-[20%] right-[10%] z-20">
+        <motion.div className="absolute top-[20%] right-[10%] z-20">
           <motion.div initial={{ y: -300, scale: 0.5 }} animate={{ y: 0, scale: 1 }} transition={{ duration: 0.5, ease: 'easeOut' }}>
             <motion.div
               animate={{
@@ -565,4 +565,4 @@ export default function Intro() {
       </motion.div>
     </section>
   );
-}
+};

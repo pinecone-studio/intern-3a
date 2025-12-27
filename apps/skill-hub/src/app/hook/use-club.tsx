@@ -25,7 +25,7 @@ export const useClub = () => {
       console.error('Error while loading clubs info!', error);
       toast.error('Failed to load clubs!');
     } finally {
-      setIsLoading(true);
+      setIsLoading(false);
     }
   };
 
@@ -58,5 +58,5 @@ export const useClub = () => {
     };
   }, []);
 
-  return { allClubs };
+  return { allClubs, isLoading };
 };
