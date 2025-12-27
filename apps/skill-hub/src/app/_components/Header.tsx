@@ -1,4 +1,5 @@
 'use client';
+
 import { Button, Dialog, DialogTrigger } from '@intern-3a/shadcn';
 import React, { useState } from 'react';
 import { ClubRegisterBtnDialogContent } from './ClubRegisterBtnDialogContent';
@@ -7,8 +8,8 @@ import { MyUserButton } from './MyUserButton';
 export const Header = () => {
   const [open, setOpen] = useState(false);
   return (
-    <div className="w-full h-20 bg-blue-950">
-      <div className="flex items-center ml-10 h-full">
+    <div className="w-full h-20 bg-blue-950 flex justify-between px-10 items-center">
+      <div className="flex items-center">
         <img className="text-white font-bold text-xl w-20 h-20 rounded-full" src="/logo.png" alt="Logo" />
         <span
           className="text-2xl font-extrabold uppercase tracking-wider 
@@ -18,18 +19,19 @@ export const Header = () => {
         >
           Growly
         </span>
-        <div>
-          <div className="flex gap-5">
-            <Dialog open={open} onOpenChange={setOpen}>
-              <DialogTrigger asChild>
-                <Button className="bg-orange-500 rounded-full cursor-pointer">Дугуйлан Бүртгүүлэх</Button>
-              </DialogTrigger>
-              <ClubRegisterBtnDialogContent setOpen={setOpen} />
-            </Dialog>
+      </div>
 
-            <MyUserButton />
-          </div>
-        </div>
+      <Button variant="destructive">Hello</Button>
+
+      <div className="flex gap-5 items-center">
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogTrigger asChild>
+            <Button className="bg-orange-500 rounded-full cursor-pointer">Дугуйлан Бүртгүүлэх</Button>
+          </DialogTrigger>
+          <ClubRegisterBtnDialogContent setOpen={setOpen} />
+        </Dialog>
+
+        <MyUserButton />
       </div>
     </div>
   );
