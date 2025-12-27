@@ -185,26 +185,26 @@ export const ClubRegisterBtnDialogContent = ({ setOpen }: { setOpen: Dispatch<Re
     }
   };
 
-  console.log({ clubName });
-  console.log({ clubCategoryName });
-  console.log({ selectedClassLevelNames });
-  console.log({ clubPrices });
-  console.log({ clubImage });
-  console.log({ clubImagePreview });
-  console.log({ clubDescription });
-  console.log({ selectedClubWorkingDays });
-  console.log({ scheduledClubTimes });
-  console.log({ clubAddress });
-  console.log({ clubLat });
-  console.log({ clubLong });
-  console.log({ teacherImage });
-  console.log({ teacherImagePreview });
-  console.log({ teacherName });
-  console.log({ teacherPhone });
-  console.log({ teacherEmail });
-  console.log({ teacherProfession });
-  console.log({ teacherExperience });
-  console.log({ teacherAchievement });
+  // console.log({ clubName });
+  // console.log({ clubCategoryName });
+  // console.log({ selectedClassLevelNames });
+  // console.log({ clubPrices });
+  // console.log({ clubImage });
+  // console.log({ clubImagePreview });
+  // console.log({ clubDescription });
+  // console.log({ selectedClubWorkingDays });
+  // console.log({ scheduledClubTimes });
+  // console.log({ clubAddress });
+  // console.log({ clubLat });
+  // console.log({ clubLong });
+  // console.log({ teacherImage });
+  // console.log({ teacherImagePreview });
+  // console.log({ teacherName });
+  // console.log({ teacherPhone });
+  // console.log({ teacherEmail });
+  // console.log({ teacherProfession });
+  // console.log({ teacherExperience });
+  // console.log({ teacherAchievement });
 
   return (
     <DialogContent className="sm:max-w-260 max-h-[90vh] gap-10 overflow-y-auto">

@@ -29,8 +29,8 @@ export type NewClubType = {
   selectedClubWorkingDays?: WeekDayType[];
   scheduledClubTimes?: ScheduledClubTimesType;
   clubAddress: string;
-  clubLat: number | null;
-  clubLong: number | null;
+  clubLat: number;
+  clubLong: number;
   teacherImage: string | File;
   teacherName: string;
   teacherPhone: string;
