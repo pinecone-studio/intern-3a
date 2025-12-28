@@ -1,9 +1,9 @@
 'use client';
 
-import { NewClubType, ClassLevelsType, WeekDayType } from '@/lib/utils/types';
+import { ClassLevelsType, NewClubType, WeekDayType } from '@/lib/utils/types';
 import { Card, CardContent } from '@intern-3a/shadcn';
-import { Mail, Phone, X, Tag, Calendar, MapPin } from 'lucide-react';
-import { useState, useMemo } from 'react';
+import { Calendar, Mail, MapPin, Phone, X } from 'lucide-react';
+import { useMemo, useState } from 'react';
 
 const CLASS_LEVEL_LABEL_MN: { [K in ClassLevelsType]: string } = {
   Elementary: 'Бага',

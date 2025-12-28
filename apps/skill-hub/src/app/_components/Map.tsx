@@ -7,12 +7,12 @@ import { useEffect, useState } from 'react';
 
 const MapContent = dynamic(() => import('./MapContent'), { ssr: false });
 
-export default function Map() {
+export default function Map({ filteredClubs }: { filteredClubs: NewClubType[] }) {
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const RADIUS_STEPS = [0.5, 1, 2, 3, 10];
   const [selectedRadius, setSelectedRadius] = useState<number>(0.5);
-  const filteredClubs: NewClubType[] = [];
-  const clubs: NewClubType[] = [];
+  // const filteredClubs: NewClubType[] = [];
+  // const clubs: NewClubType[] = [];
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -20,9 +20,7 @@ export default function Map() {
         (position) => {
           setUserLocation([position.coords.latitude, position.coords.longitude]);
         },
-        () => {
-          // Failed to get user location - silently handle
-        },
+        () => {},
       );
     }
   }, []);
@@ -59,7 +57,7 @@ export default function Map() {
           </Button>
         ))}
       </div>
-      <MapContent clubs={clubs} userLocation={userLocation} nearbyClubs={nearbyClubs} selectedRadius={selectedRadius} />
+      <MapContent clubs={filteredClubs} userLocation={userLocation} nearbyClubs={nearbyClubs} selectedRadius={selectedRadius} />
     </div>
   );
 }

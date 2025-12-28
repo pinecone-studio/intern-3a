@@ -34,7 +34,9 @@ export * from './ui/sheet';
 export * from './ui/sidebar';
 export * from './ui/skeleton';
 export * from './ui/slider';
+
 export { Toaster as Sonner } from './ui/sonner'; // Renamed to avoid conflict with toaster
+export * from './ui/spinner';
 export * from './ui/switch';
 export * from './ui/table';
 export * from './ui/tabs';
