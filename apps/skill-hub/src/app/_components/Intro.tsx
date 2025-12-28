@@ -495,20 +495,16 @@ export const Intro = () => {
       {/* Main Content */}
       <motion.div variants={containerVariants} initial="hidden" animate={isVisible ? 'visible' : 'hidden'} className="relative z-10 container mx-auto px-4 text-center">
         {/* Main Heading */}
-        <motion.h1 variants={itemVariants} className="text-5xl md:text-7xl lg:text-8xl font-black text-slate-900 mb-6">
-          <motion.span
-            animate={{
-              backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
-            }}
-            transition={{
-              duration: 5,
-              repeat: Infinity,
-              ease: 'linear',
-            }}
-            className="bg-gradient-to-r from-orange-600 via-purple-600 to-orange-600 bg-clip-text text-transparent bg-[length:200%_auto]"
+        <motion.h1 variants={itemVariants} className="flex items-center justify-center gap-4 mb-6">
+          <img className="w-24 h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 rounded-full" src="/logo.png" alt="Logo" />
+          <span
+            className="text-5xl md:text-7xl lg:text-8xl font-extrabold uppercase tracking-wider 
+                       text-transparent bg-clip-text bg-linear-to-r 
+                       from-pink-500 via-red-500 to-yellow-400
+                       animate-pulse hover:scale-110 transition-transform duration-300"
           >
-            SkillsHub
-          </motion.span>
+            Growly
+          </span>
         </motion.h1>
 
         {/* Subtitle */}

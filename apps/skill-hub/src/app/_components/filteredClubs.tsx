@@ -9,15 +9,13 @@ export const FilteredClubs = () => {
   const [selectedClass, setSelectedClass] = useState<ClassLevelsType | ''>('');
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [selectedTime, setSelectedTime] = useState<string>('');
-  const [selectedSport, setSelectedSport] = useState<string>('');
-  const [selectedGenre, setSelectedGenre] = useState<string>('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
 
   const ResetFilters = () => {
     setSelectedClass('');
     setSelectedDate('');
     setSelectedTime('');
-    setSelectedSport('');
-    setSelectedGenre('');
+    setSelectedCategory('');
   };
 
   const classes = [
@@ -26,45 +24,51 @@ export const FilteredClubs = () => {
     { label: 'Ахлах анги', value: 'High' },
   ];
 
-  const genreTypeMap: Record<string, string> = {
-    sports: 'SPORTS',
-    arts: 'ARTS',
-    education: 'EDUCATION',
-    entertainment: 'FUN',
-  };
-
-  const courseNameMap: Record<string, string[]> = {
-    Бөх: ['Wrestling Club'],
-    Хөлбөмбөг: ['Football Club', 'Soccer Club'],
-    'Сагсан бөмбөг': ['Basketball Club'],
-    'Тулаан спорт': ['Martial Arts Club', 'Karate Club'],
-    Теннис: ['Tennis Club'],
-    Волейбол: ['Volleyball Club'],
-    Бадминтон: ['Badminton Club'],
-    Бокс: ['Boxing Club'],
-    Гимнастик: ['Gymnastics Club'],
-    'Хөнгөн атлетик': ['Athletics Club', 'Track Club'],
-    'Дугуйн спорт': ['Cycling Club'],
-    'Усан сэлэлт': ['Swimming Club'],
-    'Хөлөг онгоц': ['Rowing Club'],
-    'Уран бүжиг': ['Dance Club'],
-    Хөгжим: ['Music Club'],
-    'Дуу хөгжим': ['Singing Club', 'Music Club'],
-    Зураг: ['Art Club', 'Drawing Club', 'Photography Club'],
-    'Гар урлал': ['Craft Club', 'Art Club'],
-    'Англи хэл': ['English Speaking Club', 'English Club'],
-    Математик: ['Math Club'],
-    Програмчлал: ['Coding Club', 'Programming Club'],
-    Робот: ['Robotics Club', 'Robot Club'],
-    Шатар: ['Chess Club'],
-    'Хүүхдийн тоглоом': ['Gaming Club', 'Fun Club', 'Cooking Club'],
-  };
-
   const timeSlots = [
     { label: 'Үдээс өмнө', value: 'morning', range: [8, 12] },
     { label: 'Үдээс хойш', value: 'afternoon', range: [12, 18] },
     { label: 'Орой', value: 'evening', range: [18, 22] },
   ];
+
+  // Extract unique categories from clubs data
+  const allCategories = useMemo(() => {
+    const categoryMap = new Map<string, { id: string; label: string; icon: string }>();
+
+    // Default icon mapping for known categories
+    const iconMap: Record<string, string> = {
+      SPORT: '⚽',
+      ART: '🎨',
+      SCIENCE: '🔬',
+      LANGUAGE: '🗣️',
+      MUSIC: '🎵',
+      TECHNOLOGY: '💻',
+    };
+
+    allClubs.forEach((club) => {
+      if (club.clubCategoryName) {
+        const categoryName = club.clubCategoryName;
+
+        if (!categoryMap.has(categoryName)) {
+          // Find matching icon or use default
+          let icon = '📚'; // Default icon
+          for (const [key, value] of Object.entries(iconMap)) {
+            if (categoryName.includes(key)) {
+              icon = value;
+              break;
+            }
+          }
+
+          categoryMap.set(categoryName, {
+            id: categoryName,
+            label: categoryName,
+            icon: icon,
+          });
+        }
+      }
+    });
+
+    return Array.from(categoryMap.values());
+  }, [allClubs]);
 
   const filteredClubs = useMemo(() => {
     let filtered = [...allClubs];
@@ -107,77 +111,15 @@ export const FilteredClubs = () => {
       }
     }
 
-    // Filter by genre/category
-    const genreType = genreTypeMap[selectedGenre];
-    if (genreType) {
+    // Filter by category - directly match clubCategoryName with selected category
+    if (selectedCategory) {
       filtered = filtered.filter((club) => {
-        const categoryName = club.clubCategoryName?.toUpperCase();
-        // Map the genre type to category patterns
-        if (genreType === 'SPORTS') {
-          return ['SPORT', 'WRESTLING', 'FOOTBALL', 'BASKETBALL', 'MARTIAL', 'TENNIS', 'VOLLEYBALL', 'BADMINTON', 'BOXING', 'GYMNASTICS', 'ATHLETICS', 'CYCLING', 'SWIMMING', 'ROWING'].some(
-            (pattern) => categoryName?.includes(pattern),
-          );
-        } else if (genreType === 'ARTS') {
-          return ['ART', 'DANCE', 'MUSIC', 'SINGING', 'DRAWING', 'PHOTOGRAPHY', 'CRAFT'].some((pattern) => categoryName?.includes(pattern));
-        } else if (genreType === 'EDUCATION') {
-          return ['ENGLISH', 'MATH', 'PROGRAMMING', 'CODING', 'ROBOTICS', 'CHESS', 'EDUCATION'].some((pattern) => categoryName?.includes(pattern));
-        } else if (genreType === 'FUN') {
-          return ['GAME', 'GAMING', 'FUN', 'COOKING', 'ENTERTAINMENT'].some((pattern) => categoryName?.includes(pattern));
-        }
-        return false;
+        return club.clubCategoryName === selectedCategory;
       });
     }
 
-    // Filter by specific sport/course
-    if (selectedSport) {
-      const possibleNames = courseNameMap[selectedSport] || [selectedSport];
-      filtered = filtered.filter((club) =>
-        possibleNames.some((name) => club.clubCategoryName.toLowerCase().includes(name.toLowerCase()) || club.clubName.toLowerCase().includes(selectedSport.toLowerCase())),
-      );
-    }
-
     return filtered;
-  }, [allClubs, selectedClass, selectedDate, selectedTime, selectedGenre, selectedSport]);
-
-  const coursesByGenre = {
-    sports: [
-      { name: 'Бөх', icon: '🤼' },
-      { name: 'Хөлбөмбөг', icon: '⚽' },
-      { name: 'Сагсан бөмбөг', icon: '🏀' },
-      { name: 'Тулаан спорт', icon: '🥋' },
-      { name: 'Теннис', icon: '🎾' },
-      { name: 'Волейбол', icon: '🏐' },
-      { name: 'Бадминтон', icon: '🏸' },
-      { name: 'Бокс', icon: '🥊' },
-      { name: 'Гимнастик', icon: '🤸' },
-      { name: 'Хөнгөн атлетик', icon: '🏃' },
-      { name: 'Дугуйн спорт', icon: '🚴' },
-      { name: 'Усан сэлэлт', icon: '🏊' },
-      { name: 'Хөлөг онгоц', icon: '🚣' },
-    ],
-    arts: [
-      { name: 'Уран бүжиг', icon: '💃' },
-      { name: 'Хөгжим', icon: '🎵' },
-      { name: 'Дуу хөгжим', icon: '🎤' },
-      { name: 'Зураг', icon: '🎨' },
-      { name: 'Гар урлал', icon: '✂️' },
-    ],
-    education: [
-      { name: 'Англи хэл', icon: '🇬🇧' },
-      { name: 'Математик', icon: '🔢' },
-      { name: 'Програмчлал', icon: '💻' },
-      { name: 'Робот', icon: '🤖' },
-      { name: 'Шатар', icon: '♟️' },
-    ],
-    entertainment: [{ name: 'Хүүхдийн тоглоом', icon: '🎯' }],
-  };
-
-  const genres = [
-    { id: 'sports', label: 'Спорт', icon: '⚽' },
-    { id: 'arts', label: 'Урлаг', icon: '🎨' },
-    { id: 'education', label: 'Боловсрол', icon: '📚' },
-    { id: 'entertainment', label: 'Зугаа цэнгэл', icon: '🎮' },
-  ];
+  }, [allClubs, selectedClass, selectedDate, selectedTime, selectedCategory]);
 
   const availableDays = [
     { day: 'Monday', label: 'Даваа' },
@@ -189,15 +131,14 @@ export const FilteredClubs = () => {
     { day: 'Sunday', label: 'Ням' },
   ];
 
-  const isFiltered = selectedClass || selectedDate || selectedTime || selectedGenre || selectedSport;
+  const isFiltered = selectedClass || selectedDate || selectedTime || selectedCategory;
 
   return (
     <div className="relative">
-      {/* Sports Categories */}
       <section id="sports" className="py-16 md:py-24 relative z-10">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8" data-scroll-point="search-title">
-            <h2 className="text-4xl md:text-5xl font-black text-slate-900 mb-4">Хичээл хайх</h2>
+            <h2 className="text-4xl md:text-5xl font-black text-slate-900 mb-4">Дамжаа хайх</h2>
           </div>
           <div className="flex justify-center mb-8" data-scroll-point="class-selector">
             <div className="inline-flex bg-white/50 rounded-xl p-2 gap-2 border-2 border-slate-200 shadow-sm">
@@ -269,53 +210,26 @@ export const FilteredClubs = () => {
           </div>
 
           <div className="text-center mb-8">
-            <h2 className="text-xl md:text-2xl font-black text-slate-900 mb-4">Хичээл сонгох</h2>
-            <p className="text-lg text-slate-600 max-w-2xl mx-auto">Ангилалаас хичээлээ сонгоорой</p>
+            <h2 className="text-xl md:text-2xl font-black text-slate-900 mb-4">Дамжаа төрлөө сонгох</h2>
           </div>
 
           {/* Genre Tabs */}
-          <div className="max-w-4xl mx-auto mb-8 flex justify-center" data-scroll-point="genre">
+          <div className="max-w-6xl mx-auto mb-8 flex justify-center" data-scroll-point="genre">
             <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-              {genres.map((genre) => (
+              {allCategories.map((category) => (
                 <button
-                  key={genre.id}
-                  onClick={() => setSelectedGenre(genre.id)}
+                  key={category.id}
+                  onClick={() => setSelectedCategory(category.id)}
                   className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold whitespace-nowrap transition-all duration-200 ${
-                    selectedGenre === genre.id ? 'bg-orange-600 text-white shadow-lg' : 'bg-white/50 text-slate-700 border-2 border-slate-200 hover:border-orange-400'
+                    selectedCategory === category.id ? 'bg-orange-600 text-white shadow-lg' : 'bg-white/50 text-slate-700 border-2 border-slate-200 hover:border-orange-400'
                   }`}
                 >
-                  <span className="text-xl">{genre.icon}</span>
-                  <span>{genre.label}</span>
+                  <span className="text-xl">{category.icon}</span>
+                  <span>{category.label}</span>
                 </button>
               ))}
             </div>
           </div>
-
-          {/* Courses List - Scrollable */}
-          {selectedGenre && (
-            <div className="max-w-6xl mx-auto mb-16">
-              <div className="bg-white/50 rounded-2xl p-6 border-2 border-slate-200 shadow-lg">
-                <h3 className="text-xl font-bold text-slate-900 mb-4">{genres.find((g) => g.id === selectedGenre)?.label}</h3>
-                <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-orange-400 scrollbar-track-slate-100">
-                  {coursesByGenre[selectedGenre as keyof typeof coursesByGenre].map((item) => (
-                    <button
-                      key={item.name}
-                      onClick={() => setSelectedSport(item.name)}
-                      className={`shrink-0 w-32 p-5 rounded-xl border-2 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg ${
-                        selectedSport === item.name ? 'border-orange-500 bg-orange-50 shadow-md' : 'border-slate-200 /50 hover:border-orange-300'
-                      }`}
-                    >
-                      <div className="flex flex-col items-center gap-2">
-                        <div className={`text-4xl transition-transform duration-300 ${selectedSport === item.name ? 'scale-110' : 'group-hover:scale-110'}`}>{item.icon}</div>
-                        <span className={`font-semibold text-xs text-center transition-colors ${selectedSport === item.name ? 'text-orange-600' : 'text-slate-700'}`}>{item.name}</span>
-                      </div>
-                      {selectedSport === item.name && <div className="mt-2 w-full h-1 bg-orange-500 rounded-full"></div>}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
 
           {/* Display Filtered Clubs Results */}
           {isFiltered && (
