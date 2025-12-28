@@ -1,5 +1,5 @@
 import { Button } from '@intern-3a/shadcn';
-import { AllClubsCardScrollAnimation } from './_components';
+import { AllClubsCardScrollAnimation, ClubFilterSection } from './_components';
 import Intro from './_components/Intro';
 import Map from './_components/Map';
 
@@ -9,6 +9,8 @@ export default function Index() {
       <Button variant="destructive">Hello</Button>
       <Intro />
       <AllClubsCardScrollAnimation />
+      <ClubFilterSection />
+
       <Map />
     </div>
   );
