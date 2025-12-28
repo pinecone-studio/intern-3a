@@ -1,8 +1,8 @@
 'use client';
+import { ClassLevelsType } from '@/lib/utils/types';
 import { Calendar, Clock } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useClub } from '../hook/use-club';
-import { ClassLevelsType } from '@/lib/utils/types';
 
 export const FilteredClubs = () => {
   const { allClubs, isLoading } = useClub();
@@ -204,7 +204,7 @@ export const FilteredClubs = () => {
               {classes.map((classItem) => (
                 <button
                   key={classItem.value}
-                  onClick={() => setSelectedClass(classItem.value)}
+                  onClick={() => setSelectedClass(classItem.value as ClassLevelsType)}
                   className={`px-6 py-3 rounded-lg font-bold transition-all duration-200 ${
                     selectedClass === classItem.value ? 'bg-slate-900 text-white shadow-lg' : 'text-slate-600 hover:bg-slate-100'
                   }`}
