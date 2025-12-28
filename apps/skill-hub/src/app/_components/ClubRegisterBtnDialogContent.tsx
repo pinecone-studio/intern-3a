@@ -1,6 +1,6 @@
 'use client';
 
-import { ClassLevelsType, ClubPricesType, ScheduledClubTimesType, WeekDayType } from '@/lib/utils/types';
+import { ClassLevelsType, ClubPricesType, ScheduledClubTimesByClassLevelsType, WeekDayType, WeekScheduleType } from '@/lib/utils/types';
 import { Button, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, Input, Label, Textarea, ToggleGroup, ToggleGroupItem } from '@intern-3a/shadcn';
 import { Upload, X } from 'lucide-react';
 import Image from 'next/image';
@@ -40,7 +40,7 @@ export const ClubRegisterBtnDialogContent = ({ setOpen }: { setOpen: Dispatch<Re
   const [clubImagePreview, setClubImagePreview] = useState<string>('');
   const [clubDescription, setClubDescription] = useState<string>('');
   const [selectedClubWorkingDays, setSelectedClubWorkingDays] = useState<WeekDayType[]>([]);
-  const [scheduledClubTimes, setScheduledClubTimes] = useState<ScheduledClubTimesType>({});
+  const [scheduledClubTimes, setScheduledClubTimes] = useState<ScheduledClubTimesByClassLevelsType>({});
   const [clubAddress, setClubAddress] = useState<string>('');
   const [clubLat, setClubLat] = useState<number | null>(null);
   const [clubLong, setClubLong] = useState<number | null>(null);
@@ -53,32 +53,32 @@ export const ClubRegisterBtnDialogContent = ({ setOpen }: { setOpen: Dispatch<Re
   const [teacherProfession, setTeacherProfession] = useState<string>('');
   const [teacherExperience, setTeacherExperience] = useState<string>('');
   const [teacherAchievement, setTeacherAchievement] = useState<string>('');
-  // const { getToken } = useAuth();
+
   const [loading, setLoading] = useState<boolean>(false);
 
   // Regex patterns for validation
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const phoneRegex = /^[0-9]{8}$/;
 
-  const handleSelectedClubWorkingDays = (days: WeekDayType[]) => {
-    setSelectedClubWorkingDays(days);
+  // const handleSelectedClubWorkingDays = (days: WeekDayType[]) => {
+  //   setSelectedClubWorkingDays(days);
 
-    setScheduledClubTimes((prev) => {
-      const updated = { ...prev };
+  //   setScheduledClubTimes((prev) => {
+  //     const updated = { ...prev };
 
-      days.forEach((day) => {
-        if (!updated[day]) {
-          updated[day] = { startTime: '', endTime: '' };
-        }
-      });
+  //     days.forEach((day) => {
+  //       if (!updated[day]) {
+  //         updated[day] = { startTime: '', endTime: '' };
+  //       }
+  //     });
 
-      Object.keys(updated).forEach((key) => {
-        if (!days.includes(key as WeekDayType)) delete updated[key as WeekDayType];
-      });
+  //     Object.keys(updated).forEach((key) => {
+  //       if (!days.includes(key as WeekDayType)) delete updated[key as WeekDayType];
+  //     });
 
-      return updated;
-    });
-  };
+  //     return updated;
+  //   });
+  // };
 
   const clubImageFileChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -300,7 +300,7 @@ export const ClubRegisterBtnDialogContent = ({ setOpen }: { setOpen: Dispatch<Re
               {selectedClassLevelNames.length > 0 && (
                 <div className="flex flex-col gap-1.5">
                   {selectedClassLevelNames.map((level) => (
-                    <div className="flex gap-1.5">
+                    <div key={level} className="flex gap-1.5">
                       <Label>{level}: </Label>
                       <Input
                         type="number"
@@ -319,6 +319,84 @@ export const ClubRegisterBtnDialogContent = ({ setOpen }: { setOpen: Dispatch<Re
                 </div>
               )}
             </div>
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <Label>Хичээллэх өдөр</Label>
+            {selectedClassLevelNames.map((level) => (
+              <div key={level} className="flex flex-col gap-4">
+                <Label>{level} анги</Label>
+                <ToggleGroup
+                  type="multiple"
+                  value={Object.keys(scheduledClubTimes[level] || {}) as WeekDayType[]}
+                  onValueChange={(days) => {
+                    const typedDays = days as WeekDayType[];
+
+                    setScheduledClubTimes((prev) => {
+                      const updated: WeekScheduleType = { ...(prev[level] || {}) };
+
+                      typedDays.forEach((day) => {
+                        if (!updated[day]) {
+                          updated[day] = { startTime: '', endTime: '' };
+                        }
+                      });
+
+                      Object.keys(updated).forEach((d) => {
+                        if (!typedDays.includes(d as WeekDayType)) {
+                          delete updated[d as WeekDayType];
+                        }
+                      });
+
+                      return { ...prev, [level]: updated };
+                    });
+                  }}
+                  className="flex flex-wrap gap-2"
+                >
+                  {weekDays.map((day) => (
+                    <ToggleGroupItem key={day.value} value={day.value}>
+                      {day.label}
+                    </ToggleGroupItem>
+                  ))}
+                </ToggleGroup>
+
+                {Object.entries(scheduledClubTimes[level] || {}).map(([day, time]) => {
+                  const typedDay = day as WeekDayType;
+
+                  return (
+                    <div key={typedDay} className="flex flex-col gap-2">
+                      <Label>{weekDays.find((d) => d.value === day)?.label}</Label>
+
+                      <Input
+                        type="time"
+                        value={time.startTime}
+                        onChange={(e) =>
+                          setScheduledClubTimes((prev) => ({
+                            ...prev,
+                            [level]: {
+                              ...prev[level],
+                              [typedDay]: { ...time, startTime: e.target.value },
+                            },
+                          }))
+                        }
+                      />
+
+                      <span>-</span>
+
+                      <Input
+                        type="time"
+                        value={time.endTime}
+                        onChange={(e) =>
+                          setScheduledClubTimes((prev) => ({
+                            ...prev,
+                            [level]: { ...prev[level], [typedDay]: { ...time, endTime: e.target.value } },
+                          }))
+                        }
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
           </div>
 
           <div className="flex flex-col gap-1.5">
@@ -348,7 +426,7 @@ export const ClubRegisterBtnDialogContent = ({ setOpen }: { setOpen: Dispatch<Re
             )}
           </div>
 
-          <div className="flex flex-col gap-1.5">
+          {/* <div className="flex flex-col gap-1.5">
             <Label htmlFor="selectedClubWorkingDays">Хичээллэх өдөр:</Label>
             <ToggleGroup id="selectedClubWorkingDays" type="multiple" value={selectedClubWorkingDays} onValueChange={handleSelectedClubWorkingDays} className="flex flex-wrap gap-2">
               {weekDays.map((day) => (
@@ -357,9 +435,9 @@ export const ClubRegisterBtnDialogContent = ({ setOpen }: { setOpen: Dispatch<Re
                 </ToggleGroupItem>
               ))}
             </ToggleGroup>
-          </div>
+          </div> */}
 
-          <div className="flex flex-col gap-1.5">
+          {/* <div className="flex flex-col gap-1.5">
             <Label htmlFor="scheduledClubTimes">Цаг:</Label>
             {selectedClubWorkingDays.map((day) => {
               const dayLabel = weekDays.find((d) => d.value === day)?.label;
@@ -390,7 +468,7 @@ export const ClubRegisterBtnDialogContent = ({ setOpen }: { setOpen: Dispatch<Re
                 </div>
               );
             })}
-          </div>
+          </div> */}
 
           <div className="flex flex-col gap-1.5">
             <Label>Хаяг оруулах:</Label>

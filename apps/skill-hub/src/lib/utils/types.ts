@@ -8,15 +8,14 @@ export type ClubPricesType = {
   High?: number;
 };
 
-export type ScheduledClubTimesType = {
-  MON?: { startTime: string; endTime: string };
-  TUE?: { startTime: string; endTime: string };
-  WED?: { startTime: string; endTime: string };
-  THU?: { startTime: string; endTime: string };
-  FRI?: { startTime: string; endTime: string };
-  SAT?: { startTime: string; endTime: string };
-  SUN?: { startTime: string; endTime: string };
+export type DaytimeType = {
+  startTime: string;
+  endTime: string;
 };
+
+export type WeekScheduleType = Partial<Record<WeekDayType, DaytimeType>>;
+
+export type ScheduledClubTimesByClassLevelsType = Partial<Record<ClassLevelsType, WeekScheduleType>>;
 
 export type NewClubType = {
   _id?: string;
