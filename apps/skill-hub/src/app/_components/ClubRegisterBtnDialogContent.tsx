@@ -1,7 +1,7 @@
 'use client';
 
 import { ClassLevelsType, ClubPricesType, ScheduledClubTimesType, WeekDayType } from '@/lib/utils/types';
-import { Button, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Textarea, ToggleGroup, ToggleGroupItem } from '@intern-3a/shadcn';
+import { Button, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, Input, Label, Textarea, ToggleGroup, ToggleGroupItem } from '@intern-3a/shadcn';
 import { Upload, X } from 'lucide-react';
 import Image from 'next/image';
 import React, { ChangeEvent, Dispatch, useState } from 'react';
@@ -10,7 +10,7 @@ import MapSelector from './MapSelector';
 
 const recommendedClubCategoryNames = ['SPORT', 'ART', 'SCIENCE', 'LANGUAGE', 'MUSIC', 'TECHNOLOGY'];
 
-const recommendedClubNames: Record<string, string[]> = {
+const recommendedClubSubCategoryNames: Record<string, string[]> = {
   SPORT: ['Basketball Club', 'Football Club', 'Badminton Club', 'Volleyball Club', 'Chess Sport Club'],
   ART: ['Art Club', 'Drama Club', 'Choir Club', 'Dance Club', 'Music Club', 'Calligraphy'],
   SCIENCE: ['STEM Club', 'ICT / Computer Club', 'Math Club', 'Robotics Club', 'Environmental Club', 'Debate Club'],
@@ -31,8 +31,9 @@ const weekDays: { label: string; value: WeekDayType }[] = [
 ];
 
 export const ClubRegisterBtnDialogContent = ({ setOpen }: { setOpen: Dispatch<React.SetStateAction<boolean>> }) => {
-  const [clubName, setClubName] = useState<string>('');
   const [clubCategoryName, setClubCategoryName] = useState<string>('');
+  const [clubSubCategoryName, setClubSubCategoryName] = useState<string>('');
+  const [clubName, setClubName] = useState<string>('');
   const [selectedClassLevelNames, setSelectedClassLevelNames] = useState<ClassLevelsType[]>([]);
   const [clubPrices, setClubPrices] = useState<ClubPricesType>({});
   const [clubImage, setClubImage] = useState<File | undefined>();
@@ -99,8 +100,6 @@ export const ClubRegisterBtnDialogContent = ({ setOpen }: { setOpen: Dispatch<Re
   };
 
   const handleSaveClubInfo = async () => {
-    // const token = await getToken();
-
     if (
       !clubName ||
       !clubCategoryName ||
@@ -120,7 +119,6 @@ export const ClubRegisterBtnDialogContent = ({ setOpen }: { setOpen: Dispatch<Re
       !teacherProfession ||
       !teacherExperience ||
       !teacherAchievement
-      // !token
     ) {
       toast.warning('Бүх талбаруудыг бөглөнө үү!');
       return;
@@ -207,26 +205,27 @@ export const ClubRegisterBtnDialogContent = ({ setOpen }: { setOpen: Dispatch<Re
     }
   };
 
-  // console.log({ clubName });
-  // console.log({ clubCategoryName });
-  // console.log({ selectedClassLevelNames });
-  // console.log({ clubPrices });
-  // console.log({ clubImage });
-  // console.log({ clubImagePreview });
-  // console.log({ clubDescription });
-  // console.log({ selectedClubWorkingDays });
-  // console.log({ scheduledClubTimes });
-  // console.log({ clubAddress });
-  // console.log({ clubLat });
-  // console.log({ clubLong });
-  // console.log({ teacherImage });
-  // console.log({ teacherImagePreview });
-  // console.log({ teacherName });
-  // console.log({ teacherPhone });
-  // console.log({ teacherEmail });
-  // console.log({ teacherProfession });
-  // console.log({ teacherExperience });
-  // console.log({ teacherAchievement });
+  console.log({ clubCategoryName });
+  console.log({ clubSubCategoryName });
+  console.log({ clubName });
+  console.log({ selectedClassLevelNames });
+  console.log({ clubPrices });
+  console.log({ clubImage });
+  console.log({ clubImagePreview });
+  console.log({ clubDescription });
+  console.log({ selectedClubWorkingDays });
+  console.log({ scheduledClubTimes });
+  console.log({ clubAddress });
+  console.log({ clubLat });
+  console.log({ clubLong });
+  console.log({ teacherImage });
+  console.log({ teacherImagePreview });
+  console.log({ teacherName });
+  console.log({ teacherPhone });
+  console.log({ teacherEmail });
+  console.log({ teacherProfession });
+  console.log({ teacherExperience });
+  console.log({ teacherAchievement });
 
   return (
     <DialogContent className="sm:max-w-260 max-h-[90vh] gap-10 overflow-y-auto">
@@ -238,26 +237,32 @@ export const ClubRegisterBtnDialogContent = ({ setOpen }: { setOpen: Dispatch<Re
       <div className="flex justify-between">
         <div className="w-125 flex flex-col gap-6">
           <Label className="text-base font-semibold">Дугуйлангийн мэдээлэл оруулах хэсэг:</Label>
+
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="clubCategoryName">Ангилал:</Label>
-            <Select value={clubCategoryName} onValueChange={setClubCategoryName}>
-              <SelectTrigger id="clubCategoryName">
-                <SelectValue placeholder="Дугуйлангийн төрлийг сонгоно уу..." />
-              </SelectTrigger>
-              <SelectContent>
-                {recommendedClubCategoryNames.map((category) => (
-                  <SelectItem key={category} value={category}>
-                    {category}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Input id="clubCategoryName" list="recommendedClubCategoryNames" value={clubCategoryName} onChange={(e) => setClubCategoryName(e.target.value)} placeholder="Ангилал сонгох / оруулах" />
+            <datalist id="recommendedClubCategoryNames">
+              {recommendedClubCategoryNames.map((category) => (
+                <option key={category} value={category} />
+              ))}
+            </datalist>
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="clubSubCategoryName">Төрөл:</Label>
+            <Input
+              id="clubSubCategoryName"
+              list="recommendedClubSubCategoryNames"
+              value={clubSubCategoryName}
+              onChange={(e) => setClubSubCategoryName(e.target.value)}
+              placeholder="Төрөл сонгох / оруулах"
+            />
+            <datalist id="recommendedClubSubCategoryNames">{clubCategoryName && recommendedClubSubCategoryNames[clubCategoryName]?.map((name) => <option key={name} value={name} />)}</datalist>
           </div>
 
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="clubName">Нэр:</Label>
-            <Input id="clubName" list="recommendedClubNames" value={clubName} onChange={(e) => setClubName(e.target.value)} placeholder="Дугуйлангийн нэрийг оруулна уу..." />
-            <datalist id="recommendedClubNames">{clubCategoryName && recommendedClubNames[clubCategoryName]?.map((name) => <option key={name} value={name} />)}</datalist>
+            <Input id="clubName" value={clubName} onChange={(e) => setClubName(e.target.value)} placeholder="Дугуйлангийн нэр оруулах" />
           </div>
 
           <div className="flex gap-30">
