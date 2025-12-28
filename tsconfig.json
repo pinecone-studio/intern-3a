@@ -26,6 +26,12 @@
     },
     {
       "path": "./libs/shared/shadcn"
+    },
+    {
+      "path": "./apps/amar-e2e"
+    },
+    {
+      "path": "./apps/amar"
     }
   ]
 }
