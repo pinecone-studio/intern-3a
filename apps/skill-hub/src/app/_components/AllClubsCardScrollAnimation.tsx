@@ -38,6 +38,10 @@ export const AllClubsCardScrollAnimation = () => {
         [-ms-overflow-style:none]
         [scrollbar-width:none]"
       >
+        {/* className="overflow-hidden
+        [&::-webkit-scrollbar]:hidden
+        [-ms-overflow-style:none]
+        [scrollbar-width:none]" */}
         <div className="flex gap-4 w-max animate-[scroll_100s_linear_infinite] hover:paused" style={{ willChange: 'transform' }}>
           {duplicatedClubs.map((club, index) => (
             <Link key={`${club._id}-${index}`} href={`/club/${club._id}`} className="block">
