@@ -2,7 +2,7 @@
 
 import { motion, useMotionValue, useSpring, Variants } from 'framer-motion';
 import { BookOpen, GraduationCap, Users } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export const Intro = () => {
   const [isVisible, setIsVisible] = useState(false);
