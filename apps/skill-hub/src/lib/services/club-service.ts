@@ -14,3 +14,8 @@ export const getAllClubs = async () => {
 
   return await Club.find().sort({ createdAt: -1 });
 };
+
+export const getClubById = async (id: string) => {
+  await connectDB();
+  return await Club.findById(id);
+};

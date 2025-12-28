@@ -1,0 +1,65 @@
+'use client';
+
+import { NewClubType } from '@/lib/utils/types';
+import { Button } from '@intern-3a/shadcn';
+import dynamic from 'next/dynamic';
+import { useEffect, useState } from 'react';
+
+const MapContent = dynamic(() => import('./MapContent'), { ssr: false });
+
+export default function Map() {
+  const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
+  const RADIUS_STEPS = [0.5, 1, 2, 3, 10];
+  const [selectedRadius, setSelectedRadius] = useState<number>(0.5);
+  const filteredClubs: NewClubType[] = [];
+  const clubs: NewClubType[] = [];
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation([position.coords.latitude, position.coords.longitude]);
+        },
+        (error) => {
+          console.error('Failed to get user location', error);
+        },
+      );
+    }
+  }, []);
+
+  function getDistanceFromLatLonInKm(lat1: number, lon1: number, lat2: number, lon2: number) {
+    const radius = 6371;
+    const distanceLat = ((lat2 - lat1) * Math.PI) / 180;
+    const distanceLon = ((lon2 - lon1) * Math.PI) / 180;
+
+    const a = (Math.sin(distanceLat / 2) * Math.sin(distanceLat)) / 2 + Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(distanceLon / 2) * Math.sin(distanceLon / 2);
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return radius * c;
+  }
+
+  const nearbyClubs: NewClubType[] = userLocation
+    ? filteredClubs.filter((club) => {
+        const distance = getDistanceFromLatLonInKm(userLocation[0], userLocation[1], club.clubLat, club.clubLong);
+        return distance <= selectedRadius;
+      })
+    : [];
+
+  return (
+    <div>
+      <div className="flex gap-2 mb-4 justify-center">
+        {RADIUS_STEPS.map((r) => (
+          <Button
+            variant={'ghost'}
+            key={r}
+            onClick={() => setSelectedRadius(r)}
+            className={`px-4 py-1 rounded-lg text-sm transition ${selectedRadius === r ? 'bg-slate-900 text-white shadow-lg' : 'text-slate-600'}`}
+          >
+            {r < 1 ? `${r * 1000}m` : `${r}km` || (r > 3 && `${r}km `)}
+          </Button>
+        ))}
+      </div>
+      <MapContent clubs={clubs} userLocation={userLocation} nearbyClubs={nearbyClubs} selectedRadius={selectedRadius} />
+    </div>
+  );
+}
