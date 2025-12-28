@@ -1,120 +1,223 @@
 'use client';
 
-import { NewClubType } from '@/lib/utils/types';
+import { NewClubType, ClassLevelsType, WeekDayType } from '@/lib/utils/types';
 import { Card, CardContent } from '@intern-3a/shadcn';
-import { Mail, Phone, X } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { Mail, Phone, X, Tag, Calendar, MapPin } from 'lucide-react';
+import { useState, useMemo } from 'react';
+
+const CLASS_LEVEL_LABEL_MN: { [K in ClassLevelsType]: string } = {
+  Elementary: 'Бага',
+  Middle: 'Дунд',
+  High: 'Ахлах',
+};
+
+const WEEK_DAY_LABEL_MN: { [K in WeekDayType]: string } = {
+  MON: 'Да',
+  TUE: 'Мя',
+  WED: 'Лх',
+  THU: 'Пү',
+  FRI: 'Ба',
+  SAT: 'Бя',
+  SUN: 'Ня',
+};
+
+const PRICE_LABEL_MN: { [K in ClassLevelsType]: string } = {
+  Elementary: 'Бага /I-V анги/',
+  Middle: 'Дунд /V-IX анги/',
+  High: 'Ахлах /IX-XII анги/',
+};
 
 export default function ClubCard({ club }: { club: NewClubType }) {
   const [open, setOpen] = useState(false);
-  console.log(club);
+  const [modalDescExpanded, setModalDescExpanded] = useState(false);
+
+  const levelLabel = useMemo(() => club.selectedClassLevelNames?.map((l) => CLASS_LEVEL_LABEL_MN[l]).join(' · ') || '—', [club.selectedClassLevelNames]);
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      setOpen(true);
+    }
+  };
 
   return (
     <div className="max-w-lg mx-auto relative">
-      <Card className="group overflow-hidden rounded-2xl shadow-lg transition-transform transform hover:-translate-y-1 hover:shadow-2xl">
+      <Card
+        className="group overflow-hidden rounded-2xl shadow-lg transition-transform transform hover:-translate-y-1 hover:shadow-2xl cursor-pointer"
+        onClick={() => setOpen(true)}
+        role="button"
+        tabIndex={0}
+        onKeyDown={handleKeyDown}
+      >
         <div className="relative">
-          <img src={club.clubImage} alt={club.clubName} className="w-full h-56 object-cover" />
+          <img src={club.clubImage as string} alt={club.clubName} className="w-full h-56 object-cover" />
 
           <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent" aria-hidden />
 
           <div className="absolute left-4 bottom-4 text-white">
             <h2 className="text-2xl font-bold drop-shadow">{club.clubName}</h2>
-            <p className="text-sm text-white/90 line-clamp-1">{club.clubDescription}</p>
-          </div>
-
-          <div className="absolute top-4 left-4">
-            <span className="inline-flex items-center px-3 py-1 rounded-full bg-white/10 text-white text-xs font-medium">{club.clubCategoryName}</span>
           </div>
 
           <div className="absolute top-4 right-4">
-            <span className="inline-flex flex-wrap gap-2">
-              {Object.entries(club.clubPrices).map(([k, v]) => (
-                <span key={k} className="px-3 py-1 rounded-full bg-white text-blue-900 text-xs font-semibold">
-                  {k === 'Elementary' ? 'Бага' : k === 'Middle' ? 'Дунд' : 'Ахлах'}: {v}₮
-                </span>
-              ))}
-            </span>
+            <span className="inline-flex items-center px-3 py-1 rounded-full bg-[#FCB027] text-white text-xs font-medium">{levelLabel}</span>
           </div>
         </div>
 
         <CardContent className="space-y-4 bg-white">
-          <div className="flex flex-wrap items-center justify-between">
-            <div className="flex-1 min-w-0">
-              <p className="text-sm text-gray-500">Ангилал</p>
-              <h3 className="text-lg font-semibold">{club.clubName}</h3>
-            </div>
-          </div>
-
-          <div className="grid sm:grid gap-4 text-sm text-gray-700">
-            <div>
-              <h4 className="font-semibold">Хичээлийн хуваарь</h4>
-              <div className="flex gap-0.5">
-                {Object.entries(club.selectedClubWorkingDays).map(([key, value]) => (
-                  <p key={key}>
-                    <span className="font-semibold"></span> {value}.
-                  </p>
-                ))}
+          <div>
+            <div className="items-center gap-2 inline-flex">
+              <h4 className="font-semibold text-black">
+                <span className="inline-flex items-center">
+                  <Calendar className="w-5 h-5" style={{ color: '#FCB027' }} aria-hidden />
+                </span>
+              </h4>
+              <div className="flex gap-5">
+                {Object.entries(club.scheduledClubTimes || {}).length === 0 ? (
+                  <p>Хуваарь оруулаагүй</p>
+                ) : (
+                  Object.entries(club.scheduledClubTimes || {}).map(([day, t]) => (
+                    <div key={day} className="flex ">
+                      <span className="font-medium">{WEEK_DAY_LABEL_MN[day as WeekDayType]}</span>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
-
-            {/* <div>
-              <h4 className="font-semibold">Хаяг</h4>
-              <p>{club.clubAddress}</p>
-            </div> */}
-          </div>
-
-          <div className="border-t pt-4">
-            <h4 className="font-semibold mb-3">Багш</h4>
-
-            <button
-              onClick={() => setOpen(true)}
-              className="w-full flex items-center gap-3 text-left rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-200"
-              aria-expanded={open}
-              type="button"
-            >
-              <img src={club.teacherImage} alt={club.teacherName} className="w-14 h-14 rounded-full object-cover" />
-              <div className="flex-1 min-w-0">
-                <p className="font-medium">{club.teacherName}</p>
-                <p className="text-sm text-gray-600">{club.teacherProfession}</p>
+            <div className="mt-3 flex gap-4">
+              <div className="inline-flex items-center gap-2">
+                <MapPin className="w-5 h-5" style={{ color: '#FCB027' }} aria-hidden />
+                <span className="sr-only">Хаяг</span>
               </div>
-              <span className="text-sm text-gray-400">View</span>
-            </button>
+              <p className="font-medium mt-1">{club.clubAddress}</p>
+            </div>
           </div>
         </CardContent>
       </Card>
 
       {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
           <div className="absolute inset-0 bg-black/50" onClick={() => setOpen(false)} aria-hidden />
 
-          <div className="relative bg-white rounded-2xl p-6 w-11/12 max-w-sm mx-auto shadow-2xl" role="dialog" aria-modal="true">
+          <div className="relative bg-white rounded-2xl p-6 w-11/12 max-w-2xl mx-auto shadow-2xl max-h-[90vh] overflow-auto" role="dialog" aria-modal="true">
             <button onClick={() => setOpen(false)} className="absolute top-3 right-3 text-gray-500 hover:text-gray-700" aria-label="Close details">
               <X className="w-5 h-5" />
             </button>
 
-            <div className="flex flex-col items-center gap-3">
-              <img src={club.teacherImage} alt={`Coach ${club.teacherName}`} className="w-24 h-24 rounded-full object-cover" />
-              <h3 className="text-lg font-bold">{club.teacherName}</h3>
-              <p className="text-sm text-gray-600">
-                {club.teacherProfession} {club.teacherExperience ? `· ${club.teacherExperience}` : ''}
-              </p>
-            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div className="relative">
+                  <img src={club.clubImage as string} alt={club.clubName} className="w-full h-48 object-cover rounded-lg" />
 
-            <ul className="mt-4 space-y-2 text-sm text-gray-700">
-              <li>Мэргэжил: {club.teacherProfession}</li>
-              <li>Туршлага: {club.teacherExperience}</li>
-              <li>Амжилт: {club.teacherAchievement}</li>
-              <li className="flex items-center gap-2">
-                <Phone className="w-4 h-4 text-gray-500" aria-hidden /> <span>{club?.teacherPhone}</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <Mail className="w-4 h-4 text-gray-500" aria-hidden /> <span>{club?.teacherEmail}</span>
-              </li>
-            </ul>
+                  <div className="absolute top-4 left-4 bg-[#FCB027] text-white rounded-full inline-block px-2 py-1">
+                    <h2 className="text-1xl font-bold drop-shadow">{club.clubName}</h2>
+                  </div>
+                </div>
+
+                <div className="pt-4 border-t">
+                  <div className="font-semibold mb-2">Багш</div>
+                  <div className="flex items-center gap-3 flex-col">
+                    <img src={club.teacherImage as string} alt={club.teacherName} className="w-16 h-16 rounded-full object-cover" />
+                    <div className="text-center">
+                      <p className="font-medium">{club.teacherName}</p>
+                      <div className="text-sm text-gray-600 mt-1">
+                        <div>
+                          <span className="font-semibold">Мэргэжил:</span> {club.teacherProfession}
+                        </div>
+                        <div>
+                          <span className="font-semibold">Туршлага:</span> {club.teacherExperience || '—'}
+                        </div>
+                        <div>
+                          <span className="font-semibold">Амжилт:</span> {club.teacherAchievement || '—'}
+                        </div>
+                      </div>
+                      <div className="mt-2 text-sm text-gray-700">
+                        <div className="flex items-center gap-2 justify-center">
+                          <Phone className="w-4 h-4 text-gray-500" /> <span>{club.teacherPhone || '—'}</span>
+                        </div>
+                        <div className="flex items-center gap-2 justify-center mt-1">
+                          <Mail className="w-4 h-4 text-gray-500" /> <span>{club.teacherEmail || '—'}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <p
+                    className="text-sm text-black/90"
+                    style={modalDescExpanded ? ({} as React.CSSProperties) : ({ display: '-webkit-box', WebkitLineClamp: 5, WebkitBoxOrient: 'vertical', overflow: 'hidden' } as React.CSSProperties)}
+                  >
+                    {club.clubDescription}
+                  </p>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setModalDescExpanded((s) => !s);
+                    }}
+                    aria-expanded={modalDescExpanded}
+                    className="mt-2 text-sm text-blue-600 underline"
+                    type="button"
+                  >
+                    {modalDescExpanded ? '⇧' : '⇩'}
+                  </button>
+                </div>
+                <div className="mt-3 flex gap-4">
+                  <div className="inline-flex items-center gap-2">
+                    <span className="text-[#FCB027]">Категори</span>:
+                  </div>
+                  <p className="font-medium mt-1">{CLASS_LEVEL_LABEL_MN[club.clubCategoryName as ClassLevelsType] || club.clubCategoryName}</p>
+                </div>
+
+                <div>
+                  <p className=" text-[#FCB027]">Төлбөр сараар</p>
+                  <div className="mt-2 flex flex-wrap gap-2 ml-8">
+                    {club.clubPrices ? (
+                      Object.entries(club.clubPrices).map(([k, v]) => (
+                        <span key={k} className="px-3 py-1 rounded-full bg-gray-100 text-gray-800 text-sm">
+                          {PRICE_LABEL_MN[k as ClassLevelsType]}: {v ? `${v.toLocaleString()}₮/сар` : '—'}
+                        </span>
+                      ))
+                    ) : (
+                      <span>—</span>
+                    )}
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <div className="inline-flex items-center gap-2">
+                    <Calendar className="w-5 h-5" style={{ color: '#FCB027' }} aria-hidden />
+                    <span className="sr-only">Хичээлийн хуваарь</span>
+                  </div>
+                  <div className="mt-1 text-sm text-gray-700">
+                    {Object.entries(club.scheduledClubTimes || {}).length === 0 ? (
+                      <p>Хуваарь оруулаагүй</p>
+                    ) : (
+                      Object.entries(club.scheduledClubTimes || {}).map(([day, t]) => (
+                        <div key={day} className="flex gap-4">
+                          <span className="font-medium">{WEEK_DAY_LABEL_MN[day as WeekDayType]}</span>
+                          <span>
+                            {t?.startTime} – {t?.endTime}
+                          </span>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+
+                <div className="mt-3 flex gap-4">
+                  <div className="inline-flex items-center gap-2">
+                    <MapPin className="w-5 h-5" style={{ color: '#FCB027' }} aria-hidden />
+                    <span className="sr-only">Хаяг</span>
+                  </div>
+                  <p className="font-medium mt-1">{club.clubAddress}</p>
+                </div>
+              </div>
+            </div>
 
             <div className="mt-5 flex justify-end gap-2">
               <button onClick={() => setOpen(false)} className="px-4 py-2 rounded-md border text-sm">
-                Close
+                Хаах
               </button>
             </div>
           </div>
