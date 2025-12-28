@@ -1,9 +1,12 @@
 'use client';
+import { ClassLevelsType } from '@/lib/utils/types';
 import { Calendar, Clock } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import { useClub } from '../hook/use-club';
 
 export const FilteredClubs = () => {
-  const [selectedClass, setSelectedClass] = useState<string>('');
+  const { allClubs, isLoading } = useClub();
+  const [selectedClass, setSelectedClass] = useState<ClassLevelsType | ''>('');
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [selectedTime, setSelectedTime] = useState<string>('');
   const [selectedSport, setSelectedSport] = useState<string>('');
@@ -18,9 +21,9 @@ export const FilteredClubs = () => {
   };
 
   const classes = [
-    { label: 'Бага анги', value: 'ELEMENTARY' },
-    { label: 'Дунд анги', value: 'MIDDLESCHOOL' },
-    { label: 'Ахлах анги', value: 'HIGHSCHOOL' },
+    { label: 'Бага анги', value: 'Elementary' },
+    { label: 'Дунд анги', value: 'Middle' },
+    { label: 'Ахлах анги', value: 'High' },
   ];
 
   const genreTypeMap: Record<string, string> = {
@@ -64,39 +67,77 @@ export const FilteredClubs = () => {
   ];
 
   const filteredClubs = useMemo(() => {
-    let filtered = [...mockClubs];
+    let filtered = [...allClubs];
 
+    // Filter by class level
     if (selectedClass) {
-      filtered = filtered.filter((club) => club.classCategoryName === selectedClass);
+      filtered = filtered.filter((club) => club.selectedClassLevelNames?.includes(selectedClass));
     }
 
+    // Filter by working days
     if (selectedDate) {
-      filtered = filtered.filter((club) => club.clubWorkingDays.includes(selectedDate));
+      const dayMap: Record<string, string> = {
+        Monday: 'MON',
+        Tuesday: 'TUE',
+        Wednesday: 'WED',
+        Thursday: 'THU',
+        Friday: 'FRI',
+        Saturday: 'SAT',
+        Sunday: 'SUN',
+      };
+      const dayCode = dayMap[selectedDate];
+      filtered = filtered.filter((club) => club.selectedClubWorkingDays?.includes(dayCode as any));
     }
 
+    // Filter by time slot
     if (selectedTime) {
       const timeSlot = timeSlots.find((slot) => slot.value === selectedTime);
       if (timeSlot) {
         const [startHour, endHour] = timeSlot.range;
         filtered = filtered.filter((club) => {
-          const clubHour = Number.parseInt(club.clubTime.split(':')[0]);
-          return clubHour >= startHour && clubHour < endHour;
+          if (!club.scheduledClubTimes) return false;
+
+          // Check if any scheduled time falls within the selected time range
+          return Object.values(club.scheduledClubTimes).some((time) => {
+            if (!time?.startTime) return false;
+            const clubHour = Number.parseInt(time.startTime.split(':')[0]);
+            return clubHour >= startHour && clubHour < endHour;
+          });
         });
       }
     }
 
+    // Filter by genre/category
     const genreType = genreTypeMap[selectedGenre];
     if (genreType) {
-      filtered = filtered.filter((club) => club.clubCategoryType === genreType);
+      filtered = filtered.filter((club) => {
+        const categoryName = club.clubCategoryName?.toUpperCase();
+        // Map the genre type to category patterns
+        if (genreType === 'SPORTS') {
+          return ['SPORT', 'WRESTLING', 'FOOTBALL', 'BASKETBALL', 'MARTIAL', 'TENNIS', 'VOLLEYBALL', 'BADMINTON', 'BOXING', 'GYMNASTICS', 'ATHLETICS', 'CYCLING', 'SWIMMING', 'ROWING'].some(
+            (pattern) => categoryName?.includes(pattern),
+          );
+        } else if (genreType === 'ARTS') {
+          return ['ART', 'DANCE', 'MUSIC', 'SINGING', 'DRAWING', 'PHOTOGRAPHY', 'CRAFT'].some((pattern) => categoryName?.includes(pattern));
+        } else if (genreType === 'EDUCATION') {
+          return ['ENGLISH', 'MATH', 'PROGRAMMING', 'CODING', 'ROBOTICS', 'CHESS', 'EDUCATION'].some((pattern) => categoryName?.includes(pattern));
+        } else if (genreType === 'FUN') {
+          return ['GAME', 'GAMING', 'FUN', 'COOKING', 'ENTERTAINMENT'].some((pattern) => categoryName?.includes(pattern));
+        }
+        return false;
+      });
     }
 
+    // Filter by specific sport/course
     if (selectedSport) {
       const possibleNames = courseNameMap[selectedSport] || [selectedSport];
-      filtered = filtered.filter((club) => possibleNames.some((name) => club.clubCategoryName.toLowerCase().includes(name.toLowerCase())));
+      filtered = filtered.filter((club) =>
+        possibleNames.some((name) => club.clubCategoryName.toLowerCase().includes(name.toLowerCase()) || club.clubName.toLowerCase().includes(selectedSport.toLowerCase())),
+      );
     }
 
     return filtered;
-  }, [selectedClass, selectedDate, selectedTime, selectedGenre, selectedSport]);
+  }, [allClubs, selectedClass, selectedDate, selectedTime, selectedGenre, selectedSport]);
 
   const coursesByGenre = {
     sports: [
@@ -148,41 +189,6 @@ export const FilteredClubs = () => {
     { day: 'Sunday', label: 'Ням' },
   ];
 
-  const clubs = [
-    {
-      name: 'Elite Wrestling Academy',
-      sport: 'Wrestling',
-      location: 'Downtown District',
-      rating: 4.9,
-      students: 120,
-      image: '/wrestling-training-confident-teenagers.jpg',
-    },
-    {
-      name: 'Champions Football Club',
-      sport: 'Football',
-      location: 'North Stadium',
-      rating: 4.8,
-      students: 200,
-      image: '/football-training-young-athletes.jpg',
-    },
-    {
-      name: 'Warriors Martial Arts',
-      sport: 'Martial Arts',
-      location: 'Central Gym',
-      rating: 5.0,
-      students: 85,
-      image: '/martial-arts-training-kids-discipline.jpg',
-    },
-    {
-      name: 'Victory Basketball Team',
-      sport: 'Basketball',
-      location: 'West Arena',
-      rating: 4.7,
-      students: 150,
-      image: '/basketball-training-young-players.jpg',
-    },
-  ];
-
   const isFiltered = selectedClass || selectedDate || selectedTime || selectedGenre || selectedSport;
 
   return (
@@ -198,7 +204,7 @@ export const FilteredClubs = () => {
               {classes.map((classItem) => (
                 <button
                   key={classItem.value}
-                  onClick={() => setSelectedClass(classItem.value)}
+                  onClick={() => setSelectedClass(classItem.value as ClassLevelsType)}
                   className={`px-6 py-3 rounded-lg font-bold transition-all duration-200 ${
                     selectedClass === classItem.value ? 'bg-slate-900 text-white shadow-lg' : 'text-slate-600 hover:bg-slate-100'
                   }`}
@@ -308,6 +314,64 @@ export const FilteredClubs = () => {
                   ))}
                 </div>
               </div>
+            </div>
+          )}
+
+          {/* Display Filtered Clubs Results */}
+          {isFiltered && (
+            <div className="max-w-6xl mx-auto mt-16">
+              <div className="mb-8 flex justify-between items-center">
+                <h3 className="text-2xl font-bold text-slate-900">Олдсон клубууд ({filteredClubs.length})</h3>
+                <button onClick={ResetFilters} className="px-6 py-2 bg-slate-900 text-white rounded-lg font-bold hover:bg-slate-700 transition-all">
+                  Шүүлтүүрийг цэвэрлэх
+                </button>
+              </div>
+
+              {isLoading ? (
+                <div className="text-center py-16 bg-white/50 rounded-2xl border-2 border-slate-200">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto mb-4"></div>
+                  <p className="text-xl text-slate-600">Клубууд ачааллаж байна...</p>
+                </div>
+              ) : filteredClubs.length === 0 ? (
+                <div className="text-center py-16 bg-white/50 rounded-2xl border-2 border-slate-200">
+                  <p className="text-xl text-slate-600">Таны хайлтад тохирох клуб олдсонгүй</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredClubs.map((club) => (
+                    <div key={club._id} className="bg-white rounded-2xl border-2 border-slate-200 overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                      <div className="aspect-video relative overflow-hidden bg-slate-100">
+                        {club.clubImage && <img src={typeof club.clubImage === 'string' ? club.clubImage : ''} alt={club.clubName} className="w-full h-full object-cover" />}
+                      </div>
+                      <div className="p-6">
+                        <h4 className="text-xl font-bold text-slate-900 mb-2">{club.clubName}</h4>
+                        <p className="text-orange-600 font-semibold mb-2">{club.clubCategoryName}</p>
+                        <p className="text-slate-600 text-sm mb-4 line-clamp-2">{club.clubDescription}</p>
+
+                        {club.selectedClassLevelNames && club.selectedClassLevelNames.length > 0 && (
+                          <div className="flex flex-wrap gap-2 mb-3">
+                            {club.selectedClassLevelNames.map((level) => (
+                              <span key={level} className="px-3 py-1 bg-slate-100 text-slate-700 text-xs font-semibold rounded-full">
+                                {level}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+
+                        <div className="text-sm text-slate-600 mb-2">
+                          <strong>Багш:</strong> {club.teacherName}
+                        </div>
+
+                        {club.clubAddress && (
+                          <div className="text-sm text-slate-600">
+                            <strong>Хаяг:</strong> {club.clubAddress}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </div>

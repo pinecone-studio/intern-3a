@@ -1,7 +1,7 @@
 'use client';
 
 import { ClassLevelsType, ClubPricesType, ScheduledClubTimesType, WeekDayType } from '@/lib/utils/types';
-import { Button, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, Input, Label, Textarea, ToggleGroup, ToggleGroupItem } from '@intern-3a/shadcn';
+import { Button, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Textarea, ToggleGroup, ToggleGroupItem } from '@intern-3a/shadcn';
 import { Upload, X } from 'lucide-react';
 import Image from 'next/image';
 import React, { ChangeEvent, Dispatch, useState } from 'react';
@@ -54,6 +54,10 @@ export const ClubRegisterBtnDialogContent = ({ setOpen }: { setOpen: Dispatch<Re
   const [teacherAchievement, setTeacherAchievement] = useState<string>('');
   // const { getToken } = useAuth();
   const [loading, setLoading] = useState<boolean>(false);
+
+  // Regex patterns for validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const phoneRegex = /^[0-9]{8}$/;
 
   const handleSelectedClubWorkingDays = (days: WeekDayType[]) => {
     setSelectedClubWorkingDays(days);
@@ -119,6 +123,24 @@ export const ClubRegisterBtnDialogContent = ({ setOpen }: { setOpen: Dispatch<Re
       // !token
     ) {
       toast.warning('Бүх талбаруудыг бөглөнө үү!');
+      return;
+    }
+
+    // Validate email format
+    if (!emailRegex.test(teacherEmail)) {
+      toast.error('Имэйл хаяг буруу байна!');
+      return;
+    }
+
+    // Validate phone number format
+    if (!phoneRegex.test(teacherPhone)) {
+      toast.error('Утасны дугаар буруу байна! (8 оронтой тоо оруулна уу)');
+      return;
+    }
+
+    // Validate category is one of the recommended ones
+    if (!recommendedClubCategoryNames.includes(clubCategoryName)) {
+      toast.error('Зөвхөн санал болгож буй ангиллаас сонгоно уу!');
       return;
     }
 
@@ -218,18 +240,18 @@ export const ClubRegisterBtnDialogContent = ({ setOpen }: { setOpen: Dispatch<Re
           <Label className="text-base font-semibold">Дугуйлангийн мэдээлэл оруулах хэсэг:</Label>
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="clubCategoryName">Ангилал:</Label>
-            <Input
-              id="clubCategoryName"
-              list="recommendedClubCategoryNames"
-              value={clubCategoryName}
-              onChange={(e) => setClubCategoryName(e.target.value)}
-              placeholder="Дугуйлангийн төрлийг оруулна уу..."
-            />
-            <datalist id="recommendedClubCategoryNames">
-              {recommendedClubCategoryNames.map((category) => (
-                <option key={category} value={category} />
-              ))}
-            </datalist>
+            <Select value={clubCategoryName} onValueChange={setClubCategoryName}>
+              <SelectTrigger id="clubCategoryName">
+                <SelectValue placeholder="Дугуйлангийн төрлийг сонгоно уу..." />
+              </SelectTrigger>
+              <SelectContent>
+                {recommendedClubCategoryNames.map((category) => (
+                  <SelectItem key={category} value={category}>
+                    {category}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="flex flex-col gap-1.5">
@@ -411,12 +433,26 @@ export const ClubRegisterBtnDialogContent = ({ setOpen }: { setOpen: Dispatch<Re
 
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="teacherPhone">Утас:</Label>
-            <Input id="teacherPhone" value={teacherPhone} onChange={(e) => setTeacherPhone(e.target.value)} placeholder="Багшийн холбоо барих утсыг оруулна уу..." />
+            <Input
+              id="teacherPhone"
+              value={teacherPhone}
+              onChange={(e) => setTeacherPhone(e.target.value)}
+              placeholder="Багшийн холбоо барих утсыг оруулна уу..."
+              className={teacherPhone && !phoneRegex.test(teacherPhone) ? 'border-red-500' : ''}
+            />
+            {teacherPhone && !phoneRegex.test(teacherPhone) && <span className="text-xs text-red-500">8 оронтой тоо оруулна уу</span>}
           </div>
 
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="teacherEmail">Имэйл:</Label>
-            <Input id="teacherEmail" value={teacherEmail} onChange={(e) => setTeacherEmail(e.target.value)} placeholder="Багшийн имэйл хаягийг оруулна уу..." />
+            <Input
+              id="teacherEmail"
+              value={teacherEmail}
+              onChange={(e) => setTeacherEmail(e.target.value)}
+              placeholder="Багшийн имэйл хаягийг оруулна уу..."
+              className={teacherEmail && !emailRegex.test(teacherEmail) ? 'border-red-500' : ''}
+            />
+            {teacherEmail && !emailRegex.test(teacherEmail) && <span className="text-xs text-red-500">Зөв имэйл хаяг оруулна уу</span>}
           </div>
 
           <div className="flex flex-col gap-1.5">

@@ -20,8 +20,8 @@ export default function Map() {
         (position) => {
           setUserLocation([position.coords.latitude, position.coords.longitude]);
         },
-        (error) => {
-          console.error('Failed to get user location', error);
+        () => {
+          // Failed to get user location - silently handle
         },
       );
     }
