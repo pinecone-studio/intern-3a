@@ -1,9 +1,11 @@
 'use client';
 
+import { ClubDetailPageSkeleton } from '@/app/_components/ClubDetailPageSkeleton';
 import ClubNextClasses from '@/app/_components/ClubNextClasses';
 import { useClubById } from '@/app/hook/use-club-by-id';
 import { Button } from '@intern-3a/shadcn';
 import { Calendar, Clock, Mail, MapPin, Phone, User } from 'lucide-react';
+import Image from 'next/image';
 import { notFound, useRouter } from 'next/navigation';
 import { use, useState } from 'react';
 
@@ -24,12 +26,7 @@ export default function ClubDetailPage({ params }: PageProps) {
   };
 
   if (loading) {
-    return (
-      <div className="flex flex-col justify-center items-center min-h-[60vh] gap-4">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-orange-600"></div>
-        <span className="text-slate-500 font-medium">Уншиж байна...</span>
-      </div>
-    );
+    return <ClubDetailPageSkeleton />;
   }
 
   if (!club) return notFound();
@@ -129,8 +126,6 @@ export default function ClubDetailPage({ params }: PageProps) {
         <div className="w-full lg:w-[60%] space-y-8">
           {/* Main Content Area */}
           <div className="space-y-8">
-            <img src={club.clubImage} alt={club.clubName} className="w-full h-100 md:h-150 object-cover rounded-[3rem] shadow-2xl shadow-slate-200" />
-
             {/* Хуваарийн хэсэг - Хэрэв нээлттэй бол энд гарна */}
             {showSchedule && (
               <div className="bg-white rounded-[2.5rem] border-2 border-orange-100 p-6 md:p-8 animate-in zoom-in-95 duration-300">
@@ -140,6 +135,10 @@ export default function ClubDetailPage({ params }: PageProps) {
                 <ClubNextClasses availableWeekdays={club.selectedClubWorkingDays} scheduledTimes={club.scheduledClubTimes} />
               </div>
             )}
+
+            <div className="w-full h-100 md:h-150 relative">
+              <Image src={club.clubImage} alt={club.clubName} fill className="w-full h-100 md:h-150 object-cover rounded-[3rem] shadow-2xl shadow-slate-200" />
+            </div>
 
             {/* Дэлгэрэнгүй танилцуулга */}
             <div className="bg-white p-2 md:p-4">
