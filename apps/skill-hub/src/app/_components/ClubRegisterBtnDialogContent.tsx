@@ -1,6 +1,7 @@
 'use client';
 
 import { ClassLevelsType, ClubPricesType, ScheduledClubTimesByClassLevelsType, TeacherInfoType, TeachersByClassLevelsType, WeekDayType, WeekScheduleType } from '@/lib/utils/types';
+import { useAuth } from '@clerk/nextjs';
 import { Button, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, Input, Label, Textarea, ToggleGroup, ToggleGroupItem } from '@intern-3a/shadcn';
 import { Upload, X } from 'lucide-react';
 import Image from 'next/image';
@@ -36,7 +37,6 @@ export const ClubRegisterBtnDialogContent = ({ setOpen }: { setOpen: Dispatch<Re
   const [clubName, setClubName] = useState<string>('');
   const [selectedClassLevelNames, setSelectedClassLevelNames] = useState<ClassLevelsType[]>([]);
   const [clubPrices, setClubPrices] = useState<ClubPricesType>({});
-  // const [selectedClubWorkingDays, setSelectedClubWorkingDays] = useState<WeekDayType[]>([]);
   const [scheduledClubTimes, setScheduledClubTimes] = useState<ScheduledClubTimesByClassLevelsType>({});
   const [teachersInfoByClass, setTeachersInfoByClass] = useState<TeachersByClassLevelsType>({});
 
@@ -46,7 +46,7 @@ export const ClubRegisterBtnDialogContent = ({ setOpen }: { setOpen: Dispatch<Re
   const [clubAddress, setClubAddress] = useState<string>('');
   const [clubLat, setClubLat] = useState<number | null>(null);
   const [clubLong, setClubLong] = useState<number | null>(null);
-
+  const { getToken } = useAuth();
   const [loading, setLoading] = useState<boolean>(false);
 
   // Regex patterns for validation
@@ -85,17 +85,21 @@ export const ClubRegisterBtnDialogContent = ({ setOpen }: { setOpen: Dispatch<Re
   };
 
   const handleSaveClubInfo = async () => {
+    const token = await getToken();
     if (
-      !clubName ||
       !clubCategoryName ||
+      !clubSubCategoryName ||
+      !clubName ||
       selectedClassLevelNames.length === 0 ||
       Object.keys(clubPrices).length === 0 ||
-      !clubImage ||
-      !clubDescription ||
       Object.keys(scheduledClubTimes).length === 0 ||
+      Object.keys(teachersInfoByClass).length === 0 ||
+      !clubDescription ||
+      !clubImage ||
       !clubAddress ||
       clubLat === null ||
-      clubLong === null
+      clubLong === null ||
+      !token
     ) {
       toast.warning('Бүх талбаруудыг бөглөнө үү!');
       return;
@@ -114,38 +118,46 @@ export const ClubRegisterBtnDialogContent = ({ setOpen }: { setOpen: Dispatch<Re
     // }
 
     // Validate category is one of the recommended ones
-    if (!recommendedClubCategoryNames.includes(clubCategoryName)) {
-      toast.error('Зөвхөн санал болгож буй ангиллаас сонгоно уу!');
-      return;
-    }
 
     setLoading(true);
 
     try {
       const newForm = new FormData();
 
-      newForm.append('clubName', clubName);
       newForm.append('clubCategoryName', clubCategoryName);
+      newForm.append('clubSubCategoryName', clubSubCategoryName);
+      newForm.append('clubName', clubName);
       newForm.append('selectedClassLevelNames', JSON.stringify(selectedClassLevelNames));
       newForm.append('clubPrices', JSON.stringify(clubPrices));
-      newForm.append('clubImage', clubImage as File);
-      newForm.append('clubDescription', clubDescription);
       newForm.append('scheduledClubTimes', JSON.stringify(scheduledClubTimes));
+      newForm.append('teachersInfoByClass', JSON.stringify(teachersInfoByClass));
+      selectedClassLevelNames.forEach((level) => {
+        const teacher = teachersInfoByClass[level];
+        if (teacher?.teacherImage) {
+          newForm.append(`teacherImage_${level}`, teacher.teacherImage as File);
+        }
+      });
+
+      newForm.append('clubDescription', clubDescription);
+      newForm.append('clubImage', clubImage as File);
       newForm.append('clubAddress', clubAddress);
       newForm.append('clubLat', String(clubLat));
       newForm.append('clubLong', String(clubLong));
 
       const res = await fetch('/api/create-club', {
         method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         body: newForm,
       });
 
       if (!res.ok) {
-        toast.error('Дугуйлан мэдээлэд хадгалахад алдаа гарлаа!');
+        toast.error('Дугуйлан мэдээлэл хадгалахад алдаа гарлаа!');
         setLoading(false);
         return;
       }
-      toast.success('Амжилттай хадгаллаа!');
+      toast.success('Амжилттай хадгалагдлаа!');
 
       setClubCategoryName('');
       setClubSubCategoryName('');
@@ -173,8 +185,8 @@ export const ClubRegisterBtnDialogContent = ({ setOpen }: { setOpen: Dispatch<Re
   console.log({ clubCategoryName });
   console.log({ clubSubCategoryName });
   console.log({ clubName });
-  console.log({ selectedClassLevelNames });
 
+  console.log({ selectedClassLevelNames });
   console.log({ clubPrices });
   console.log({ scheduledClubTimes });
   console.log({ teachersInfoByClass });

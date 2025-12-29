@@ -13,6 +13,7 @@
   "dependencies": {
     "@apollo/client": "4.0.9",
     "@apollo/server": "5.1.0",
+    "@clerk/backend": "^2.29.0",
     "@clerk/clerk-sdk-node": "5.1.6",
     "@clerk/nextjs": "6.35.2",
     "@hookform/resolvers": "5.2.2",

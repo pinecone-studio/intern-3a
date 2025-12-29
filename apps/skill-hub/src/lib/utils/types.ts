@@ -39,7 +39,7 @@ export type NewClubType = {
   clubImage: string | File;
   clubDescription: string;
   selectedClubWorkingDays?: WeekDayType[];
-  scheduledClubTimes?: ScheduledClubTimesType;
+  scheduledClubTimes?: ScheduledClubTimesByClassLevelsType;
   clubAddress: string;
   clubLat: number;
   clubLong: number;
