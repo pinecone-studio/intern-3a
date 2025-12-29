@@ -228,17 +228,17 @@ export const ClubRegisterBtnDialogContent = ({ setOpen }: { setOpen: Dispatch<Re
   console.log({ teacherAchievement });
 
   return (
-    <DialogContent className="sm:max-w-260 max-h-[90vh] gap-10 overflow-y-auto">
+    <DialogContent className="sm:max-w-300 max-h-[90vh] gap-10 overflow-y-auto">
       <DialogHeader>
         <DialogTitle className="font-bold">Дугуйлан бүртгүүлэх</DialogTitle>
         <DialogDescription hidden />
       </DialogHeader>
 
-      <div className="flex justify-between">
-        <div className="w-125 flex flex-col gap-6">
-          <Label className="text-base font-semibold">Дугуйлангийн мэдээлэл оруулах хэсэг:</Label>
+      <div className="w-full flex flex-col gap-6">
+        <Label className="text-base font-semibold">Дугуйлангийн мэдээлэл оруулах хэсэг:</Label>
 
-          <div className="flex flex-col gap-1.5">
+        <div className="flex justify-between">
+          <div className="w-1/4 flex flex-col gap-1.5">
             <Label htmlFor="clubCategoryName">Ангилал:</Label>
             <Input id="clubCategoryName" list="recommendedClubCategoryNames" value={clubCategoryName} onChange={(e) => setClubCategoryName(e.target.value)} placeholder="Ангилал сонгох / оруулах" />
             <datalist id="recommendedClubCategoryNames">
@@ -248,7 +248,7 @@ export const ClubRegisterBtnDialogContent = ({ setOpen }: { setOpen: Dispatch<Re
             </datalist>
           </div>
 
-          <div className="flex flex-col gap-1.5">
+          <div className="w-1/4 flex flex-col gap-1.5">
             <Label htmlFor="clubSubCategoryName">Төрөл:</Label>
             <Input
               id="clubSubCategoryName"
@@ -260,65 +260,65 @@ export const ClubRegisterBtnDialogContent = ({ setOpen }: { setOpen: Dispatch<Re
             <datalist id="recommendedClubSubCategoryNames">{clubCategoryName && recommendedClubSubCategoryNames[clubCategoryName]?.map((name) => <option key={name} value={name} />)}</datalist>
           </div>
 
-          <div className="flex flex-col gap-1.5">
+          <div className="w-1/4 flex flex-col gap-1.5">
             <Label htmlFor="clubName">Нэр:</Label>
             <Input id="clubName" value={clubName} onChange={(e) => setClubName(e.target.value)} placeholder="Дугуйлангийн нэр оруулах" />
           </div>
+        </div>
 
-          <div className="flex gap-30">
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="selectedClassLevelName">Анги:</Label>
-              <ToggleGroup
-                id="selectedClassLevelName"
-                type="multiple"
-                value={selectedClassLevelNames}
-                onValueChange={(values) => {
-                  const typedValues = values as ClassLevelsType[];
-                  setSelectedClassLevelNames(typedValues);
-                  setClubPrices((prev) => {
-                    const updated = { ...prev };
-                    Object.keys(updated).forEach((key) => {
-                      if (!typedValues.includes(key as ClassLevelsType)) delete updated[key as ClassLevelsType];
-                    });
-                    return updated;
+        <div className="flex justify-between">
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="selectedClassLevelName">Хичээллэх Анги:</Label>
+            <ToggleGroup
+              id="selectedClassLevelName"
+              type="multiple"
+              value={selectedClassLevelNames}
+              onValueChange={(values) => {
+                const typedValues = values as ClassLevelsType[];
+                setSelectedClassLevelNames(typedValues);
+                setClubPrices((prev) => {
+                  const updated = { ...prev };
+                  Object.keys(updated).forEach((key) => {
+                    if (!typedValues.includes(key as ClassLevelsType)) delete updated[key as ClassLevelsType];
                   });
-                }}
-                className="flex flex-wrap gap-2"
-              >
-                <div className="flex flex-col gap-1.5">
-                  {classLevels.map((level) => (
-                    <ToggleGroupItem key={level} value={level} className="w-fit px-4 py-2 rounded-full data-[state=on]:bg-blue-500 data-[state=on]:text-white">
-                      {level}
-                    </ToggleGroupItem>
-                  ))}
-                </div>
-              </ToggleGroup>
-            </div>
+                  return updated;
+                });
+              }}
+              className="flex flex-wrap gap-2"
+            >
+              <div className="flex flex-col gap-1.5">
+                {classLevels.map((level) => (
+                  <ToggleGroupItem key={level} value={level} className="w-fit px-4 py-2 rounded-full data-[state=on]:bg-blue-500 data-[state=on]:text-white">
+                    {level}
+                  </ToggleGroupItem>
+                ))}
+              </div>
+            </ToggleGroup>
+          </div>
 
-            <div className="flex flex-col gap-1.5">
-              <Label>Үнэ:</Label>
-              {selectedClassLevelNames.length > 0 && (
-                <div className="flex flex-col gap-1.5">
-                  {selectedClassLevelNames.map((level) => (
-                    <div key={level} className="flex gap-1.5">
-                      <Label>{level}: </Label>
-                      <Input
-                        type="number"
-                        placeholder="Үнэ (₮)"
-                        value={clubPrices[level] || ''}
-                        onChange={(e) =>
-                          setClubPrices((prev) => ({
-                            ...prev,
-                            [level]: Number(e.target.value),
-                          }))
-                        }
-                        className="w-full"
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+          <div className="flex flex-col gap-1.5">
+            <Label>Үнэ:</Label>
+            {selectedClassLevelNames.length > 0 && (
+              <div className="flex flex-col gap-1.5">
+                {selectedClassLevelNames.map((level) => (
+                  <div key={level} className="flex gap-1.5">
+                    <Label>{level}: </Label>
+                    <Input
+                      type="number"
+                      placeholder="Үнэ (₮)"
+                      value={clubPrices[level] || ''}
+                      onChange={(e) =>
+                        setClubPrices((prev) => ({
+                          ...prev,
+                          [level]: Number(e.target.value),
+                        }))
+                      }
+                      className="w-full"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="flex flex-col gap-1.5">
@@ -398,35 +398,36 @@ export const ClubRegisterBtnDialogContent = ({ setOpen }: { setOpen: Dispatch<Re
               </div>
             ))}
           </div>
+        </div>
 
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="clubDescription">Товч танилцуулга:</Label>
-            <Textarea id="clubDescription" value={clubDescription} onChange={(e) => setClubDescription(e.target.value)} placeholder="Дугуйлангийн товч танилцуулгыг оруулна уу..." />
-          </div>
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="clubDescription">Товч танилцуулга:</Label>
+          <Textarea id="clubDescription" value={clubDescription} onChange={(e) => setClubDescription(e.target.value)} placeholder="Дугуйлангийн товч танилцуулгыг оруулна уу..." />
+        </div>
 
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="clubImage">Зураг:</Label>
-            {clubImage ? (
-              <div className="w-full h-65 rounded-md border border-border border-dashed relative overflow-hidden">
-                <Image src={clubImagePreview} alt={'image preview'} width={440} height={260} className="object-cover w-full h-full" unoptimized />
-                <Button type="button" variant={'secondary'} onClick={() => setClubImage(undefined)} className="absolute w-9 h-9 rounded-full right-1 top-1">
-                  <X />
-                </Button>
-              </div>
-            ) : (
-              <div className="w-full h-65 bg-gray-800/5 flex justify-center items-center p-4 rounded-md border border-border border-dashed relative">
-                <input id="clubImage" type="file" onChange={clubImageFileChangeHandler} className="absolute inset-0 opacity-0 cursor-pointer border" />
-                <div className="flex flex-col justify-center items-center gap-2">
-                  <div className="w-8 h-8 rounded-full bg-background flex justify-center items-center">
-                    <Upload className="text-muted-foreground" />
-                  </div>
-                  <Label className="text-muted-foreground">Choose a file or drag & drop it here</Label>
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="clubImage">Зураг:</Label>
+          {clubImage ? (
+            <div className="w-full h-65 rounded-md border border-border border-dashed relative overflow-hidden">
+              <Image src={clubImagePreview} alt={'image preview'} width={440} height={260} className="object-cover w-full h-full" unoptimized />
+              <Button type="button" variant={'secondary'} onClick={() => setClubImage(undefined)} className="absolute w-9 h-9 rounded-full right-1 top-1">
+                <X />
+              </Button>
+            </div>
+          ) : (
+            <div className="w-full h-65 bg-gray-800/5 flex justify-center items-center p-4 rounded-md border border-border border-dashed relative">
+              <input id="clubImage" type="file" onChange={clubImageFileChangeHandler} className="absolute inset-0 opacity-0 cursor-pointer border" />
+              <div className="flex flex-col justify-center items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-background flex justify-center items-center">
+                  <Upload className="text-muted-foreground" />
                 </div>
+                <Label className="text-muted-foreground">Choose a file or drag & drop it here</Label>
               </div>
-            )}
-          </div>
+            </div>
+          )}
+        </div>
 
-          {/* <div className="flex flex-col gap-1.5">
+        {/* <div className="flex flex-col gap-1.5">
             <Label htmlFor="selectedClubWorkingDays">Хичээллэх өдөр:</Label>
             <ToggleGroup id="selectedClubWorkingDays" type="multiple" value={selectedClubWorkingDays} onValueChange={handleSelectedClubWorkingDays} className="flex flex-wrap gap-2">
               {weekDays.map((day) => (
@@ -437,7 +438,7 @@ export const ClubRegisterBtnDialogContent = ({ setOpen }: { setOpen: Dispatch<Re
             </ToggleGroup>
           </div> */}
 
-          {/* <div className="flex flex-col gap-1.5">
+        {/* <div className="flex flex-col gap-1.5">
             <Label htmlFor="scheduledClubTimes">Цаг:</Label>
             {selectedClubWorkingDays.map((day) => {
               const dayLabel = weekDays.find((d) => d.value === day)?.label;
@@ -470,88 +471,85 @@ export const ClubRegisterBtnDialogContent = ({ setOpen }: { setOpen: Dispatch<Re
             })}
           </div> */}
 
-          <div className="flex flex-col gap-1.5">
-            <Label>Хаяг оруулах:</Label>
-            <Input value={clubAddress} onChange={(e) => setClubAddress(e.target.value)} placeholder="Дугуйлангийн хаягаа оруулна уу..." />
-          </div>
-
-          <div className="flex flex-col gap-1.5">
-            <Label>Байршил сонгох:</Label>
-            <div className="flex gap-1.5">
-              <Input type="number" name="clubLat" placeholder="Өргөрөг" value={clubLat || ''} onChange={(e) => setClubLat(Number(e.target.value))} />
-              <Input type="number" name="clubLong" placeholder="Уртраг" value={clubLong || ''} onChange={(e) => setClubLong(Number(e.target.value))} />
-            </div>
-            <MapSelector lat={clubLat || 47.9215} lng={clubLong || 106.9186} setLat={setClubLat} setLng={setClubLong} onLocationSelect={handleLocationSelectOnMap} />
-          </div>
+        <div className="flex flex-col gap-1.5">
+          <Label>Хаяг оруулах:</Label>
+          <Input value={clubAddress} onChange={(e) => setClubAddress(e.target.value)} placeholder="Дугуйлангийн хаягаа оруулна уу..." />
         </div>
 
-        <div className="w-100 flex flex-col gap-6">
-          <Label className="text-base font-semibold">Багшийн мэдээлэд оруулах хэсэг:</Label>
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="teacherImage">Багш зураг:</Label>
-            {teacherImage ? (
-              <div className="w-full h-55 rounded-md border border-border border-dashed relative overflow-hidden">
-                <Image src={teacherImagePreview} alt={'image preview'} width={440} height={220} className="object-cover w-full h-full" unoptimized />
-                <Button type="button" variant={'secondary'} onClick={() => setTeacherImage(undefined)} className="absolute w-9 h-9 rounded-full right-1 top-1">
-                  <X />
-                </Button>
-              </div>
-            ) : (
-              <div className="w-full h-55 bg-gray-800/5 flex justify-center items-center p-4 rounded-md border border-border border-dashed relative">
-                <input id="teacherImage" type="file" onChange={teacherImageFileChangeHandler} className="absolute inset-0 opacity-0 cursor-pointer border" />
-                <div className="flex flex-col justify-center items-center gap-2">
-                  <div className="w-8 h-8 rounded-full bg-background flex justify-center items-center">
-                    <Upload className="text-muted-foreground" />
-                  </div>
-                  <Label className="text-muted-foreground">Choose a file or drag & drop it here</Label>
+        <div className="flex flex-col gap-1.5">
+          <Label>Байршил сонгох:</Label>
+          <div className="flex gap-1.5">
+            <Input type="number" name="clubLat" placeholder="Өргөрөг" value={clubLat || ''} onChange={(e) => setClubLat(Number(e.target.value))} />
+            <Input type="number" name="clubLong" placeholder="Уртраг" value={clubLong || ''} onChange={(e) => setClubLong(Number(e.target.value))} />
+          </div>
+          <MapSelector lat={clubLat || 47.9215} lng={clubLong || 106.9186} setLat={setClubLat} setLng={setClubLong} onLocationSelect={handleLocationSelectOnMap} />
+        </div>
+
+        <Label className="text-base font-semibold">Багшийн мэдээлэд оруулах хэсэг:</Label>
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="teacherImage">Багш зураг:</Label>
+          {teacherImage ? (
+            <div className="w-full h-55 rounded-md border border-border border-dashed relative overflow-hidden">
+              <Image src={teacherImagePreview} alt={'image preview'} width={440} height={220} className="object-cover w-full h-full" unoptimized />
+              <Button type="button" variant={'secondary'} onClick={() => setTeacherImage(undefined)} className="absolute w-9 h-9 rounded-full right-1 top-1">
+                <X />
+              </Button>
+            </div>
+          ) : (
+            <div className="w-full h-55 bg-gray-800/5 flex justify-center items-center p-4 rounded-md border border-border border-dashed relative">
+              <input id="teacherImage" type="file" onChange={teacherImageFileChangeHandler} className="absolute inset-0 opacity-0 cursor-pointer border" />
+              <div className="flex flex-col justify-center items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-background flex justify-center items-center">
+                  <Upload className="text-muted-foreground" />
                 </div>
+                <Label className="text-muted-foreground">Choose a file or drag & drop it here</Label>
               </div>
-            )}
-          </div>
+            </div>
+          )}
+        </div>
 
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="teacherName">Багшийн нэр:</Label>
-            <Input id="teacherName" value={teacherName} onChange={(e) => setTeacherName(e.target.value)} placeholder="Багшийн нэрийг оруулна уу..." />
-          </div>
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="teacherName">Багшийн нэр:</Label>
+          <Input id="teacherName" value={teacherName} onChange={(e) => setTeacherName(e.target.value)} placeholder="Багшийн нэрийг оруулна уу..." />
+        </div>
 
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="teacherPhone">Утас:</Label>
-            <Input
-              id="teacherPhone"
-              value={teacherPhone}
-              onChange={(e) => setTeacherPhone(e.target.value)}
-              placeholder="Багшийн холбоо барих утсыг оруулна уу..."
-              className={teacherPhone && !phoneRegex.test(teacherPhone) ? 'border-red-500' : ''}
-            />
-            {teacherPhone && !phoneRegex.test(teacherPhone) && <span className="text-xs text-red-500">8 оронтой тоо оруулна уу</span>}
-          </div>
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="teacherPhone">Утас:</Label>
+          <Input
+            id="teacherPhone"
+            value={teacherPhone}
+            onChange={(e) => setTeacherPhone(e.target.value)}
+            placeholder="Багшийн холбоо барих утсыг оруулна уу..."
+            className={teacherPhone && !phoneRegex.test(teacherPhone) ? 'border-red-500' : ''}
+          />
+          {teacherPhone && !phoneRegex.test(teacherPhone) && <span className="text-xs text-red-500">8 оронтой тоо оруулна уу</span>}
+        </div>
 
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="teacherEmail">Имэйл:</Label>
-            <Input
-              id="teacherEmail"
-              value={teacherEmail}
-              onChange={(e) => setTeacherEmail(e.target.value)}
-              placeholder="Багшийн имэйл хаягийг оруулна уу..."
-              className={teacherEmail && !emailRegex.test(teacherEmail) ? 'border-red-500' : ''}
-            />
-            {teacherEmail && !emailRegex.test(teacherEmail) && <span className="text-xs text-red-500">Зөв имэйл хаяг оруулна уу</span>}
-          </div>
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="teacherEmail">Имэйл:</Label>
+          <Input
+            id="teacherEmail"
+            value={teacherEmail}
+            onChange={(e) => setTeacherEmail(e.target.value)}
+            placeholder="Багшийн имэйл хаягийг оруулна уу..."
+            className={teacherEmail && !emailRegex.test(teacherEmail) ? 'border-red-500' : ''}
+          />
+          {teacherEmail && !emailRegex.test(teacherEmail) && <span className="text-xs text-red-500">Зөв имэйл хаяг оруулна уу</span>}
+        </div>
 
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="teacherProfession">Мэргэжил:</Label>
-            <Input id="teacherProfession" value={teacherProfession} onChange={(e) => setTeacherProfession(e.target.value)} placeholder="Багшийн мэргэжлийг оруулна уу..." />
-          </div>
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="teacherProfession">Мэргэжил:</Label>
+          <Input id="teacherProfession" value={teacherProfession} onChange={(e) => setTeacherProfession(e.target.value)} placeholder="Багшийн мэргэжлийг оруулна уу..." />
+        </div>
 
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="teacherExperience">Туршлага:</Label>
-            <Textarea id="teacherExperience" value={teacherExperience} onChange={(e) => setTeacherExperience(e.target.value)} placeholder="Багшийн туршлагыг оруулна уу..." />
-          </div>
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="teacherExperience">Туршлага:</Label>
+          <Textarea id="teacherExperience" value={teacherExperience} onChange={(e) => setTeacherExperience(e.target.value)} placeholder="Багшийн туршлагыг оруулна уу..." />
+        </div>
 
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="teacherAchievement">Гаргасан амжилт:</Label>
-            <Textarea id="teacherAchievement" value={teacherAchievement} onChange={(e) => setTeacherAchievement(e.target.value)} placeholder="Багшийн ололт амжилтыг оруулна уу..." />
-          </div>
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="teacherAchievement">Гаргасан амжилт:</Label>
+          <Textarea id="teacherAchievement" value={teacherAchievement} onChange={(e) => setTeacherAchievement(e.target.value)} placeholder="Багшийн ололт амжилтыг оруулна уу..." />
         </div>
       </div>
       <DialogFooter>
