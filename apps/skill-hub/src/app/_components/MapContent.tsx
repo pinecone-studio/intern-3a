@@ -3,6 +3,7 @@
 import { NewClubType } from '@/lib/utils/types';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { useRouter } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 
 type Props = {
@@ -13,6 +14,7 @@ type Props = {
 };
 
 export default function MapContent({ clubs, userLocation, nearbyClubs, selectedRadius }: Props) {
+  const router = useRouter();
   const mapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -48,8 +50,50 @@ export default function MapContent({ clubs, userLocation, nearbyClubs, selectedR
     }
 
     const displayClubs = nearbyClubs.length ? nearbyClubs : clubs;
+    // displayClubs.forEach((club) => {
+    //   L.marker([club.clubLat, club.clubLong]).addTo(map).bindPopup(club.clubName, );
+    // });
+
     displayClubs.forEach((club) => {
-      L.marker([club.clubLat, club.clubLong]).addTo(map).bindPopup(club.clubName);
+      const popupContent = `
+    <div style="text-align:center; width:180px;">
+      <img 
+        src="${club.clubImage}" 
+        alt="${club.clubName}"
+        style="width:100%; height:120px; object-fit:cover; border-radius:8px; margin-bottom:6px;"
+      />
+      <strong>${club.clubName}</strong>
+      <br />
+      <button 
+        id="btn-${club._id}" 
+        variant={"ghost}
+        style="
+          margin-top:6px;
+          padding:6px 10px;
+          background:#FCB027;
+          color:white;
+          border:none;
+          border-radius:6px;
+          cursor:pointer;
+        "
+      >
+        Дэлгэрэнгүй
+      </button>
+    </div>
+  `;
+
+      const marker = L.marker([club.clubLat, club.clubLong]).addTo(map);
+      marker.bindPopup(popupContent);
+
+      marker.on('popupopen', () => {
+        const btn = document.getElementById(`btn-${club._id}`);
+        if (btn) {
+          btn.onclick = () => {
+            console.log('Clicked club:', club);
+            router.push(`/club/${club._id}`);
+          };
+        }
+      });
     });
 
     return () => {

@@ -1,4 +1,7 @@
+'use client';
+
 import { NewClubType } from '@/lib/utils/types';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 import { useClub } from '../hook/use-club';
 import Map from './Map';
@@ -11,6 +14,7 @@ type FilteredClubsCardProps = {
 
 const FilteredResult = ({ filteredClubs, isFiltered, resetFilters }: FilteredClubsCardProps) => {
   const { isLoading } = useClub();
+  const router = useRouter();
   return (
     <div>
       <div>
@@ -35,7 +39,11 @@ const FilteredResult = ({ filteredClubs, isFiltered, resetFilters }: FilteredClu
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredClubs.map((club) => (
-                  <div key={club._id} className="bg-white rounded-2xl border-2 border-slate-200 overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                  <div
+                    key={club._id}
+                    className="bg-white rounded-2xl border-2 border-slate-200 overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+                    onClick={() => router.push(`/club/${club._id}`)}
+                  >
                     <div className="aspect-video relative overflow-hidden bg-slate-100">
                       {club.clubImage && <img src={typeof club.clubImage === 'string' ? club.clubImage : ''} alt={club.clubName} className="w-full h-full object-cover" />}
                     </div>

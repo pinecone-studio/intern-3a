@@ -11,8 +11,6 @@ export default function Map({ filteredClubs }: { filteredClubs: NewClubType[] })
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const RADIUS_STEPS = [0.5, 1, 2, 3, 10];
   const [selectedRadius, setSelectedRadius] = useState<number>(0.5);
-  // const filteredClubs: NewClubType[] = [];
-  // const clubs: NewClubType[] = [];
 
   useEffect(() => {
     if (navigator.geolocation) {
