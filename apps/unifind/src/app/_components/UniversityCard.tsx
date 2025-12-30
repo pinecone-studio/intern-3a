@@ -26,7 +26,7 @@ const getIconForUniversity = (name: string) => {
   return GraduationCap;
 };
 
-export default function UniversityCard({ id, name, location, image, status, minScore }: UniversityCardProps) {
+export default function UniversityCard({ id, name, location, image, status }: UniversityCardProps) {
   const router = useRouter();
   const Icon = getIconForUniversity(name);
 
@@ -61,7 +61,7 @@ export default function UniversityCard({ id, name, location, image, status, minS
 
         <div className="flex justify-between text-sm border-t pt-2">
           <span>Босго оноо</span>
-          <span className="font-semibold">{minScore}</span>
+          <span className="font-semibold">500</span>
         </div>
 
         {/* Button дээр дарахад давхар trigger болохоос сэргийлнэ */}

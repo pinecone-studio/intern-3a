@@ -1,19 +1,28 @@
+'use client';
+import { Major } from 'apps/unifind/src/lib/types/type';
 import { Calendar, CheckCircle2, ChevronRight, Clock, ExternalLink, Globe, Mail, MapPin, Phone } from 'lucide-react';
-
-import { universities } from 'apps/unifind/src/lib/data/universities';
 import Link from 'next/link';
+import React from 'react';
+import useSWR from 'swr';
 import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
 import { Card } from '../../components/ui/card';
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-export default async function UniversityDetailPage({ params }: { params: { id: string } }) {
-  const { id } = await params;
+interface Props {
+  params: Promise<{ id: string }>;
+}
 
-  console.log('PARAMS ID', id);
+export default function UniversityDetailPage2({ params }: Props) {
+  const resolvedParams = React.use(params);
+  const uniId = Number(resolvedParams.id);
+  const { data: majors, error: majorsError, isLoading: majorsLoading } = useSWR<Major[]>(`/api/majors?university_id=${uniId}`, fetcher);
 
-  const uni = universities.find((u) => u.id === Number(id));
-
-  if (!uni) return <div>Их сургуулийн мэдээлэл олдсонгүй</div>;
+  if (majorsLoading) return <p>Уншиж байна...</p>;
+  if (majorsError) return <p>Өгөгдөл авахад алдаа гарлаа</p>;
+  if (!majors) return <p>Их сургуулийн мэдээлэл олдсонгүй</p>;
+  const university = majors[0]?.universities;
+  console.log({ majors });
 
   return (
     <div className="min-h-screen bg-white">
@@ -21,22 +30,17 @@ export default async function UniversityDetailPage({ params }: { params: { id: s
       <div className="g-linear-to-br from-slate-600 to-slate-700 px-6 py-16">
         <div className="mx-auto max-w-7xl">
           <div className="flex items-start gap-4 mb-6">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-white shadow-sm">
-              <svg viewBox="0 0 24 24" fill="#06b6d4" className="h-8 w-8">
-                <path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z" />
-              </svg>
-            </div>
+            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-white shadow-sm">{/* SVG */}</div>
             <Badge variant="secondary" className="bg-gray-600/50 text-white border-gray-500">
-              {/* #2 Үндэсний их сургуулиууд */}
-              {uni.name}
+              {university?.name ?? 'Мэдээлэл олдсонгүй'}
             </Badge>
           </div>
           <div className="flex items-end justify-between">
             <div>
-              <h1 className="text-5xl font-bold text-white mb-3">{uni.name}</h1>
+              <h1 className="text-5xl font-bold text-white mb-3">{university?.name}</h1>
               <div className="flex items-center gap-2 text-white/90">
                 <MapPin className="h-4 w-4" />
-                <span>{uni.location}</span>
+                <span>{university?.city ?? 'Мэдээлэл олдсонгүй'}</span>
               </div>
             </div>
             <div className="flex gap-3">
@@ -79,8 +83,13 @@ export default async function UniversityDetailPage({ params }: { params: { id: s
             <section>
               <h2 className="text-2xl font-bold mb-4">Их сургуулийн тухай</h2>
               <div className="space-y-4 text-gray-700 leading-relaxed">
-                {uni.about.map((text, i) => (
-                  <p key={i}>{text}</p>
+                {' '}
+                {majors.map((major, index) => (
+                  <div key={index}>
+                    {' '}
+                    <p>Их сургууль: {major.universities?.name ?? 'Мэдээлэл олдсонгүй'}</p>
+                    <p>Хот: {major.universities?.city ?? 'Мэдээлэл олдсонгүй'}</p>
+                  </div>
                 ))}
               </div>
 
@@ -113,53 +122,51 @@ export default async function UniversityDetailPage({ params }: { params: { id: s
               </div>
 
               <div className="space-y-6">
-                {uni.majors.map((major, index) => {
+                {majors.map((major) => {
                   const competitionText = major.competition >= 75 ? 'Маш өндөр' : major.competition >= 65 ? 'Өндөр' : 'Дунд';
-
                   const competitionColor = major.competition >= 75 ? 'bg-red-500' : major.competition >= 65 ? 'bg-orange-500' : 'bg-yellow-500';
 
                   return (
                     <Link
-                      key={index}
-                      href="/mergejil"
-
-                      // key={index}
-                      // href={`/universities/${
-                      //   uni.id
-                      // }/majors/${encodeURIComponent(major.name)}`}
+                      key={major.id}
+                      href={`/mergejil/${major.id}`} // эсвэл өөрийн маршрутыг тохируулна
                     >
-                      {major.name}
                       <Card className="p-6 hover:shadow-lg transition cursor-pointer mt-3">
+                        {/* Major info */}
                         <div className="flex items-start justify-between mb-3">
                           <div>
                             <div className="flex items-center gap-2 mb-1">
                               <h3 className="text-lg font-semibold">{major.name}</h3>
-                              <Badge className="bg-green-100 text-green-700 text-xs">Бакалавр</Badge>
+                              <Badge className="bg-green-100 text-green-700 text-xs">{major.degree_type}</Badge>
                             </div>
-                            <p className="text-sm text-gray-600">{major.faculty} факультет</p>
-                            <Badge className="bg-blue-50 mt-4 text-blue-700 hover:bg-blue-50 px-4 py-2 text-sm">
-                              <span className="mr-2">∑</span>
-                              Математик A
-                            </Badge>
-                            <Badge className="bg-purple-50 text-purple-700 hover:bg-purple-50 px-4 py-2 text-sm">
-                              <span className="mr-2">⚛</span>
-                              Физик
-                            </Badge>
+                            {/* Faculty байхгүй бол comment хийсэн */}
+                            {/* <p className="text-sm text-gray-600">{major.faculty} факультет</p> */}
+
+                            {/* Example requirements */}
+                            {major.major_requirements.map((req) =>
+                              req.subjects.map((subj) => (
+                                <Badge key={subj.id} className="bg-blue-50 mt-2 text-blue-700 hover:bg-blue-50 px-4 py-2 text-sm">
+                                  {subj.name}
+                                </Badge>
+                              )),
+                            )}
                           </div>
 
+                          {/* Score */}
                           <div className="text-right">
                             <div className="text-xs text-gray-500 uppercase mb-1">Хамгийн бага оноо</div>
-                            <div className="text-2xl font-bold">{major.minScore}</div>
+                            <div className="text-2xl font-bold">{major.minScore ?? '-'}</div>
                           </div>
                         </div>
 
+                        {/* Competition */}
                         <div>
                           <div className="flex items-center justify-between mb-2">
                             <span className="text-sm text-gray-600">Өрсөлдөөн</span>
                             <span className="text-sm font-semibold">{competitionText}</span>
                           </div>
                           <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                            <div className={`h-full ${competitionColor}`} style={{ width: `${major.competition}%` }} />
+                            <div className={`h-full ${competitionColor}`} style={{ width: `${major.competition ?? 0}%` }} />
                           </div>
                         </div>
                       </Card>
