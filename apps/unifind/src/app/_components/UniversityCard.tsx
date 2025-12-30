@@ -37,7 +37,8 @@ export default function UniversityCard({ id, name, location, image, status }: Un
   return (
     <Card onClick={handleViewDetails} className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
       <div className="relative h-48">
-        <img src={image} alt={name} className="w-full h-full object-cover" />
+        {image && <img src={image} alt={name} className="w-full h-full object-cover" />}
+
         <div className="absolute top-4 right-4">
           {status === 'open' && <span className="bg-green-500 text-white text-xs font-semibold px-3 py-1 rounded-full">Нээлттэй</span>}
           {status === 'closing-soon' && <span className="bg-orange-500 text-white text-xs font-semibold px-3 py-1 rounded-full">Удахгүй хаагдана</span>}

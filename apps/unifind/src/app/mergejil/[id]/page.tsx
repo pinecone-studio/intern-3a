@@ -9,38 +9,40 @@ import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
 import { Card } from '../../components/ui/card';
 
-type Subject = {
-  id: number;
-  name: string;
-};
-
-type MajorRequirement = {
-  id: number;
-  subjects: Subject[];
-};
-
-type University = {
-  id: number;
-  name: string;
-  location?: string;
-};
-
-type Major = {
-  id: number;
-  name: string;
-  universities: University;
-  major_requirements: MajorRequirement[];
-};
-
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-export default function Mergejil({ searchParams }: { searchParams: Promise<{ id: string }> }) {
+export default function Mergejil() {
   const params = useParams();
   const majorId = Number(params.id);
 
   const { data, error, isLoading } = useSWR(`/api/majors/${majorId}`, fetcher);
-
-  if (isLoading) return <p>Уншиж байна...</p>;
+  if (isLoading || !data) {
+    return (
+      <div className="min-h-screen bg-gray-50 animate-pulse">
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+          <div className="h-6 bg-gray-200 rounded w-1/4"></div>
+          <div className="h-10 bg-gray-200 rounded w-3/4"></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="h-36 bg-gray-200 rounded-lg"></div>
+            ))}
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+            <div className="lg:col-span-2 space-y-6">
+              {[...Array(2)].map((_, i) => (
+                <div key={i} className="h-40 bg-gray-200 rounded-lg"></div>
+              ))}
+            </div>
+            <div className="space-y-6">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="h-32 bg-gray-200 rounded-lg"></div>
+              ))}
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
   if (error) return <p>Алдаа гарлаа</p>;
   if (!data) return <p>Мэргэжил олдсонгүй</p>;
 
@@ -65,11 +67,12 @@ export default function Mergejil({ searchParams }: { searchParams: Promise<{ id:
             Нүүр
           </Link>
           <span>›</span>
-          <Link href="/universities" className="text-cyan-600 hover:text-cyan-700">
+
+          <Link href={`/detail/${data.universities.id}`} className="text-cyan-600 hover:text-cyan-700">
             {data.universities.name}
           </Link>
           <span>›</span>
-          <span className="text-gray-900"> {data.universities.name}</span>
+          <span className="text-gray-900"> {data.name}</span>
         </div>
 
         {/* Title Section */}

@@ -7,8 +7,20 @@ export type University = {
   image?: string;
   logo?: string;
 };
-export type Subject = { id: number; name: string };
-export type MajorRequirement = { id: number; subjects: Subject[] };
+
+export type Subject = {
+  id: number;
+  name: string;
+  type?: string;
+};
+
+export type MajorRequirement = {
+  id: number;
+  major_id: number;
+  min_score: number;
+  subject_id: number;
+  subjects: Subject; // Массив биш, дан объект
+};
 
 export type Major = {
   id: number;
@@ -16,6 +28,7 @@ export type Major = {
   university_id: number;
   degree_type: string;
   description: string;
-  universities: University;
+  universities: University; // Дан объект
   major_requirements: MajorRequirement[];
+  created_at: string;
 };

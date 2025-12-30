@@ -1,23 +1,19 @@
-// apps/unifind/src/app/api/majors/[id]/route.ts
-
 import prisma from 'apps/unifind/src/lib/prisma';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
-  console.log({ params });
-  const majorId = Number(params.id);
+export async function GET(_req: Request, context: any) {
+  const majorId = Number(context.params.id);
 
-  console.log({ majorId });
+  if (isNaN(majorId)) {
+    return NextResponse.json({ error: 'Invalid major id' }, { status: 400 });
+  }
+
   try {
     const major = await prisma.majors.findUnique({
       where: { id: majorId },
       include: {
-        universities: true, // их сургуулийн мэдээллийг хамт авах
-        major_requirements: {
-          include: {
-            subjects: true, // хэрэв шаардлага болон subjects хэрэгтэй бол
-          },
-        },
+        universities: true,
+        major_requirements: { include: { subjects: true } },
       },
     });
 
@@ -28,6 +24,6 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     return NextResponse.json(major);
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: 'Алдаа гарлаа' }, { status: 500 });
+    return NextResponse.json({ error: 'Серверийн алдаа' }, { status: 500 });
   }
 }

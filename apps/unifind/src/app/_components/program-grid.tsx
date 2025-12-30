@@ -1,117 +1,35 @@
 'use client';
 
 import { Grid3x3, List, SlidersHorizontal, X } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
+import useSWR from 'swr';
+import { University } from '../../lib/types/type';
 import { Button } from '../components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Pagination } from './pagination';
 import { ProgramCard } from './program-card';
 
-type Program = {
-  id: number;
-  name: string;
-  location: string;
-  image: string;
-  logo: string;
-  type: 'Public' | 'Private';
-  tags: string[];
-  minScore: string;
-  maxScore: string;
-  deadline: string;
-  deadlineColor: string;
-};
-
-const programs: Program[] = [
-  {
-    id: 1,
-    name: 'Технологийн Улсын Их Сургууль',
-    location: 'Бостон, MA, АНУ',
-    image: '/modern-university-building.png',
-    logo: '/university-shield-logo.jpg',
-    type: 'Public',
-    tags: ['Инженерчлэл & Технологи', 'Top 50'],
-    minScore: '680',
-    maxScore: '1000',
-    deadline: '10-р сарын 15',
-    deadlineColor: 'text-orange-600',
-  },
-  {
-    id: 2,
-    name: 'Кембрижийн Бизнесийн Сургууль',
-    location: 'Кембриж, Их Британи',
-    image: '/modern-glass-business-school-building.jpg',
-    logo: '/business-school-crest.jpg',
-    type: 'Private',
-    tags: ['Менежмент', 'MBA'],
-    minScore: '720',
-    maxScore: '800',
-    deadline: '9-р сарын 30',
-    deadlineColor: 'text-red-600',
-  },
-  {
-    id: 3,
-    name: 'Үндэсний Урлагийн Институт',
-    location: 'Нью-Йорк, NY, АНУ',
-    image: '/red-brick-arts-institute-building-with-green-lawn.jpg',
-    logo: '/arts-institute-logo.jpg',
-    type: 'Public',
-    tags: ['Дүрслэх Урлаг', 'Дизайн'],
-    minScore: 'Портфолио',
-    maxScore: '',
-    deadline: '11-р сарын 01',
-    deadlineColor: 'text-green-600',
-  },
-  {
-    id: 4,
-    name: 'Хатан хааны Анагаах Ухааны Коллеж',
-    location: 'Лондон, Их Британи',
-    image: '/modern-medical-school-glass-building.jpg',
-    logo: '/medical-college-emblem.png',
-    type: 'Private',
-    tags: ['Анагаах ухаан', 'Эрүүл мэнд'],
-    minScore: '850',
-    maxScore: '1000',
-    deadline: '12-р сарын 01',
-    deadlineColor: 'text-gray-900',
-  },
-  {
-    id: 5,
-    name: 'Номхон Далайн Их Сургууль',
-    location: 'Сан Диего, CA, АНУ',
-    image: '/university-marine-science-building-exterior.jpg',
-    logo: '/ocean-university-seal.jpg',
-    type: 'Public',
-    tags: ['Далайн Биологи', 'Шинжлэх Ухаан'],
-    minScore: '600',
-    maxScore: '1000',
-    deadline: '10-р сарын 20',
-    deadlineColor: 'text-orange-600',
-  },
-  {
-    id: 6,
-    name: 'Сэнт Майклс Хуулийн Сургууль',
-    location: 'Чикаго, IL, АНУ',
-    image: '/historic-clock-tower-law-school-building-blue-sky.jpg',
-    logo: '/law-school-badge.jpg',
-    type: 'Private',
-    tags: ['Хууль', 'Бодлого'],
-    minScore: '700',
-    maxScore: '1000',
-    deadline: '1-р сарын 15',
-    deadlineColor: 'text-gray-900',
-  },
-];
-
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 export function ProgramGrid() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [programs, setPrograms] = useState<University[]>([]);
+  const { data, error, isLoading } = useSWR<University[]>('/api/universities', fetcher);
+
+  console.log({ data });
+  useEffect(() => {
+    if (data) setPrograms(data);
+  }, [data]);
+  console.log({ data });
+  if (isLoading) return <p>Уншиж байна...</p>;
+  if (error) return <p>Өгөгдөл авахад алдаа гарлаа</p>;
 
   return (
     <div>
       {/* Гарчиг */}
       <div className="mb-6">
         <h1 className="text-3xl font-bold mb-2 text-balance">Ирээдүйн их сургуулиа ол</h1>
-        <p className="text-gray-600">Таны шалгуурт нийцсэн 1,240 хөтөлбөр олдлоо</p>
+        {/* <p className="text-gray-600">Таны шалгуурт нийцсэн 1,240 хөтөлбөр олдлоо</p> */}
       </div>
 
       {/* Идэвхтэй шүүлтүүрүүд */}

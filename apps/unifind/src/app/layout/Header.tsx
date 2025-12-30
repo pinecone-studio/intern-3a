@@ -1,7 +1,7 @@
 'use client';
 
 import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton, useUser } from '@clerk/nextjs';
-import { GraduationCap, Search, User } from 'lucide-react';
+import { GraduationCap, Search } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
@@ -28,9 +28,7 @@ export function Header() {
           <Link href={'/universities'}>
             <div className="text-sm cursor-pointer text-slate-600 hover:text-slate-900 transition-colors">Их сургуулиуд</div>
           </Link>
-          <Link href={'/'}>
-            <div className="text-sm cursor-pointer text-slate-600 hover:text-slate-900 transition-colors">Мэргэжлүүд</div>
-          </Link>
+
           {user && (
             <Link href={'/profile'}>
               <div className="text-sm cursor-pointer text-slate-600 hover:text-slate-900 transition-colors">Миний хуваарь</div>

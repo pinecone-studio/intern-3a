@@ -2,6 +2,7 @@
 import { ArrowRight, Bookmark, Calendar, Download, ExternalLink, Share2, User } from 'lucide-react';
 
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import useSWR from 'swr';
 import { Avatar } from '../components/ui/avatar';
 import { Badge } from '../components/ui/badge';
@@ -32,16 +33,17 @@ type Major = {
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-interface Props {
-  universityId?: number;
-}
-
-export default function AdmissionPage({ universityId }: Props) {
+export default function AdmissionPage() {
+  const searchParams = useSearchParams();
+  const universityId = searchParams?.get('university_id');
   const query = universityId ? `?university_id=${universityId}` : '';
+
   const { data, error, isLoading } = useSWR<Major[]>(`/api/majors${query}`, fetcher);
 
   if (isLoading) return <p>Уншиж байна...</p>;
   if (error) return <p>Өгөгдөл авахад алдаа гарлаа</p>;
+  if (!data) return <p>Мэргэжил олдсонгүй</p>;
+
   function getDaysLeft(targetDate: string) {
     const today = new Date();
     const target = new Date(targetDate);
@@ -55,6 +57,7 @@ export default function AdmissionPage({ universityId }: Props) {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {data && <div>{data[0].name}</div>}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-sm text-gray-600 mb-6">

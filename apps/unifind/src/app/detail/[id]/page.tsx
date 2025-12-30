@@ -18,12 +18,31 @@ export default function UniversityDetailPage2({ params }: Props) {
   const uniId = Number(resolvedParams.id);
   const { data: majors, error: majorsError, isLoading: majorsLoading } = useSWR<Major[]>(`/api/majors?university_id=${uniId}`, fetcher);
 
-  if (majorsLoading) return <p>Уншиж байна...</p>;
+  console.log({ majors });
+  if (majorsLoading || !majors) {
+    return (
+      <div className="min-h-screen bg-white animate-pulse">
+        <div className="h-64 bg-gray-200 w-full mb-6 rounded-lg" />
+        <div className="max-w-7xl mx-auto px-6 space-y-4">
+          <div className="h-6 bg-gray-200 w-1/4 rounded" />
+          <div className="h-4 bg-gray-200 w-1/6 rounded" />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+            {[...Array(3)].map((_, idx) => (
+              <div key={idx} className="h-48 bg-gray-200 rounded-lg" />
+            ))}
+          </div>
+          <div className="space-y-4 mt-8">
+            {[...Array(5)].map((_, idx) => (
+              <div key={idx} className="h-6 bg-gray-200 w-full rounded" />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
   if (majorsError) return <p>Өгөгдөл авахад алдаа гарлаа</p>;
   if (!majors) return <p>Их сургуулийн мэдээлэл олдсонгүй</p>;
   const university = majors[0]?.universities;
-  console.log({ majors });
-
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
@@ -82,16 +101,9 @@ export default function UniversityDetailPage2({ params }: Props) {
             {/* About Section */}
             <section>
               <h2 className="text-2xl font-bold mb-4">Их сургуулийн тухай</h2>
-              <div className="space-y-4 text-gray-700 leading-relaxed">
-                {' '}
-                {majors.map((major, index) => (
-                  <div key={index}>
-                    {' '}
-                    <p>Их сургууль: {major.universities?.name ?? 'Мэдээлэл олдсонгүй'}</p>
-                    <p>Хот: {major.universities?.city ?? 'Мэдээлэл олдсонгүй'}</p>
-                  </div>
-                ))}
-              </div>
+              <div className="space-y-4 text-gray-700 leading-relaxed">{university.name}</div>
+              <div className="space-y-4 text-gray-700 leading-relaxed">{university.description}</div>
+              <div className="space-y-4 text-gray-700 font-bold leading-relaxed">{university.city}</div>
 
               {/* Stats */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-8">
@@ -122,57 +134,38 @@ export default function UniversityDetailPage2({ params }: Props) {
               </div>
 
               <div className="space-y-6">
-                {majors.map((major) => {
-                  const competitionText = major.competition >= 75 ? 'Маш өндөр' : major.competition >= 65 ? 'Өндөр' : 'Дунд';
-                  const competitionColor = major.competition >= 75 ? 'bg-red-500' : major.competition >= 65 ? 'bg-orange-500' : 'bg-yellow-500';
-
-                  return (
-                    <Link
-                      key={major.id}
-                      href={`/mergejil/${major.id}`} // эсвэл өөрийн маршрутыг тохируулна
-                    >
-                      <Card className="p-6 hover:shadow-lg transition cursor-pointer mt-3">
-                        {/* Major info */}
-                        <div className="flex items-start justify-between mb-3">
-                          <div>
-                            <div className="flex items-center gap-2 mb-1">
-                              <h3 className="text-lg font-semibold">{major.name}</h3>
-                              <Badge className="bg-green-100 text-green-700 text-xs">{major.degree_type}</Badge>
-                            </div>
-                            {/* Faculty байхгүй бол comment хийсэн */}
-                            {/* <p className="text-sm text-gray-600">{major.faculty} факультет</p> */}
-
-                            {/* Example requirements */}
-                            {major.major_requirements.map((req) =>
-                              req.subjects.map((subj) => (
-                                <Badge key={subj.id} className="bg-blue-50 mt-2 text-blue-700 hover:bg-blue-50 px-4 py-2 text-sm">
-                                  {subj.name}
-                                </Badge>
-                              )),
-                            )}
-                          </div>
-
-                          {/* Score */}
-                          <div className="text-right">
-                            <div className="text-xs text-gray-500 uppercase mb-1">Хамгийн бага оноо</div>
-                            <div className="text-2xl font-bold">{major.minScore ?? '-'}</div>
-                          </div>
-                        </div>
-
-                        {/* Competition */}
+                {majors?.map((major) => (
+                  <Link key={major.id} href={`/mergejil/${major.id}`}>
+                    <Card className="p-6 hover:shadow-lg transition-shadow duration-300 cursor-pointer mt-3">
+                      {/* Major Info */}
+                      <div className="flex items-start justify-between mb-4">
                         <div>
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="text-sm text-gray-600">Өрсөлдөөн</span>
-                            <span className="text-sm font-semibold">{competitionText}</span>
+                          <div className="flex items-center gap-2 mb-1">
+                            <h3 className="text-lg font-semibold">{major.name}</h3>
+                            <Badge className="bg-green-100 text-green-700 text-xs">{major.degree_type}</Badge>
                           </div>
-                          <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                            <div className={`h-full ${competitionColor}`} style={{ width: `${major.competition ?? 0}%` }} />
+
+                          {/* Major Requirements */}
+                          <div className="flex flex-wrap gap-2 mt-2">
+                            {major?.major_requirements?.map((req) => (
+                              <Badge key={req.id} className="bg-blue-50 text-blue-700 px-3 py-1 text-sm rounded hover:bg-blue-100 transition">
+                                {req.subjects.name} – {req.min_score} оноо
+                              </Badge>
+                            ))}
                           </div>
                         </div>
-                      </Card>
-                    </Link>
-                  );
-                })}
+
+                        {/* Minimum Score (Highest among requirements) */}
+                        <div className="text-right">
+                          <div className="text-xs text-gray-500 uppercase mb-1">Хамгийн бага оноо</div>
+                          <div className="text-2xl font-bold">{Math.min(...major.major_requirements.map((req) => req.min_score)) ?? '-'}</div>
+                        </div>
+                      </div>
+
+                      {/* Өрсөлдөөн хэсэг байхгүй */}
+                    </Card>
+                  </Link>
+                ))}
               </div>
             </section>
           </div>
@@ -205,24 +198,6 @@ export default function UniversityDetailPage2({ params }: Props) {
                     <Badge variant="destructive" className="mt-1 text-xs">
                       5 хоногт хаагдах
                     </Badge>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-100">
-                    <div className="h-2 w-2 rounded-full bg-gray-400"></div>
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium">1 САР 5, 2026</p>
-                    <p className="text-sm text-gray-600">Энгийн шийдвэр</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-100">
-                    <div className="h-2 w-2 rounded-full bg-gray-400"></div>
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium">4 САР 1, 2026</p>
-                    <p className="text-sm text-gray-600">Элсэлтийн шийдвэрүүд</p>
                   </div>
                 </div>
               </div>

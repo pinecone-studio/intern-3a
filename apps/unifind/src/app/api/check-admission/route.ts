@@ -11,10 +11,11 @@ export async function POST(req: Request) {
     const body = await req.json();
     const scores: ScoreInput[] = body.scores;
 
-    if (!Array.isArray(scores)) {
-      return NextResponse.json({ error: 'scores is required and must be an array' }, { status: 400 });
+    if (!Array.isArray(scores) || scores.some((s) => typeof s.subject_id !== 'number' || typeof s.score !== 'number')) {
+      return NextResponse.json({ error: 'scores is required and must be an array of objects with subject_id and score' }, { status: 400 });
     }
 
+    // Бүх мэргэжлийн мэдээлэл
     const majors = await prisma.majors.findMany({
       include: {
         universities: true,
@@ -26,16 +27,17 @@ export async function POST(req: Request) {
       },
     });
 
-    const results = majors.filter((major) =>
-      major.major_requirements.every((req) => {
+    // Тохирох мэргэжлүүдийг шүүлт хийх
+    const results = majors.filter((major) => {
+      return major.major_requirements.every((req) => {
         const userScore = scores.find((s) => s.subject_id === req.subject_id);
-        return userScore && userScore.score >= req.min_score;
-      }),
-    );
+        return userScore ? userScore.score >= req.min_score : false;
+      });
+    });
 
     return NextResponse.json(results);
   } catch (error) {
-    console.error(error);
+    console.error('Error in /api/check-admission:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
