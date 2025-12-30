@@ -4,7 +4,7 @@ import { ClubDetailPageSkeleton } from '@/app/_components/ClubDetailPageSkeleton
 import ClubNextClasses from '@/app/_components/ClubNextClasses';
 import { useClubById } from '@/app/hook/use-club-by-id';
 import { Button } from '@intern-3a/shadcn';
-import { Calendar, Clock, Mail, MapPin, Phone, User } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, Mail, MapPin, Phone, User } from 'lucide-react';
 import Image from 'next/image';
 import { notFound, useRouter } from 'next/navigation';
 import { use, useState } from 'react';
