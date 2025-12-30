@@ -1,4 +1,5 @@
 'use client';
+
 import { useUser } from '@clerk/nextjs';
 import { Button, Dialog, DialogTrigger } from '@intern-3a/shadcn';
 import Image from 'next/image';
@@ -14,7 +15,7 @@ export const Header = () => {
 
   return (
     <div className="w-full h-20 bg-[#0A427A] sticky top-0 z-50 flex justify-between items-center px-10">
-      <div className="flex items-center h-full gap-4">
+      <div className="flex items-center h-full gap-5">
         <Image className="text-white font-bold text-xl" width={40} height={40} src="/logo.png" alt="Logo" />
         <Link href={'/'}>
           <span

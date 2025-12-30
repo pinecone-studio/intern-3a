@@ -50,10 +50,10 @@ export const AllClubsCardScrollAnimation = () => {
 
             <div className="flex justify-between mt-auto">
               <Link href={`/club/${club._id}`}>
-                <Button className="bg-[#FCB027] hover:bg-[#e69f1c] text-white rounded-full px-5">Дэлгэрэнгүй</Button>
+                <Button className="bg-[#FCB027] hover:bg-[#e69f1c] text-white rounded-full px-5 cursor-pointer">Дэлгэрэнгүй</Button>
               </Link>
 
-              <Button className="bg-[#0A427A] hover:bg-[#093662] text-white rounded-full px-5" onClick={() => router.push('/register')}>
+              <Button className="bg-[#0A427A] hover:bg-[#093662] text-white rounded-full px-5 cursor-pointer" onClick={() => router.push('/register')}>
                 Бүртгүүлэх
               </Button>
             </div>

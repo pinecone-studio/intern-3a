@@ -69,7 +69,7 @@ export const Intro = () => {
   const features = [
     {
       icon: <BookOpen className="w-8 h-8" />,
-      title: 'Олон төрлийн хичээл',
+      title: 'Олон төрлийн дугуйлан',
       description: 'Спорт, урлаг, боловсролын сургалт',
     },
     {
@@ -519,7 +519,7 @@ export const Intro = () => {
               key={index}
               variants={itemVariants}
               whileHover={{ scale: 1.05, y: -5 }}
-              className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border-2 border-slate-200 hover:border-orange-400 transition-all duration-300"
+              className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border-2 border-slate-200 hover:border-[#FCB027] transition-all duration-300"
             >
               <motion.div
                 animate={{
