@@ -1,4 +1,5 @@
 'use client';
+import { useUser } from '@clerk/nextjs';
 import { Button, Dialog, DialogTrigger } from '@intern-3a/shadcn';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -8,8 +9,11 @@ import { MyUserButton } from './MyUserButton';
 
 export const Header = () => {
   const [open, setOpen] = useState(false);
+  const { user } = useUser();
+  const role = user?.publicMetadata?.role;
+
   return (
-    <div className="w-full h-20 bg-blue-950 sticky top-0 z-50 flex justify-between items-center px-10">
+    <div className="w-full h-20 bg-[#0A427A] sticky top-0 z-50 flex justify-between items-center px-10">
       <div className="flex items-center h-full gap-4">
         <Image className="text-white font-bold text-xl" width={40} height={40} src="/logo.png" alt="Logo" />
         <Link href={'/'}>
@@ -24,13 +28,15 @@ export const Header = () => {
         </Link>
       </div>
 
-      <div className="flex gap-5">
-        <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild>
-            <Button className="bg-orange-500 rounded-full cursor-pointer">Дугуйлан Бүртгүүлэх</Button>
-          </DialogTrigger>
-          <ClubRegisterBtnDialogContent setOpen={setOpen} />
-        </Dialog>
+      <div className="flex gap-5 items-center">
+        {role === 'ADMIN' && (
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+              <Button className="bg-[#FCB027] hover:bg-[#f5a81d] rounded-full cursor-pointer">Дугуйлан Бүртгүүлэх</Button>
+            </DialogTrigger>
+            <ClubRegisterBtnDialogContent setOpen={setOpen} />
+          </Dialog>
+        )}
 
         <MyUserButton />
       </div>

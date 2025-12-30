@@ -1,87 +1,82 @@
+import { User } from '@/lib/models/User';
 import connectDB from '@/lib/mongodb';
 import { createNewClub } from '@/lib/services/club-service';
-import { ClassLevelsType, ClubPricesType, NewClubType, ScheduledClubTimesType, WeekDayType } from '@/lib/utils/types';
+import { ClassLevelsType, ClubPricesType, NewClubType, ScheduledClubTimesByClassLevelsType, TeachersByClassLevelsType } from '@/lib/utils/types';
 import { uploadImageToCloudinary } from '@/lib/utils/uploadImage';
 import Ably from 'ably';
 import { NextRequest, NextResponse } from 'next/server';
+import { checkAuth } from '../check-create-user/route';
 
 export async function POST(req: NextRequest) {
   try {
     await connectDB();
-    // const result = await checkAuth();
+    const result = await checkAuth();
 
-    // if (!result) {
-    //   return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-    // }
-    // const { userClerkId, role } = result;
+    if (!result) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { userClerkId } = result;
+
+    const admin = await User.findOne({
+      userClerkId: userClerkId,
+    });
+    console.log({ admin });
 
     const newFormData = await req.formData();
-
-    const clubName = newFormData.get('clubName')?.toString();
     const clubCategoryName = newFormData.get('clubCategoryName')?.toString();
+    const clubSubCategoryName = newFormData.get('clubSubCategoryName')?.toString();
+    const clubName = newFormData.get('clubName')?.toString();
 
     const selectedClassLevelNames = JSON.parse(newFormData.get('selectedClassLevelNames')?.toString() || '[]') as ClassLevelsType[];
-
     const clubPricesRaw = JSON.parse(newFormData.get('clubPrices')?.toString() || '{}') as ClubPricesType;
+    const scheduledClubTimesRaw = JSON.parse(newFormData.get('scheduledClubTimes')?.toString() || '{}') as ScheduledClubTimesByClassLevelsType;
+    const teachersInfoByClassRaw = JSON.parse(newFormData.get('teachersInfoByClass')?.toString() || '{}') as TeachersByClassLevelsType;
 
-    const clubImage = newFormData.get('clubImage') as File | null;
+    for (const level of selectedClassLevelNames) {
+      const file = newFormData.get(`teacherImage_${level}`) as File | null;
+      if (file) {
+        const url = await uploadImageToCloudinary(file);
+        if (teachersInfoByClassRaw[level]) {
+          teachersInfoByClassRaw[level].teacherImage = url;
+        }
+      }
+    }
+
     const clubDescription = newFormData.get('clubDescription')?.toString();
-
-    const selectedClubWorkingDays = JSON.parse(newFormData.get('selectedClubWorkingDays')?.toString() || '[]') as WeekDayType[];
-
-    const scheduledClubTimesRaw = JSON.parse(newFormData.get('scheduledClubTimes')?.toString() || '{}') as ScheduledClubTimesType;
-
+    const clubImage = newFormData.get('clubImage') as File | null;
     const clubAddress = newFormData.get('clubAddress')?.toString();
     const clubLat = parseFloat(newFormData.get('clubLat')?.toString() || 'NaN');
     const clubLong = parseFloat(newFormData.get('clubLong')?.toString() || 'NaN');
-    const teacherImage = newFormData.get('teacherImage') as File | null;
-    const teacherName = newFormData.get('teacherName')?.toString();
-    const teacherPhone = newFormData.get('teacherPhone')?.toString();
-    const teacherEmail = newFormData.get('teacherEmail')?.toString();
-    const teacherProfession = newFormData.get('teacherProfession')?.toString();
-    const teacherExperience = newFormData.get('teacherExperience')?.toString();
-    const teacherAchievement = newFormData.get('teacherAchievement')?.toString();
 
     console.log({
-      clubName,
       clubCategoryName,
+      clubSubCategoryName,
+      clubName,
       selectedClassLevelNames,
       clubPricesRaw,
-      clubImage,
-      clubDescription,
-      selectedClubWorkingDays,
       scheduledClubTimesRaw,
+      teachersInfoByClassRaw,
+      clubDescription,
+      clubImage,
       clubAddress,
       clubLat,
       clubLong,
-      teacherImage,
-      teacherName,
-      teacherPhone,
-      teacherEmail,
-      teacherProfession,
-      teacherExperience,
-      teacherAchievement,
     });
 
     if (
-      !clubName ||
       !clubCategoryName ||
+      !clubSubCategoryName ||
+      !clubName ||
       selectedClassLevelNames.length === 0 ||
       Object.keys(clubPricesRaw).length === 0 ||
-      !clubImage ||
-      !clubDescription ||
-      selectedClubWorkingDays.length === 0 ||
       Object.keys(scheduledClubTimesRaw).length === 0 ||
+      Object.keys(teachersInfoByClassRaw).length === 0 ||
+      !clubDescription ||
+      !clubImage ||
       !clubAddress ||
       isNaN(clubLat) ||
-      isNaN(clubLong) ||
-      !teacherImage ||
-      !teacherName ||
-      !teacherPhone ||
-      !teacherEmail ||
-      !teacherProfession ||
-      !teacherExperience ||
-      !teacherAchievement
+      isNaN(clubLong)
     ) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
@@ -91,35 +86,29 @@ export async function POST(req: NextRequest) {
       clubImageUrl = await uploadImageToCloudinary(clubImage);
     }
 
-    let teacherImageUrl = '';
-    if (teacherImage) {
-      teacherImageUrl = await uploadImageToCloudinary(teacherImage);
-    }
-    // const clubPrices = new Map(Object.entries(clubPricesRaw));
-    // const scheduledClubTimes = new Map(Object.entries(scheduledClubTimesRaw));
-
     const newClubData: NewClubType = {
-      clubName,
       clubCategoryName,
+      clubSubCategoryName,
+      clubName,
       selectedClassLevelNames,
       clubPrices: clubPricesRaw,
-      clubImage: clubImageUrl,
-      clubDescription,
-      selectedClubWorkingDays,
       scheduledClubTimes: scheduledClubTimesRaw,
+      teachersInfoByClass: teachersInfoByClassRaw,
+      clubDescription,
+      clubImage: clubImageUrl,
       clubAddress,
       clubLat,
       clubLong,
-      teacherImage: teacherImageUrl,
-      teacherName,
-      teacherPhone,
-      teacherEmail,
-      teacherProfession,
-      teacherExperience,
-      teacherAchievement,
+      adminId: admin._id,
     };
 
-    const clubCreated = await createNewClub(newClubData);
+    let clubCreated;
+
+    if (admin.userStatus !== 'ADMIN') {
+      return NextResponse.json({ message: 'Forbidden: Only admins can create clubs' }, { status: 403 });
+    } else {
+      clubCreated = await createNewClub(newClubData);
+    }
 
     const ably = new Ably.Rest({ key: process.env.ABLY_API_KEY });
     await ably.channels.get('clubs').publish({ name: 'club-created', data: clubCreated });

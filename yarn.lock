@@ -1233,7 +1233,7 @@
     snakecase-keys "8.0.1"
     tslib "2.8.1"
 
-"@clerk/backend@^2.23.0":
+"@clerk/backend@^2.23.0", "@clerk/backend@^2.29.0":
   version "2.29.0"
   resolved "https://registry.yarnpkg.com/@clerk/backend/-/backend-2.29.0.tgz#5b225ad63abb5bcc014345ec9ade840f05c49306"
   integrity sha512-cw4CK6ZHgeFROirlIOawelqRBxZAyH6v3GPSYZEEzYAL0WWUHx7cMXzoQcTMruH7w6UM7s3Ox+uUcINESWkQPA==
