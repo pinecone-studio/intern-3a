@@ -13,6 +13,15 @@ export type DaytimeType = {
   endTime: string;
 };
 
+export type ClassLevelScheduleType = {
+  MON?: DaytimeType;
+  TUE?: DaytimeType;
+  WED?: DaytimeType;
+  THU?: DaytimeType;
+  FRI?: DaytimeType;
+  SAT?: DaytimeType;
+  SUN?: DaytimeType;
+};
 export type WeekScheduleType = Partial<Record<WeekDayType, DaytimeType>>;
 
 export type ScheduledClubTimesByClassLevelsType = Partial<Record<ClassLevelsType, WeekScheduleType>>;
@@ -20,34 +29,29 @@ export type ScheduledClubTimesByClassLevelsType = Partial<Record<ClassLevelsType
 export type TeacherInfoType = {
   teacherImage?: string | File;
   teacherImagePreview?: string;
-  teacherName: string;
-  teacherPhone: string;
-  teacherEmail: string;
-  teacherProfession: string;
-  teacherExperience: string;
-  teacherAchievement: string;
+  teacherName?: string;
+  teacherPhone?: string;
+  teacherEmail?: string;
+  teacherProfession?: string;
+  teacherExperience?: string;
+  teacherAchievement?: string;
 };
 
 export type TeachersByClassLevelsType = { [key in ClassLevelsType]?: TeacherInfoType };
 
 export type NewClubType = {
   _id?: string;
-  clubName: string;
   clubCategoryName: string;
+  clubSubCategoryName: string;
+  clubName: string;
   selectedClassLevelNames?: ClassLevelsType[];
   clubPrices?: ClubPricesType;
-  clubImage: string | File;
-  clubDescription: string;
-  selectedClubWorkingDays?: WeekDayType[];
   scheduledClubTimes?: ScheduledClubTimesByClassLevelsType;
+  teachersInfoByClass?: TeachersByClassLevelsType;
+  clubDescription: string;
+  clubImage?: string | File;
+  clubImagePreview?: string;
   clubAddress: string;
   clubLat: number;
   clubLong: number;
-  teacherImage: string | File;
-  teacherName: string;
-  teacherPhone: string;
-  teacherEmail: string;
-  teacherProfession: string;
-  teacherExperience: string;
-  teacherAchievement: string;
 };

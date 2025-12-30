@@ -21,6 +21,7 @@ export async function POST(req: NextRequest) {
     const admin = await User.findOne({
       userClerkId: userClerkId,
     });
+    console.log({ admin });
 
     const newFormData = await req.formData();
     const clubCategoryName = newFormData.get('clubCategoryName')?.toString();
@@ -31,6 +32,16 @@ export async function POST(req: NextRequest) {
     const clubPricesRaw = JSON.parse(newFormData.get('clubPrices')?.toString() || '{}') as ClubPricesType;
     const scheduledClubTimesRaw = JSON.parse(newFormData.get('scheduledClubTimes')?.toString() || '{}') as ScheduledClubTimesByClassLevelsType;
     const teachersInfoByClassRaw = JSON.parse(newFormData.get('teachersInfoByClass')?.toString() || '{}') as TeachersByClassLevelsType;
+
+    for (const level of selectedClassLevelNames) {
+      const file = newFormData.get(`teacherImage_${level}`) as File | null;
+      if (file) {
+        const url = await uploadImageToCloudinary(file);
+        if (teachersInfoByClassRaw[level]) {
+          teachersInfoByClassRaw[level].teacherImage = url;
+        }
+      }
+    }
 
     const clubDescription = newFormData.get('clubDescription')?.toString();
     const clubImage = newFormData.get('clubImage') as File | null;
@@ -75,11 +86,6 @@ export async function POST(req: NextRequest) {
       clubImageUrl = await uploadImageToCloudinary(clubImage);
     }
 
-    let teacherImageUrl = '';
-    if (teacherImage) {
-      teacherImageUrl = await uploadImageToCloudinary(teacherImage);
-    }
-
     const newClubData: NewClubType = {
       clubCategoryName,
       clubSubCategoryName,
@@ -95,7 +101,13 @@ export async function POST(req: NextRequest) {
       clubLong,
     };
 
-    const clubCreated = await createNewClub(newClubData);
+    let clubCreated;
+
+    if (admin.userStatus !== 'ADMIN') {
+      return NextResponse.json({ message: 'Forbidden: Only admins can create clubs' }, { status: 403 });
+    } else {
+      clubCreated = await createNewClub(newClubData);
+    }
 
     const ably = new Ably.Rest({ key: process.env.ABLY_API_KEY });
     await ably.channels.get('clubs').publish({ name: 'club-created', data: clubCreated });
