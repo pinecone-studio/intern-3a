@@ -54,4 +54,5 @@ export type NewClubType = {
   clubAddress: string;
   clubLat: number;
   clubLong: number;
+  adminId: string;
 };

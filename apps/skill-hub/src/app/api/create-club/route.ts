@@ -99,6 +99,7 @@ export async function POST(req: NextRequest) {
       clubAddress,
       clubLat,
       clubLong,
+      adminId: admin._id,
     };
 
     let clubCreated;

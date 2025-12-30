@@ -24,18 +24,18 @@ const ClassLevelScheduleSchema = new Schema(
 
 const TeacherInfoSchema = new Schema(
   {
-    teacherImage: String,
-    teacherName: String,
-    teacherPhone: String,
-    teacherEmail: String,
-    teacherProfession: String,
-    teacherExperience: String,
-    teacherAchievement: String,
+    teacherImage: { type: String, default: undefined },
+    teacherName: { type: String, default: undefined },
+    teacherPhone: { type: String, default: undefined },
+    teacherEmail: { type: String, default: undefined },
+    teacherProfession: { type: String, default: undefined },
+    teacherExperience: { type: String, default: undefined },
+    teacherAchievement: { type: String, default: undefined },
   },
   { _id: false },
 );
 
-export type ClubSchemaType = {
+export type NewClubSchemaType = {
   clubCategoryName: string;
   clubSubCategoryName: string;
   clubName: string;
@@ -55,9 +55,10 @@ export type ClubSchemaType = {
   clubAddress: string;
   clubLat: number;
   clubLong: number;
+  adminId: mongoose.Types.ObjectId;
 };
 
-export const ClubSchema = new Schema(
+export const NewClubSchema = new Schema(
   {
     clubCategoryName: { type: String, required: true },
     clubSubCategoryName: { type: String, required: true },
@@ -73,15 +74,16 @@ export const ClubSchema = new Schema(
       Middle: { type: Number },
       High: { type: Number },
     },
-    scheduledClubTimes: { type: Map, of: ClassLevelScheduleSchema },
-    teachersInfoByClass: { type: Map, of: TeacherInfoSchema },
+    scheduledClubTimes: { type: Map, of: ClassLevelScheduleSchema, default: {} },
+    teachersInfoByClass: { type: Map, of: TeacherInfoSchema, default: {} },
     clubDescription: { type: String, required: true },
     clubImage: { type: String, required: true },
     clubAddress: { type: String, required: true },
     clubLat: { type: Number, required: true },
     clubLong: { type: Number, required: true },
+    adminId: { type: Schema.ObjectId, ref: 'User', required: true },
   },
   { timestamps: true, versionKey: false },
 );
 
-export const Club = mongoose.models.Club || mongoose.model<ClubSchemaType>('Club', ClubSchema);
+export const NewClub = mongoose.models.NewClub || mongoose.model<NewClubSchemaType>('NewClub', NewClubSchema);
