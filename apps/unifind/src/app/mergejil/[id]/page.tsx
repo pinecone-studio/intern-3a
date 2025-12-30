@@ -2,11 +2,13 @@
 import { ArrowRight, Bookmark, Calendar, Download, ExternalLink, Share2, User } from 'lucide-react';
 
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 import useSWR from 'swr';
-import { Avatar } from '../components/ui/avatar';
-import { Badge } from '../components/ui/badge';
-import { Button } from '../components/ui/button';
-import { Card } from '../components/ui/card';
+import { Avatar } from '../../components/ui/avatar';
+import { Badge } from '../../components/ui/badge';
+import { Button } from '../../components/ui/button';
+import { Card } from '../../components/ui/card';
+
 type Subject = {
   id: number;
   name: string;
@@ -32,16 +34,16 @@ type Major = {
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-interface Props {
-  universityId?: number;
-}
+export default function Mergejil({ searchParams }: { searchParams: Promise<{ id: string }> }) {
+  const params = useParams();
+  const majorId = Number(params.id);
 
-export default function AdmissionPage({ universityId }: Props) {
-  const query = universityId ? `?university_id=${universityId}` : '';
-  const { data, error, isLoading } = useSWR<Major[]>(`/api/majors${query}`, fetcher);
+  const { data, error, isLoading } = useSWR(`/api/majors/${majorId}`, fetcher);
 
   if (isLoading) return <p>Уншиж байна...</p>;
-  if (error) return <p>Өгөгдөл авахад алдаа гарлаа</p>;
+  if (error) return <p>Алдаа гарлаа</p>;
+  if (!data) return <p>Мэргэжил олдсонгүй</p>;
+
   function getDaysLeft(targetDate: string) {
     const today = new Date();
     const target = new Date(targetDate);
@@ -52,6 +54,7 @@ export default function AdmissionPage({ universityId }: Props) {
     return diffDays;
   }
   const daysLeft = getDaysLeft('2026-8-15');
+  console.log({ data });
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -63,10 +66,10 @@ export default function AdmissionPage({ universityId }: Props) {
           </Link>
           <span>›</span>
           <Link href="/universities" className="text-cyan-600 hover:text-cyan-700">
-            Технологийн их сургууль
+            {data.universities.name}
           </Link>
           <span>›</span>
-          <span className="text-gray-900">Компьютерийн шинжлэх ухаан</span>
+          <span className="text-gray-900"> {data.universities.name}</span>
         </div>
 
         {/* Title Section */}
@@ -77,7 +80,7 @@ export default function AdmissionPage({ universityId }: Props) {
                 <Badge className="bg-cyan-100 text-cyan-700 hover:bg-cyan-100">#КШУ-2024</Badge>
                 <Badge className="bg-green-100 text-green-700 hover:bg-green-100">Элсэлт нээлттэй</Badge>
               </div>
-              <h1 className="text-4xl font-bold mb-4 text-gray-900">Компьютерийн шинжлэх ухаан ба инженерчлэл</h1>
+              <h1 className="text-4xl font-bold mb-4 text-gray-900">{data.name}</h1>
               <p className="text-lg text-blue-600 leading-relaxed max-w-3xl">
                 Програм хангамж боловсруулах, дэвшилтэт алгоритм, хиймэл оюун ухаан болон системийн архитектур дээр төвлөрсөн иж бүрэн хөтөлбөр. Онолын үндэс ба практик хэрэглээний хослолоор дээд
                 зэргийн технологийн карьерт оюутнуудыг бэлтгэхэд зориулагдсан.
