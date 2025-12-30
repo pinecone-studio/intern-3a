@@ -1,3 +1,5 @@
+'use client';
+
 import { ablyClient } from '@/lib/ably';
 import { NewClubType } from '@/lib/utils/types';
 import type * as Ably from 'ably';

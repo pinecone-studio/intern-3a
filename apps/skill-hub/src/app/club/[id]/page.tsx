@@ -3,7 +3,7 @@
 import ClubNextClasses from '@/app/_components/ClubNextClasses';
 import { useClubById } from '@/app/hook/use-club-by-id';
 import { Button } from '@intern-3a/shadcn';
-import { Calendar, Clock, Mail, MapPin, Phone, User } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, Mail, MapPin, Phone, User } from 'lucide-react';
 import { notFound, useRouter } from 'next/navigation';
 import { use, useState } from 'react';
 
@@ -40,6 +40,11 @@ export default function ClubDetailPage({ params }: PageProps) {
         {/* ЗҮҮН ТАЛ (40%) - Бүх мэдээлэл болон Үйлдэл */}
         <div className="w-full lg:w-[40%] space-y-6 sticky top-8">
           {/* Бүртгүүлэх болон Үндсэн мэдээллийн карт */}
+          <div>
+            <Button variant={'ghost'} className="rounded-lg hover:bg-slate-100 border border-slate-200 shadow-xl shadow-slate-100/50" onClick={() => router.push(`/`)}>
+              <ArrowLeft />
+            </Button>
+          </div>
           <div className="bg-white rounded-4xl border border-slate-100 shadow-xl shadow-slate-100/50 p-6 md:p-8 space-y-6">
             <div className="space-y-4">
               <span className="bg-orange-100 text-orange-700 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest">{club.clubCategoryName}</span>

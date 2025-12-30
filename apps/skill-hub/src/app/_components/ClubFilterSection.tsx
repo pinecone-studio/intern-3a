@@ -3,16 +3,17 @@ import { ClassLevelsType } from '@/lib/utils/types';
 import { Calendar, Clock } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useClub } from '../hook/use-club';
+import FilteredResult from './FilteredResult';
 
 export const ClubFilterSection = () => {
-  const { allClubs, isLoading } = useClub();
+  const { allClubs } = useClub();
   const [selectedClass, setSelectedClass] = useState<ClassLevelsType | ''>('');
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [selectedTime, setSelectedTime] = useState<string>('');
   const [selectedSport, setSelectedSport] = useState<string>('');
   const [selectedGenre, setSelectedGenre] = useState<string>('');
 
-  const ResetFilters = () => {
+  const resetFilters = () => {
     setSelectedClass('');
     setSelectedDate('');
     setSelectedTime('');
@@ -189,7 +190,7 @@ export const ClubFilterSection = () => {
     { day: 'Sunday', label: 'Ням' },
   ];
 
-  const isFiltered = selectedClass || selectedDate || selectedTime || selectedGenre || selectedSport;
+  const isFiltered = Boolean(selectedClass || selectedDate || selectedTime || selectedGenre || selectedSport);
 
   return (
     <div className="relative">
@@ -317,63 +318,7 @@ export const ClubFilterSection = () => {
             </div>
           )}
 
-          {/* Display Filtered Clubs Results */}
-          {isFiltered && (
-            <div className="max-w-6xl mx-auto mt-16">
-              <div className="mb-8 flex justify-between items-center">
-                <h3 className="text-2xl font-bold text-slate-900">Олдсон клубууд ({filteredClubs.length})</h3>
-                <button onClick={ResetFilters} className="px-6 py-2 bg-slate-900 text-white rounded-lg font-bold hover:bg-slate-700 transition-all">
-                  Шүүлтүүрийг цэвэрлэх
-                </button>
-              </div>
-
-              {isLoading ? (
-                <div className="text-center py-16 bg-white/50 rounded-2xl border-2 border-slate-200">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto mb-4"></div>
-                  <p className="text-xl text-slate-600">Клубууд ачааллаж байна...</p>
-                </div>
-              ) : filteredClubs.length === 0 ? (
-                <div className="text-center py-16 bg-white/50 rounded-2xl border-2 border-slate-200">
-                  <p className="text-xl text-slate-600">Таны хайлтад тохирох клуб олдсонгүй</p>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {filteredClubs.map((club) => (
-                    <div key={club._id} className="bg-white rounded-2xl border-2 border-slate-200 overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                      <div className="aspect-video relative overflow-hidden bg-slate-100">
-                        {club.clubImage && <img src={typeof club.clubImage === 'string' ? club.clubImage : ''} alt={club.clubName} className="w-full h-full object-cover" />}
-                      </div>
-                      <div className="p-6">
-                        <h4 className="text-xl font-bold text-slate-900 mb-2">{club.clubName}</h4>
-                        <p className="text-orange-600 font-semibold mb-2">{club.clubCategoryName}</p>
-                        <p className="text-slate-600 text-sm mb-4 line-clamp-2">{club.clubDescription}</p>
-
-                        {club.selectedClassLevelNames && club.selectedClassLevelNames.length > 0 && (
-                          <div className="flex flex-wrap gap-2 mb-3">
-                            {club.selectedClassLevelNames.map((level) => (
-                              <span key={level} className="px-3 py-1 bg-slate-100 text-slate-700 text-xs font-semibold rounded-full">
-                                {level}
-                              </span>
-                            ))}
-                          </div>
-                        )}
-
-                        <div className="text-sm text-slate-600 mb-2">
-                          <strong>Багш:</strong> {club.teacherName}
-                        </div>
-
-                        {club.clubAddress && (
-                          <div className="text-sm text-slate-600">
-                            <strong>Хаяг:</strong> {club.clubAddress}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
+          <FilteredResult filteredClubs={filteredClubs} isFiltered={isFiltered} resetFilters={resetFilters} />
         </div>
       </section>
     </div>
