@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model major_requirements {
+  id         Int      @id @default(autoincrement())
+  major_id   Int
+  subject_id Int
+  min_score  Int
+  majors     majors   @relation(fields: [major_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_req_major")
+  subjects   subjects @relation(fields: [subject_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_req_subject")
+
+  @@unique([major_id, subject_id], map: "unique_major_subject")
+}
+
+model majors {
+  id                 Int                  @id @default(autoincrement())
+  name               String
+  description        String?
+  degree_type        degree_type
+  university_id      Int
+  created_at         DateTime?            @default(now()) @db.Timestamp(6)
+  major_requirements major_requirements[]
+  universities       universities         @relation(fields: [university_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_major_university")
+}
+
+model subjects {
+  id                 Int                  @id @default(autoincrement())
+  name               String
+  type               subject_type
+  major_requirements major_requirements[]
+}
+
+model universities {
+  id          Int       @id @default(autoincrement())
+  name        String
+  city        String
+  description String?
+  website     String?
+  created_at  DateTime? @default(now()) @db.Timestamp(6)
+  majors      majors[]
+}
+
+enum degree_type {
+  BACHELOR
+  MASTER
+  DOCTOR
+}
+
+enum subject_type {
+  MATH
+  ENGLISH
+  MONGOLIAN
+  PHYSICS
+  CHEMISTRY
+  BIOLOGY
+  GEOGRAPHY
+  HISTORY
+  INFORMATICS
+  SOCIOLOGY
+}
