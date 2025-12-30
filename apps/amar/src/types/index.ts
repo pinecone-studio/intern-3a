@@ -28,3 +28,36 @@ export interface GenerateStudyPlanRequest {
 export interface GenerateStudyPlanResponse {
   plan: WeeklyStudyPlan;
 }
+
+//Homework types
+export interface HomeworkHintRequest {
+  question: string;
+}
+
+export interface HomeworkHintStep {
+  step: number;
+  hint: string;
+}
+
+export interface HomeworkHintResponse {
+  steps: HomeworkHintStep[];
+}
+
+//Exam types
+
+export interface ExamQuestion {
+  id: string;
+  question: string;
+  options: string[];
+  correctAnswerIndex: number;
+}
+
+export interface GenerateExamRequest {
+  subject: string;
+  topic: string;
+  difficulty: "Easy" | "Medium" | "Hard";
+}
+
+export interface GenerateExamResponse {
+  questions: ExamQuestion[];
+}
