@@ -1,0 +1,10 @@
+{
+  "projectId": "__YOUR_PROJECT_ID__",
+  "orgId": "__YOUR_TEAM_ID__",
+  "settings": {
+    "framework": "nextjs",
+    "installCommand": "yarn --immutable",
+    "buildCommand": "nx build --skip-nx-cache unifind",
+    "outputDirectory": "apps/unifind/.next"
+  }
+}
