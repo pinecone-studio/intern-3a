@@ -40,6 +40,13 @@ export type TeacherInfoType = {
 export type TeachersByClassLevelsType = { [key in ClassLevelsType]?: TeacherInfoType };
 
 export type NewClubType = {
+  teacherEmail: string;
+  teacherPhone: string;
+  teacherAchievement: string;
+  teacherExperience: string;
+  teacherProfession: string;
+  teacherName: string | undefined;
+  teacherImage: string;
   _id?: string;
   clubCategoryName: string;
   clubSubCategoryName: string;

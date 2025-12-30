@@ -39,6 +39,10 @@ export default function ClubCard({ club }: { club: NewClubType }) {
       setOpen(true);
     }
   };
+  const [selectedClass, setSelectedClass] = useState<ClassLevelsType | null>(null);
+  const [selectedDay, setSelectedDay] = useState<WeekDayType | null>(null);
+
+  const classLevels: ClassLevelsType[] = ['Elementary', 'Middle', 'High'];
 
   return (
     <div className="max-w-lg mx-auto relative">
@@ -104,43 +108,46 @@ export default function ClubCard({ club }: { club: NewClubType }) {
             </button>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <div className="relative">
-                  <img src={club.clubImage as string} alt={club.clubName} className="w-full h-48 object-cover rounded-lg" />
+              <div>
+                <img className="w-70" src={club.clubImage} alt={club.clubName} />
+                <div className="font-semibold mb-2">Багш</div>
 
-                  <div className="absolute top-4 left-4 bg-[#FCB027] text-white rounded-full inline-block px-2 py-1">
-                    <h2 className="text-1xl font-bold drop-shadow">{club.clubName}</h2>
-                  </div>
-                </div>
-
-                <div className="pt-4 border-t">
-                  <div className="font-semibold mb-2">Багш</div>
-                  <div className="flex items-center gap-3 flex-col">
-                    <img src={club.teacherImage as string} alt={club.teacherName} className="w-16 h-16 rounded-full object-cover" />
-                    <div className="text-center">
-                      <p className="font-medium">{club.teacherName}</p>
-                      <div className="text-sm text-gray-600 mt-1">
-                        <div>
-                          <span className="font-semibold">Мэргэжил:</span> {club.teacherProfession}
-                        </div>
-                        <div>
-                          <span className="font-semibold">Туршлага:</span> {club.teacherExperience || '—'}
-                        </div>
-                        <div>
-                          <span className="font-semibold">Амжилт:</span> {club.teacherAchievement || '—'}
+                {club.teachersInfoByClass && Object.entries(club.teachersInfoByClass).length > 0 ? (
+                  <div className="flex flex-col gap-4">
+                    {Object.entries(club.teachersInfoByClass).map(([classLevel, teacher]) => (
+                      <div key={classLevel} className="flex items-center gap-3 flex-col border p-3 rounded-lg bg-gray-50">
+                        <div className="text-center">
+                          <p className="font-medium">{teacher.teacherName || '—'}</p>
+                          <img src={teacher.teacherImage || '/default-avatar.png'} alt={teacher.teacherName} className="w-16 h-16 rounded-full object-cover mx-auto my-2" />
+                          <div className="text-sm text-gray-600 mt-1">
+                            <div>
+                              <span className="font-semibold">Анги:</span> {CLASS_LEVEL_LABEL_MN[classLevel as ClassLevelsType]}
+                            </div>
+                            <div>
+                              <span className="font-semibold">Мэргэжил:</span> {teacher.teacherProfession || '—'}
+                            </div>
+                            <div>
+                              <span className="font-semibold">Туршлага:</span> {teacher.teacherExperience || '—'}
+                            </div>
+                            <div>
+                              <span className="font-semibold">Амжилт:</span> {teacher.teacherAchievement || '—'}
+                            </div>
+                          </div>
+                          <div className="mt-2 text-sm text-gray-700">
+                            <div className="flex items-center gap-2 justify-center">
+                              <Phone className="w-4 h-4 text-gray-500" /> <span>{teacher.teacherPhone || '—'}</span>
+                            </div>
+                            <div className="flex items-center gap-2 justify-center mt-1">
+                              <Mail className="w-4 h-4 text-gray-500" /> <span>{teacher.teacherEmail || '—'}</span>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                      <div className="mt-2 text-sm text-gray-700">
-                        <div className="flex items-center gap-2 justify-center">
-                          <Phone className="w-4 h-4 text-gray-500" /> <span>{club.teacherPhone || '—'}</span>
-                        </div>
-                        <div className="flex items-center gap-2 justify-center mt-1">
-                          <Mail className="w-4 h-4 text-gray-500" /> <span>{club.teacherEmail || '—'}</span>
-                        </div>
-                      </div>
-                    </div>
+                    ))}
                   </div>
-                </div>
+                ) : (
+                  <span>Багшийн мэдээлэл алга</span>
+                )}
               </div>
 
               <div className="space-y-4">
@@ -170,6 +177,47 @@ export default function ClubCard({ club }: { club: NewClubType }) {
                   <p className="font-medium mt-1">{CLASS_LEVEL_LABEL_MN[club.clubCategoryName as ClassLevelsType] || club.clubCategoryName}</p>
                 </div>
 
+                <div className="flex gap-4">
+                  <div className="inline-flex items-center gap-2">
+                    <Calendar className="w-5 h-5" style={{ color: '#FCB027' }} aria-hidden />
+                    <span className="sr-only">Хичээлийн хуваарь</span>
+                    {club.scheduledClubTimes && Object.entries(club.scheduledClubTimes).length > 0 ? (
+                      <div className="mt-2 flex flex-wrap gap-3"></div>
+                    ) : (
+                      <span className="font-medium mt-1">Хуваарь оруулаагүй</span>
+                    )}
+                  </div>
+                  <div>
+                    {open && (
+                      <div className="">
+                        <div className="flex gap-2 mb-3">
+                          {classLevels.map((level) => (
+                            <button
+                              key={level}
+                              className={`px-3 py-1 rounded ${selectedClass === level ? 'bg-[#FCB027] text-white' : 'bg-gray-200 text-gray-800'}`}
+                              onClick={() => setSelectedClass(level)}
+                            >
+                              {CLASS_LEVEL_LABEL_MN[level]}
+                            </button>
+                          ))}
+                        </div>
+
+                        {selectedClass && club.scheduledClubTimes[selectedClass] && (
+                          <div className="flex flex-col gap-2">
+                            {Object.entries(club.scheduledClubTimes[selectedClass]).map(([day, schedule]) => (
+                              <div key={day} className=" flex gap-3">
+                                <span className="font-semibold">{WEEK_DAY_LABEL_MN[day as WeekDayType]}:</span>
+                                <span>
+                                  Эхлэх: {schedule.startTime} - Дуусах: {schedule.endTime}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
                 <div>
                   <p className=" text-[#FCB027]">Төлбөр сараар</p>
                   <div className="mt-2 flex flex-wrap gap-2 ml-8">
@@ -181,26 +229,6 @@ export default function ClubCard({ club }: { club: NewClubType }) {
                       ))
                     ) : (
                       <span>—</span>
-                    )}
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="inline-flex items-center gap-2">
-                    <Calendar className="w-5 h-5" style={{ color: '#FCB027' }} aria-hidden />
-                    <span className="sr-only">Хичээлийн хуваарь</span>
-                  </div>
-                  <div className="mt-1 text-sm text-gray-700">
-                    {Object.entries(club.scheduledClubTimes || {}).length === 0 ? (
-                      <p>Хуваарь оруулаагүй</p>
-                    ) : (
-                      Object.entries(club.scheduledClubTimes || {}).map(([day, t]) => (
-                        <div key={day} className="flex gap-4">
-                          <span className="font-medium">{WEEK_DAY_LABEL_MN[day as WeekDayType]}</span>
-                          <span>
-                            {t?.startTime} – {t?.endTime}
-                          </span>
-                        </div>
-                      ))
                     )}
                   </div>
                 </div>
