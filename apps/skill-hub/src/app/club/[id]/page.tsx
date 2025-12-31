@@ -2,8 +2,9 @@
 
 import { ClubDetailPageSkeleton } from '@/app/_components/ClubDetailPageSkeleton';
 import ClubNextClasses from '@/app/_components/ClubNextClasses';
+import MapView from '@/app/_components/MapView';
 import { useClubById } from '@/app/hook/use-club-by-id';
-import { Button } from '@intern-3a/shadcn';
+import { Button, Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@intern-3a/shadcn';
 import { ArrowLeft, Calendar, Clock, Mail, MapPin, Phone, User } from 'lucide-react';
 import Image from 'next/image';
 import { notFound, useRouter } from 'next/navigation';
@@ -83,10 +84,29 @@ export default function ClubDetailPage({ params }: PageProps) {
                 </div>
               </div>
 
-              <div className="flex items-start gap-2 text-slate-500 bg-slate-50 p-3 rounded-xl">
-                <MapPin className="w-5 h-5 text-orange-600 shrink-0 mt-0.5" />
-                <span className="text-sm font-medium">{club.clubAddress}</span>
-              </div>
+              {/* ГАЗРЫН ЗУРАГ НЭЭХ ХЭСЭГ */}
+              <Dialog>
+                <DialogTrigger asChild>
+                  <button className="w-full flex items-start gap-2 text-slate-500 bg-slate-50 p-4 rounded-xl hover:bg-orange-50 transition-colors border border-transparent hover:border-orange-200 group">
+                    <MapPin className="w-5 h-5 text-orange-600 shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
+                    <div className="text-left">
+                      <span className="text-sm font-medium block">{club.clubAddress}</span>
+                      <span className="text-[10px] text-orange-600 font-bold uppercase tracking-tight">Газрын зураг харах</span>
+                    </div>
+                  </button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-175 p-0 overflow-hidden rounded-2xl">
+                  <DialogHeader className="p-4 absolute z-10 top-0 left-0 w-full bg-white/80 backdrop-blur-md">
+                    <DialogTitle className="flex items-center gap-2">
+                      <MapPin className="w-5 h-5 text-orange-600" />
+                      {club.clubName} байршил
+                    </DialogTitle>
+                  </DialogHeader>
+                  <div className="w-full h-125">
+                    <MapView lat={club.clubLat} lng={club.clubLong} />
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
 
             <div className="flex items-center justify-between p-4 bg-orange-50 rounded-2xl border border-orange-100">
@@ -158,6 +178,7 @@ export default function ClubDetailPage({ params }: PageProps) {
         </div>
 
         {/* БАРУУН ТАЛ */}
+
         <div className="w-full lg:w-[60%] space-y-8">
           {showSchedule && (
             <div className="bg-white rounded-[2.5rem] border-2 border-orange-100 p-6 md:p-8 animate-in zoom-in-95 duration-300">
