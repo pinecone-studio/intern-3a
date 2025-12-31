@@ -1,6 +1,6 @@
 'use client';
-import { ClassLevelsType, NewClubType, WeekDayType } from '@/lib/utils/types';
-import { Calendar, Clock } from 'lucide-react';
+import { ClassLevelsType, NewClubType, TimeSlotValueType, WeekDayType } from '@/lib/utils/types';
+import { Backpack, Calendar, Clock } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import FilteredResult from './FilteredResult';
 
@@ -21,33 +21,21 @@ export const FilteredClubsForUser = ({ allClubs }: { allClubs: NewClubType[] }) 
     setSelectedGenre('');
   };
 
-  const CLASS_LEVEL_MN_LABEL: Record<ClassLevelsType, string> = {
-    Elementary: 'Бага анги',
-    Middle: 'Дунд анги',
-    High: 'Ахлах анги',
-  };
-  const classesFromClubs = useMemo(() => {
-    const classSet = new Set<ClassLevelsType>();
-    allClubs.forEach((club) => {
-      club.selectedClassLevelNames?.forEach((level) => classSet.add(level));
-    });
-    return Array.from(classSet).map((level) => ({
-      label: CLASS_LEVEL_MN_LABEL[level],
-      value: level,
-    }));
-  }, [allClubs]);
+  const classes = [
+    { label: 'Бага анги', value: 'Elementary' },
+    { label: 'Дунд анги', value: 'Middle' },
+    { label: 'Ахлах анги', value: 'High' },
+  ];
 
-  const WEEKDAY_MN_LABEL: Record<WeekDayType, string> = {
-    MON: 'Даваа',
-    TUE: 'Мягмар',
-    WED: 'Лхагва',
-    THU: 'Пүрэв',
-    FRI: 'Баасан',
-    SAT: 'Бямба',
-    SUN: 'Ням',
-  };
-
-  const availableDays: WeekDayType[] = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+  const availableDays: { day: WeekDayType; label: string }[] = [
+    { day: 'MON', label: 'Даваа' },
+    { day: 'TUE', label: 'Мягмар' },
+    { day: 'WED', label: 'Лхагва' },
+    { day: 'THU', label: 'Пүрэв' },
+    { day: 'FRI', label: 'Баасан' },
+    { day: 'SAT', label: 'Бямба' },
+    { day: 'SUN', label: 'Ням' },
+  ];
 
   const genreTypeMap: Record<string, string> = {
     sports: 'SPORTS',
@@ -55,6 +43,12 @@ export const FilteredClubsForUser = ({ allClubs }: { allClubs: NewClubType[] }) 
     education: 'EDUCATION',
     entertainment: 'FUN',
   };
+
+  const timeSlots: { label: string; value: TimeSlotValueType; range: [number, number] }[] = [
+    { label: 'Үдээс өмнө', value: 'morning', range: [8, 12] },
+    { label: 'Үдээс хойш', value: 'afternoon', range: [12, 18] },
+    { label: 'Орой', value: 'evening', range: [18, 22] },
+  ];
 
   const courseNameMap: Record<string, string[]> = {
     Бөх: ['Wrestling Club'],
@@ -83,12 +77,6 @@ export const FilteredClubsForUser = ({ allClubs }: { allClubs: NewClubType[] }) 
     'Хүүхдийн тоглоом': ['Gaming Club', 'Fun Club', 'Cooking Club'],
   };
 
-  const timeSlots = [
-    { label: 'Үдээс өмнө', value: 'morning', range: [8, 12] },
-    { label: 'Үдээс хойш', value: 'afternoon', range: [12, 18] },
-    { label: 'Орой', value: 'evening', range: [18, 22] },
-  ];
-
   const filteredClubs = useMemo(() => {
     let filtered = [...allClubs];
 
@@ -109,17 +97,19 @@ export const FilteredClubsForUser = ({ allClubs }: { allClubs: NewClubType[] }) 
     }
 
     // Filter by time slot
-    if (selectedTime) {
+    if (selectedTime && selectedClass) {
       const timeSlot = timeSlots.find((slot) => slot.value === selectedTime);
       if (timeSlot) {
         const [startHour, endHour] = timeSlot.range;
-        filtered = filtered.filter((club) => {
-          if (!club.scheduledClubTimes) return false;
 
-          // Check if any scheduled time falls within the selected time range
-          return Object.values(club.scheduledClubTimes).some((time) => {
-            if (!time?.startTime) return false;
-            const clubHour = Number.parseInt(time.startTime.split(':')[0]);
+        filtered = filtered.filter((club) => {
+          const classSchedule = club?.scheduledClubTimes?.[selectedClass];
+          if (!classSchedule) return false;
+
+          return Object.values(classSchedule).some((dayTime) => {
+            if (!dayTime?.startTime) return false;
+
+            const clubHour = Number(dayTime.startTime.split(':')[0]);
             return clubHour >= startHour && clubHour < endHour;
           });
         });
@@ -203,49 +193,56 @@ export const FilteredClubsForUser = ({ allClubs }: { allClubs: NewClubType[] }) 
 
   return (
     <div className="relative">
-      {/* Sports Categories */}
+      {/* filters */}
       <section id="sports" className="py-16 md:py-24 relative z-10">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8" data-scroll-point="search-title">
-            <h2 className="text-4xl md:text-5xl font-black text-slate-900 mb-4">Дугуйлан хайх</h2>
-          </div>
-          <div className="flex justify-center mb-8" data-scroll-point="class-selector">
-            <div className="inline-flex bg-white/50 rounded-xl p-2 gap-2 border-2 border-slate-200 shadow-sm">
-              {classesFromClubs.map((classItem) => (
-                <button
-                  key={classItem.value}
-                  onClick={() => setSelectedClass(classItem.value as ClassLevelsType)}
-                  className={`px-6 py-3 rounded-lg font-bold transition-all duration-200 ${
-                    selectedClass === classItem.value ? 'bg-[#0A427A] text-white shadow-lg' : 'text-slate-600 hover:bg-slate-100'
-                  }`}
-                >
-                  {classItem.label}
-                </button>
-              ))}
-            </div>
+            <h2 className="text-4xl md:text-5xl font-black text-slate-900 mb-4">ӨӨРТ ОЙР ДУГУЙЛАН ХАЙХ</h2>
           </div>
 
           <div className="mb-16 max-w-4xl mx-auto" data-scroll-point="date-time">
-            <div className="bg-white/50 rounded-2xl p-8 border-2 border-slate-200 shadow-lg">
-              <div className="flex items-center gap-3 mb-6">
-                <Calendar className="w-6 h-6 text-orange-600" />
-                <h3 className="text-2xl font-black text-navy-900">Огноо ба цаг сонгох</h3>
+            <div className="bg-white/50 rounded-2xl p-8 border-2 border-slate-200 shadow-lg flex flex-col gap-8">
+              {/* Class Selector */}
+              <div data-scroll-point="class-selector">
+                <div className="flex items-center gap-2 mb-4">
+                  <Backpack className="w-5 h-5 text-orange-600" />
+                  <p className="text-sm font-bold text-slate-600 uppercase tracking-wide">Анги сонгох</p>
+                </div>
+
+                <div className="grid grid-cols-3 gap-3">
+                  {classes.map((classItem) => (
+                    <button
+                      key={classItem.value}
+                      onClick={() => setSelectedClass((prev) => (prev === classItem.value ? '' : (classItem.value as ClassLevelsType)))}
+                      className={`px-6 py-4 rounded-xl border-2 font-bold transition-all duration-200 cursor-pointer ${
+                        selectedClass === classItem.value
+                          ? 'bg-[#0A427A] hover:border-[#0A427A] border-[#0A427A] text-white shadow-lg'
+                          : 'border-slate-200 hover:border-orange-600 text-slate-700 hover:bg-slate-100 '
+                      }`}
+                    >
+                      {classItem.label}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               {/* Date Selector */}
-              <div className="mb-8">
-                <Calendar className="w-6 h-6 text-orange-600" />
-                <p className="text-sm font-bold text-slate-600 mb-4 uppercase tracking-wide">Өдөр сонгох</p>
+              <div>
+                <div className="flex items-center gap-2 mb-4">
+                  <Calendar className="w-5 h-5 text-orange-600" />
+                  <p className="text-sm font-bold text-slate-600 uppercase tracking-wide">Өдөр сонгох</p>
+                </div>
+
                 <div className="grid grid-cols-7 gap-3">
-                  {availableDays.map((day, i) => (
+                  {availableDays.map((d) => (
                     <button
-                      key={i}
-                      onClick={() => setSelectedDate(day)}
-                      className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all duration-200 ${
-                        selectedDate === day ? 'bg-orange-600 border-orange-600 text-white shadow-lg scale-105' : 'border-slate-200 hover:border-orange-600 text-slate-700 hover:bg-slate-50'
+                      key={d.day}
+                      onClick={() => setSelectedDate((prev) => (prev === d.day ? '' : d.day))}
+                      className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all duration-200 cursor-pointer ${
+                        selectedDate === d.day ? 'bg-orange-600 border-orange-600 text-white shadow-lg scale-105' : 'border-slate-200 hover:border-orange-600 text-slate-700 hover:bg-slate-100'
                       }`}
                     >
-                      <span className="text-xs font-bold text-center">{WEEKDAY_MN_LABEL[day]}</span>
+                      <span className="text-sm font-bold text-center">{d.label}</span>
                     </button>
                   ))}
                 </div>
@@ -257,13 +254,16 @@ export const FilteredClubsForUser = ({ allClubs }: { allClubs: NewClubType[] }) 
                   <Clock className="w-5 h-5 text-orange-600" />
                   <p className="text-sm font-bold text-slate-600 uppercase tracking-wide">Цаг сонгох</p>
                 </div>
+
                 <div className="grid grid-cols-3 gap-3">
                   {timeSlots.map((timeSlot) => (
                     <button
                       key={timeSlot.value}
-                      onClick={() => setSelectedTime(timeSlot.value)}
-                      className={`py-4 px-6 rounded-xl border-2 font-bold transition-all duration-200 ${
-                        selectedTime === timeSlot.value ? 'bg-slate-900 border-slate-900 text-white shadow-lg' : 'border-slate-200 hover:border-orange-600 text-slate-700 hover:bg-slate-50'
+                      onClick={() => setSelectedTime((prev) => (prev === timeSlot.value ? '' : timeSlot.value))}
+                      className={`py-4 px-6 rounded-xl border-2 font-bold transition-all duration-200 cursor-pointer ${
+                        selectedTime === timeSlot.value
+                          ? 'bg-[#0A427A] hover:bg-[#083563] border-[#0A427A] text-white shadow-lg'
+                          : 'border-slate-200 hover:border-orange-600 text-slate-700 hover:bg-slate-100'
                       }`}
                     >
                       <div className="text-center">
@@ -276,57 +276,56 @@ export const FilteredClubsForUser = ({ allClubs }: { allClubs: NewClubType[] }) 
                   ))}
                 </div>
               </div>
-            </div>
-          </div>
 
-          <div className="text-center mb-8">
-            <h2 className="text-xl md:text-2xl font-black text-slate-900 mb-4">Хичээл сонгох</h2>
-            <p className="text-lg text-slate-600 max-w-2xl mx-auto">Ангилалаас хичээлээ сонгоорой</p>
-          </div>
-
-          {/* Genre Tabs */}
-          <div className="max-w-4xl mx-auto mb-8 flex justify-center" data-scroll-point="genre">
-            <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-              {genres.map((genre) => (
-                <button
-                  key={genre.id}
-                  onClick={() => setSelectedGenre(genre.id)}
-                  className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold whitespace-nowrap transition-all duration-200 ${
-                    selectedGenre === genre.id ? 'bg-orange-600 text-white shadow-lg' : 'bg-white/50 text-slate-700 border-2 border-slate-200 hover:border-orange-400'
-                  }`}
-                >
-                  <span className="text-xl">{genre.icon}</span>
-                  <span>{genre.label}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Courses List - Scrollable */}
-          {selectedGenre && (
-            <div className="max-w-6xl mx-auto mb-16">
-              <div className="bg-white/50 rounded-2xl p-6 border-2 border-slate-200 shadow-lg">
-                <h3 className="text-xl font-bold text-slate-900 mb-4">{genres.find((g) => g.id === selectedGenre)?.label}</h3>
-                <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-orange-400 scrollbar-track-slate-100">
-                  {coursesByGenre[selectedGenre as keyof typeof coursesByGenre].map((item) => (
+              {/* Genre Tabs */}
+              <div data-scroll-point="genre">
+                <div className="flex items-center gap-2 mb-4">
+                  <Clock className="w-5 h-5 text-orange-600" />
+                  <p className="text-sm font-bold text-slate-600 uppercase tracking-wide">Цаг сонгох</p>
+                </div>
+                <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+                  {genres.map((genre) => (
                     <button
-                      key={item.name}
-                      onClick={() => setSelectedSport(item.name)}
-                      className={`shrink-0 w-32 p-5 rounded-xl border-2 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg ${
-                        selectedSport === item.name ? 'border-orange-500 bg-orange-50 shadow-md' : 'border-slate-200 /50 hover:border-orange-300'
+                      key={genre.id}
+                      onClick={() => setSelectedGenre(genre.id)}
+                      className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold whitespace-nowrap transition-all duration-200 ${
+                        selectedGenre === genre.id ? 'bg-orange-600 text-white shadow-lg' : 'bg-white/50 text-slate-700 border-2 border-slate-200 hover:border-orange-400'
                       }`}
                     >
-                      <div className="flex flex-col items-center gap-2">
-                        <div className={`text-4xl transition-transform duration-300 ${selectedSport === item.name ? 'scale-110' : 'group-hover:scale-110'}`}>{item.icon}</div>
-                        <span className={`font-semibold text-xs text-center transition-colors ${selectedSport === item.name ? 'text-orange-600' : 'text-slate-700'}`}>{item.name}</span>
-                      </div>
-                      {selectedSport === item.name && <div className="mt-2 w-full h-1 bg-orange-500 rounded-full"></div>}
+                      <span className="text-xl">{genre.icon}</span>
+                      <span>{genre.label}</span>
                     </button>
                   ))}
                 </div>
               </div>
+
+              {/* Courses List - Scrollable */}
+              {selectedGenre && (
+                <div className="max-w-6xl mx-auto mb-16">
+                  <div className="bg-white/50 rounded-2xl p-6 border-2 border-slate-200 shadow-lg">
+                    <h3 className="text-xl font-bold text-slate-900 mb-4">{genres.find((g) => g.id === selectedGenre)?.label}</h3>
+                    <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-orange-400 scrollbar-track-slate-100">
+                      {coursesByGenre[selectedGenre as keyof typeof coursesByGenre].map((item) => (
+                        <button
+                          key={item.name}
+                          onClick={() => setSelectedSport(item.name)}
+                          className={`shrink-0 w-32 p-5 rounded-xl border-2 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg ${
+                            selectedSport === item.name ? 'border-orange-500 bg-orange-50 shadow-md' : 'border-slate-200 /50 hover:border-orange-300'
+                          }`}
+                        >
+                          <div className="flex flex-col items-center gap-2">
+                            <div className={`text-4xl transition-transform duration-300 ${selectedSport === item.name ? 'scale-110' : 'group-hover:scale-110'}`}>{item.icon}</div>
+                            <span className={`font-semibold text-xs text-center transition-colors ${selectedSport === item.name ? 'text-orange-600' : 'text-slate-700'}`}>{item.name}</span>
+                          </div>
+                          {selectedSport === item.name && <div className="mt-2 w-full h-1 bg-orange-500 rounded-full"></div>}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
-          )}
+          </div>
 
           <FilteredResult filteredClubs={filteredClubs} isFiltered={isFiltered} resetFilters={resetFilters} />
         </div>

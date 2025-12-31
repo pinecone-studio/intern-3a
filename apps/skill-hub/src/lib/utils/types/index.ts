@@ -56,3 +56,5 @@ export type NewClubType = {
   clubLong: number;
   adminId: string;
 };
+
+export type TimeSlotValueType = 'morning' | 'afternoon' | 'evening';

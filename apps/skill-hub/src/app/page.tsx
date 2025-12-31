@@ -5,7 +5,6 @@ import { Spinner } from '@intern-3a/shadcn';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { AllClubsCardScrollAnimation, ClubFilterSection, FilteredClubsForUser } from './_components';
-import { FilteredClubs } from './_components/filteredClubs';
 import { Intro } from './_components/Intro';
 import { useClub } from './hook/use-club';
 
@@ -56,7 +55,6 @@ export default function Index() {
       <AllClubsCardScrollAnimation />
       <FilteredClubsForUser allClubs={allClubs} />
       <ClubFilterSection />
-      {/* <FilteredClubs /> */}
     </div>
   );
 }
