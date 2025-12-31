@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 
 export async function GET(_req: Request, context: any) {
   const majorId = Number(context.params.id);
+  console.log('dkosvnsdjkfnbfdj', context.params.id);
 
   if (isNaN(majorId)) {
     return NextResponse.json({ error: 'Invalid major id' }, { status: 400 });
