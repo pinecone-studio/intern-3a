@@ -3,9 +3,6 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "prepare": "husky",
-    "create-project": "./tools/create-project.sh",
-    "clean": "rm -rf node_modules tmp dist .next coverage results .nyc_output test-output out build .cache .turbo .parcel-cache apps/**/node_modules apps/**/dist apps/**/.next apps/**/coverage apps/**/results apps/**/.nyc_output libs/**/node_modules libs/**/dist libs/**/coverage",
     "commit": "cz",
     "commit-all": "git add -A && cz"
   },
@@ -169,7 +166,6 @@
   },
   "workspaces": [
     "libs/shared/*",
-    "apps/*",
-    "app/*"
+    "apps/*"
   ]
 }

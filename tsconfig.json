@@ -4,15 +4,6 @@
   "files": [],
   "references": [
     {
-      "path": "./libs/shared/ui"
-    },
-    {
-      "path": "./apps/todo-be"
-    },
-    {
-      "path": "./apps/todo-fe"
-    },
-    {
       "path": "./apps/skill-hub-e2e"
     },
     {
