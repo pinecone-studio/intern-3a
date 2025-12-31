@@ -23,6 +23,12 @@
     },
     {
       "path": "./apps/amar"
+    },
+    {
+      "path": "./apps/sample-e2e"
+    },
+    {
+      "path": "./apps/sample"
     }
   ]
 }
