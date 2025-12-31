@@ -1,10 +1,10 @@
 'use client';
 
 import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton, useUser } from '@clerk/nextjs';
-import { GraduationCap, Search } from 'lucide-react';
+import { GraduationCap } from 'lucide-react';
 import Link from 'next/link';
+import { SearchUniversity } from '../_components/SeachUniversity';
 import { Button } from '../components/ui/button';
-import { Input } from '../components/ui/input';
 
 export function Header() {
   const { user } = useUser();
@@ -38,10 +38,7 @@ export function Header() {
 
         {/* Profile */}
         <div className="flex items-center gap-3">
-          <div className="relative hidden md:block">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-            <Input placeholder="Их сургууль хайх..." className="w-64 pl-9 bg-gray-50 border-gray-200" />
-          </div>
+          <SearchUniversity />
 
           <SignedOut>
             <SignInButton>
