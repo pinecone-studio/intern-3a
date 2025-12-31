@@ -7,5 +7,5 @@ export * from './FilteredResult';
 export * from './Header';
 export * from './Intro';
 export * from './Map';
-export * from './MapContent';
+// export * from './MapContent';
 export * from './MyUserButton';

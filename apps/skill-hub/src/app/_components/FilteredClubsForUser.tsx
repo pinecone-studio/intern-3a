@@ -1,18 +1,18 @@
 'use client';
-import { ClassLevelsType } from '@/lib/utils/types';
+import { ClassLevelsType, NewClubType, WeekDayType } from '@/lib/utils/types';
 import { Calendar, Clock } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { useClub } from '../hook/use-club';
 import FilteredResult from './FilteredResult';
 
-export const FilteredClubsForUser = () => {
-  const { allClubs } = useClub();
+export const FilteredClubsForUser = ({ allClubs }: { allClubs: NewClubType[] }) => {
   const [selectedClass, setSelectedClass] = useState<ClassLevelsType | ''>('');
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [selectedTime, setSelectedTime] = useState<string>('');
   const [selectedSport, setSelectedSport] = useState<string>('');
   const [selectedGenre, setSelectedGenre] = useState<string>('');
-
+  console.log({ selectedClass });
+  console.log({ selectedDate });
+  console.log({ allClubs });
   const resetFilters = () => {
     setSelectedClass('');
     setSelectedDate('');
@@ -21,16 +21,33 @@ export const FilteredClubsForUser = () => {
     setSelectedGenre('');
   };
 
+  const CLASS_LEVEL_MN_LABEL: Record<ClassLevelsType, string> = {
+    Elementary: 'Бага анги',
+    Middle: 'Дунд анги',
+    High: 'Ахлах анги',
+  };
   const classesFromClubs = useMemo(() => {
     const classSet = new Set<ClassLevelsType>();
     allClubs.forEach((club) => {
       club.selectedClassLevelNames?.forEach((level) => classSet.add(level));
     });
     return Array.from(classSet).map((level) => ({
-      label: level === 'Elementary' ? 'Бага анги' : level === 'Middle' ? 'Дунд анги' : 'Ахлах анги',
+      label: CLASS_LEVEL_MN_LABEL[level],
       value: level,
     }));
   }, [allClubs]);
+
+  const WEEKDAY_MN_LABEL: Record<WeekDayType, string> = {
+    MON: 'Даваа',
+    TUE: 'Мягмар',
+    WED: 'Лхагва',
+    THU: 'Пүрэв',
+    FRI: 'Баасан',
+    SAT: 'Бямба',
+    SUN: 'Ням',
+  };
+
+  const availableDays: WeekDayType[] = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
 
   const genreTypeMap: Record<string, string> = {
     sports: 'SPORTS',
@@ -82,17 +99,13 @@ export const FilteredClubsForUser = () => {
 
     // Filter by working days
     if (selectedDate) {
-      const dayMap: Record<string, string> = {
-        Monday: 'MON',
-        Tuesday: 'TUE',
-        Wednesday: 'WED',
-        Thursday: 'THU',
-        Friday: 'FRI',
-        Saturday: 'SAT',
-        Sunday: 'SUN',
-      };
-      const dayCode = dayMap[selectedDate];
-      filtered = filtered.filter((club) => club.selectedClubWorkingDays?.includes(dayCode as any));
+      filtered = filtered.filter((club) => {
+        if (!club.scheduledClubTimes || !selectedClass) return false;
+        const classSchedule = club.scheduledClubTimes[selectedClass];
+        if (!classSchedule) return false;
+
+        return selectedDate in classSchedule;
+      });
     }
 
     // Filter by time slot
@@ -144,6 +157,7 @@ export const FilteredClubsForUser = () => {
 
     return filtered;
   }, [allClubs, selectedClass, selectedDate, selectedTime, selectedGenre, selectedSport]);
+  console.log({ filteredClubs });
 
   const coursesByGenre = {
     sports: [
@@ -185,16 +199,6 @@ export const FilteredClubsForUser = () => {
     { id: 'entertainment', label: 'Зугаа цэнгэл', icon: '🎮' },
   ];
 
-  const availableDays = [
-    { day: 'Monday', label: 'Даваа' },
-    { day: 'Tuesday', label: 'Мягмар' },
-    { day: 'Wednesday', label: 'Лхагва' },
-    { day: 'Thursday', label: 'Пүрэв' },
-    { day: 'Friday', label: 'Баасан' },
-    { day: 'Saturday', label: 'Бямба' },
-    { day: 'Sunday', label: 'Ням' },
-  ];
-
   const isFiltered = Boolean(selectedClass || selectedDate || selectedTime || selectedGenre || selectedSport);
 
   return (
@@ -233,15 +237,15 @@ export const FilteredClubsForUser = () => {
                 <Calendar className="w-6 h-6 text-orange-600" />
                 <p className="text-sm font-bold text-slate-600 mb-4 uppercase tracking-wide">Өдөр сонгох</p>
                 <div className="grid grid-cols-7 gap-3">
-                  {availableDays.map((dayInfo) => (
+                  {availableDays.map((day, i) => (
                     <button
-                      key={dayInfo.day}
-                      onClick={() => setSelectedDate(dayInfo.day)}
+                      key={i}
+                      onClick={() => setSelectedDate(day)}
                       className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all duration-200 ${
-                        selectedDate === dayInfo.day ? 'bg-orange-600 border-orange-600 text-white shadow-lg scale-105' : 'border-slate-200 hover:border-orange-600 text-slate-700 hover:bg-slate-50'
+                        selectedDate === day ? 'bg-orange-600 border-orange-600 text-white shadow-lg scale-105' : 'border-slate-200 hover:border-orange-600 text-slate-700 hover:bg-slate-50'
                       }`}
                     >
-                      <span className="text-xs font-bold text-center">{dayInfo.label}</span>
+                      <span className="text-xs font-bold text-center">{WEEKDAY_MN_LABEL[day]}</span>
                     </button>
                   ))}
                 </div>
