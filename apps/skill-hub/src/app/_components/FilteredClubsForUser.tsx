@@ -1,24 +1,28 @@
 'use client';
-import { ClassLevelsType, NewClubType, TimeSlotValueType, WeekDayType } from '@/lib/utils/types';
-import { Backpack, Calendar, Clock } from 'lucide-react';
+import { CATEGORY_UI_MAP, ClassLevelsType, NewClubType, SUBCATEGORY_ICON_MAP, TimeSlotValueType, WeekDayType } from '@/lib/utils/types';
+import { Backpack, Calendar, Clock, LayoutGrid, LayoutList } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import FilteredResult from './FilteredResult';
 
 export const FilteredClubsForUser = ({ allClubs }: { allClubs: NewClubType[] }) => {
   const [selectedClass, setSelectedClass] = useState<ClassLevelsType | ''>('');
-  const [selectedDate, setSelectedDate] = useState<string>('');
-  const [selectedTime, setSelectedTime] = useState<string>('');
-  const [selectedSport, setSelectedSport] = useState<string>('');
-  const [selectedGenre, setSelectedGenre] = useState<string>('');
+  const [selectedDate, setSelectedDate] = useState<WeekDayType | ''>('');
+  const [selectedTime, setSelectedTime] = useState<TimeSlotValueType | ''>('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [selectedSubCategory, setSelectedSubCategory] = useState<string>('');
+  console.log({ allClubs });
   console.log({ selectedClass });
   console.log({ selectedDate });
-  console.log({ allClubs });
+  console.log({ selectedTime });
+  console.log({ selectedCategory });
+  console.log({ selectedSubCategory });
+
   const resetFilters = () => {
     setSelectedClass('');
     setSelectedDate('');
     setSelectedTime('');
-    setSelectedSport('');
-    setSelectedGenre('');
+    setSelectedCategory('');
+    setSelectedSubCategory('');
   };
 
   const classes = [
@@ -37,45 +41,32 @@ export const FilteredClubsForUser = ({ allClubs }: { allClubs: NewClubType[] }) 
     { day: 'SUN', label: 'Ням' },
   ];
 
-  const genreTypeMap: Record<string, string> = {
-    sports: 'SPORTS',
-    arts: 'ARTS',
-    education: 'EDUCATION',
-    entertainment: 'FUN',
-  };
-
   const timeSlots: { label: string; value: TimeSlotValueType; range: [number, number] }[] = [
     { label: 'Үдээс өмнө', value: 'morning', range: [8, 12] },
     { label: 'Үдээс хойш', value: 'afternoon', range: [12, 18] },
     { label: 'Орой', value: 'evening', range: [18, 22] },
   ];
 
-  const courseNameMap: Record<string, string[]> = {
-    Бөх: ['Wrestling Club'],
-    Хөлбөмбөг: ['Football Club', 'Soccer Club'],
-    'Сагсан бөмбөг': ['Basketball Club'],
-    'Тулаан спорт': ['Martial Arts Club', 'Karate Club'],
-    Теннис: ['Tennis Club'],
-    Волейбол: ['Volleyball Club'],
-    Бадминтон: ['Badminton Club'],
-    Бокс: ['Boxing Club'],
-    Гимнастик: ['Gymnastics Club'],
-    'Хөнгөн атлетик': ['Athletics Club', 'Track Club'],
-    'Дугуйн спорт': ['Cycling Club'],
-    'Усан сэлэлт': ['Swimming Club'],
-    'Хөлөг онгоц': ['Rowing Club'],
-    'Уран бүжиг': ['Dance Club'],
-    Хөгжим: ['Music Club'],
-    'Дуу хөгжим': ['Singing Club', 'Music Club'],
-    Зураг: ['Art Club', 'Drawing Club', 'Photography Club'],
-    'Гар урлал': ['Craft Club', 'Art Club'],
-    'Англи хэл': ['English Speaking Club', 'English Club'],
-    Математик: ['Math Club'],
-    Програмчлал: ['Coding Club', 'Programming Club'],
-    Робот: ['Robotics Club', 'Robot Club'],
-    Шатар: ['Chess Club'],
-    'Хүүхдийн тоглоом': ['Gaming Club', 'Fun Club', 'Cooking Club'],
-  };
+  const categories = useMemo(() => {
+    const used = new Set(allClubs.map((club) => club.clubCategoryName));
+
+    return Array.from(used).map((key) => ({
+      key,
+      label: CATEGORY_UI_MAP[key]?.label ?? key,
+      icon: CATEGORY_UI_MAP[key]?.icon ?? '📦',
+    }));
+  }, [allClubs]);
+
+  const subCategories = useMemo(() => {
+    if (!selectedCategory) return [];
+
+    const used = new Set(allClubs.filter((club) => club.clubCategoryName === selectedCategory).map((c) => c.clubSubCategoryName));
+
+    return Array.from(used).map((name) => ({
+      name,
+      icon: SUBCATEGORY_ICON_MAP[name] ?? '',
+    }));
+  }, [allClubs, selectedCategory]);
 
   const filteredClubs = useMemo(() => {
     let filtered = [...allClubs];
@@ -86,7 +77,7 @@ export const FilteredClubsForUser = ({ allClubs }: { allClubs: NewClubType[] }) 
     }
 
     // Filter by working days
-    if (selectedDate) {
+    if (selectedDate && selectedClass) {
       filtered = filtered.filter((club) => {
         if (!club.scheduledClubTimes || !selectedClass) return false;
         const classSchedule = club.scheduledClubTimes[selectedClass];
@@ -117,91 +108,32 @@ export const FilteredClubsForUser = ({ allClubs }: { allClubs: NewClubType[] }) 
     }
 
     // Filter by genre/category
-    const genreType = genreTypeMap[selectedGenre];
-    if (genreType) {
-      filtered = filtered.filter((club) => {
-        const categoryName = club.clubCategoryName?.toUpperCase();
-        // Map the genre type to category patterns
-        if (genreType === 'SPORTS') {
-          return ['SPORT', 'WRESTLING', 'FOOTBALL', 'BASKETBALL', 'MARTIAL', 'TENNIS', 'VOLLEYBALL', 'BADMINTON', 'BOXING', 'GYMNASTICS', 'ATHLETICS', 'CYCLING', 'SWIMMING', 'ROWING'].some(
-            (pattern) => categoryName?.includes(pattern),
-          );
-        } else if (genreType === 'ARTS') {
-          return ['ART', 'DANCE', 'MUSIC', 'SINGING', 'DRAWING', 'PHOTOGRAPHY', 'CRAFT'].some((pattern) => categoryName?.includes(pattern));
-        } else if (genreType === 'EDUCATION') {
-          return ['ENGLISH', 'MATH', 'PROGRAMMING', 'CODING', 'ROBOTICS', 'CHESS', 'EDUCATION'].some((pattern) => categoryName?.includes(pattern));
-        } else if (genreType === 'FUN') {
-          return ['GAME', 'GAMING', 'FUN', 'COOKING', 'ENTERTAINMENT'].some((pattern) => categoryName?.includes(pattern));
-        }
-        return false;
-      });
+    if (selectedCategory) {
+      filtered = filtered.filter((club) => club.clubCategoryName === selectedCategory);
     }
 
     // Filter by specific sport/course
-    if (selectedSport) {
-      const possibleNames = courseNameMap[selectedSport] || [selectedSport];
-      filtered = filtered.filter((club) =>
-        possibleNames.some((name) => club.clubCategoryName.toLowerCase().includes(name.toLowerCase()) || club.clubName.toLowerCase().includes(selectedSport.toLowerCase())),
-      );
+    if (selectedSubCategory) {
+      filtered = filtered.filter((club) => club.clubSubCategoryName === selectedSubCategory);
     }
 
     return filtered;
-  }, [allClubs, selectedClass, selectedDate, selectedTime, selectedGenre, selectedSport]);
+  }, [allClubs, selectedClass, selectedDate, selectedTime, selectedCategory, selectedSubCategory]);
   console.log({ filteredClubs });
 
-  const coursesByGenre = {
-    sports: [
-      { name: 'Бөх', icon: '🤼' },
-      { name: 'Хөлбөмбөг', icon: '⚽' },
-      { name: 'Сагсан бөмбөг', icon: '🏀' },
-      { name: 'Тулаан спорт', icon: '🥋' },
-      { name: 'Теннис', icon: '🎾' },
-      { name: 'Волейбол', icon: '🏐' },
-      { name: 'Бадминтон', icon: '🏸' },
-      { name: 'Бокс', icon: '🥊' },
-      { name: 'Гимнастик', icon: '🤸' },
-      { name: 'Хөнгөн атлетик', icon: '🏃' },
-      { name: 'Дугуйн спорт', icon: '🚴' },
-      { name: 'Усан сэлэлт', icon: '🏊' },
-      { name: 'Хөлөг онгоц', icon: '🚣' },
-    ],
-    arts: [
-      { name: 'Уран бүжиг', icon: '💃' },
-      { name: 'Хөгжим', icon: '🎵' },
-      { name: 'Дуу хөгжим', icon: '🎤' },
-      { name: 'Зураг', icon: '🎨' },
-      { name: 'Гар урлал', icon: '✂️' },
-    ],
-    education: [
-      { name: 'Англи хэл', icon: '🇬🇧' },
-      { name: 'Математик', icon: '🔢' },
-      { name: 'Програмчлал', icon: '💻' },
-      { name: 'Робот', icon: '🤖' },
-      { name: 'Шатар', icon: '♟️' },
-    ],
-    entertainment: [{ name: 'Хүүхдийн тоглоом', icon: '🎯' }],
-  };
-
-  const genres = [
-    { id: 'sports', label: 'Спорт', icon: '⚽' },
-    { id: 'arts', label: 'Урлаг', icon: '🎨' },
-    { id: 'education', label: 'Боловсрол', icon: '📚' },
-    { id: 'entertainment', label: 'Зугаа цэнгэл', icon: '🎮' },
-  ];
-
-  const isFiltered = Boolean(selectedClass || selectedDate || selectedTime || selectedGenre || selectedSport);
+  const isFiltered = Boolean(selectedClass || selectedDate || selectedTime || selectedCategory || selectedSubCategory);
 
   return (
     <div className="relative">
       {/* filters */}
       <section id="sports" className="py-16 md:py-24 relative z-10">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-8" data-scroll-point="search-title">
-            <h2 className="text-4xl md:text-5xl font-black text-slate-900 mb-4">ӨӨРТ ОЙР ДУГУЙЛАН ХАЙХ</h2>
+        <div className="container mx-auto px-4 flex flex-col gap-12">
+          <div className="text-center" data-scroll-point="search-title">
+            <h2 className="text-4xl md:text-5xl font-black text-[#FCB027]">ӨӨРТ ОЙР ДУГУЙЛАН ХАЙХ</h2>
           </div>
 
-          <div className="mb-16 max-w-4xl mx-auto" data-scroll-point="date-time">
-            <div className="bg-white/50 rounded-2xl p-8 border-2 border-slate-200 shadow-lg flex flex-col gap-8">
+          <div className="max-w-4xl mx-auto" data-scroll-point="date-time">
+            <div className="bg-white/50 rounded-2xl p-8 border-2 border-slate-200 shadow-lg hover:shadow-2xl flex flex-col gap-8">
               {/* Class Selector */}
               <div data-scroll-point="class-selector">
                 <div className="flex items-center gap-2 mb-4">
@@ -277,51 +209,57 @@ export const FilteredClubsForUser = ({ allClubs }: { allClubs: NewClubType[] }) 
                 </div>
               </div>
 
-              {/* Genre Tabs */}
+              {/* Category Tabs */}
               <div data-scroll-point="genre">
                 <div className="flex items-center gap-2 mb-4">
-                  <Clock className="w-5 h-5 text-orange-600" />
-                  <p className="text-sm font-bold text-slate-600 uppercase tracking-wide">Цаг сонгох</p>
+                  <LayoutGrid className="w-5 h-5 text-orange-600" />
+                  <p className="text-sm font-bold text-slate-600 uppercase tracking-wide">Категори сонгох</p>
                 </div>
                 <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-                  {genres.map((genre) => (
+                  {categories.map((cat) => (
                     <button
-                      key={genre.id}
-                      onClick={() => setSelectedGenre(genre.id)}
-                      className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold whitespace-nowrap transition-all duration-200 ${
-                        selectedGenre === genre.id ? 'bg-orange-600 text-white shadow-lg' : 'bg-white/50 text-slate-700 border-2 border-slate-200 hover:border-orange-400'
+                      key={cat.key}
+                      onClick={() => setSelectedCategory((prev) => (prev === cat.key ? '' : cat.key))}
+                      className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold whitespace-nowrap transition-all duration-200 cursor-pointer border-2 ${
+                        selectedCategory === cat.key ? 'bg-orange-600 border-orange-600 text-white shadow-lg' : 'border-slate-200 hover:border-orange-600 text-slate-700 hover:bg-slate-100'
                       }`}
                     >
-                      <span className="text-xl">{genre.icon}</span>
-                      <span>{genre.label}</span>
+                      <span className="text-xl">{cat.icon}</span>
+                      <span>{cat.label}</span>
                     </button>
                   ))}
                 </div>
               </div>
 
               {/* Courses List - Scrollable */}
-              {selectedGenre && (
-                <div className="max-w-6xl mx-auto mb-16">
-                  <div className="bg-white/50 rounded-2xl p-6 border-2 border-slate-200 shadow-lg">
-                    <h3 className="text-xl font-bold text-slate-900 mb-4">{genres.find((g) => g.id === selectedGenre)?.label}</h3>
-                    <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-orange-400 scrollbar-track-slate-100">
-                      {coursesByGenre[selectedGenre as keyof typeof coursesByGenre].map((item) => (
-                        <button
-                          key={item.name}
-                          onClick={() => setSelectedSport(item.name)}
-                          className={`shrink-0 w-32 p-5 rounded-xl border-2 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg ${
-                            selectedSport === item.name ? 'border-orange-500 bg-orange-50 shadow-md' : 'border-slate-200 /50 hover:border-orange-300'
-                          }`}
-                        >
-                          <div className="flex flex-col items-center gap-2">
-                            <div className={`text-4xl transition-transform duration-300 ${selectedSport === item.name ? 'scale-110' : 'group-hover:scale-110'}`}>{item.icon}</div>
-                            <span className={`font-semibold text-xs text-center transition-colors ${selectedSport === item.name ? 'text-orange-600' : 'text-slate-700'}`}>{item.name}</span>
-                          </div>
-                          {selectedSport === item.name && <div className="mt-2 w-full h-1 bg-orange-500 rounded-full"></div>}
-                        </button>
-                      ))}
-                    </div>
+              {selectedCategory && (
+                <div className="mx-auto mb-16">
+                  <div className="flex items-center gap-2 mb-4">
+                    <LayoutList className="w-5 h-5 text-orange-600" />
+                    <p className="text-sm font-bold text-slate-600 uppercase tracking-wide">Төрөл сонгох</p>
                   </div>
+                  {/* <div className="bg-white/50 rounded-2xl p-6 border-2 border-slate-200 shadow-lg"> */}
+                  {/* <h3 className="text-xl font-bold text-slate-900 mb-4">{CATEGORY_UI_MAP[selectedCategory]?.label ?? selectedCategory}</h3> */}
+                  <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-orange-400 scrollbar-track-slate-100">
+                    {subCategories.map((subCategory) => (
+                      <button
+                        key={subCategory.name}
+                        onClick={() => setSelectedSubCategory(subCategory.name)}
+                        className={`shrink-0 w-32 p-5 rounded-xl border-2 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg ${
+                          selectedSubCategory === subCategory.name ? 'border-orange-500 bg-orange-50 shadow-md' : 'border-slate-200 /50 hover:border-orange-300'
+                        }`}
+                      >
+                        <div className="flex flex-col items-center gap-2">
+                          <div className={`text-4xl transition-transform duration-300 ${selectedSubCategory === subCategory.name ? 'scale-110' : 'group-hover:scale-110'}`}>{subCategory.icon}</div>
+                          <span className={`font-semibold text-xs text-center transition-colors ${selectedSubCategory === subCategory.name ? 'text-orange-600' : 'text-slate-700'}`}>
+                            {subCategory.name}
+                          </span>
+                        </div>
+                        {selectedSubCategory === subCategory.name && <div className="mt-2 w-full h-1 bg-orange-500 rounded-full"></div>}
+                      </button>
+                    ))}
+                  </div>
+                  {/* </div> */}
                 </div>
               )}
             </div>

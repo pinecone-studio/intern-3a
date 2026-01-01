@@ -9,15 +9,52 @@ import React, { ChangeEvent, Dispatch, useState } from 'react';
 import { toast } from 'sonner';
 import MapSelector from './MapSelector';
 
-const recommendedClubCategoryNames = ['SPORT', 'ART', 'SCIENCE', 'LANGUAGE', 'MUSIC', 'TECHNOLOGY'];
+const recommendedClubCategoryNames = ['ART', 'LANGUAGE', 'MUSIC', 'SCIENCE', 'SPORT'];
 
 const recommendedClubSubCategoryNames: Record<string, string[]> = {
-  SPORT: ['Basketball Club', 'Football Club', 'Badminton Club', 'Volleyball Club', 'Chess Sport Club'],
-  ART: ['Art Club', 'Drama Club', 'Choir Club', 'Dance Club', 'Music Club', 'Calligraphy'],
-  SCIENCE: ['STEM Club', 'ICT / Computer Club', 'Math Club', 'Robotics Club', 'Environmental Club', 'Debate Club'],
-  LANGUAGE: ['English Club', 'Mongolian Language Club', 'Public Speaking Club', 'Debate Club', 'Literature Club', 'New Language Learning Club'],
-  MUSIC: ['Piano Club', 'Morin Khuur / Mongolian Traditional Music Club', 'Choir Club', 'Band / Ensemble', 'Vocal Music Club', 'Orchestra Club'],
-  TECHNOLOGY: ['Programming Club', 'Web Development Club', 'AI / ML Club', 'Robotics Club', 'Cybersecurity Club', 'Mobile App Development Club'],
+  ART: ['Calligraphy Club', 'Dance Club', 'Design Club', 'Drama / Theater Club', 'Drawing / Painting Club', 'Fine Arts Club', 'Handcraft / DIY Club', 'Photography Club', 'Video / Media Club'],
+  LANGUAGE: ['Debate Club', 'English Club', 'English Speaking Club', 'Essay Writing Club', 'Literature Club', 'Mongolian Language Club', 'Public Speaking Club', 'Reading Club'],
+  MUSIC: ['Band / Ensemble Club', 'Choir Club', 'Guitar Club', 'Morin Khuur', 'Orchestra Club', 'Piano Club', 'Ukulele Club', 'Vocal Club', 'Yatga Club'],
+  SCIENCE: [
+    'AI / ML Club',
+    'Astronomy Club',
+    'Logic & Puzzle Club',
+    'Math Club',
+    'Mobile App Development Club',
+    'Chemistry Club',
+    'Coding Club',
+    'Environmental / Eco Club',
+    'Physics Club',
+    'Programming Club',
+    'Python Programming Club',
+    'Robotics Club',
+    'Science Experiment Club',
+    'STEM Club',
+    'Web Development Club',
+    'Young Researchers Club',
+  ],
+  SPORT: [
+    'Athletics Club',
+    'Badminton Club',
+    'Basketball Club',
+    'Boxing Club',
+    'Chess Club',
+    'Cycling Club',
+    'Football Club',
+    'Futsal Club',
+    'Gymnastics Club',
+    'Judo Club',
+    'Karate Club',
+    'Martial Arts Club',
+    'Soccer Club',
+    'Swimming Club',
+    'Table Tennis',
+    'Taekwondo Club',
+    'Tennis Club',
+    'Track & Field Club',
+    'Volleyball Club',
+    'Wrestling Club',
+  ],
 };
 const classLevels: ClassLevelsType[] = ['Elementary', 'Middle', 'High'];
 
