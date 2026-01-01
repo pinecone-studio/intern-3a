@@ -88,23 +88,22 @@ export const FilteredClubsForUser = ({ allClubs }: { allClubs: NewClubType[] }) 
     }
 
     // Filter by time slot
-    if (selectedTime && selectedClass) {
+    if (selectedTime && selectedDate && selectedClass) {
       const timeSlot = timeSlots.find((slot) => slot.value === selectedTime);
-      if (timeSlot) {
-        const [startHour, endHour] = timeSlot.range;
+      if (!timeSlot) return filtered;
 
-        filtered = filtered.filter((club) => {
-          const classSchedule = club?.scheduledClubTimes?.[selectedClass];
-          if (!classSchedule) return false;
+      const [startHour, endHour] = timeSlot.range;
 
-          return Object.values(classSchedule).some((dayTime) => {
-            if (!dayTime?.startTime) return false;
+      filtered = filtered.filter((club) => {
+        const classSchedule = club?.scheduledClubTimes?.[selectedClass];
+        if (!classSchedule) return false;
 
-            const clubHour = Number(dayTime.startTime.split(':')[0]);
-            return clubHour >= startHour && clubHour < endHour;
-          });
-        });
-      }
+        const daySchedule = classSchedule[selectedDate];
+        if (!daySchedule?.startTime) return false;
+
+        const clubHour = Number(daySchedule.startTime.split(':')[0]);
+        return clubHour >= startHour && clubHour < endHour;
+      });
     }
 
     // Filter by genre/category
