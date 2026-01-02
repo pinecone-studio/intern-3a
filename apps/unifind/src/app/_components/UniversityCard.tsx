@@ -1,32 +1,48 @@
-'use client';
-import { Building2, GraduationCap, Landmark, MapPin, Palette, School } from 'lucide-react';
+"use client";
+import {
+  Building2,
+  GraduationCap,
+  Landmark,
+  MapPin,
+  Palette,
+  School,
+} from "lucide-react";
 
-import { useRouter } from 'next/navigation';
-import { Button } from '../components/ui/button';
-import { Card } from '../components/ui/card';
+import { useRouter } from "next/navigation";
+import { Button } from "../components/ui/button";
+import { Card } from "../components/ui/card";
+import Image from "next/image";
+import { useState } from "react";
 
 type UniversityCardProps = {
   id: number;
   name: string;
   location: string;
   image: string;
-  status: 'open' | 'closing-soon' | 'closed';
-  minScore: string;
-  admissionRate: string | null;
-  deadline: string | null;
-  nextCycle: string | null;
+  status: "open" | "closing-soon" | "closed";
+  minScore?: string;
+  admissionRate?: string | null;
+  deadline?: string | null;
+  nextCycle?: string | null;
 };
 
 const getIconForUniversity = (name: string) => {
-  if (name.includes('Tech')) return Building2;
-  if (name.includes('Liberal Arts')) return Landmark;
-  if (name.includes('Science')) return School;
-  if (name.includes('Business')) return Building2;
-  if (name.includes('Arts')) return Palette;
+  if (name.includes("Tech")) return Building2;
+  if (name.includes("Liberal Arts")) return Landmark;
+  if (name.includes("Science")) return School;
+  if (name.includes("Business")) return Building2;
+  if (name.includes("Arts")) return Palette;
   return GraduationCap;
 };
 
-export default function UniversityCard({ id, name, location, image, status }: UniversityCardProps) {
+export default function UniversityCard({
+  id,
+  name,
+  location,
+  image,
+  status,
+  minScore,
+}: UniversityCardProps) {
   const router = useRouter();
   const Icon = getIconForUniversity(name);
 
@@ -34,15 +50,44 @@ export default function UniversityCard({ id, name, location, image, status }: Un
     router.push(`/detail/${id}`);
   };
 
+  // ✅ Image fallback component
+  const ImageWithFallback = ({ src }: { src: string }) => {
+    const [imgSrc, setImgSrc] = useState(src || "/university-logo-arts.jpg");
+    return (
+      <img
+        src={imgSrc}
+        alt={name}
+        className="w-full h-full object-cover rounded-md"
+        onError={(e) => (e.currentTarget.src = "/university-logo-arts.jpg")}
+      />
+    );
+  };
+
   return (
-    <Card onClick={handleViewDetails} className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
+    <Card
+      onClick={handleViewDetails}
+      className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
+    >
       <div className="relative h-48">
-        {image && <img src={image} alt={name} className="w-full h-full object-cover" />}
+        {/* ✅ Fallback image ашиглаж харуулах */}
+        <ImageWithFallback src={image} />
 
         <div className="absolute top-4 right-4">
-          {status === 'open' && <span className="bg-green-500 text-white text-xs font-semibold px-3 py-1 rounded-full">Нээлттэй</span>}
-          {status === 'closing-soon' && <span className="bg-orange-500 text-white text-xs font-semibold px-3 py-1 rounded-full">Удахгүй хаагдана</span>}
-          {status === 'closed' && <span className="bg-slate-400 text-white text-xs font-semibold px-3 py-1 rounded-full">Хаагдсан</span>}
+          {status === "open" && (
+            <span className="bg-green-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
+              Нээлттэй
+            </span>
+          )}
+          {status === "closing-soon" && (
+            <span className="bg-orange-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
+              Удахгүй хаагдана
+            </span>
+          )}
+          {status === "closed" && (
+            <span className="bg-slate-400 text-white text-xs font-semibold px-3 py-1 rounded-full">
+              Хаагдсан
+            </span>
+          )}
         </div>
       </div>
 
@@ -62,13 +107,12 @@ export default function UniversityCard({ id, name, location, image, status }: Un
 
         <div className="flex justify-between text-sm border-t pt-2">
           <span>Босго оноо</span>
-          <span className="font-semibold">500</span>
+          <span className="font-semibold">{minScore ?? "–"}</span>
         </div>
 
-        {/* Button дээр дарахад давхар trigger болохоос сэргийлнэ */}
         <Button
           onClick={(e) => {
-            e.stopPropagation();
+            e.stopPropagation(); // давхар click-оос сэргийлэх
             handleViewDetails();
           }}
           variant="outline"

@@ -1,12 +1,17 @@
-import prisma from 'apps/unifind/src/lib/prisma';
-import { NextResponse } from 'next/server';
+import prisma from "@/src/lib/prisma";
+import { NextResponse } from "next/server";
 
-export async function GET(_req: Request, context: any) {
-  const majorId = Number(context.params.id);
-  console.log('dkosvnsdjkfnbfdj', context.params.id);
+export const runtime = "nodejs";
+
+export async function GET(
+  _req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params; // 🔥 ЗААВАЛ await
+  const majorId = Number(id);
 
   if (isNaN(majorId)) {
-    return NextResponse.json({ error: 'Invalid major id' }, { status: 400 });
+    return NextResponse.json({ error: "Invalid major id" }, { status: 400 });
   }
 
   try {
@@ -14,17 +19,22 @@ export async function GET(_req: Request, context: any) {
       where: { id: majorId },
       include: {
         universities: true,
-        major_requirements: { include: { subjects: true } },
+        major_requirements: {
+          include: { subjects: true },
+        },
       },
     });
 
     if (!major) {
-      return NextResponse.json({ error: 'Мэргэжил олдсонгүй' }, { status: 404 });
+      return NextResponse.json(
+        { error: "Мэргэжил олдсонгүй" },
+        { status: 404 }
+      );
     }
 
     return NextResponse.json(major);
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: 'Серверийн алдаа' }, { status: 500 });
+    return NextResponse.json({ error: "Серверийн алдаа" }, { status: 500 });
   }
 }

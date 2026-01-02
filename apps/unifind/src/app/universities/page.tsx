@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { Breadcrumb } from '../_components/breadcrumb';
-import { FilterSidebar } from '../_components/filter-sidebar';
-import { ProgramGrid } from '../_components/program-grid';
+import { Breadcrumb } from "../_components/breadcrumb";
+import { FilterSidebar } from "../_components/filter-sidebar";
+import { ProgramGrid } from "../_components/program-grid";
 
 export default function UniversitiesPage() {
   return (

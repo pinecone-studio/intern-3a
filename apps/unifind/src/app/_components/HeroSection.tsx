@@ -20,11 +20,15 @@ export function HeroSection() {
 
           {/* Title */}
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-balance text-slate-900">
-            Их сургууль, мэргэжил, элсэлтийн шаардлагыг <span className="text-sky-600">нэг дор олж мэдэх</span>
+            Их сургууль, мэргэжил, элсэлтийн шаардлагыг{" "}
+            <span className="text-sky-600">нэг дор олж мэдэх</span>
           </h1>
 
           {/* Description */}
-          <p className="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto text-pretty">Шалгалтын оноо,бүх хэлний мэдлэг, хувийн зан чанарын үндсэн дээр таньд төгс их сургуулийг олох.</p>
+          {/* <p className="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto text-pretty">
+            Шалгалтын оноо,бүх хэлний мэдлэг, хувийн зан чанарын үндсэн дээр
+            таньд төгс их сургуулийг олох.
+          </p> */}
         </div>
       </div>
     </section>

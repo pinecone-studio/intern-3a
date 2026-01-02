@@ -1,19 +1,51 @@
-'use client';
-import { ArrowRight, Bookmark, Calendar, Download, ExternalLink, Share2, User } from 'lucide-react';
-
-import Link from 'next/link';
-import { useParams } from 'next/navigation';
-import useSWR from 'swr';
-import { Avatar } from '../../components/ui/avatar';
-import { Badge } from '../../components/ui/badge';
-import { Button } from '../../components/ui/button';
-import { Card } from '../../components/ui/card';
+"use client";
+import {
+  ArrowRight,
+  Bookmark,
+  Calendar,
+  Download,
+  ExternalLink,
+  Share2,
+  User,
+} from "lucide-react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import useSWR from "swr";
+import { Avatar } from "../../components/ui/avatar";
+import { Badge } from "../../components/ui/badge";
+import { Button } from "../../components/ui/button";
+import Image from "next/image";
+import { Card } from "../../components/ui/card";
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "../../components/ui/dialog";
+import { useUser } from "@clerk/nextjs";
+import { toast } from "sonner";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function Mergejil() {
+  const [open, setOpen] = useState(false);
+
   const params = useParams();
   const majorId = Number(params.id);
+
+  const { isSignedIn } = useUser();
+
+  const handleRegisterClick = () => {
+    if (!isSignedIn) {
+      toast.warning("Нэвтэрч орно уу", {
+        description: "Өргөдөл гаргахын тулд эхлээд нэвтрэх шаардлагатай.",
+      });
+      return;
+    }
+
+    setOpen(true); // QR modal нээх
+  };
 
   const { data, error, isLoading } = useSWR(`/api/majors/${majorId}`, fetcher);
   if (isLoading || !data) {
@@ -55,7 +87,7 @@ export default function Mergejil() {
 
     return diffDays;
   }
-  const daysLeft = getDaysLeft('2026-8-15');
+  const daysLeft = getDaysLeft("2026-8-15");
   console.log({ data });
 
   return (
@@ -68,8 +100,11 @@ export default function Mergejil() {
           </Link>
           <span>›</span>
 
-          <Link href={`/detail/${data.universities.id}`} className="text-cyan-600 hover:text-cyan-700">
-            {data.universities.name}
+          <Link
+            href={`/detail/${data.universities?.id}`}
+            className="text-cyan-600 hover:text-cyan-700"
+          >
+            {data.universities?.name}
           </Link>
           <span>›</span>
           <span className="text-gray-900"> {data.name}</span>
@@ -80,12 +115,20 @@ export default function Mergejil() {
           <div className="flex items-start justify-between mb-4">
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-3">
-                <Badge className="bg-cyan-100 text-cyan-700 hover:bg-cyan-100">#КШУ-2024</Badge>
-                <Badge className="bg-green-100 text-green-700 hover:bg-green-100">Элсэлт нээлттэй</Badge>
+                <Badge className="bg-cyan-100 text-cyan-700 hover:bg-cyan-100">
+                  #КШУ-2024
+                </Badge>
+                <Badge className="bg-green-100 text-green-700 hover:bg-green-100">
+                  Элсэлт нээлттэй
+                </Badge>
               </div>
-              <h1 className="text-4xl font-bold mb-4 text-gray-900">{data.name}</h1>
+              <h1 className="text-4xl font-bold mb-4 text-gray-900">
+                {data.name}
+              </h1>
               <p className="text-lg text-blue-600 leading-relaxed max-w-3xl">
-                Програм хангамж боловсруулах, дэвшилтэт алгоритм, хиймэл оюун ухаан болон системийн архитектур дээр төвлөрсөн иж бүрэн хөтөлбөр. Онолын үндэс ба практик хэрэглээний хослолоор дээд
+                Програм хангамж боловсруулах, дэвшилтэт алгоритм, хиймэл оюун
+                ухаан болон системийн архитектур дээр төвлөрсөн иж бүрэн
+                хөтөлбөр. Онолын үндэс ба практик хэрэглээний хослолоор дээд
                 зэргийн технологийн карьерт оюутнуудыг бэлтгэхэд зориулагдсан.
               </p>
             </div>
@@ -106,7 +149,12 @@ export default function Mergejil() {
             <div className="flex items-start justify-between mb-4">
               <span className="text-sm text-gray-600">Босго оноо (2025)</span>
               <div className="w-8 h-8 bg-cyan-100 rounded-lg flex items-center justify-center">
-                <svg className="w-5 h-5 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg
+                  className="w-5 h-5 text-cyan-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -131,15 +179,22 @@ export default function Mergejil() {
             <div className="flex items-center gap-1 text-green-600 text-sm">
               <span className="text-4xl font-bold text-gray-900">500</span>
               <span>↗</span>
-              <span>2022-оос +0.5</span>
+              <span>2024-оос +0.5</span>
             </div>
           </Card>
 
           <Card className="p-6 bg-white">
             <div className="flex items-start justify-between mb-4">
-              <span className="text-sm text-gray-600">Сургалтын төлбөр нэг крэдитийн үнэ</span>
+              <span className="text-sm text-gray-600">
+                Сургалтын төлбөр нэг крэдитийн үнэ
+              </span>
               <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
-                <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg
+                  className="w-5 h-5 text-gray-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -149,16 +204,30 @@ export default function Mergejil() {
                 </svg>
               </div>
             </div>
-            <div className="text-4xl font-bold text-gray-900 mb-2">₮ 103,500</div>
-            <div className="text-sm text-gray-500">Нэг хичээлийн жилд жил бүр өөрчлөгддөг</div>
+            <div className="text-4xl font-bold text-gray-900 mb-2">
+              ₮ 103,500
+            </div>
+            <div className="text-sm text-gray-500">
+              Нэг хичээлийн жилд жил бүр өөрчлөгддөг
+            </div>
           </Card>
 
           <Card className="p-6 bg-white">
             <div className="flex items-start justify-between mb-4">
               <span className="text-sm text-gray-600">Хугацаа</span>
               <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
-                <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <svg
+                  className="w-5 h-5 text-gray-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
                 </svg>
               </div>
             </div>
@@ -171,16 +240,36 @@ export default function Mergejil() {
 
           <Card className="p-6 bg-white">
             <div className="flex items-start justify-between mb-4">
-              <span className="text-sm text-gray-600">Хугацаа дуусах</span>
+              <span className="text-sm text-gray-600">Бүртгэлийн хугацаа</span>
               <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
-                <svg className="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                <svg
+                  className="w-5 h-5 text-orange-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
                 </svg>
               </div>
             </div>
-            <div className="text-4xl font-bold text-gray-900 mb-2">8-р сарын 15</div>
 
-            <div className="text-sm text-orange-600 font-medium">{daysLeft > 0 ? `${daysLeft} хоног үлдсэн` : 'Хугацаа дууссан'}</div>
+            {/* Date range */}
+            <div className="text-2xl font-bold text-gray-900 mb-1">
+              7-р сарын 1 нээс
+            </div>
+            <div className="text-2xl font-bold text-gray-900 mb-1">
+              8-р сарын 15 хүртэл
+            </div>
+
+            {/* Days left */}
+            <div className="text-sm text-orange-600 font-medium">
+              {daysLeft > 0 ? `${daysLeft} хоног үлдсэн` : "Хугацаа дууссан"}
+            </div>
           </Card>
         </div>
 
@@ -192,7 +281,12 @@ export default function Mergejil() {
             <Card className="p-6 bg-white">
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-8 h-8 bg-cyan-100 rounded-lg flex items-center justify-center">
-                  <svg className="w-5 h-5 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg
+                    className="w-5 h-5 text-cyan-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -201,10 +295,15 @@ export default function Mergejil() {
                     />
                   </svg>
                 </div>
-                <h2 className="text-xl font-bold text-gray-900">Элсэлтийн шалгалтын шаардлага</h2>
+                <h2 className="text-xl font-bold text-gray-900">
+                  Элсэлтийн шалгалтын шаардлага
+                </h2>
               </div>
 
-              <p className="text-blue-600 mb-6 leading-relaxed">Өргөдөл гаргагчид дараах хичээлүүдийн оноо ирүүлэх ёстой. Эдгээр хичээлүүдийн жигнэсэн дунджийг элсэлтийн оноо тооцоход ашигладаг.</p>
+              <p className="text-blue-600 mb-6 leading-relaxed">
+                Өргөдөл гаргагчид дараах хичээлүүдийн оноог илгээх хэрэгтэй .
+                Эдгээр хичээлүүдийн дунджийг элсэлтийн оноо тооцоход ашигладаг.
+              </p>
 
               <div className="flex flex-wrap gap-3 mb-6">
                 <Badge className="bg-blue-50 text-blue-700 hover:bg-blue-50 px-4 py-2 text-sm">
@@ -229,11 +328,13 @@ export default function Mergejil() {
               </div>
 
               <div>
-                <h3 className="font-semibold text-gray-900 mb-3">Нэмэлт шаардлага</h3>
+                <h3 className="font-semibold text-gray-900 mb-3">
+                  Нэмэлт шаардлага
+                </h3>
                 <ul className="space-y-2 text-blue-600">
                   <li className="flex items-start gap-2">
                     <span className="text-blue-600 mt-1">•</span>
-                    <span>Ахлах сургуулийн голч дүн хамгийн багадаа 3.0</span>
+                    <span>Ахлах сургуулийн голч дүн хамгийн багадаа 80</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-blue-600 mt-1">•</span>
@@ -245,18 +346,30 @@ export default function Mergejil() {
 
             {/* Resources */}
             <Card className="p-6 bg-white">
-              <h2 className="text-xl font-bold text-gray-900 mb-6">Материалууд</h2>
+              <h2 className="text-xl font-bold text-gray-900 mb-6">
+                Материалууд
+              </h2>
 
               <div className="space-y-4">
                 <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
-                      <svg className="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clipRule="evenodd" />
+                      <svg
+                        className="w-6 h-6 text-red-600"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
+                          clipRule="evenodd"
+                        />
                       </svg>
                     </div>
                     <div>
-                      <div className="font-medium text-gray-900">Хөтөлбөрийн агуулга</div>
+                      <div className="font-medium text-gray-900">
+                        Хөтөлбөрийн агуулга
+                      </div>
                       <div className="text-sm text-gray-500">PDF • 2.4 MB</div>
                     </div>
                   </div>
@@ -268,13 +381,21 @@ export default function Mergejil() {
                 <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <svg className="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                      <svg
+                        className="w-6 h-6 text-blue-600"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
                         <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z" />
                       </svg>
                     </div>
                     <div>
-                      <div className="font-medium text-gray-900">Тэтгэлгийн заавар</div>
-                      <div className="text-sm text-gray-500">Гадаад холбоос</div>
+                      <div className="font-medium text-gray-900">
+                        Тэтгэлгийн заавар
+                      </div>
+                      <div className="text-sm text-gray-500 cursor-pointer">
+                        Гадаад холбоос
+                      </div>
                     </div>
                   </div>
                   <Button variant="ghost" size="icon" className="text-gray-600">
@@ -289,15 +410,72 @@ export default function Mergejil() {
           <div className="space-y-6">
             {/* Ready to Apply Card */}
             <Card className="p-6 bg-white">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Өргөдөл гаргахад бэлэн үү?</h3>
-              <p className="text-sm text-gray-600 mb-6">Эхлэхээс өмнө шаардлагатай бүх баримт бичгийг бэлтгэсэн эсэхийг шалгаарай.</p>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">
+                Өргөдөл гаргахад бэлэн үү?
+              </h3>
+              <p className="text-sm text-gray-600 mb-6">
+                Өргөдөл гаргахын өмнө{" "}
+                <span className="font-medium text-gray-800">
+                  бүртгэлийн хураамжийг
+                </span>{" "}
+                төлсөн байх шаардлагатай. Төлбөр баталгаажсаны дараа өргөдөл
+                эхлүүлэх боломжтой.
+              </p>
 
-              <Button className="w-full bg-cyan-500 hover:bg-cyan-600 text-white mb-3 h-12 text-base font-medium">
-                Өргөдөл эхлүүлэх
+              <Button
+                className="w-full bg-cyan-500 cursor-pointer hover:bg-cyan-600 text-white mb-3 h-12 text-base font-medium"
+                onClick={handleRegisterClick}
+              >
+                Бүртгэлийн хураамж төлөх
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
 
-              <Button variant="outline" className="w-full h-12 bg-transparent">
+              <Dialog open={open} onOpenChange={setOpen}>
+                <DialogContent className="sm:max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>Бүртгэлийн хураамж төлөх</DialogTitle>
+                  </DialogHeader>
+
+                  <div className="flex flex-col items-center text-center gap-4">
+                    {/* QR Image */}
+                    <div className="w-48 h-48 rounded-lg border bg-white p-2">
+                      <Image
+                        src="/qr-mock.png"
+                        alt="Payment QR"
+                        width={192}
+                        height={192}
+                        className="rounded-md"
+                      />
+                    </div>
+
+                    {/* Amount */}
+                    <div>
+                      <p className="text-sm text-gray-500">Төлөх дүн</p>
+                      <p className="text-2xl font-bold text-gray-900">
+                        37,500 ₮
+                      </p>
+                    </div>
+
+                    <p className="text-xs text-gray-500">
+                      Энэхүү хураамжийг төлснөөр та их сургуулийн өргөдөл гаргах
+                      эрхтэй болно. Төлбөрийг буцаан олгохгүй.
+                    </p>
+
+                    <Button
+                      className="w-full bg-cyan-500 hover:bg-cyan-600 text-white"
+                      onClick={() => setOpen(false)}
+                    >
+                      Төлбөр баталгаажуулах
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+
+              <Button
+                variant="outline"
+                onClick={handleRegisterClick}
+                className="cursor-pointer w-full h-12 bg-transparent"
+              >
                 <Calendar className="mr-2 w-5 h-5" />
                 Хуанлид нэмэх
               </Button>
@@ -312,8 +490,13 @@ export default function Mergejil() {
                   </Avatar>
                 </div>
                 <div className="flex-1">
-                  <div className="text-sm font-medium text-gray-900">Асуулт байна уу?</div>
-                  <Link href="/chat" className="text-sm text-cyan-500 hover:text-cyan-600">
+                  <div className="text-sm font-medium text-gray-900">
+                    Асуулт байна уу?
+                  </div>
+                  <Link
+                    href="/chat"
+                    className="text-sm text-cyan-500 hover:text-cyan-600"
+                  >
                     Элсэлттэй чатлах
                   </Link>
                 </div>

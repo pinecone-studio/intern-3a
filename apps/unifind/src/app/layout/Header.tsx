@@ -1,10 +1,18 @@
-'use client';
+"use client";
 
-import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton, useUser } from '@clerk/nextjs';
-import { GraduationCap } from 'lucide-react';
-import Link from 'next/link';
-import { SearchUniversity } from '../_components/SeachUniversity';
-import { Button } from '../components/ui/button';
+import {
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  SignUpButton,
+  UserButton,
+  useUser,
+} from "@clerk/nextjs";
+import { GraduationCap, Search } from "lucide-react";
+import Link from "next/link";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { SearchUniversity } from "../_components/SeachUniversity";
 
 export function Header() {
   const { user } = useUser();
@@ -22,16 +30,22 @@ export function Header() {
 
         {/* Nav */}
         <nav className="hidden md:flex items-center gap-6">
-          <Link href={'/'}>
-            <div className="cursor-pointer text-sm text-slate-600 hover:text-slate-900 transition-colors">Нүүр хуудас</div>
+          <Link href={"/"}>
+            <div className="cursor-pointer text-sm text-slate-600 hover:text-slate-900 transition-colors">
+              Нүүр хуудас
+            </div>
           </Link>
-          <Link href={'/universities'}>
-            <div className="text-sm cursor-pointer text-slate-600 hover:text-slate-900 transition-colors">Их сургуулиуд</div>
+          <Link href={"/universities"}>
+            <div className="text-sm cursor-pointer text-slate-600 hover:text-slate-900 transition-colors">
+              Их сургуулиуд
+            </div>
           </Link>
 
           {user && (
-            <Link href={'/profile'}>
-              <div className="text-sm cursor-pointer text-slate-600 hover:text-slate-900 transition-colors">Миний хуваарь</div>
+            <Link href={"/profile"}>
+              <div className="text-sm cursor-pointer text-slate-600 hover:text-slate-900 transition-colors">
+                Миний хуваарь
+              </div>
             </Link>
           )}
         </nav>
@@ -42,11 +56,15 @@ export function Header() {
 
           <SignedOut>
             <SignInButton>
-              <Button className=" hover:bg-cyan-600 text-white">Бүртгүүлэх</Button>
+              <Button className=" hover:bg-cyan-600 cursor-pointer text-white">
+                Бүртгүүлэх
+              </Button>
             </SignInButton>
 
             <SignUpButton>
-              <Button className="bg-cyan-500 hover:bg-cyan-600 text-white">Нэвтрэх</Button>
+              <Button className="bg-cyan-500 cursor-pointer hover:bg-cyan-600 text-white">
+                Нэвтрэх
+              </Button>
             </SignUpButton>
           </SignedOut>
           <SignedIn>

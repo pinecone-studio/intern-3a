@@ -106,11 +106,6 @@ export function Footer() {
                   Үйлчилгээний нөхцөл
                 </Link>
               </li>
-              <li>
-                <Link href="#" className="text-sm  hover:text-[#00ACC1]">
-                  Cookie бодлого
-                </Link>
-              </li>
             </ul>
           </div>
         </div>
