@@ -5,6 +5,7 @@ import { Button, Dialog, DialogTrigger } from '@intern-3a/shadcn';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useState } from 'react';
+import { CategoryDropdown } from './CategoryDropdown';
 import { ClubRegisterBtnDialogContent } from './ClubRegisterBtnDialogContent';
 import { MyUserButton } from './MyUserButton';
 import { SearchBar } from './SearchBar';
@@ -27,9 +28,10 @@ export const Header = () => {
           >
             Growly
           </span>
-          <SearchBar />
         </Link>
       </div>
+      <SearchBar />
+      <CategoryDropdown />
 
       <div className="flex gap-5 items-center">
         {role === 'ADMIN' && (
