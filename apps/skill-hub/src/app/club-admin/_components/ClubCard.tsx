@@ -3,7 +3,7 @@
 import { ClassLevelsType, NewClubType, WeekDayType } from '@/lib/utils/types';
 import { Card, CardContent } from '@intern-3a/shadcn';
 import { Calendar, Mail, MapPin, Phone, X } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 const CLASS_LEVEL_LABEL_MN: { [K in ClassLevelsType]: string } = {
   Elementary: 'Бага',
@@ -40,9 +40,37 @@ export default function ClubCard({ club }: { club: NewClubType }) {
     }
   };
   const [selectedClass, setSelectedClass] = useState<ClassLevelsType | null>(null);
-  const [selectedDay, setSelectedDay] = useState<WeekDayType | null>(null);
+  // const [selectedDay, setSelectedDay] = useState<WeekDayType | null>(null);
 
   const classLevels: ClassLevelsType[] = ['Elementary', 'Middle', 'High'];
+
+  const clubImageSrc = useMemo(() => {
+    if (!club.clubImage) return '/default-avatar.png';
+
+    if (club.clubImage instanceof File) {
+      return URL.createObjectURL(club.clubImage);
+    }
+
+    return club.clubImage; // string URL
+  }, [club.clubImage]);
+
+  useEffect(() => {
+    return () => {
+      if (club.clubImage instanceof File) {
+        URL.revokeObjectURL(clubImageSrc);
+      }
+    };
+  }, [club.clubImage, clubImageSrc]);
+
+  const getImageSrc = (image?: string | File) => {
+    if (!image) return '/default-avatar.png';
+
+    if (image instanceof File) {
+      return URL.createObjectURL(image);
+    }
+
+    return image;
+  };
 
   return (
     <div className="max-w-lg mx-auto relative">
@@ -109,7 +137,7 @@ export default function ClubCard({ club }: { club: NewClubType }) {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <img className="w-70" src={club.clubImage} alt={club.clubName} />
+                <img className="w-70" src={clubImageSrc} alt={club.clubName} />
                 <div className="font-semibold mb-2">Багш</div>
 
                 {club.teachersInfoByClass && Object.entries(club.teachersInfoByClass).length > 0 ? (
@@ -118,7 +146,7 @@ export default function ClubCard({ club }: { club: NewClubType }) {
                       <div key={classLevel} className="flex items-center gap-3 flex-col border p-3 rounded-lg bg-gray-50">
                         <div className="text-center">
                           <p className="font-medium">{teacher.teacherName || '—'}</p>
-                          <img src={teacher.teacherImage || '/default-avatar.png'} alt={teacher.teacherName} className="w-16 h-16 rounded-full object-cover mx-auto my-2" />
+                          <img src={getImageSrc(teacher.teacherImage)} alt={teacher.teacherName} className="w-16 h-16 rounded-full object-cover mx-auto my-2" />
                           <div className="text-sm text-gray-600 mt-1">
                             <div>
                               <span className="font-semibold">Анги:</span> {CLASS_LEVEL_LABEL_MN[classLevel as ClassLevelsType]}
@@ -202,9 +230,9 @@ export default function ClubCard({ club }: { club: NewClubType }) {
                           ))}
                         </div>
 
-                        {selectedClass && club.scheduledClubTimes[selectedClass] && (
+                        {selectedClass && club.scheduledClubTimes?.[selectedClass] && (
                           <div className="flex flex-col gap-2">
-                            {Object.entries(club.scheduledClubTimes[selectedClass]).map(([day, schedule]) => (
+                            {Object.entries(club.scheduledClubTimes?.[selectedClass]).map(([day, schedule]) => (
                               <div key={day} className=" flex gap-3">
                                 <span className="font-semibold">{WEEK_DAY_LABEL_MN[day as WeekDayType]}:</span>
                                 <span>

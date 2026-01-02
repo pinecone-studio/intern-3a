@@ -1,6 +1,6 @@
 {
-  "projectId": "__YOUR_PROJECT_ID__",
-  "orgId": "__YOUR_TEAM_ID__",
+  "projectId": "prj_IYSahMyCyluvriTBZrWiYU2tK3WO",
+  "orgId": "team_94Y6f3lo4Ep4S8gaAJW18Bkr",
   "settings": {
     "framework": "nextjs",
     "installCommand": "yarn --immutable",

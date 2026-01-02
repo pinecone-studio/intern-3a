@@ -1,13 +1,12 @@
 'use client';
 
+import { NewClubType } from '@/lib/utils/types';
 import { Badge, Button, Spinner } from '@intern-3a/shadcn';
 import { MapPin } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useClub } from '../hook/use-club';
 
-export const AllClubsCardScrollAnimation = () => {
-  const { allClubs, isLoading } = useClub();
+export const AllClubsCardScrollAnimation = ({ allClubs, isLoading }: { allClubs: NewClubType[]; isLoading: boolean }) => {
   const router = useRouter();
 
   if (isLoading) {
@@ -25,7 +24,7 @@ export const AllClubsCardScrollAnimation = () => {
 
   return (
     <div
-      className=" w-full overflow-x-auto scroll-smooth [&::-webkit-scrollbar]:hidden
+      className="w-full overflow-x-auto scroll-smooth [&::-webkit-scrollbar]:hidden
        [-ms-overflow-style:none]
       [scrollbar-width:none] "
     >

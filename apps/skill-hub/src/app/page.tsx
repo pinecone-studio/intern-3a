@@ -4,7 +4,7 @@ import { useAuth, useUser } from '@clerk/nextjs';
 import { Spinner } from '@intern-3a/shadcn';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { AllClubsCardScrollAnimation, ClubFilterSection, FilteredClubsForUser } from './_components';
+import { AllClubsCardScrollAnimation, FilteredClubsForUser } from './_components';
 import { Intro } from './_components/Intro';
 import { useClub } from './hook/use-club';
 
@@ -13,7 +13,7 @@ export default function Index() {
   const { getToken } = useAuth();
   const router = useRouter();
   const role = user?.publicMetadata?.role;
-  const { allClubs } = useClub();
+  const { allClubs, isLoading } = useClub();
 
   useEffect(() => {
     if (!isLoaded) return;
@@ -52,9 +52,8 @@ export default function Index() {
   return (
     <div>
       <Intro />
-      <AllClubsCardScrollAnimation />
+      <AllClubsCardScrollAnimation allClubs={allClubs} isLoading={isLoading} />
       <FilteredClubsForUser allClubs={allClubs} />
-      <ClubFilterSection />
     </div>
   );
 }
