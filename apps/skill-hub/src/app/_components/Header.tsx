@@ -7,6 +7,7 @@ import Link from 'next/link';
 import React, { useState } from 'react';
 import { ClubRegisterBtnDialogContent } from './ClubRegisterBtnDialogContent';
 import { MyUserButton } from './MyUserButton';
+import { SearchBar } from './SearchBar';
 
 export const Header = () => {
   const [open, setOpen] = useState(false);
@@ -26,6 +27,7 @@ export const Header = () => {
           >
             Growly
           </span>
+          <SearchBar />
         </Link>
       </div>
 
