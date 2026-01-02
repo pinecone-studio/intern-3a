@@ -5,5 +5,67 @@
   "projectType": "application",
   "tags": [],
   "// targets": "to see all targets run: nx show project sample --web",
-  "targets": {}
+  "targets": {
+    "prisma:generate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "prisma generate",
+        "cwd": "apps/sample"
+      }
+    },
+    "prisma:migrate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "prisma migrate dev",
+        "cwd": "apps/sample"
+      }
+    },
+    "prisma:studio": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "prisma studio",
+        "cwd": "apps/sample"
+      }
+    },
+    "prisma:push": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "prisma db push",
+        "cwd": "apps/sample"
+      }
+    },
+    "build": {
+      "executor": "@nx/next:build",
+      "outputs": ["{options.outputPath}"],
+      "dependsOn": ["prisma:generate"],
+      "options": {
+        "root": "apps/sample",
+        "outputPath": "dist/apps/sample"
+      }
+    },
+    "dev": {
+      "executor": "@nx/next:server",
+      "dependsOn": ["prisma:generate"],
+      "options": {
+        "buildTarget": "sample:build",
+        "dev": true,
+        "port": 3001
+      }
+    },
+    "serve": {
+      "executor": "@nx/next:server",
+      "dependsOn": ["prisma:generate"],
+      "options": {
+        "buildTarget": "sample:build",
+        "dev": false,
+        "port": 3001
+      }
+    },
+    "test": {
+      "dependsOn": ["prisma:generate"]
+    },
+    "lint": {
+      "dependsOn": ["prisma:generate"]
+    }
+  }
 }
