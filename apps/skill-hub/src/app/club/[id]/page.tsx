@@ -56,7 +56,7 @@ export default function ClubDetailPage({ params }: PageProps) {
         {/* ЗҮҮН ТАЛ */}
         <div className="w-full lg:w-[40%] space-y-6 lg:sticky lg:top-8">
           <div>
-            <Button variant={'ghost'} className="rounded-lg hover:bg-slate-100 border border-slate-200" onClick={() => router.push(`/`)}>
+            <Button variant={'ghost'} className="rounded-lg hover:bg-slate-100 border border-slate-200 cursor-pointer" onClick={() => router.push(`/`)}>
               <ArrowLeft className="w-4 h-4 mr-2" /> Буцах
             </Button>
           </div>
@@ -74,7 +74,7 @@ export default function ClubDetailPage({ params }: PageProps) {
                     <button
                       key={level}
                       onClick={() => setSelectedLevel(level)}
-                      className={`flex-1 py-2.5 px-4 rounded-xl text-sm font-bold transition-all ${
+                      className={`flex-1 py-2.5 px-4 rounded-xl text-sm font-bold transition-all cursor-pointer ${
                         selectedLevel === level ? 'bg-white text-orange-600 shadow-md ring-1 ring-slate-100' : 'text-slate-500 hover:bg-white/50'
                       }`}
                     >
@@ -87,7 +87,7 @@ export default function ClubDetailPage({ params }: PageProps) {
               {/* ГАЗРЫН ЗУРАГ НЭЭХ ХЭСЭГ */}
               <Dialog>
                 <DialogTrigger asChild>
-                  <button className="w-full flex items-start gap-2 text-slate-500 bg-slate-50 p-4 rounded-xl hover:bg-orange-50 transition-colors border border-transparent hover:border-orange-200 group">
+                  <button className="w-full flex items-start gap-2 text-slate-500 bg-slate-50 p-4 rounded-xl hover:bg-orange-50 transition-colors border border-transparent hover:border-orange-200 group cursor-pointer">
                     <MapPin className="w-5 h-5 text-orange-600 shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
                     <div className="text-left">
                       <span className="text-sm font-medium block">{club.clubAddress}</span>
@@ -114,7 +114,10 @@ export default function ClubDetailPage({ params }: PageProps) {
               <span className="text-2xl font-black text-orange-600">{currentPrice?.toLocaleString()}₮</span>
             </div>
 
-            <Button onClick={handleRegister} className="w-full bg-orange-600 hover:bg-orange-700 text-white font-black py-7 text-lg rounded-2xl shadow-lg transition-all hover:-translate-y-1">
+            <Button
+              onClick={handleRegister}
+              className="w-full bg-orange-600 hover:bg-orange-700 text-white font-black py-7 text-lg rounded-2xl shadow-lg transition-all hover:-translate-y-1 cursor-pointer"
+            >
               Одоо бүртгүүлэх
             </Button>
 
@@ -122,7 +125,7 @@ export default function ClubDetailPage({ params }: PageProps) {
               <Button
                 variant="outline"
                 onClick={() => setShowContact(!showContact)}
-                className={`h-12 gap-2 text-xs font-bold rounded-xl border-2 transition-all ${showContact ? 'bg-slate-900 border-slate-900 text-white' : 'border-slate-100 text-slate-600'}`}
+                className={`h-12 gap-2 text-xs font-bold rounded-xl border-2 transition-all cursor-pointer ${showContact ? 'bg-slate-900 border-slate-900 text-white' : 'border-slate-100 text-slate-600'}`}
               >
                 <Phone className="w-4 h-4" /> Холбоо барих
               </Button>
@@ -130,7 +133,7 @@ export default function ClubDetailPage({ params }: PageProps) {
               <Button
                 variant="outline"
                 onClick={() => setShowSchedule(!showSchedule)}
-                className={`h-12 gap-2 text-xs font-bold rounded-xl border-2 transition-all ${showSchedule ? 'bg-slate-900 border-slate-900 text-white' : 'border-slate-100 text-slate-600'}`}
+                className={`h-12 gap-2 text-xs font-bold rounded-xl border-2 transition-all cursor-pointer ${showSchedule ? 'bg-slate-900 border-slate-900 text-white' : 'border-slate-100 text-slate-600'}`}
               >
                 <Calendar className="w-4 h-4" /> Хуваарь харах
               </Button>
