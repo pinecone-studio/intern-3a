@@ -1,5 +1,4 @@
 // src/app/api/universities/route.ts
-
 import prisma from 'apps/unifind/src/lib/prisma';
 import { NextResponse } from 'next/server';
 
