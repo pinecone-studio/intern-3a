@@ -1,9 +1,9 @@
-import prisma from "@/src/lib/prisma";
-import { NextResponse } from "next/server";
+import prisma from 'apps/unifind/src/lib/prisma';
+import { NextResponse } from 'next/server';
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
-  const universityId = searchParams.get("university_id");
+  const universityId = searchParams.get('university_id');
 
   const majors = await prisma.majors.findMany({
     where: universityId ? { university_id: Number(universityId) } : undefined,

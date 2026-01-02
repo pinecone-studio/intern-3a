@@ -1,7 +1,7 @@
-import prisma from "@/src/lib/prisma";
-import { NextResponse } from "next/server";
+import prisma from 'apps/unifind/src/lib/prisma';
+import { NextResponse } from 'next/server';
 
-export const runtime = "nodejs";
+export const runtime = 'nodejs';
 
 type ScoreInput = {
   subject_id: number;
@@ -16,17 +16,8 @@ export async function POST(req: Request) {
       major_id?: number | null;
     };
 
-    if (
-      !Array.isArray(scores) ||
-      scores.length === 0 ||
-      scores.some(
-        (s) => typeof s.subject_id !== "number" || typeof s.score !== "number"
-      )
-    ) {
-      return NextResponse.json(
-        { error: "scores must be a non-empty array with subject_id and score" },
-        { status: 400 }
-      );
+    if (!Array.isArray(scores) || scores.length === 0 || scores.some((s) => typeof s.subject_id !== 'number' || typeof s.score !== 'number')) {
+      return NextResponse.json({ error: 'scores must be a non-empty array with subject_id and score' }, { status: 400 });
     }
 
     // Бүх majors-г авч ирнэ, major_id сонгосон бол filter
@@ -56,10 +47,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(results);
   } catch (error) {
-    console.error("Error in /api/check-admission:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    console.error('Error in /api/check-admission:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
