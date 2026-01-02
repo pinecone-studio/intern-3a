@@ -1,6 +1,6 @@
 export * from './AllClubsCard';
 export * from './AllClubsCardScrollAnimation';
-export * from './ClubFilterSection';
+// export * from './ClubFilterSection';
 export * from './ClubRegisterBtnDialogContent';
 export * from './FilteredClubsForUser';
 export * from './FilteredResult';

@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, useMotionValue, useSpring, Variants } from 'framer-motion';
+import { motion, useMotionValue, Variants } from 'framer-motion';
 import { BookOpen, GraduationCap, Users } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
@@ -10,9 +10,9 @@ export const Intro = () => {
   const cursorX = useMotionValue(0);
   const cursorY = useMotionValue(0);
 
-  const springConfig = { damping: 25, stiffness: 150 };
-  const cursorXSpring = useSpring(cursorX, springConfig);
-  const cursorYSpring = useSpring(cursorY, springConfig);
+  // const springConfig = { damping: 25, stiffness: 150 };
+  // const cursorXSpring = useSpring(cursorX, springConfig);
+  // const cursorYSpring = useSpring(cursorY, springConfig);
 
   useEffect(() => {
     setIsVisible(true);
@@ -57,14 +57,14 @@ export const Intro = () => {
     },
   };
 
-  const floatingAnimation = {
-    y: [0, -10, 0],
-    transition: {
-      duration: 3,
-      repeat: Infinity,
-      ease: 'easeInOut' as const,
-    },
-  };
+  // const floatingAnimation = {
+  //   y: [0, -10, 0],
+  //   transition: {
+  //     duration: 3,
+  //     repeat: Infinity,
+  //     ease: 'easeInOut' as const,
+  //   },
+  // };
 
   const features = [
     {
