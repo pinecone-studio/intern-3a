@@ -1,6 +1,8 @@
 'use client';
 
 import { NewClubType } from '@/lib/utils/types';
+import { Button } from '@intern-3a/shadcn';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 import { useClub } from '../hook/use-club';
@@ -51,7 +53,6 @@ const FilteredResult = ({ filteredClubs, isFiltered, resetFilters }: FilteredClu
                       <h4 className="text-xl font-bold text-slate-900 mb-2">{club.clubName}</h4>
                       <p className="text-orange-600 font-semibold mb-2">{club.clubCategoryName}</p>
                       <p className="text-slate-600 text-sm mb-4 line-clamp-2">{club.clubDescription}</p>
-
                       {club.selectedClassLevelNames && club.selectedClassLevelNames.length > 0 && (
                         <div className="flex flex-wrap gap-2 mb-3">
                           {club.selectedClassLevelNames.map((level) => (
@@ -61,16 +62,23 @@ const FilteredResult = ({ filteredClubs, isFiltered, resetFilters }: FilteredClu
                           ))}
                         </div>
                       )}
-
                       <div className="text-sm text-slate-600 mb-2">
                         <strong>Багш:</strong> {club.teacherName}
                       </div>
-
                       {club.clubAddress && (
                         <div className="text-sm text-slate-600">
                           <strong>Хаяг:</strong> {club.clubAddress}
                         </div>
                       )}
+                      <div className="flex justify-between mt-auto">
+                        <Link href={`/club/${club._id}`}>
+                          <Button className="bg-[#FCB027] hover:bg-[#e69f1c] text-white rounded-full px-5 cursor-pointer">Дэлгэрэнгүй</Button>
+                        </Link>
+
+                        <Button className="bg-[#0A427A] hover:bg-[#093662] text-white rounded-full px-5 cursor-pointer" onClick={() => router.push('/register')}>
+                          Бүртгүүлэх
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 ))}
