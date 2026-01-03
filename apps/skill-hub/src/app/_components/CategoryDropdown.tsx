@@ -1,13 +1,25 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import React from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
 import { useClub } from '../hook/use-club';
 
 export const CategoryDropdown = () => {
+  // ✅ Hook-ууд дандаа эхэнд
   const router = useRouter();
+  const pathname = usePathname();
   const { allClubs, isLoading } = useClub();
 
+  const [selectedCategory, setSelectedCategory] = useState('');
+
+  // ✅ Route өөрчлөгдөхийг ажиглана
+  useEffect(() => {
+    if (pathname === '/') {
+      setSelectedCategory('');
+    }
+  }, [pathname]);
+
+  // ⛔ Hook-уудын ДАРАА early return хийнэ
   if (isLoading) {
     return <div>Ачааллаж байна...</div>;
   }
@@ -16,20 +28,37 @@ export const CategoryDropdown = () => {
     return <div>Дата олдсонгүй</div>;
   }
 
-  // 1. clubCategoryName-үүдийг unique болгох
   const categories = Array.from(new Set(allClubs.map((club: any) => club.clubCategoryName)));
 
-  // 2. сонголт хийх үед тусдаа page рүү шилжих
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const category = e.target.value;
-    if (!category) return;
-
+    setSelectedCategory(category);
     router.push(`/genre?id=${category}&name=${category}`);
   };
 
   return (
-    <div className="w-full max-w-xs">
-      <select defaultValue="" onChange={handleChange} className="w-full rounded-md border px-3 py-2 text-sm">
+    <div
+      className="
+        h-9 w-full max-w-xs
+        rounded-md border border-input
+        bg-background
+        focus-within:ring-2 focus-within:ring-primary/20
+        focus-within:border-primary
+        transition-colors
+      "
+    >
+      <select
+        value={selectedCategory}
+        onChange={handleChange}
+        className="
+          h-9 w-full
+          bg-transparent
+          px-3 text-sm
+          outline-none
+          border-0
+          cursor-pointer
+        "
+      >
         <option value="" disabled>
           Ангилал сонгох
         </option>

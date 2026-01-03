@@ -1,13 +1,20 @@
 'use client';
 
 import { Input, Popover, PopoverAnchor, PopoverContent } from '@intern-3a/shadcn';
-import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import { SearchIcon } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
 import { useClub } from '../hook/use-club';
 import { SearchBarResults } from './SearchBarResults';
 
 export const SearchBar = () => {
   const router = useRouter();
+  const pathname = usePathname();
+  useEffect(() => {
+    if (pathname === '/') {
+      setSearchValue('');
+    }
+  }, [pathname]);
   const { allClubs, isLoading } = useClub();
 
   const [searchValue, setSearchValue] = useState('');
@@ -21,24 +28,42 @@ export const SearchBar = () => {
   return (
     <div className="relative w-full max-w-sm">
       <Popover open={open} onOpenChange={setOpen}>
-        {/* Anchor the popover to a wrapper so the input remains fully interactive */}
         <PopoverAnchor asChild>
-          <div>
-            <Input
-              value={searchValue}
-              placeholder="Клубын нэрээр хайх..."
-              onChange={(e) => {
-                const value = e.target.value;
-                setSearchValue(value);
-                setOpen(value.length > 0);
-              }}
-              onFocus={() => setOpen(searchValue.length > 0)}
-              className="pl-4"
-            />
+          <div
+            className="
+              h-9
+              rounded-md border border-input
+              bg-background
+              focus-within:ring-2 focus-within:ring-primary/20
+              focus-within:border-primary
+              transition-colors
+            "
+          >
+            <div className="relative h-full">
+              <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                value={searchValue}
+                placeholder="Клубын нэрээр хайх..."
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setSearchValue(value);
+                  setOpen(value.length > 0);
+                }}
+                onFocus={() => setOpen(searchValue.length > 0)}
+                className="
+                  h-9
+                  pl-10
+                  border-0
+                  bg-transparent
+                  focus:ring-0
+                  focus-visible:ring-0
+                "
+              />
+            </div>
           </div>
         </PopoverAnchor>
 
-        <PopoverContent className="w-90" onOpenAutoFocus={(e) => e.preventDefault()} onCloseAutoFocus={(e) => e.preventDefault()}>
+        <PopoverContent className="w-90 p-1" onOpenAutoFocus={(e) => e.preventDefault()} onCloseAutoFocus={(e) => e.preventDefault()}>
           {filteredClubs.slice(0, 5).map((club: any) => (
             <div
               key={club._id}
@@ -56,7 +81,7 @@ export const SearchBar = () => {
 
           {filteredClubs.length > 5 && (
             <button
-              className="mt-2 text-sm text-primary"
+              className="mt-2 px-2 py-1 text-sm text-primary"
               onClick={() => {
                 router.push(`/search?value=${searchValue}`);
                 setOpen(false);

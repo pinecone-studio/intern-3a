@@ -1,9 +1,8 @@
 import Link from 'next/link';
 
-interface GenrePageProps {
+interface SearchPageProps {
   searchParams: Promise<{
-    id?: string;
-    name?: string;
+    value?: string;
   }>;
 }
 
@@ -19,26 +18,28 @@ async function getAllClubs() {
   return res.json();
 }
 
-export default async function GenrePage({ searchParams }: GenrePageProps) {
+export default async function SearchPage({ searchParams }: SearchPageProps) {
   const params = await searchParams;
-  const category = params.id;
+  const value = params.value?.toLowerCase() ?? '';
 
   const result = await getAllClubs();
   const clubs = result.data ?? [];
 
-  const filteredClubs = clubs.filter((club: any) => club.clubCategoryName === category);
+  const filteredClubs = value ? clubs.filter((club: any) => club.clubName.toLowerCase().includes(value)) : [];
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <h1 className="mb-6 text-2xl font-semibold">{params.name ?? category}</h1>
+      <h1 className="mb-2 text-2xl font-semibold">“{value}” хайлтын үр дүн</h1>
+
+      <p className="mb-6 text-sm text-gray-500">{filteredClubs.length} үр дүн олдлоо</p>
 
       {filteredClubs.length === 0 ? (
-        <p className="text-sm text-gray-500">Энэ ангилалд одоогоор клуб бүртгэгдээгүй байна.</p>
+        <p className="text-sm text-gray-500">Илэрц олдсонгүй</p>
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {filteredClubs.map((club: any) => (
             <Link key={club._id} href={`/club/${club._id}`}>
-              <div className="rounded-xl border p-4 shadow-sm">
+              <div className="rounded-xl border p-4 shadow-sm hover:shadow-md transition">
                 <img src={club.clubImage} alt={club.clubName} className="mb-3 h-40 w-full rounded-lg object-cover" />
 
                 <h2 className="text-lg font-medium">{club.clubName}</h2>
