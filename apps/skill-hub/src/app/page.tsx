@@ -4,7 +4,7 @@ import { useAuth, useUser } from '@clerk/nextjs';
 import { Spinner } from '@intern-3a/shadcn';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { AllClubsCardScrollAnimation, FilteredClubsForUser, Intro, MainPageUserLocationMap } from './_components';
+import { AllClubsCardScrollAnimation, BookingStyleMap, FilteredClubsForUser, Intro } from './_components';
 import { useClub } from './hook/use-club';
 
 export default function Index() {
@@ -50,8 +50,8 @@ export default function Index() {
 
   return (
     <div>
-      <Intro />
-      {/* <MainPageUserLocationMap allClubs={allClubs} isLoading={isLoading} /> */}
+      {/* <Intro /> */}
+      <BookingStyleMap allClubs={allClubs} />
       <AllClubsCardScrollAnimation allClubs={allClubs} isLoading={isLoading} />
       <FilteredClubsForUser allClubs={allClubs} />
     </div>

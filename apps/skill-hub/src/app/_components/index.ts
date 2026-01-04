@@ -9,5 +9,7 @@ export * from './Intro';
 export * from './MainPageUserLocationMap';
 export * from './Map';
 // export * from './MapContent';
+export * from './BookingStyleMap';
+export * from './MapSideBar';
 export * from './MyUserButton';
 export * from './UserMapContent';
