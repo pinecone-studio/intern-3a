@@ -46,7 +46,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
                 <p className="text-sm text-gray-500">{club.clubSubCategoryName}</p>
 
-                <p className="mt-2 line-clamp-2 text-sm">{club.clubDescription}</p>
+                <p className="mt-2 line-clamp-1 text-sm">{club.clubDescription}</p>
               </div>
             </Link>
           ))}

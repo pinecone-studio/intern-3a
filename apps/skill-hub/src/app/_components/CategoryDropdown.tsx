@@ -1,5 +1,6 @@
 'use client';
 
+import { Skeleton } from '@intern-3a/shadcn';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useClub } from '../hook/use-club';
@@ -21,11 +22,11 @@ export const CategoryDropdown = () => {
 
   // ⛔ Hook-уудын ДАРАА early return хийнэ
   if (isLoading) {
-    return <div>Ачааллаж байна...</div>;
+    return <Skeleton className="w-37 h-9 flex items-center justify-center text-sm">Ачааллаж байна...</Skeleton>;
   }
 
   if (!allClubs || allClubs.length === 0) {
-    return <div>Дата олдсонгүй</div>;
+    return <Skeleton className="w-37 h-9 flex items-center justify-center text-sm">Дата олдсонгүй</Skeleton>;
   }
 
   const categories = Array.from(new Set(allClubs.map((club: any) => club.clubCategoryName)));
@@ -57,6 +58,7 @@ export const CategoryDropdown = () => {
           outline-none
           border-0
           cursor-pointer
+          text-muted-foreground
         "
       >
         <option value="" disabled>

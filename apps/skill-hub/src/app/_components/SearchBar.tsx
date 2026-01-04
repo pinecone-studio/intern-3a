@@ -1,6 +1,6 @@
 'use client';
 
-import { Input, Popover, PopoverAnchor, PopoverContent } from '@intern-3a/shadcn';
+import { Input, Popover, PopoverAnchor, PopoverContent, Skeleton } from '@intern-3a/shadcn';
 import { SearchIcon } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
@@ -20,8 +20,8 @@ export const SearchBar = () => {
   const [searchValue, setSearchValue] = useState('');
   const [open, setOpen] = useState(false);
 
-  if (isLoading) return <div>Ачааллаж байна...</div>;
-  if (!allClubs || allClubs.length === 0) return <div>Дата олдсонгүй</div>;
+  if (isLoading) return <Skeleton className="w-51 h-9 flex items-center justify-center text-sm">Ачааллаж байна...</Skeleton>;
+  if (!allClubs || allClubs.length === 0) return <Skeleton className="w-51 h-9 flex items-center justify-center text-sm">Дата олдсонгүй</Skeleton>;
 
   const filteredClubs = searchValue.trim().length === 0 ? [] : allClubs.filter((club: any) => club.clubName.toLowerCase().includes(searchValue.toLowerCase()));
 
