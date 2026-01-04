@@ -3,7 +3,6 @@
 import { NewClubType } from '@/lib/utils/types';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { useRouter } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 
 type UserMapContentProps = {
@@ -19,7 +18,6 @@ type UserMapContentProps = {
 export default function UserMapContent({ visibleClubs, userLocation, zoom, setZoom, setBounds, hoveredClubId, sidebarOpen }: UserMapContentProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<L.Map | null>(null);
-  const router = useRouter();
 
   useEffect(() => {
     if (!mapRef.current || mapInstance.current) return;
