@@ -85,6 +85,7 @@ export const ClubRegisterBtnDialogContent = ({ setOpen }: { setOpen: Dispatch<Re
   const [clubLong, setClubLong] = useState<number | null>(null);
   const { getToken } = useAuth();
   const [loading, setLoading] = useState<boolean>(false);
+  const [isClicked, setIsClicked] = useState<boolean>(false);
 
   // Regex patterns for validation
   // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -273,7 +274,7 @@ export const ClubRegisterBtnDialogContent = ({ setOpen }: { setOpen: Dispatch<Re
         </div>
 
         <div className="flex justify-between">
-          <div className="w-fit flex flex-col gap-1.5">
+          <div>
             <Label htmlFor="selectedClassLevelName">Анги:</Label>
             <ToggleGroup
               id="selectedClassLevelName"
@@ -302,7 +303,7 @@ export const ClubRegisterBtnDialogContent = ({ setOpen }: { setOpen: Dispatch<Re
                 });
               }}
             >
-              <div className="flex flex-col gap-1.5">
+              <div className="flex gap-1.5">
                 {classLevels.map((level) => (
                   <ToggleGroupItem
                     key={level}
@@ -315,276 +316,287 @@ export const ClubRegisterBtnDialogContent = ({ setOpen }: { setOpen: Dispatch<Re
               </div>
             </ToggleGroup>
           </div>
+        </div>
+        <Label className="mt-5">Дугуйлан хичээллэх хуваарь:</Label>
+        <div className="w-fit flex gap-68">
+          {selectedClassLevelNames.map((level) => (
+            <div key={level} className="flex flex-col gap-1.5">
+              <Label>{level} анги</Label>
+              <ToggleGroup
+                type="multiple"
+                value={Object.keys(scheduledClubTimes[level] || {}) as WeekDayType[]}
+                onValueChange={(days) => {
+                  const typedDays = days as WeekDayType[];
+                  {
+                    scheduledClubTimes && typedDays.length > 0 ? setIsClicked(true) : setIsClicked(false);
+                  }
+                  setScheduledClubTimes((prev) => {
+                    const updated: WeekScheduleType = { ...(prev[level] || {}) };
 
-          <div className="w-fit flex flex-col gap-1.5">
-            <Label>Үнэ:</Label>
-            {selectedClassLevelNames.length > 0 && (
-              <div className="flex flex-col gap-1.5">
-                {selectedClassLevelNames.map((level) => (
-                  <div key={level} className="flex gap-1.5">
-                    <Label>{level}: </Label>
-                    <Input
-                      type="number"
-                      placeholder="Үнэ (₮)"
-                      value={clubPrices[level] || ''}
-                      onChange={(e) =>
-                        setClubPrices((prev) => ({
-                          ...prev,
-                          [level]: Number(e.target.value),
-                        }))
+                    typedDays.forEach((day) => {
+                      if (!updated[day]) {
+                        updated[day] = { startTime: '', endTime: '' };
                       }
-                      className="w-23"
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <div className="w-fit flex flex-col gap-1.5">
-            <Label>Дугуйлан хичээллэх хуваарь:</Label>
-            {selectedClassLevelNames.map((level) => (
-              <div key={level} className="flex flex-col gap-1.5">
-                <Label>{level} анги</Label>
-                <ToggleGroup
-                  type="multiple"
-                  value={Object.keys(scheduledClubTimes[level] || {}) as WeekDayType[]}
-                  onValueChange={(days) => {
-                    const typedDays = days as WeekDayType[];
-
-                    setScheduledClubTimes((prev) => {
-                      const updated: WeekScheduleType = { ...(prev[level] || {}) };
-
-                      typedDays.forEach((day) => {
-                        if (!updated[day]) {
-                          updated[day] = { startTime: '', endTime: '' };
-                        }
-                      });
-
-                      Object.keys(updated).forEach((d) => {
-                        if (!typedDays.includes(d as WeekDayType)) {
-                          delete updated[d as WeekDayType];
-                        }
-                      });
-
-                      return { ...prev, [level]: updated };
                     });
-                  }}
-                >
-                  <div className="flex gap-1.5">
-                    {weekDays.map((day) => (
-                      <ToggleGroupItem
-                        key={day.value}
-                        value={day.value}
-                        className="cursor-pointer w-fit px-4 py-2 rounded-full bg-muted data-[state=on]:bg-[#0A427A] hover:data-[state=on]:bg-[#083563] data-[state=on]:text-white"
-                      >
-                        {day.label}
-                      </ToggleGroupItem>
-                    ))}
-                  </div>
-                </ToggleGroup>
 
-                <div className="flex flex-col gap-1.5">
-                  {Object.entries(scheduledClubTimes[level] || {}).map(([day, time]) => {
-                    const typedDay = day as WeekDayType;
+                    Object.keys(updated).forEach((d) => {
+                      if (!typedDays.includes(d as WeekDayType)) {
+                        delete updated[d as WeekDayType];
+                      }
+                    });
 
-                    return (
-                      <div key={typedDay} className="flex gap-1.5">
-                        <Label>{weekDays.find((d) => d.value === day)?.label}</Label>
-                        <Input
-                          type="time"
-                          value={time.startTime}
-                          onChange={(e) => {
-                            const newStart = e.target.value;
-
-                            if (!time.endTime && !isValidTimeRange(newStart, time.endTime)) {
-                              toast.error('Эхлэх цаг дуусах цагаас өмнө байх ёстой!');
-                              return;
-                            }
-
-                            setScheduledClubTimes((prev) => ({
-                              ...prev,
-                              [level]: {
-                                ...prev[level],
-                                [typedDay]: { ...time, startTime: newStart },
-                              },
-                            }));
-                          }}
-                          className={time.startTime && time.endTime && !isValidTimeRange(time.startTime, time.endTime) ? 'border-red-500' : ''}
-                        />
-                        <span>-</span>
-                        <Input
-                          type="time"
-                          value={time.endTime}
-                          onChange={(e) => {
-                            const newEnd = e.target.value;
-
-                            if (time.startTime && !isValidTimeRange(time.startTime, newEnd)) {
-                              toast.error('Дуусах цаг эхлэх цагаас хойш байх ёстой!');
-                              return;
-                            }
-
-                            setScheduledClubTimes((prev) => ({
-                              ...prev,
-                              [level]: { ...prev[level], [typedDay]: { ...time, endTime: newEnd } },
-                            }));
-                          }}
-                          className={time.startTime && time.endTime && !isValidTimeRange(time.startTime, time.endTime) ? 'border-red-500' : ''}
-                        />
-                      </div>
-                    );
-                  })}
+                    return { ...prev, [level]: updated };
+                  });
+                }}
+              >
+                <div className="flex gap-1.5">
+                  {weekDays.map((day) => (
+                    <ToggleGroupItem
+                      key={day.value}
+                      value={day.value}
+                      className="cursor-pointer w-fit px-4 py-2 rounded-full bg-muted data-[state=on]:bg-[#0A427A] hover:data-[state=on]:bg-[#083563] data-[state=on]:text-white"
+                    >
+                      {day.label}
+                    </ToggleGroupItem>
+                  ))}
                 </div>
+              </ToggleGroup>
+              <div className="flex flex-col gap-1.5">
+                <div>
+                  {isClicked ? (
+                    <div className="flex gap-29 ml-7">
+                      <div>Эхлэх цаг</div>
+                      <div>Дуусах цаг</div>
+                    </div>
+                  ) : (
+                    ''
+                  )}
+                </div>
+                {Object.entries(scheduledClubTimes[level] || {}).map(([day, time]) => {
+                  const typedDay = day as WeekDayType;
+
+                  return (
+                    <div key={typedDay} className="flex gap-1.5">
+                      <Label>{weekDays.find((d) => d.value === day)?.label}</Label>
+
+                      <Input
+                        type="time"
+                        value={time.startTime}
+                        onChange={(e) => {
+                          const newStart = e.target.value;
+
+                          if (!time.endTime && !isValidTimeRange(newStart, time.endTime)) {
+                            toast.error('Эхлэх цаг дуусах цагаас өмнө байх ёстой!');
+                            return;
+                          }
+
+                          setScheduledClubTimes((prev) => ({
+                            ...prev,
+                            [level]: {
+                              ...prev[level],
+                              [typedDay]: { ...time, startTime: newStart },
+                            },
+                          }));
+                        }}
+                        className={time.startTime && time.endTime && !isValidTimeRange(time.startTime, time.endTime) ? 'border-red-500' : ''}
+                      />
+                      <span>-</span>
+                      <Input
+                        type="time"
+                        value={time.endTime}
+                        onChange={(e) => {
+                          const newEnd = e.target.value;
+
+                          if (time.startTime && !isValidTimeRange(time.startTime, newEnd)) {
+                            toast.error('Дуусах цаг эхлэх цагаас хойш байх ёстой!');
+                            return;
+                          }
+
+                          setScheduledClubTimes((prev) => ({
+                            ...prev,
+                            [level]: { ...prev[level], [typedDay]: { ...time, endTime: newEnd } },
+                          }));
+                        }}
+                        className={time.startTime && time.endTime && !isValidTimeRange(time.startTime, time.endTime) ? 'border-red-500' : ''}
+                      />
+                    </div>
+                  );
+                })}
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
+        </div>
+        <div className="w-fit flex flex-col gap-1.5 mt-5">
+          <Label>Үнэ:</Label>
+          {selectedClassLevelNames.length > 0 && (
+            <div className="flex gap-123">
+              {selectedClassLevelNames.map((level) => (
+                <div key={level} className="flex gap-1.5">
+                  <Label>{level}:</Label>
+                  <Input
+                    type="number"
+                    placeholder="Үнэ (₮)"
+                    value={clubPrices[level] || ''}
+                    onChange={(e) =>
+                      setClubPrices((prev) => ({
+                        ...prev,
+                        [level]: Number(e.target.value),
+                      }))
+                    }
+                    className="w-23"
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
 
-          <div className="flex flex-col gap-1.5">
-            <Label>Багшийн мэдээлэл:</Label>
-            {selectedClassLevelNames.map((level) => {
-              const teacher: TeacherInfoType = teachersInfoByClass[level] || {
-                teacherImage: undefined,
-                teacherImagePreview: '',
-                teacherName: '',
-                teacherPhone: '',
-                teacherEmail: '',
-                teacherProfession: '',
-                teacherExperience: '',
-                teacherAchievement: '',
-              };
+        <Label className="text-base font-semibold tracking-wide text-gray-900 mt-5">Багшийн мэдээлэл:</Label>
 
-              return (
-                <div className="flex flex-col gap-1.5">
-                  <Label>{level} анги</Label>
-                  <div className="flex gap-6">
-                    <div>
-                      <div className="flex flex-col gap-1.5">
-                        <Label htmlFor="teacherName">Нэр:</Label>
-                        <Input
-                          id="teacherName"
-                          value={teacher.teacherName}
-                          onChange={(e) =>
-                            setTeachersInfoByClass((prev) => ({
-                              ...prev,
-                              [level]: { ...teacher, teacherName: e.target.value },
-                            }))
-                          }
-                          placeholder="Нэр оруулах"
-                        />
-                      </div>
+        <div className="flex gap-30">
+          {selectedClassLevelNames.map((level) => {
+            const teacher: TeacherInfoType = teachersInfoByClass[level] || {
+              teacherImage: undefined,
+              teacherImagePreview: '',
+              teacherName: '',
+              teacherPhone: '',
+              teacherEmail: '',
+              teacherProfession: '',
+              teacherExperience: '',
+              teacherAchievement: '',
+            };
 
-                      <div className="flex flex-col gap-1.5">
-                        <Label htmlFor="teacherPhone">Утас:</Label>
-                        <Input
-                          id="teacherPhone"
-                          value={teacher.teacherPhone}
-                          onChange={(e) =>
-                            setTeachersInfoByClass((prev) => ({
-                              ...prev,
-                              [level]: { ...teacher, teacherPhone: e.target.value },
-                            }))
-                          }
-                          placeholder="Утасны дугаар оруулах"
-                        />
-                      </div>
-
-                      <div className="flex flex-col gap-1.5">
-                        <Label htmlFor="teacherEmail">Имэйл:</Label>
-                        <Input
-                          id="teacherEmail"
-                          value={teacher.teacherEmail}
-                          onChange={(e) =>
-                            setTeachersInfoByClass((prev) => ({
-                              ...prev,
-                              [level]: { ...teacher, teacherEmail: e.target.value },
-                            }))
-                          }
-                          placeholder="Имэйл хаяг оруулах"
-                        />
-                      </div>
-
-                      <div className="flex flex-col gap-1.5">
-                        <Label htmlFor="teacherProfession">Мэргэжил:</Label>
-                        <Input
-                          id="teacherProfession"
-                          value={teacher.teacherProfession}
-                          onChange={(e) =>
-                            setTeachersInfoByClass((prev) => ({
-                              ...prev,
-                              [level]: { ...teacher, teacherProfession: e.target.value },
-                            }))
-                          }
-                          placeholder="Мэргэжил оруулах"
-                        />
-                      </div>
-
-                      <div className="flex flex-col gap-1.5">
-                        <Label htmlFor="teacherExperience">Туршлага:</Label>
-                        <Textarea
-                          id="teacherExperience"
-                          value={teacher.teacherExperience}
-                          onChange={(e) =>
-                            setTeachersInfoByClass((prev) => ({
-                              ...prev,
-                              [level]: { ...teacher, teacherExperience: e.target.value },
-                            }))
-                          }
-                          placeholder="Туршлага оруулах"
-                        />
-                      </div>
-
-                      <div className="flex flex-col gap-1.5">
-                        <Label htmlFor="teacherAchievement">Амжилт:</Label>
-                        <Textarea
-                          id="teacherAchievement"
-                          value={teacher.teacherAchievement}
-                          onChange={(e) =>
-                            setTeachersInfoByClass((prev) => ({
-                              ...prev,
-                              [level]: { ...teacher, teacherAchievement: e.target.value },
-                            }))
-                          }
-                          placeholder="Амжилт оруулах"
-                        />
-                      </div>
+            return (
+              <div className="flex flex-col gap-3">
+                <Label>{level} анги</Label>
+                <div className="flex gap-10">
+                  <div className="flex gap-4 flex-col">
+                    <div className="flex flex-col gap-2">
+                      <Label htmlFor="teacherName">Нэр:</Label>
+                      <Input
+                        id="teacherName"
+                        value={teacher.teacherName}
+                        onChange={(e) =>
+                          setTeachersInfoByClass((prev) => ({
+                            ...prev,
+                            [level]: { ...teacher, teacherName: e.target.value },
+                          }))
+                        }
+                        placeholder="Нэр оруулах"
+                      />
                     </div>
 
                     <div className="flex flex-col gap-1.5">
-                      <Label htmlFor="teacherImage">Багш зураг:</Label>
-                      {teacher.teacherImage ? (
-                        <div className="w-full h-90 rounded-md border border-border border-dashed relative overflow-hidden">
-                          <Image src={teacher.teacherImagePreview as string} alt={'teacher image preview'} width={80} height={360} className="object-cover w-full h-full" unoptimized />
-                          <Button
-                            type="button"
-                            variant={'secondary'}
-                            onClick={() =>
-                              setTeachersInfoByClass((prev) => ({
-                                ...prev,
-                                [level]: { ...teacher, teacherImage: undefined, teacherImagePreview: '' },
-                              }))
-                            }
-                            className="absolute w-9 h-9 rounded-full right-1 top-1"
-                          >
-                            <X />
-                          </Button>
-                        </div>
-                      ) : (
-                        <div className="w-full h-90 bg-gray-800/5 flex justify-center items-center p-4 rounded-md border border-border border-dashed relative">
-                          <input id="teacherImage" type="file" onChange={handleTeacherImageFileChange(level)} className="absolute inset-0 opacity-0 cursor-pointer border" />
-                          <div className="flex flex-col justify-center items-center gap-2">
-                            <div className="w-8 h-8 rounded-full bg-background flex justify-center items-center">
-                              <Upload className="text-muted-foreground" />
-                            </div>
-                            <Label className="text-muted-foreground">Файлыг сонгох эсвэл энд чирж оруулах</Label>
-                          </div>
-                        </div>
-                      )}
+                      <Label htmlFor="teacherPhone">Утас:</Label>
+                      <Input
+                        id="teacherPhone"
+                        value={teacher.teacherPhone}
+                        onChange={(e) =>
+                          setTeachersInfoByClass((prev) => ({
+                            ...prev,
+                            [level]: { ...teacher, teacherPhone: e.target.value },
+                          }))
+                        }
+                        placeholder="Утасны дугаар оруулах"
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <Label htmlFor="teacherEmail">Имэйл:</Label>
+                      <Input
+                        id="teacherEmail"
+                        value={teacher.teacherEmail}
+                        onChange={(e) =>
+                          setTeachersInfoByClass((prev) => ({
+                            ...prev,
+                            [level]: { ...teacher, teacherEmail: e.target.value },
+                          }))
+                        }
+                        placeholder="Имэйл хаяг оруулах"
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <Label htmlFor="teacherProfession">Мэргэжил:</Label>
+                      <Input
+                        id="teacherProfession"
+                        value={teacher.teacherProfession}
+                        onChange={(e) =>
+                          setTeachersInfoByClass((prev) => ({
+                            ...prev,
+                            [level]: { ...teacher, teacherProfession: e.target.value },
+                          }))
+                        }
+                        placeholder="Мэргэжил оруулах"
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <Label htmlFor="teacherExperience">Туршлага:</Label>
+                      <Textarea
+                        id="teacherExperience"
+                        value={teacher.teacherExperience}
+                        onChange={(e) =>
+                          setTeachersInfoByClass((prev) => ({
+                            ...prev,
+                            [level]: { ...teacher, teacherExperience: e.target.value },
+                          }))
+                        }
+                        placeholder="Туршлага оруулах"
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <Label htmlFor="teacherAchievement">Амжилт:</Label>
+                      <Textarea
+                        id="teacherAchievement"
+                        value={teacher.teacherAchievement}
+                        onChange={(e) =>
+                          setTeachersInfoByClass((prev) => ({
+                            ...prev,
+                            [level]: { ...teacher, teacherAchievement: e.target.value },
+                          }))
+                        }
+                        placeholder="Амжилт оруулах"
+                      />
                     </div>
                   </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <Label htmlFor="teacherImage">Багш зураг:</Label>
+                    {teacher.teacherImage ? (
+                      <div className="w-full h-90 rounded-md border border-border border-dashed relative overflow-hidden">
+                        <Image src={teacher.teacherImagePreview as string} alt={'teacher image preview'} width={80} height={360} className="object-cover w-full h-full" unoptimized />
+                        <Button
+                          type="button"
+                          variant={'secondary'}
+                          onClick={() =>
+                            setTeachersInfoByClass((prev) => ({
+                              ...prev,
+                              [level]: { ...teacher, teacherImage: undefined, teacherImagePreview: '' },
+                            }))
+                          }
+                          className="absolute w-9 h-9 rounded-full right-1 top-1"
+                        >
+                          <X />
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="w-full h-90 bg-gray-800/5 flex justify-center items-center p-4 rounded-md border border-border border-dashed relative">
+                        <input id="teacherImage" type="file" onChange={handleTeacherImageFileChange(level)} className="absolute inset-0 opacity-0 cursor-pointer border" />
+                        <div className="flex flex-col justify-center items-center gap-2">
+                          <div className="w-8 h-8 rounded-full bg-background flex justify-center items-center">
+                            <Upload className="text-muted-foreground" />
+                          </div>
+                          <Label className="text-muted-foreground">Файлыг сонгох эсвэл энд чирж оруулах</Label>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              );
-            })}
-          </div>
+              </div>
+            );
+          })}
         </div>
 
         <div className="flex justify-between">

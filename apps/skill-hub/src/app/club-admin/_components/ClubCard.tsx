@@ -147,7 +147,7 @@ export default function ClubCard({ club }: { club: NewClubType }) {
                         <div className="text-center">
                           <p className="font-medium">{teacher.teacherName || '—'}</p>
                           <img src={getImageSrc(teacher.teacherImage)} alt={teacher.teacherName} className="w-16 h-16 rounded-full object-cover mx-auto my-2" />
-                          <div className="text-sm text-gray-600 mt-1">
+                          <div className="text-sm text-gray-600 mt-1 flex">
                             <div>
                               <span className="font-semibold">Анги:</span> {CLASS_LEVEL_LABEL_MN[classLevel as ClassLevelsType]}
                             </div>
