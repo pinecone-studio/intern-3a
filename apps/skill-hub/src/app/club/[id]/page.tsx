@@ -70,24 +70,6 @@ export default function ClubDetailPage({ params }: PageProps) {
                 <span className="bg-orange-100 text-orange-700 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest">{club.clubCategoryName}</span>
                 <h1 className="text-3xl font-black text-slate-900 leading-tight">{club.clubName}</h1>
 
-                {/* ТҮВШИН СОНГОХ ХЭСЭГ */}
-                <div className="space-y-3">
-                  <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Суралцах түвшин сонгох:</p>
-                  <div className="flex flex-wrap gap-2 p-1.5 bg-slate-50 rounded-2xl border border-slate-100">
-                    {club.selectedClassLevelNames?.map((level: string) => (
-                      <button
-                        key={level}
-                        onClick={() => setSelectedLevel(level)}
-                        className={`flex-1 py-2.5 px-4 rounded-xl text-sm font-bold transition-all cursor-pointer ${
-                          selectedLevel === level ? 'bg-white text-orange-600 shadow-md ring-1 ring-slate-100' : 'text-slate-500 hover:bg-white/50'
-                        }`}
-                      >
-                        {levelLabels[level] || level}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
                 {/* ГАЗРЫН ЗУРАГ НЭЭХ ХЭСЭГ */}
                 <Dialog>
                   <DialogTrigger asChild>
@@ -193,21 +175,6 @@ export default function ClubDetailPage({ params }: PageProps) {
                 </div>
               </div>
             )}
-          </div>
-
-          {/* БАРУУН ТАЛ */}
-
-          <div className="w-full lg:w-[60%] space-y-8">
-            {showSchedule && (
-              <div className="bg-white rounded-[2.5rem] border-2 border-orange-100 p-6 md:p-8 animate-in zoom-in-95 duration-300">
-                <h3 className="text-xl font-black mb-6 flex items-center gap-3 text-slate-900">
-                  <Clock className="w-6 h-6 text-orange-600" />
-                  {levelLabels[selectedLevel]} хичээлийн хуваарь
-                </h3>
-                <ClubNextClasses availableWeekdays={availableWeekdays} scheduledTimes={currentSchedule} />
-              </div>
-            )}
-
             <div className="w-full h-75 md:h-125 relative">
               <Image src={club.clubImage} alt={club.clubName} fill className="object-cover rounded-[3rem] shadow-2xl shadow-slate-200" />
             </div>
@@ -219,6 +186,37 @@ export default function ClubDetailPage({ params }: PageProps) {
               </div>
               <p className="text-slate-600 leading-[1.9] text-lg whitespace-pre-line font-medium">{club.clubDescription}</p>
             </div>
+          </div>
+
+          {/* БАРУУН ТАЛ */}
+
+          <div className="w-full lg:w-[60%] space-y-8">
+            {/* ТҮВШИН СОНГОХ ХЭСЭГ */}
+            <div className="space-y-3">
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Суралцах түвшин сонгох:</p>
+              <div className="flex flex-wrap gap-2 p-1.5 bg-slate-50 rounded-2xl border border-slate-100">
+                {club.selectedClassLevelNames?.map((level: string) => (
+                  <button
+                    key={level}
+                    onClick={() => setSelectedLevel(level)}
+                    className={`flex-1 py-2.5 px-4 rounded-xl text-sm font-bold transition-all cursor-pointer ${
+                      selectedLevel === level ? 'bg-white text-orange-600 shadow-md ring-1 ring-slate-100' : 'text-slate-500 hover:bg-white/50'
+                    }`}
+                  >
+                    {levelLabels[level] || level}
+                  </button>
+                ))}
+              </div>
+            </div>
+            {showSchedule && (
+              <div className="bg-white rounded-[2.5rem] border-2 border-orange-100 p-6 md:p-8 animate-in zoom-in-95 duration-300">
+                <h3 className="text-xl font-black mb-6 flex items-center gap-3 text-slate-900">
+                  <Clock className="w-6 h-6 text-orange-600" />
+                  {levelLabels[selectedLevel]} хичээлийн хуваарь
+                </h3>
+                <ClubNextClasses availableWeekdays={availableWeekdays} scheduledTimes={currentSchedule} />
+              </div>
+            )}
           </div>
         </div>
       </div>
