@@ -50,8 +50,8 @@ export default function Index() {
 
   return (
     <div>
-      {/* <Intro /> */}
-      <MainPageUserLocationMap allClubs={allClubs} isLoading={isLoading} />
+      <Intro />
+      {/* <MainPageUserLocationMap allClubs={allClubs} isLoading={isLoading} /> */}
       <AllClubsCardScrollAnimation allClubs={allClubs} isLoading={isLoading} />
       <FilteredClubsForUser allClubs={allClubs} />
     </div>
