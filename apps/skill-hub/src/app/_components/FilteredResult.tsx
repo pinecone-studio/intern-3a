@@ -1,10 +1,10 @@
 'use client';
 
-import { NewClubType } from '@/lib/utils/types';
+import { ClassLevelsType, NewClubType } from '@/lib/utils/types';
 import { Badge, Button } from '@intern-3a/shadcn';
-import { Loader } from 'lucide-react';
+import { ChevronDown, Loader } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import React from 'react';
+import React, { useState } from 'react';
 import { useClub } from '../hook/use-club';
 import Map from './Map';
 
@@ -17,6 +17,29 @@ type FilteredClubsCardProps = {
 const FilteredResult = ({ filteredClubs, isFiltered, resetFilters }: FilteredClubsCardProps) => {
   const { isLoading } = useClub();
   const router = useRouter();
+  const [expandedClass, setExpandedClass] = useState<{ clubId: string; level: ClassLevelsType } | null>(null);
+
+  const toggleClassDetails = (clubId: string, level: ClassLevelsType) => {
+    if (expandedClass?.clubId === clubId && expandedClass?.level === level) {
+      setExpandedClass(null);
+    } else {
+      setExpandedClass({ clubId, level });
+    }
+  };
+
+  const formatDayName = (day: string) => {
+    const dayMap: Record<string, string> = {
+      MON: 'Даваа',
+      TUE: 'Мягмар',
+      WED: 'Лхагва',
+      THU: 'Пүрэв',
+      FRI: 'Баасан',
+      SAT: 'Бямба',
+      SUN: 'Ням',
+    };
+    return dayMap[day] || day;
+  };
+
   return (
     <div>
       <div>
@@ -43,32 +66,94 @@ const FilteredResult = ({ filteredClubs, isFiltered, resetFilters }: FilteredClu
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredClubs.map((club) => (
-                  <div key={club._id} className="bg-white rounded-2xl border-2 border-slate-200 overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                  <div key={club._id} className="bg-white rounded-2xl border-2 border-slate-200 overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col h-full">
                     <div className="aspect-video relative overflow-hidden bg-slate-100">
                       {club.clubImage && <img src={typeof club.clubImage === 'string' ? club.clubImage : ''} alt={club.clubName} className="w-full h-full object-cover" />}
                     </div>
-                    <div className="p-6">
-                      <h4 className="text-xl font-bold text-[#0A427A] mb-2">{club.clubName}</h4>
-                      <Badge variant={'secondary'} className="text-xs text-orange-600 bg-slate-100 font-semibold mb-2">
-                        {club.clubCategoryName}
-                      </Badge>
-                      <p className="text-slate-600 text-sm mb-4 line-clamp-2">{club.clubDescription}</p>
-                      {club.selectedClassLevelNames && club.selectedClassLevelNames.length > 0 && (
-                        <div className="flex flex-wrap gap-2 mb-3">
-                          {club.selectedClassLevelNames.map((level) => (
-                            <span key={level} className="px-3 py-1 bg-slate-100 text-slate-700 text-xs font-semibold rounded-full">
-                              {level}
-                            </span>
-                          ))}
-                        </div>
-                      )}
+                    <div className="p-6 flex flex-col flex-grow">
+                      <h4 className="text-xl font-bold text-[#0A427A] mb-2 line-clamp-1">{club.clubName}</h4>
 
-                      {club.clubAddress && (
-                        <div className="text-sm text-slate-600 mb-2 line-clamp-2">
-                          <strong>Хаяг:</strong> {club.clubAddress}
+                      <p className="text-slate-600 text-sm mb-4 line-clamp-2 h-10">{club.clubDescription}</p>
+
+                      <div className="mb-3">
+                        <div className="flex flex-wrap gap-2 min-h-[28px]">
+                          {club.selectedClassLevelNames && club.selectedClassLevelNames.length > 0 ? (
+                            club.selectedClassLevelNames.map((level) => (
+                              <div key={level} className="relative">
+                                <button
+                                  onClick={() => toggleClassDetails(club._id || '', level)}
+                                  className="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-full flex items-center gap-1 transition-colors cursor-pointer"
+                                >
+                                  {level}
+                                  <ChevronDown className={`w-3 h-3 transition-transform ${expandedClass?.clubId === club._id && expandedClass?.level === level ? 'rotate-180' : ''}`} />
+                                </button>
+                              </div>
+                            ))
+                          ) : (
+                            <span className="invisible">placeholder</span>
+                          )}
                         </div>
-                      )}
-                      <div className="flex justify-between">
+
+                        {/* Dropdown for selected class */}
+                        {club.selectedClassLevelNames?.map(
+                          (level) =>
+                            expandedClass?.clubId === club._id &&
+                            expandedClass?.level === level && (
+                              <div key={`${level}-dropdown`} className="mt-2 p-3 bg-slate-50 rounded-lg border border-slate-200 text-xs">
+                                <div className="mb-2">
+                                  <strong className="text-slate-700">Үнэ:</strong>{' '}
+                                  <span className="text-slate-600">{club.clubPrices?.[level] ? `${club.clubPrices[level].toLocaleString()}₮` : 'Мэдээлэл байхгүй'}</span>
+                                </div>
+                                <div>
+                                  <strong className="text-slate-700">Хичээлийн цаг:</strong>
+                                  <div className="mt-1 space-y-1">
+                                    {club.scheduledClubTimes?.[level] && Object.keys(club.scheduledClubTimes[level]).length > 0 ? (
+                                      Object.entries(club.scheduledClubTimes[level]).map(([day, time]) => (
+                                        <div key={day} className="text-slate-600">
+                                          {formatDayName(day)}: {time?.startTime} - {time?.endTime}
+                                        </div>
+                                      ))
+                                    ) : (
+                                      <span className="text-slate-600">Мэдээлэл байхгүй</span>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            ),
+                        )}
+                      </div>
+
+                      <div className="mb-4 min-h-[60px]">
+                        {club.teachersInfoByClass && Object.keys(club.teachersInfoByClass).length > 0 ? (
+                          <div>
+                            <p className="text-xs font-semibold text-slate-700 mb-2">Багш:</p>
+                            <div className="flex flex-wrap gap-2">
+                              {Object.entries(club.teachersInfoByClass)
+                                .filter(([_, teacher]) => teacher?.teacherName)
+                                .map(([level, teacher]) => (
+                                  <div key={level} className="flex items-center gap-2 group">
+                                    <div className="relative w-10 h-10 rounded-full overflow-hidden bg-slate-200 border-2 border-slate-300 group-hover:border-orange-500 transition-colors">
+                                      {teacher?.teacherImage ? (
+                                        <img
+                                          src={typeof teacher.teacherImage === 'string' ? teacher.teacherImage : ''}
+                                          alt={teacher?.teacherName || 'Teacher'}
+                                          className="w-full h-full object-cover"
+                                        />
+                                      ) : (
+                                        <div className="w-full h-full flex items-center justify-center text-slate-500 text-xs font-bold">{teacher?.teacherName?.charAt(0).toUpperCase()}</div>
+                                      )}
+                                    </div>
+                                    <span className="text-xs text-slate-600">{teacher?.teacherName}</span>
+                                  </div>
+                                ))}
+                            </div>
+                          </div>
+                        ) : (
+                          <span className="invisible">placeholder</span>
+                        )}
+                      </div>
+
+                      <div className="flex justify-between gap-2 mt-auto">
                         <Button onClick={() => router.push(`/club/${club._id}`)} className="bg-[#FCB027] hover:bg-[#e69f1c] text-white rounded-full px-5 cursor-pointer">
                           Дэлгэрэнгүй
                         </Button>

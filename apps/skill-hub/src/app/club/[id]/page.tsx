@@ -3,6 +3,7 @@
 import { ClubDetailPageSkeleton } from '@/app/_components/ClubDetailPageSkeleton';
 import MapView from '@/app/_components/MapView';
 import { useClubById } from '@/app/hook/use-club-by-id';
+import { Button } from '@intern-3a/shadcn';
 import { SignedIn, SignedOut } from '@clerk/nextjs';
 import { Button, Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@intern-3a/shadcn';
 import { ArrowLeft, Calendar, Clock, Mail, MapPin, Phone, User } from 'lucide-react';

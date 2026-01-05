@@ -51,11 +51,7 @@ export default function Index() {
   return (
     <div>
       <Intro />
-      <Button onClick={() => router.push('/map')} className="cursor-pointer">
-        Дугуйлан Хайх
-      </Button>
       <AllClubsCardScrollAnimation allClubs={allClubs} isLoading={isLoading} />
-      <FilteredClubsForUser allClubs={allClubs} />
     </div>
   );
 }
