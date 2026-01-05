@@ -1,29 +1,21 @@
-"use client";
-import {
-  ChevronDown,
-  ChevronUp,
-  Search,
-  RotateCcw,
-  GraduationCap,
-} from "lucide-react";
-import { useState } from "react";
-import useSWR from "swr";
-import { Button } from "../components/ui/button";
-import { Checkbox } from "../components/ui/checkbox";
-import { Input } from "../components/ui/input";
-import { Label } from "../components/ui/label";
-import { Slider } from "../components/ui/slider";
+'use client';
+import { ChevronDown, ChevronUp, GraduationCap, RotateCcw, Search } from 'lucide-react';
+import { useState } from 'react';
+import useSWR from 'swr';
+import { Button } from '../components/ui/button';
+import { Checkbox } from '../components/ui/checkbox';
+import { Input } from '../components/ui/input';
+import { Label } from '../components/ui/label';
+import { Slider } from '../components/ui/slider';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export function FilterSidebar({ filters, setFilters, resetFilters }: any) {
   const [fieldExpanded, setFieldExpanded] = useState(true);
-  const { data: categories = [], isLoading } = useSWR("/api/majors", fetcher);
+  const { data: categories = [], isLoading } = useSWR('/api/majors', fetcher);
 
   const handleCategoryChange = (id: number, checked: boolean) => {
-    const newCats = checked
-      ? [...filters.categories, id]
-      : filters.categories.filter((c: number) => c !== id);
+    const newCats = checked ? [...filters.categories, id] : filters.categories.filter((c: number) => c !== id);
     setFilters({ ...filters, categories: newCats });
   };
   console.log({ filters });
@@ -33,29 +25,21 @@ export function FilterSidebar({ filters, setFilters, resetFilters }: any) {
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
         <div className="flex items-center justify-between mb-6">
           <h2 className="font-bold text-gray-900 flex items-center gap-2">
-            <GraduationCap className="w-5 h-5 text-blue-600" /> Шүүлтүүр
+            <GraduationCap className="w-5 h-5 text-sky-600" /> Шүүлтүүр
           </h2>
-          <Button
-            variant="ghost"
-            onClick={resetFilters}
-            className="h-8 text-xs text-gray-500 hover:text-blue-600"
-          >
+          <Button variant="ghost" onClick={resetFilters} className="h-8 text-xs text-gray-500 hover:text-sky-600">
             <RotateCcw className="w-3 h-3 mr-1" /> Шинэчлэх
           </Button>
         </div>
 
         {/* Search */}
         <div className="space-y-2 mb-6">
-          <Label className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-            Сургуулийн нэр
-          </Label>
+          <Label className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">Сургуулийн нэр</Label>
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <Input
               value={filters.search}
-              onChange={(e) =>
-                setFilters({ ...filters, search: e.target.value })
-              }
+              onChange={(e) => setFilters({ ...filters, search: e.target.value })}
               placeholder="Хайх..."
               className="pl-9 bg-gray-50 border-none focus-visible:ring-2 focus-visible:ring-blue-500/20 transition-all"
             />
@@ -64,38 +48,17 @@ export function FilterSidebar({ filters, setFilters, resetFilters }: any) {
 
         {/* majors */}
         <div className="border-t border-gray-50 pt-4">
-          <button
-            onClick={() => setFieldExpanded(!fieldExpanded)}
-            className="flex items-center justify-between w-full mb-4"
-          >
-            <span className="font-bold text-sm text-gray-700">
-              Мэргэжлийн чиглэл
-            </span>
-            {fieldExpanded ? (
-              <ChevronUp className="w-4 h-4 text-gray-400" />
-            ) : (
-              <ChevronDown className="w-4 h-4 text-gray-400" />
-            )}
+          <button onClick={() => setFieldExpanded(!fieldExpanded)} className="flex items-center justify-between w-full mb-4">
+            <span className="font-bold text-sm text-gray-700">Мэргэжлийн чиглэл</span>
+            {fieldExpanded ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
           </button>
 
           {fieldExpanded && (
             <div className="space-y-2.5 max-h-75 overflow-y-auto pr-2 custom-scrollbar">
               {categories.map((cat: any) => (
-                <div
-                  key={cat.id}
-                  className="flex items-center gap-3 group cursor-pointer"
-                >
-                  <Checkbox
-                    id={`cat-${cat.id}`}
-                    checked={filters.categories.includes(cat.id)}
-                    onCheckedChange={(checked) =>
-                      handleCategoryChange(cat.id, !!checked)
-                    }
-                  />
-                  <Label
-                    htmlFor={`cat-${cat.id}`}
-                    className="text-sm text-gray-600 group-hover:text-blue-600 transition-colors cursor-pointer"
-                  >
+                <div key={cat.id} className="flex items-center gap-3 group cursor-pointer">
+                  <Checkbox id={`cat-${cat.id}`} checked={filters.categories.includes(cat.id)} onCheckedChange={(checked) => handleCategoryChange(cat.id, !!checked)} />
+                  <Label htmlFor={`cat-${cat.id}`} className="text-sm text-gray-600 group-hover:text-sky-600 transition-colors cursor-pointer">
                     {cat.name}
                   </Label>
                 </div>
@@ -107,36 +70,22 @@ export function FilterSidebar({ filters, setFilters, resetFilters }: any) {
         {/* Score Slider */}
         <div className="border-t border-gray-50 mt-6 pt-6">
           <div className="flex justify-between items-end mb-4">
-            <Label className="font-bold text-sm text-gray-700">
-              Босго оноо
-            </Label>
-            <span className="text-blue-600 font-bold text-lg">
+            <Label className="font-bold text-sm text-gray-700">Босго оноо</Label>
+            <span className="text-sky-600 font-bold text-lg">
               {filters.minScore}
               <span className="text-xs ml-0.5">+</span>
             </span>
           </div>
-          <Slider
-            value={[filters.minScore]}
-            onValueChange={(val) =>
-              setFilters({ ...filters, minScore: val[0] })
-            }
-            max={800}
-            step={10}
-            className="py-4"
-          />
+          <Slider value={[filters.minScore]} onValueChange={(val) => setFilters({ ...filters, minScore: val[0] })} max={800} step={10} className="py-4" />
         </div>
       </div>
 
       {/* Promo Box */}
-      <div className="bg-blue-600 rounded-2xl p-6 text-white relative overflow-hidden group">
+      <div className="bg-sky-600 hover:bg-sky-700 rounded-2xl p-6 text-white relative overflow-hidden group">
         <div className="relative z-10">
           <p className="font-bold mb-1">Тусламж хэрэгтэй юу?</p>
-          <p className="text-blue-100 text-xs mb-4 opacity-90">
-            Мэргэжлийн зөвлөх танд чиглүүлэхэд бэлэн байна.
-          </p>
-          <Button className="w-full bg-white text-blue-600 hover:bg-blue-50 font-bold shadow-lg shadow-blue-900/20">
-            Зөвлөгөө авах
-          </Button>
+          <p className="text-sky-100 text-xs mb-4 opacity-90">Мэргэжлийн зөвлөх танд чиглүүлэхэд бэлэн байна.</p>
+          <Button className="w-full bg-white text-sky-600 hover:bg-sky-50 font-bold shadow-lg shadow-sky-900/20">Зөвлөгөө авах</Button>
         </div>
         <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500" />
       </div>
