@@ -2,6 +2,7 @@
 
 import { useCreatedClubs } from '@/app/hook/use-created-club';
 import { useSearchParams } from 'next/navigation';
+import ProjectDialog from './ProjectDialog';
 
 const AdminMyClubsComponent = () => {
   const searchParams = useSearchParams();
@@ -30,6 +31,8 @@ const AdminMyClubsComponent = () => {
 
               <p>Хаяг: {selectedClub.clubAddress}</p>
               <p>{selectedClub.clubDescription}</p>
+
+              <ProjectDialog clubId={clubId} />
             </div>
           </div>
         )}
