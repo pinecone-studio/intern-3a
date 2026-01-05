@@ -26,14 +26,18 @@ model subjects {
 }
 
 model universities {
-  id          Int       @id @default(autoincrement())
-  name        String
-  city        String
-  description String?
-  website     String?
-  created_at  DateTime? @default(now()) @db.Timestamp(6)
-  image       String?
-  majors      majors[]
+  id                        Int                         @id @default(autoincrement())
+  name                      String
+  city                      String
+  description               String?
+  website                   String?
+  created_at                DateTime?                   @default(now()) @db.Timestamp(6)
+  image                     String?
+  burtgelehleh_start_date   DateTime                    @default(dbgenerated("'2026-01-15'::date")) @db.Date
+  burtgelduusah_end_date    DateTime                    @default(dbgenerated("'2026-01-22'::date")) @db.Date
+  majors                    majors[]
+  scholarship_rules         scholarship_rules[]
+  user_university_selection user_university_selection[]
 }
 
 model majors {
@@ -45,6 +49,41 @@ model majors {
   created_at         DateTime?            @default(now()) @db.Timestamp(6)
   major_requirements major_requirements[]
   universities       universities         @relation(fields: [university_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_major_university")
+  scholarship_rules  scholarship_rules[]
+}
+
+model mrusers {
+  id                        Int                         @id @default(autoincrement())
+  email                     String                      @unique @db.VarChar(255)
+  name                      String                      @db.VarChar(255)
+  password_hash             String                      @db.VarChar(255)
+  created_at                DateTime?                   @default(now()) @db.Timestamp(6)
+  user_university_selection user_university_selection[]
+}
+
+model scholarship_rules {
+  id                Int          @id @default(autoincrement())
+  university_id     Int
+  major_id          Int
+  min_math_score    Int
+  min_english_score Int
+  discount_percent  Int
+  created_at        DateTime?    @default(now()) @db.Timestamp(6)
+  majors            majors       @relation(fields: [major_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_scholarship_major")
+  universities      universities @relation(fields: [university_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_scholarship_university")
+
+  @@unique([university_id, major_id, min_math_score, min_english_score], map: "unique_scholarship_rule")
+}
+
+model user_university_selection {
+  id            Int          @id @default(autoincrement())
+  user_id       Int
+  university_id Int
+  start_date    DateTime     @db.Date
+  end_date      DateTime     @db.Date
+  created_at    DateTime?    @default(now()) @db.Timestamp(6)
+  mrusers       mrusers      @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "mrusers")
+  universities  universities @relation(fields: [university_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "universities")
 }
 
 enum degree_type {

@@ -49,5 +49,5 @@ export const POST = async () => {
     return NextResponse.json({ message: 'Failed to check or create user!' }, { status: 500 });
   }
 
-  return NextResponse.json({ message: 'User checked or created successfully' });
+  return NextResponse.json({ message: 'User checked or created successfully', userId: user._id });
 };

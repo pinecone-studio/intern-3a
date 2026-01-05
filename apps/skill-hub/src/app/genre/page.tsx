@@ -1,3 +1,4 @@
+import { NewClubType } from '@/lib/utils/types';
 import Link from 'next/link';
 
 interface GenrePageProps {
@@ -26,7 +27,7 @@ export default async function GenrePage({ searchParams }: GenrePageProps) {
   const result = await getAllClubs();
   const clubs = result.data ?? [];
 
-  const filteredClubs = clubs.filter((club: any) => club.clubCategoryName === category);
+  const filteredClubs = clubs.filter((club: NewClubType) => club.clubCategoryName === category);
 
   return (
     <div className="container mx-auto px-4 py-6">
@@ -36,10 +37,14 @@ export default async function GenrePage({ searchParams }: GenrePageProps) {
         <p className="text-sm text-gray-500">Энэ ангилалд одоогоор клуб бүртгэгдээгүй байна.</p>
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredClubs.map((club: any) => (
+          {filteredClubs.map((club: NewClubType) => (
             <Link key={club._id} href={`/club/${club._id}`}>
               <div className="rounded-xl border p-4 shadow-sm">
-                <img src={club.clubImage} alt={club.clubName} className="mb-3 h-40 w-full rounded-lg object-cover" />
+                <img
+                  src={typeof club.clubImage === 'string' ? club.clubImage : club.clubImage ? URL.createObjectURL(club.clubImage) : '/placeholder.png'}
+                  alt={club.clubName}
+                  className="mb-3 h-40 w-full rounded-lg object-cover"
+                />
 
                 <h2 className="text-lg font-medium">{club.clubName}</h2>
 

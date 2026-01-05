@@ -1,10 +1,10 @@
 'use client';
 
 import { useAuth, useUser } from '@clerk/nextjs';
-import { Spinner } from '@intern-3a/shadcn';
+import { Button, Spinner } from '@intern-3a/shadcn';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { AllClubsCardScrollAnimation, FilteredClubsForUser, Intro, MainPageUserLocationMap } from './_components';
+import { AllClubsCardScrollAnimation, FilteredClubsForUser, Intro } from './_components';
 import { useClub } from './hook/use-club';
 
 export default function Index() {

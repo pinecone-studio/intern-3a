@@ -1,4 +1,5 @@
-// app/hook/use-club-by-id.tsx
+'use client';
+
 import { useEffect, useState } from 'react';
 
 export function useClubById(id: string) {
@@ -14,7 +15,7 @@ export function useClubById(id: string) {
         if (!res.ok) throw new Error('Failed to fetch');
 
         const result = await res.json();
-        // API хариу нь { data: { ... } } бүтэцтэй байгаа тул result.data-г авна
+
         setClub(result.data);
       } catch (err) {
         setError(err);

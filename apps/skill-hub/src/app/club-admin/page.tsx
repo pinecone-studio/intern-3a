@@ -2,8 +2,7 @@
 
 import React from 'react';
 import { useClub } from '../hook/use-club';
-
-import ClubCard from './_components/ClubCard';
+import { ClubCard } from './_components';
 
 const ClubAdminPage = () => {
   const { allClubs } = useClub();
