@@ -6,13 +6,12 @@ import { Button } from '../components/ui/button';
 import { Checkbox } from '../components/ui/checkbox';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
-import { Slider } from '../components/ui/slider';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export function FilterSidebar({ filters, setFilters, resetFilters }: any) {
   const [fieldExpanded, setFieldExpanded] = useState(true);
-  const { data: categories = [], isLoading } = useSWR('/api/majors', fetcher);
+  const { data: categories = [] } = useSWR('/api/majorCategories', fetcher);
 
   const handleCategoryChange = (id: number, checked: boolean) => {
     const newCats = checked ? [...filters.categories, id] : filters.categories.filter((c: number) => c !== id);
@@ -68,7 +67,7 @@ export function FilterSidebar({ filters, setFilters, resetFilters }: any) {
         </div>
 
         {/* Score Slider */}
-        <div className="border-t border-gray-50 mt-6 pt-6">
+        {/* <div className="border-t border-gray-50 mt-6 pt-6">
           <div className="flex justify-between items-end mb-4">
             <Label className="font-bold text-sm text-gray-700">Босго оноо</Label>
             <span className="text-sky-600 font-bold text-lg">
@@ -77,7 +76,7 @@ export function FilterSidebar({ filters, setFilters, resetFilters }: any) {
             </span>
           </div>
           <Slider value={[filters.minScore]} onValueChange={(val) => setFilters({ ...filters, minScore: val[0] })} max={800} step={10} className="py-4" />
-        </div>
+        </div> */}
       </div>
 
       {/* Promo Box */}

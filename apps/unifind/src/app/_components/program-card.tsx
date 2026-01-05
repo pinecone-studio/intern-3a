@@ -21,15 +21,19 @@ export function ProgramCard({ program, viewMode }: any) {
       <div className="p-5 flex flex-col justify-between flex-1">
         <div>
           <div className="flex items-center gap-2 text-gray-400 text-[11px] font-bold uppercase mb-2">
-            <MapPin className="w-3 h-3 text-red-400" /> {program.city}
+            <MapPin className="w-3 h-3 text-red-400" />
+            {program.city}
           </div>
           <h3 className="font-bold text-gray-900 group-hover:text-sky-600 transition-colors line-clamp-1 mb-3">{program.name}</h3>
 
           <div className="grid grid-cols-2 gap-4 mb-5">
             <div className="space-y-1">
               <p className="text-[10px] text-gray-400 uppercase font-bold">Босго оноо</p>
+
               <div className="flex items-center gap-1.5 font-bold text-gray-700 text-sm">
-                <GraduationCap className="w-4 h-4 text-sky-500" /> 500+
+                <GraduationCap className="w-4 h-4 text-sky-500" />
+                {/* Эхний мэргэжлийн босго оноог харуулах (эсвэл logic нэмж болно) */}
+                {program.majors?.[0]?.major_requirements?.[0]?.min_score || 400}+
               </div>
             </div>
             <div className="space-y-1 text-right">

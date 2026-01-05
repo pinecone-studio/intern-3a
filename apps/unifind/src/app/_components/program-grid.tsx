@@ -1,6 +1,6 @@
 'use client';
-import { Info, LayoutGrid, List, SlidersHorizontal, X } from 'lucide-react';
-import { useState } from 'react';
+import { Info, LayoutGrid, List, X } from 'lucide-react';
+import { useMemo, useState } from 'react';
 import useSWR from 'swr';
 import { Button } from '../components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
@@ -8,19 +8,40 @@ import { ProgramCard } from './program-card';
 
 export function ProgramGrid({ programs, isLoading, filters, setFilters, resetFilters }: any) {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const { data: categories = [] } = useSWR('/api/majors');
-  console.log({ categories });
+
+  // Мэргэжлийн ангиллуудыг шинэ API-аас татаж авна
+  const { data: categories = [] } = useSWR('/api/majorCategories');
+
+  // Мэргэжил бүрээр сургуулиудыг бүлэглэх логик (Шинэчилсэн)
+  const groupedData = useMemo(() => {
+    // Хэрэв ямар нэг мэргэжил сонгоогүй бол бүгдийг нь нэг жагсаалтаар харуулна
+    if (filters.categories.length === 0) {
+      return [{ title: 'Бүх сургуулиуд', list: programs }];
+    }
+
+    // Сонгосон ангилал бүрийн хувьд
+    return filters.categories.map((catId: number) => {
+      const categoryName = categories.find((c: any) => c.id === catId)?.name || 'Мэргэжил';
+
+      // Сургуулийн majors дотор энэ ангиллын (category_id) мэргэжил байгаа эсэхийг шүүнэ
+      const filteredSchools = programs.filter((p: any) => p.majors.some((m: any) => m.category_id === catId));
+
+      return {
+        id: catId,
+        title: categoryName,
+        list: filteredSchools,
+      };
+    });
+  }, [programs, filters.categories, categories]);
 
   if (isLoading) return <LoadingSkeleton />;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
+      {/* Header хэсэг */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black text-gray-900">~ Ирээдүйн их сургуулиа төлөвлө ~</h1>
-          <p className="text-gray-500 text-sm mt-1">
-            Нийт <span className="text-sky-600 font-bold">{programs.length}</span> сургууль олдлоо
-          </p>
         </div>
 
         <div className="flex items-center gap-3">
@@ -45,7 +66,7 @@ export function ProgramGrid({ programs, isLoading, filters, setFilters, resetFil
         </div>
       </div>
 
-      {/* Active Filters */}
+      {/* Идэвхтэй шүүлтүүрүүд (Badge) */}
       {(filters.categories.length > 0 || filters.search || filters.minScore > 0) && (
         <div className="flex flex-wrap gap-2 items-center">
           {filters.search && <Badge label={`"${filters.search}"`} onRemove={() => setFilters({ ...filters, search: '' })} />}
@@ -71,10 +92,31 @@ export function ProgramGrid({ programs, isLoading, filters, setFilters, resetFil
         </div>
       )}
 
+      {/* Үндсэн жагсаалт (Гарчиг + Сургуулиуд) */}
       {programs.length > 0 ? (
-        <div className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6' : 'space-y-4'}>
-          {programs.map((p: any) => (
-            <ProgramCard key={p.id} program={p} viewMode={viewMode} />
+        <div className="space-y-12">
+          {groupedData.map((group: any) => (
+            <div key={group.id || group.title} className="space-y-5 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              {filters.categories.length > 0 && (
+                <div className="flex items-center gap-3">
+                  <div className="h-8 w-1.5 bg-sky-600 rounded-full" />
+                  <h2 className="text-xl font-bold text-gray-800 uppercase tracking-tight">{group.title}</h2>
+                  <span className="bg-gray-100 text-gray-500 text-xs px-2 py-1 rounded-lg">{group.list.length} сургууль</span>
+                </div>
+              )}
+
+              {group.list.length > 0 ? (
+                <div className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6' : 'space-y-4'}>
+                  {group.list.map((p: any) => (
+                    <ProgramCard key={`${group.id}-${p.id}`} program={p} viewMode={viewMode} />
+                  ))}
+                </div>
+              ) : (
+                <div className="bg-gray-50 border border-dashed border-gray-200 rounded-2xl p-8 text-center">
+                  <p className="text-gray-400 text-sm italic">"{group.title}" чиглэлээр босго оноонд тэнцэх сургууль олдсонгүй.</p>
+                </div>
+              )}
+            </div>
           ))}
         </div>
       ) : (
