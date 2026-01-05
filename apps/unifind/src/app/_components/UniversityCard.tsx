@@ -1,7 +1,5 @@
 'use client';
 import { Building2, GraduationCap, Landmark, MapPin, Palette, School } from 'lucide-react';
-
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Button } from '../components/ui/button';
@@ -76,7 +74,7 @@ export default function UniversityCard({ id, name, location, image, status, minS
 
         <Button
           onClick={(e) => {
-            e.stopPropagation(); // давхар click-оос сэргийлэх
+            e.stopPropagation();
             handleViewDetails();
           }}
           variant="outline"
