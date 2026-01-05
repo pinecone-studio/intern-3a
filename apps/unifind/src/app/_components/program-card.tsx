@@ -1,28 +1,20 @@
-"use client";
-import { ArrowRight, MapPin, GraduationCap, Calendar } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { Button } from "../components/ui/button";
+'use client';
+import { ArrowRight, Calendar, GraduationCap, MapPin } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Button } from '../components/ui/button';
 
 export function ProgramCard({ program, viewMode }: any) {
   const router = useRouter();
 
   return (
     <div
-      className={`group bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden ${
-        viewMode === "list" ? "flex" : ""
-      }`}
+      className={`group bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden ${viewMode === 'list' ? 'flex' : ''}`}
     >
-      <div className={`relative ${viewMode === "list" ? "w-64" : "h-40"}`}>
+      <div className={`relative ${viewMode === 'list' ? 'w-64' : 'h-40'}`}>
         <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent z-10" />
-        <img
-          src={program.image || "/university-logo-arts.jpg"}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-          alt={program.name}
-        />
+        <img src={program.image || '/university-logo-arts.jpg'} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt={program.name} />
         <div className="absolute bottom-3 left-3 z-20">
-          <span className="bg-blue-600 text-white text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wide">
-            Элсэлт нээлттэй
-          </span>
+          <span className="bg-sky-600 text-white text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wide">Элсэлт нээлттэй</span>
         </div>
       </div>
 
@@ -31,23 +23,17 @@ export function ProgramCard({ program, viewMode }: any) {
           <div className="flex items-center gap-2 text-gray-400 text-[11px] font-bold uppercase mb-2">
             <MapPin className="w-3 h-3 text-red-400" /> {program.city}
           </div>
-          <h3 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-1 mb-3">
-            {program.name}
-          </h3>
+          <h3 className="font-bold text-gray-900 group-hover:text-sky-600 transition-colors line-clamp-1 mb-3">{program.name}</h3>
 
           <div className="grid grid-cols-2 gap-4 mb-5">
             <div className="space-y-1">
-              <p className="text-[10px] text-gray-400 uppercase font-bold">
-                Босго оноо
-              </p>
+              <p className="text-[10px] text-gray-400 uppercase font-bold">Босго оноо</p>
               <div className="flex items-center gap-1.5 font-bold text-gray-700 text-sm">
-                <GraduationCap className="w-4 h-4 text-blue-500" /> 500+
+                <GraduationCap className="w-4 h-4 text-sky-500" /> 500+
               </div>
             </div>
             <div className="space-y-1 text-right">
-              <p className="text-[10px] text-gray-400 uppercase font-bold">
-                Дуусах хугацаа
-              </p>
+              <p className="text-[10px] text-gray-400 uppercase font-bold">Дуусах хугацаа</p>
               <div className="flex items-center justify-end gap-1.5 font-bold text-gray-700 text-sm">
                 <Calendar className="w-4 h-4 text-orange-500" /> 08.15
               </div>
@@ -55,10 +41,7 @@ export function ProgramCard({ program, viewMode }: any) {
           </div>
         </div>
 
-        <Button
-          onClick={() => router.push(`/detail/${program.id}`)}
-          className="w-full bg-gray-50 hover:bg-blue-600 text-gray-900 hover:text-white border-none shadow-none rounded-xl group/btn"
-        >
+        <Button onClick={() => router.push(`/detail/${program.id}`)} className="w-full bg-gray-50 hover:bg-sky-600 text-gray-900 hover:text-white border-none shadow-none rounded-xl group/btn">
           Дэлгэрэнгүй
           <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
         </Button>

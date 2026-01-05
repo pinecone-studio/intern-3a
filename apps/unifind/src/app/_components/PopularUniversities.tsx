@@ -12,7 +12,7 @@ export function PopularUniversities() {
   const { data, error, isLoading } = useSWR<University[]>('/api/universities', fetcher);
 
   return (
-    <section className="py-20 bg-background">
+    <section className="py-20 pb-6 bg-background">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
@@ -60,8 +60,8 @@ export function PopularUniversities() {
 
         {/* Load more */}
         <div className="text-center">
-          <Link href="/universities">
-            <button className="px-8 py-3 border-2 border-slate-300 rounded-lg font-semibold text-foreground hover:bg-slate-50 transition-colors">Бүгдийг үзэх</button>
+          <Link href={'/universities'}>
+            <Button variant={'outline'}>Бүгдийг үзэх</Button>
           </Link>
         </div>
       </div>
