@@ -142,36 +142,40 @@ export const ClubCard = ({ club }: { club: NewClubType }) => {
 
                 {club.teachersInfoByClass && Object.entries(club.teachersInfoByClass).length > 0 ? (
                   <div className="flex flex-col gap-4">
-                    {Object.entries(club.teachersInfoByClass).map(([classLevel, teacher]) => (
-                      <div key={classLevel} className="flex items-center gap-3 flex-col border p-3 rounded-lg bg-gray-50">
-                        <div className="text-center">
-                          <p className="font-medium">{teacher.teacherName || '—'}</p>
-                          <img src={getImageSrc(teacher.teacherImage)} alt={teacher.teacherName} className="w-16 h-16 rounded-full object-cover mx-auto my-2" />
-                          <div className="text-sm text-gray-600 mt-1 flex">
+                    {Object.entries(club.teachersInfoByClass)
+                      .filter(([classLevel]) => classLevel === selectedClass)
+                      .map(([classLevel, teacher]) => (
+                        <div key={classLevel} className="border rounded-xl p-5 bg-white shadow-sm text-center">
+                          <img src={getImageSrc(teacher.teacherImage)} alt={teacher.teacherName} className="w-20 h-20 rounded-full object-cover mx-auto" />
+
+                          <h3 className="mt-2 font-semibold text-lg">{teacher.teacherName || '—'}</h3>
+
+                          <p className="text-sm text-gray-500 mb-3">{CLASS_LEVEL_LABEL_MN[classLevel as ClassLevelsType]} анги</p>
+
+                          <div className="text-sm text-gray-700 space-y-1">
                             <div>
-                              <span className="font-semibold">Анги:</span> {CLASS_LEVEL_LABEL_MN[classLevel as ClassLevelsType]}
+                              <b>Мэргэжил:</b> {teacher.teacherProfession || '—'}
                             </div>
                             <div>
-                              <span className="font-semibold">Мэргэжил:</span> {teacher.teacherProfession || '—'}
+                              <b>Туршлага:</b> {teacher.teacherExperience || '—'}
                             </div>
                             <div>
-                              <span className="font-semibold">Туршлага:</span> {teacher.teacherExperience || '—'}
-                            </div>
-                            <div>
-                              <span className="font-semibold">Амжилт:</span> {teacher.teacherAchievement || '—'}
+                              <b>Амжилт:</b> {teacher.teacherAchievement || '—'}
                             </div>
                           </div>
-                          <div className="mt-2 text-sm text-gray-700">
-                            <div className="flex items-center gap-2 justify-center">
-                              <Phone className="w-4 h-4 text-gray-500" /> <span>{teacher.teacherPhone || '—'}</span>
+
+                          <div className="mt-3 text-sm text-gray-600 space-y-1">
+                            <div className="flex justify-center items-center gap-2">
+                              <Phone className="w-4 h-4" />
+                              {teacher.teacherPhone || '—'}
                             </div>
-                            <div className="flex items-center gap-2 justify-center mt-1">
-                              <Mail className="w-4 h-4 text-gray-500" /> <span>{teacher.teacherEmail || '—'}</span>
+                            <div className="flex justify-center items-center gap-2">
+                              <Mail className="w-4 h-4" />
+                              {teacher.teacherEmail || '—'}
                             </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
                   </div>
                 ) : (
                   <span>Багшийн мэдээлэл алга</span>
@@ -218,12 +222,15 @@ export const ClubCard = ({ club }: { club: NewClubType }) => {
                   <div>
                     {open && (
                       <div className="">
-                        <div className="flex gap-2 mb-3">
+                        <div className="flex gap-2 mb-4">
                           {classLevels.map((level) => (
                             <button
                               key={level}
-                              className={`px-3 py-1 rounded ${selectedClass === level ? 'bg-[#FCB027] text-white' : 'bg-gray-200 text-gray-800'}`}
                               onClick={() => setSelectedClass(level)}
+                              className={`
+        px-4 py-1.5 rounded-full text-sm font-medium transition-all
+        ${selectedClass === level ? 'bg-[#FCB027] text-white shadow' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}
+      `}
                             >
                               {CLASS_LEVEL_LABEL_MN[level]}
                             </button>
