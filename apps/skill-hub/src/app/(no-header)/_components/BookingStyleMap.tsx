@@ -26,7 +26,7 @@ export const BookingStyleMap = ({ allClubs }: { allClubs: NewClubType[] }) => {
 
   if (!userLocation) return <div className="h-screen grid place-items-center">Ачааллаж байна</div>;
   return (
-    <div>
+    <div className="w-full h-screen">
       <MapSideBar visibleClubs={visibleClubs} sidebarOpen={sidebarOpen} onToggle={() => setSidebarOpen((v) => !v)} hoveredClubId={hoveredClubId} setHoveredClubId={setHoveredClubId} />
       <UserMapContent visibleClubs={visibleClubs} userLocation={userLocation} zoom={zoom} setZoom={setZoom} setBounds={setBounds} hoveredClubId={hoveredClubId} sidebarOpen={sidebarOpen} />
     </div>

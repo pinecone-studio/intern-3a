@@ -54,6 +54,7 @@ export default function Index() {
       <Button onClick={() => router.push('/map')} className="cursor-pointer">
         Дугуйлан Хайх
       </Button>
+
       <AllClubsCardScrollAnimation allClubs={allClubs} isLoading={isLoading} />
       <FilteredClubsForUser allClubs={allClubs} />
     </div>

@@ -97,5 +97,5 @@ export default function UserMapContent({ visibleClubs, userLocation, zoom, setZo
     })();
   }, [visibleClubs, hoveredClubId]);
 
-  return <div ref={mapRef} className={`h-full transition-all duration-300 ${sidebarOpen ? 'ml-95' : 'ml-0'}`} />;
+  return <div ref={mapRef} className={`w-full h-screen transition-all duration-300 ${sidebarOpen ? 'ml-95' : 'ml-0'}`} />;
 }
