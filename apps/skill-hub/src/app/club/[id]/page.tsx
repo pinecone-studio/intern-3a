@@ -6,6 +6,7 @@ import ClubNextClasses from '@/app/_components/ClubNextClasses';
 import { ClubRating } from '@/app/_components/ClubRating';
 import MapView from '@/app/_components/MapView';
 import { useClubById } from '@/app/hook/use-club-by-id';
+
 import { SignedIn, SignedOut } from '@clerk/nextjs';
 import { Button, Dialog, DialogContent, DialogTitle, DialogTrigger } from '@intern-3a/shadcn';
 import { ArrowLeft, Info, Mail, MapPin, Phone, User } from 'lucide-react';
