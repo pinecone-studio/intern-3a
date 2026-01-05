@@ -6,9 +6,8 @@ import ClubNextClasses from '@/app/_components/ClubNextClasses';
 import { ClubRating } from '@/app/_components/ClubRating';
 import MapView from '@/app/_components/MapView';
 import { useClubById } from '@/app/hook/use-club-by-id';
-
 import { SignedIn, SignedOut } from '@clerk/nextjs';
-import { Button, Dialog, DialogContent, DialogTitle, DialogTrigger } from '@intern-3a/shadcn';
+import { Badge, Button, Dialog, DialogContent, DialogTitle, DialogTrigger } from '@intern-3a/shadcn';
 import { ArrowLeft, Info, Mail, MapPin, Phone, User } from 'lucide-react';
 import Image from 'next/image';
 import { notFound, useRouter } from 'next/navigation';
@@ -98,6 +97,10 @@ export default function ClubDetailPage({ params }: PageProps) {
           <div className="pt-2">
             <ClubRating clubId={id} />
           </div>
+
+          <Badge variant={'outline'} className="text-sm/6">
+            Нийтлэгдсэн огноо {club?.createdAt && new Date(club.createdAt).toLocaleDateString('en-CA')}
+          </Badge>
         </div>
 
         {/* БАРУУН ТАЛ: ТҮВШИН + ХУВААРЬ + CTA (Sticky on Desktop) */}
