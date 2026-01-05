@@ -281,7 +281,7 @@ export const ClubCard = ({ club }: { club: NewClubType }) => {
                     {open && (
                       <div className="">
                         <div className="flex gap-2 mb-4">
-                          {classLevels.map((level) => (
+                          {club.selectedClassLevelNames?.map((level) => (
                             <button
                               key={level}
                               onClick={() => setSelectedClass(level)}
