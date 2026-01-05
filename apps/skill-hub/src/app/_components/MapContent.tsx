@@ -25,7 +25,8 @@ export default function MapContent({ clubs, userLocation, nearbyClubs, selectedR
       mapRef.current.innerHTML = '';
     }
 
-    const center: [number, number] = userLocation ?? (nearbyClubs.length ? [nearbyClubs[0].clubLat, nearbyClubs[0].clubLong] : [clubs[0].clubLat, clubs[0].clubLong]);
+    const center: [number, number] =
+      userLocation ?? (nearbyClubs.length ? [nearbyClubs[0]?.clubLat ?? 47.9184, nearbyClubs[0]?.clubLong ?? 106.9177] : [clubs[0]?.clubLat ?? 47.9184, clubs[0]?.clubLong ?? 106.9177]);
 
     const map = L.map(mapRef.current).setView(center, 13);
 
@@ -57,15 +58,15 @@ export default function MapContent({ clubs, userLocation, nearbyClubs, selectedR
     displayClubs.forEach((club) => {
       const popupContent = `
     <div style="text-align:center; width:180px;">
-      <img 
-        src="${club.clubImage}" 
+      <img
+        src="${club.clubImage}"
         alt="${club.clubName}"
         style="width:100%; height:120px; object-fit:cover; border-radius:8px; margin-bottom:6px;"
       />
       <strong>${club.clubName}</strong>
       <br />
-      <button 
-        id="btn-${club._id}" 
+      <button
+        id="btn-${club._id}"
         variant={"ghost}
         style="
           margin-top:6px;

@@ -4,15 +4,6 @@
   "files": [],
   "references": [
     {
-      "path": "./libs/shared/ui"
-    },
-    {
-      "path": "./apps/todo-be"
-    },
-    {
-      "path": "./apps/todo-fe"
-    },
-    {
       "path": "./apps/skill-hub-e2e"
     },
     {
@@ -26,6 +17,18 @@
     },
     {
       "path": "./libs/shared/shadcn"
+    },
+    {
+      "path": "./apps/amar-e2e"
+    },
+    {
+      "path": "./apps/amar"
+    },
+    {
+      "path": "./apps/sample-e2e"
+    },
+    {
+      "path": "./apps/sample"
     }
   ]
 }

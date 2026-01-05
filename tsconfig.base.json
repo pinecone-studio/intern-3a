@@ -17,9 +17,6 @@
     "strict": true,
     "target": "es2022",
     "customConditions": ["@intern-3a/source"],
-    "baseUrl": ".",
-    "paths": {
-      "@pinecone-intern/ui": ["libs/shared/ui/src/index.ts"]
-    }
+    "baseUrl": "."
   }
 }

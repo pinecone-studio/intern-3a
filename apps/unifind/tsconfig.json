@@ -8,11 +8,7 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
@@ -23,39 +19,13 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/*"]
     },
-    "types": [
-      "jest",
-      "node"
-    ],
+    "types": ["jest", "node"],
     "outDir": "dist",
-    "rootDir": "src",
+    "rootDir": "src", // source файлууд src-д байгаа
     "tsBuildInfoFile": "dist/tsconfig.tsbuildinfo"
   },
-  "include": [
-    "../../apps/unifind/.next/types/**/*.ts",
-    "../../dist/apps/unifind/.next/types/**/*.ts",
-    "next-env.d.ts",
-    "src/**/*.js",
-    "src/**/*.jsx",
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": [
-    "out-tsc",
-    "dist",
-    "node_modules",
-    "jest.config.ts",
-    "jest.config.cts",
-    "src/**/*.spec.ts",
-    "src/**/*.test.ts",
-    ".next",
-    "eslint.config.js",
-    "eslint.config.cjs",
-    "eslint.config.mjs"
-  ]
+  "include": ["../../dist/apps/unifind/.next/types/**/*.ts", "next-env.d.ts", "src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules", "dist", ".next", "out-tsc", "src/**/*.spec.ts", "src/**/*.test.ts"]
 }

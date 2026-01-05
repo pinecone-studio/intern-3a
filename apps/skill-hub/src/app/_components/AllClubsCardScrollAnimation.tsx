@@ -1,13 +1,12 @@
 'use client';
 
+import { NewClubType } from '@/lib/utils/types';
 import { Badge, Button, Spinner } from '@intern-3a/shadcn';
 import { MapPin } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useClub } from '../hook/use-club';
 
-export const AllClubsCardScrollAnimation = () => {
-  const { allClubs, isLoading } = useClub();
+export const AllClubsCardScrollAnimation = ({ allClubs, isLoading }: { allClubs: NewClubType[]; isLoading: boolean }) => {
   const router = useRouter();
 
   if (isLoading) {
@@ -25,7 +24,7 @@ export const AllClubsCardScrollAnimation = () => {
 
   return (
     <div
-      className=" w-full overflow-x-auto scroll-smooth [&::-webkit-scrollbar]:hidden
+      className="w-full overflow-x-auto scroll-smooth [&::-webkit-scrollbar]:hidden
        [-ms-overflow-style:none]
       [scrollbar-width:none] "
     >
@@ -50,10 +49,10 @@ export const AllClubsCardScrollAnimation = () => {
 
             <div className="flex justify-between mt-auto">
               <Link href={`/club/${club._id}`}>
-                <Button className="bg-[#FCB027] hover:bg-[#e69f1c] text-white rounded-full px-5">Дэлгэрэнгүй</Button>
+                <Button className="bg-[#FCB027] hover:bg-[#e69f1c] text-white rounded-full px-5 cursor-pointer">Дэлгэрэнгүй</Button>
               </Link>
 
-              <Button className="bg-[#0A427A] hover:bg-[#093662] text-white rounded-full px-5" onClick={() => router.push('/register')}>
+              <Button className="bg-[#0A427A] hover:bg-[#093662] text-white rounded-full px-5 cursor-pointer" onClick={() => router.push('/register')}>
                 Бүртгүүлэх
               </Button>
             </div>

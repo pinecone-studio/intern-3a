@@ -87,6 +87,5 @@ out
 
 .claude
 
-# Cypress results
-apps/todo-be/cypress/results/
 /generated/prisma
+.vercel

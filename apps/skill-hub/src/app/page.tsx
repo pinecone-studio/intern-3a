@@ -4,16 +4,16 @@ import { useAuth, useUser } from '@clerk/nextjs';
 import { Button, Spinner } from '@intern-3a/shadcn';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { AllClubsCardScrollAnimation, ClubFilterSection } from './_components';
-// import { FilteredClubs } from './_components/filteredClubs';
-import { Intro } from './_components/Intro';
+import { AllClubsCardScrollAnimation, FilteredClubsForUser, Intro } from './_components';
+import { useClub } from './hook/use-club';
 
 export default function Index() {
   const { user, isLoaded } = useUser();
   const { getToken } = useAuth();
   const router = useRouter();
   const role = user?.publicMetadata?.role;
-  console.log({ user });
+  const { allClubs, isLoading } = useClub();
+
   useEffect(() => {
     if (!isLoaded) return;
     if (!user) return;
@@ -51,10 +51,11 @@ export default function Index() {
   return (
     <div>
       <Intro />
-      <AllClubsCardScrollAnimation />
-      <ClubFilterSection />
-
-      {/* <FilteredClubs /> */}
+      <Button onClick={() => router.push('/map')} className="cursor-pointer">
+        Дугуйлан Хайх
+      </Button>
+      <AllClubsCardScrollAnimation allClubs={allClubs} isLoading={isLoading} />
+      <FilteredClubsForUser allClubs={allClubs} />
     </div>
   );
 }

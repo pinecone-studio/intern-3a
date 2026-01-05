@@ -1,0 +1,10 @@
+{
+  "projectId": "prj_HbKkdz5xD5wX1gtrJUSIwE09Boof",
+  "orgId": "team_9ULyBcUF5NZaHRlX569Zyopc",
+  "settings": {
+    "framework": "nextjs",
+    "installCommand": "yarn --immutable",
+    "buildCommand": "nx build --skip-nx-cache amar",
+    "outputDirectory": "apps/amar/.next"
+  }
+}

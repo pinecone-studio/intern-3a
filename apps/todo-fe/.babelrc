@@ -1,8 +1,0 @@
-{
-  "compact": false,
-  "presets": ["@babel/preset-react", "@nx/next/babel"],
-  "plugins": [
-    ["@babel/transform-class-properties", {}, "unique-name"],
-    ["istanbul", {}, "unique-name"]
-  ]
-}
