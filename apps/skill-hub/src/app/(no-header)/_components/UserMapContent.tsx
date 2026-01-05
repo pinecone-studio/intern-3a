@@ -3,7 +3,7 @@
 import { NewClubType } from '@/lib/utils/types';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 type UserMapContentProps = {
   visibleClubs: NewClubType[];
@@ -18,12 +18,15 @@ type UserMapContentProps = {
 export default function UserMapContent({ visibleClubs, userLocation, zoom, setZoom, setBounds, hoveredClubId, sidebarOpen }: UserMapContentProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<L.Map | null>(null);
+  const userMarkerRef = useRef<L.Marker | null>(null);
+  const [locateLoading, setLocateLoading] = useState(false);
 
   useEffect(() => {
     if (!mapRef.current || mapInstance.current) return;
 
     (async () => {
       const L = (await import('leaflet')).default;
+
       await import('leaflet/dist/leaflet.css');
 
       delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -45,11 +48,19 @@ export default function UserMapContent({ visibleClubs, userLocation, zoom, setZo
         setBounds(map.getBounds());
       });
 
-      L.circle(userLocation, {
-        radius: zoom >= 15 ? 300 : zoom >= 13 ? 800 : 3000,
-        color: '#2563eb',
-        fillOpacity: 0.15,
-      }).addTo(map);
+      const redIcon = L.icon({
+        iconUrl: '',
+        iconSize: [30, 42],
+        iconAnchor: [15, 42],
+      });
+
+      const marker = L.marker(userLocation, { icon: redIcon }).addTo(map);
+      userMarkerRef.current = marker;
+      // L.circle(userLocation, {
+      //   radius: zoom >= 15 ? 300 : zoom >= 13 ? 800 : 3000,
+      //   color: '#2563eb',
+      //   fillOpacity: 0.15,
+      // }).addTo(map);
 
       L.marker(userLocation).addTo(map).bindPopup('Таны байршил');
     })();
@@ -74,15 +85,79 @@ export default function UserMapContent({ visibleClubs, userLocation, zoom, setZo
       visibleClubs.forEach((club) => {
         const isHovered = hoveredClubId === club._id;
 
+        const markerHtml = `
+        <div style="position: relative; width: 60px; height: 80px;">
+
+        ${
+          isHovered
+            ? `<span style="
+          position: absolute;
+          bottom: 5px;
+          left: 50%;
+          width: 18px;
+          height: 18px;
+          background: rgba(10,66,122,0.35);
+          border-radius: 50%;
+          transform:translateX(-50%);
+          animation:pulse 1.4s ease-out infinite;
+          z-index:1;
+          "></span>`
+            : ''
+        }
+
+        <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        width="${isHovered ? 42 : 34}"
+        height="${isHovered ? 64 : 50}"
+        fill="#0A427A"
+        stroke="white"
+        stroke-width="1"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        style="
+          position:absolute;
+          bottom:0;
+          left:50%;
+          transform:translateX(-50%);
+          transition:all 0.25s ease;
+          z-index:2;
+          animation: ${isHovered ? 'bounce 0.6s ease infinite alternate' : 'none'}
+        "
+      >
+        <path d="M12 22s8-4 8-10a8 8 0 1 0-16 0c0 6 8 10 8 10z"/>
+        <circle cx="12" cy="12" r="3" fill="white"/>
+      </svg>
+
+      <style>
+        @keyframes pulse {
+          0% {
+            transform: translateX(-50%) scale(1);
+            opacity: 0.8;
+          }
+          100% {
+            transform: translateX(-50%) scale(2.4);
+            opacity: 0;
+          }
+        }
+        
+        @keyframes bounce {
+          0% { 
+            transform: translateX(-50%) translateY(0); 
+          }
+          100% { 
+            transform: translateX(-50%) translateY(-8px); 
+          }
+        }
+      </style>
+    </div>
+    `;
+
         L.marker([club.clubLat, club.clubLong], {
           icon: L.divIcon({
+            html: markerHtml,
             className: '',
-            html: `<div style="
-              background:${isHovered ? '#f97316' : '#2563eb'};
-              width:${isHovered ? 20 : 14}px;
-              height:${isHovered ? 20 : 14}px;
-              border-radius:50%;
-              transform:translate(-50%, -50%)"></div>`,
+            iconAnchor: [30, 80],
           }),
         })
           .addTo(map)
@@ -91,11 +166,11 @@ export default function UserMapContent({ visibleClubs, userLocation, zoom, setZo
               <img src="${club.clubImage}" style="width:100%; height:100px; object-fit:cover; border-radius:6px"/>
               <strong>${club.clubName}</strong>
             </div>`,
-            { direction: 'top', offset: [0, -10] },
+            { direction: 'top', offset: [0, -12] },
           );
       });
     })();
   }, [visibleClubs, hoveredClubId]);
 
-  return <div ref={mapRef} className={`w-full h-screen transition-all duration-300 ${sidebarOpen ? 'ml-95' : 'ml-0'}`} />;
+  return <div ref={mapRef} className={`w-full h-screen transition-all duration-300 ${sidebarOpen ? 'ml-85' : 'ml-0'}`} />;
 }

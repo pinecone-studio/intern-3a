@@ -24,7 +24,7 @@ export const BookingStyleMap = ({ allClubs }: { allClubs: NewClubType[] }) => {
     return allClubs.filter((c) => bounds.contains([c.clubLat, c.clubLong]));
   }, [bounds, allClubs]);
 
-  if (!userLocation) return <div className="h-screen grid place-items-center">Ачааллаж байна</div>;
+  if (!userLocation) return <div className="w-full h-screen grid place-items-center">Ачааллаж байна</div>;
   return (
     <div className="w-full h-screen">
       <MapSideBar visibleClubs={visibleClubs} sidebarOpen={sidebarOpen} onToggle={() => setSidebarOpen((v) => !v)} hoveredClubId={hoveredClubId} setHoveredClubId={setHoveredClubId} />
