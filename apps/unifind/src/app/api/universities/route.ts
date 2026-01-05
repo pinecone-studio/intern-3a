@@ -1,12 +1,57 @@
 import prisma from 'apps/unifind/src/lib/prisma';
 import { NextResponse } from 'next/server';
 
-export async function GET() {
-  const universities = await prisma.universities.findMany({
-    orderBy: { name: 'asc' },
-  });
+export async function GET(req: Request) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const search = searchParams.get('search') || '';
+    const minScore = parseInt(searchParams.get('minScore') || '0');
 
-  return NextResponse.json(universities);
+    const where: any = {
+      AND: [],
+    };
+
+    if (search) {
+      where.AND.push({
+        name: { contains: search, mode: 'insensitive' },
+      });
+    }
+
+    if (minScore > 0) {
+      where.AND.push({
+        majors: {
+          some: {
+            major_requirements: {
+              some: {
+                min_score: { gte: minScore },
+              },
+            },
+          },
+        },
+      });
+    }
+
+    const universities = await prisma.universities.findMany({
+      where: where,
+      include: {
+        majors: {
+          include: {
+            major_requirements: {
+              include: {
+                subjects: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: { name: 'asc' },
+    });
+
+    return NextResponse.json(universities);
+  } catch (error: any) {
+    console.error('API Error details:', error);
+    return NextResponse.json({ error: 'Internal Server Error', message: error.message }, { status: 500 });
+  }
 }
 
 export async function POST(req: Request) {

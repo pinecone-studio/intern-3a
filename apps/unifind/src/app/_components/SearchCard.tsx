@@ -103,6 +103,7 @@ export function SearchCard() {
   const filteredMajors = majors.filter((m) =>
     m.name.toLowerCase().includes(majorQuery.toLowerCase())
   );
+  console.log({ results });
 
   return (
     <div className="relative">
@@ -202,39 +203,65 @@ export function SearchCard() {
             Хайх
           </Button>
         </div>
-
         {/* ================= RESULT ================= */}
         {loading && <ResultSkeleton />}
-
+        {/* // ================= RESULT ================= */}
         {!loading && results.length > 0 && (
           <Card className="p-4 shadow-xl">
             <div className="grid gap-3">
-              {results.map((m) => (
-                <div
-                  key={m.id}
-                  className={`p-3 border rounded-lg mb-2 ${
-                    m.allMet
-                      ? "bg-white hover:bg-slate-50 cursor-pointer"
-                      : "bg-gray-100 opacity-50 cursor-not-allowed"
-                  }`}
-                  onClick={() =>
-                    m.allMet && router.push(`/detail/${m.universities.id}`)
-                  }
-                >
-                  <p className="font-medium">{m.name}</p>
-                  <p className="text-sm text-muted-foreground">
-                    {m.universities.name}
-                  </p>
-                  {m.requirements.map((r: any) => (
-                    <p
-                      key={r.id}
-                      className={r.meets ? "text-green-600" : "text-red-500"}
-                    >
-                      {r.subjects.name}: {r.userScore ?? 0} / {r.min_score}
-                    </p>
-                  ))}
-                </div>
-              ))}
+              {results
+                .sort((a, b) => {
+                  // 1. allRequirementsMet-ийг эхэнд
+                  if (a.allRequirementsMet && !b.allRequirementsMet) return -1;
+                  if (!a.allRequirementsMet && b.allRequirementsMet) return 1;
+
+                  // 2. scholarshipPercent ихээс бага
+                  return (
+                    (b.scholarshipPercent ?? 0) - (a.scholarshipPercent ?? 0)
+                  );
+                })
+                .map((m, idx) => (
+                  <div
+                    key={idx}
+                    className={`p-4 border rounded-lg mb-3 ${
+                      m.allRequirementsMet
+                        ? "bg-white hover:bg-slate-50 cursor-pointer"
+                        : "bg-gray-100 opacity-50 cursor-not-allowed"
+                    }`}
+                    onClick={() =>
+                      m.allRequirementsMet &&
+                      router.push(`/mergejil/${m.majorid}`)
+                    }
+                  >
+                    <p className="font-semibold text-lg">{m.major}</p>
+                    <p className="text-sm text-gray-600">{m.university}</p>
+
+                    {/* Шаардлагын оноонууд */}
+                    {m.requirements.length > 0 && (
+                      <div className="mt-2 space-y-1">
+                        {m.requirements.map((r: any, i: number) => (
+                          <p
+                            key={i}
+                            className={
+                              r.meets ? "text-green-600" : "text-red-500"
+                            }
+                          >
+                            {r.subject}: {r.userScore} / {r.minScore}
+                          </p>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Тэтгэлэг */}
+                    {m.scholarshipPercent > 0 && (
+                      <p className="mt-2 text-blue-600 font-medium">
+                        Таны боломжит тэтгэлэг: {m.scholarshipPercent}%
+                        төлбөрийн хөнгөлөлт
+                      </p>
+                    )}
+                  </div>
+                ))}
+
               {!loading && results.length === 0 && (
                 <p className="text-center text-muted-foreground mt-4">
                   Тохирох мэргэжил олдсонгүй
