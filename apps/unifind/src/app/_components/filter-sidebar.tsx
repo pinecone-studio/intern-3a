@@ -85,7 +85,7 @@ export function FilterSidebar({ filters, setFilters, resetFilters }: any) {
         <div className="relative z-10">
           <p className="font-bold mb-1">Тусламж хэрэгтэй юу?</p>
           <p className="text-sky-100 text-xs mb-4 opacity-90">Мэргэжлийн зөвлөх танд чиглүүлэхэд бэлэн байна.</p>
-          <Button className="w-full bg-white text-sky-600 hover:bg-sky-50 font-bold shadow-lg shadow-sky-900/20">Зөвлөгөө авах</Button>
+          <Button className="w-full bg-white text-sky-500 hover:bg-sky-50 font-bold shadow-lg shadow-sky-900/20">Зөвлөгөө авах</Button>
         </div>
         <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500" />
       </div>

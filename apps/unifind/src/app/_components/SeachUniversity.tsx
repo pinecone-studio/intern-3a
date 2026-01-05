@@ -75,7 +75,7 @@ export function SearchUniversity() {
   return (
     <div ref={wrapperRef} className="relative hidden md:block w-64">
       <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-      <Input placeholder="Их сургууль хайх..." className="pl-9 bg-gray-50 border-gray-200" value={query} onChange={(e) => setQuery(e.target.value)} />
+      <Input placeholder="Их сургууль хайх..." className="pl-9 bg-gray-50  dark:border-neutral-800 border-gray-200" value={query} onChange={(e) => setQuery(e.target.value)} />
 
       {showDropdown && (
         <div className="absolute top-full left-0 w-full bg-white border rounded-lg shadow-lg mt-1 max-h-64 overflow-auto z-50">
