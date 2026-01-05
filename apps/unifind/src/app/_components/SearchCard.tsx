@@ -1,6 +1,6 @@
 'use client';
 
-import { Search } from 'lucide-react';
+import { ChevronDown, Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '../components/ui/button';
@@ -17,21 +17,27 @@ const SUBJECTS = [
 ];
 
 export function SearchCard() {
+  const router = useRouter();
+
   const [majors, setMajors] = useState<any[]>([]);
   const [majorQuery, setMajorQuery] = useState('');
   const [selectedMajor, setSelectedMajor] = useState<number | null>(null);
-  const [showMajorDropdown, setShowMajorDropdown] = useState(false);
+  const [showMajor, setShowMajor] = useState(false);
 
   const [subject1, setSubject1] = useState<number | null>(null);
-  const [score1, setScore1] = useState('');
   const [subject2, setSubject2] = useState<number | null>(null);
+  const [score1, setScore1] = useState('');
   const [score2, setScore2] = useState('');
+  const [showSub1, setShowSub1] = useState(false);
+  const [showSub2, setShowSub2] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
 
   const [results, setResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const router = useRouter();
+  const majorRef = useRef<HTMLDivElement>(null);
+  const sub1Ref = useRef<HTMLDivElement>(null);
+  const sub2Ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetch('/api/majors')
@@ -41,9 +47,9 @@ export function SearchCard() {
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
-        setShowMajorDropdown(false);
-      }
+      if (majorRef.current && !majorRef.current.contains(e.target as Node)) setShowMajor(false);
+      if (sub1Ref.current && !sub1Ref.current.contains(e.target as Node)) setShowSub1(false);
+      if (sub2Ref.current && !sub2Ref.current.contains(e.target as Node)) setShowSub2(false);
     }
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
@@ -54,11 +60,12 @@ export function SearchCard() {
     if (subject1 && score1) scores.push({ subject_id: subject1, score: Number(score1) });
     if (subject2 && score2) scores.push({ subject_id: subject2, score: Number(score2) });
 
-    if (scores.length === 0) {
+    if (!scores.length) {
       alert('Ядаж 1 хичээлийн оноо оруулна уу');
       return;
     }
 
+    setHasSearched(true); // ✅ ADD THIS
     setLoading(true);
     setResults([]);
 
@@ -68,58 +75,42 @@ export function SearchCard() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ major_id: selectedMajor, scores }),
       });
-      const data = await res.json();
-      setResults(data);
+      setResults(await res.json());
     } finally {
       setLoading(false);
     }
   }
 
-  function ResultSkeleton() {
-    return (
-      <Card className="p-4 shadow-xl">
-        <div className="grid gap-3">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="flex justify-between items-center rounded-lg border p-3">
-              <div className="space-y-2 w-full">
-                <div className="h-4 w-1/2 bg-slate-200 rounded animate-pulse" />
-                <div className="h-3 w-1/3 bg-slate-200 rounded animate-pulse" />
-              </div>
-            </div>
-          ))}
-        </div>
-      </Card>
-    );
-  }
-
   const filteredMajors = majors.filter((m) => m.name.toLowerCase().includes(majorQuery.toLowerCase()));
-  console.log({ results });
 
   return (
     <div className="relative">
-      <Card ref={wrapperRef} className="relative p-8 max-w-5xl mx-auto mt-10 z-20">
+      <Card className="p-8 max-w-5xl mx-auto mt-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-          <div className="relative">
+          {/* MAJOR POPOVER */}
+          <div ref={majorRef} className="relative">
             <Input
+              className="h-12 cursor-pointer"
               placeholder="Мэргэжил (optional)"
               value={majorQuery}
-              onFocus={() => setShowMajorDropdown(true)}
+              onFocus={() => setShowMajor(true)}
               onChange={(e) => {
                 setMajorQuery(e.target.value);
                 setSelectedMajor(null);
-                setShowMajorDropdown(true);
+                setShowMajor(true);
               }}
-              className="h-12"
             />
-            {showMajorDropdown && majorQuery && (
-              <div className="absolute top-full left-0 z-50 mt-1 w-full bg-white border rounded-lg shadow-lg max-h-56 overflow-auto">
+            <ChevronDown className="absolute right-3 top-3 text-gray-400" />
+
+            {showMajor && majorQuery && (
+              <div className="absolute z-50 mt-1 w-full bg-white dark:bg-slate-800 border rounded-lg shadow-lg max-h-56 overflow-auto">
                 {filteredMajors.slice(0, 6).map((m) => (
                   <div
                     key={m.id}
                     onClick={() => {
                       setMajorQuery(m.name);
                       setSelectedMajor(m.id);
-                      setShowMajorDropdown(false);
+                      setShowMajor(false);
                     }}
                     className="px-3 py-2 text-sm cursor-pointer hover:bg-slate-100"
                   >
@@ -130,83 +121,131 @@ export function SearchCard() {
             )}
           </div>
 
-          <div>
-            <select className="h-12 w-full rounded-md border bg-slate-50 px-3 text-sm" value={subject1 ?? ''} onChange={(e) => setSubject1(Number(e.target.value))}>
-              <option value="" disabled>
-                Хичээл 1
-              </option>
-              {SUBJECTS.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.name}
-                </option>
-              ))}
-            </select>
-            <Input className="mt-2 h-12" placeholder="Оноо" type="number" min={0} max={800} value={score1} onChange={(e) => setScore1(e.target.value)} />
+          {/* SUBJECT 1 */}
+          <div ref={sub1Ref} className="relative">
+            <Button variant="outline" className="h-12 w-full justify-between" onClick={() => setShowSub1(!showSub1)}>
+              {SUBJECTS.find((s) => s.id === subject1)?.name ?? 'Хичээл 1'}
+              <ChevronDown className="w-4 h-4 opacity-50" />
+            </Button>
+
+            {showSub1 && (
+              <div className="absolute z-50 mt-1 w-full bg-white dark:bg-neutral-800 border rounded-lg shadow-lg">
+                {SUBJECTS.map((s) => (
+                  <div
+                    key={s.id}
+                    onClick={() => {
+                      setSubject1(s.id);
+                      setShowSub1(false);
+                    }}
+                    className={`px-3 py-2 cursor-pointer hover:bg-slate-100 ${subject2 === s.id ? 'opacity-50 pointer-events-none' : ''}`}
+                  >
+                    {s.name}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <Input className="mt-2 h-12" placeholder="Оноо" type="number" value={score1} onChange={(e) => setScore1(e.target.value)} />
           </div>
 
-          <div>
-            <select className="h-12 w-full rounded-md border bg-slate-50 px-3 text-sm" value={subject2 ?? ''} onChange={(e) => setSubject2(Number(e.target.value))}>
-              <option value="" disabled>
-                Хичээл 2
-              </option>
-              {SUBJECTS.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.name}
-                </option>
-              ))}
-            </select>
-            <Input className="mt-2 h-12" placeholder="Оноо" type="number" min={0} max={800} value={score2} onChange={(e) => setScore2(e.target.value)} />
+          {/* SUBJECT 2 */}
+          <div ref={sub2Ref} className="relative">
+            <Button variant="outline" className="h-12 w-full justify-between" onClick={() => setShowSub2(!showSub2)}>
+              {SUBJECTS.find((s) => s.id === subject2)?.name ?? 'Хичээл 2'}
+              <ChevronDown className="w-4 h-4 opacity-50" />
+            </Button>
+
+            {showSub2 && (
+              <div className="absolute z-50 mt-1 w-full bg-white dark:bg-neutral-800 border rounded-lg shadow-lg">
+                {SUBJECTS.map((s) => (
+                  <div
+                    key={s.id}
+                    onClick={() => {
+                      setSubject2(s.id);
+                      setShowSub2(false);
+                    }}
+                    className={`px-3 py-2 cursor-pointer hover:bg-slate-100 ${subject1 === s.id ? 'opacity-50 pointer-events-none' : ''}`}
+                  >
+                    {s.name}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <Input className="mt-2 h-12" placeholder="Оноо" type="number" value={score2} onChange={(e) => setScore2(e.target.value)} />
           </div>
 
-          <Button onClick={handleSearch} className="h-12 bg-sky-600 hover:bg-sky-700 text-white">
-            <Search className="w-4 h-4 mr-2" />
+          <Button onClick={handleSearch} className="h-12 bg-sky-500 hover:bg-sky-600 text-white">
+            <Search className="w-4 h-4" />
             Хайх
           </Button>
         </div>
-        {/* ================= RESULT ================= */}
-        {loading && <ResultSkeleton />}
-        {/* // ================= RESULT ================= */}
-        {!loading && results.length > 0 && (
-          <Card className="p-4 shadow-xl">
-            <div className="grid gap-3">
-              {results
-                .sort((a, b) => {
-                  // 1. allRequirementsMet-ийг эхэнд
-                  if (a.allRequirementsMet && !b.allRequirementsMet) return -1;
-                  if (!a.allRequirementsMet && b.allRequirementsMet) return 1;
 
-                  // 2. scholarshipPercent ихээс бага
-                  return (b.scholarshipPercent ?? 0) - (a.scholarshipPercent ?? 0);
-                })
-                .map((m, idx) => (
+        {/* RESULTS */}
+        {/* RESULTS */}
+        {loading && (
+          <div className="mt-6 space-y-3 animate-pulse">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="h-24 rounded-xl bg-slate-100" />
+            ))}
+          </div>
+        )}
+
+        {!loading && results.length > 0 && (
+          <div className="mt-6 grid gap-4">
+            {results
+              .sort((a, b) => {
+                if (a.allRequirementsMet && !b.allRequirementsMet) return -1;
+                if (!a.allRequirementsMet && b.allRequirementsMet) return 1;
+                return (b.scholarshipPercent ?? 0) - (a.scholarshipPercent ?? 0);
+              })
+              .map((m, idx) => {
+                const passed = m.allRequirementsMet;
+
+                return (
                   <div
                     key={idx}
-                    className={`p-4 border rounded-lg mb-3 ${m.allRequirementsMet ? 'bg-white hover:bg-slate-50 cursor-pointer' : 'bg-gray-100 opacity-50 cursor-not-allowed'}`}
-                    onClick={() => m.allRequirementsMet && router.push(`/mergejil/${m.majorid}`)}
+                    onClick={() => passed && router.push(`/mergejil/${m.majorid}`)}
+                    className={`relative rounded-xl border p-5 transition-all ${
+                      passed ? 'bg-white hover:shadow-lg hover:-translate-y-0.5 cursor-pointer' : 'bg-slate-50 opacity-60 cursor-not-allowed'
+                    }`}
                   >
-                    <p className="font-semibold text-lg">{m.major}</p>
-                    <p className="text-sm text-gray-600">{m.university}</p>
+                    {/* STATUS BADGE */}
+                    <div className={`absolute top-4 right-4 px-2 py-1 text-xs font-semibold rounded-full ${passed ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                      {passed ? 'Тэнцсэн' : 'Тэнцээгүй'}
+                    </div>
 
-                    {/* Шаардлагын оноонууд */}
-                    {m.requirements.length > 0 && (
-                      <div className="mt-2 space-y-1">
+                    {/* HEADER */}
+                    <div className="space-y-1">
+                      <p className="text-lg font-semibold">{m.major}</p>
+                      <p className="text-sm text-gray-500">{m.university}</p>
+                    </div>
+
+                    {/* REQUIREMENTS */}
+                    {m.requirements?.length > 0 && (
+                      <div className="mt-3 space-y-1">
                         {m.requirements.map((r: any, i: number) => (
-                          <p key={i} className={r.meets ? 'text-green-600' : 'text-red-500'}>
-                            {r.subject}: {r.userScore} / {r.minScore}
-                          </p>
+                          <div key={i} className={`flex justify-between text-sm ${r.meets ? 'text-green-600' : 'text-red-500'}`}>
+                            <span>{r.subject}</span>
+                            <span>
+                              {r.userScore} / {r.minScore}
+                            </span>
+                          </div>
                         ))}
                       </div>
                     )}
 
-                    {/* Тэтгэлэг */}
-                    {m.scholarshipPercent > 0 && <p className="mt-2 text-blue-600 font-medium">Таны боломжит тэтгэлэг: {m.scholarshipPercent}% төлбөрийн хөнгөлөлт</p>}
+                    {/* SCHOLARSHIP */}
+                    {passed && m.scholarshipPercent > 0 && (
+                      <div className="mt-4 inline-flex items-center gap-2 rounded-lg bg-sky-50 px-3 py-2 text-sm font-medium text-sky-500">🎓 {m.scholarshipPercent}% тэтгэлэг</div>
+                    )}
                   </div>
-                ))}
-
-              {!loading && results.length === 0 && <p className="text-center text-muted-foreground mt-4">Тохирох мэргэжил олдсонгүй</p>}
-            </div>
-          </Card>
+                );
+              })}
+          </div>
         )}
+
+        {!loading && hasSearched && results.length === 0 && <p className="mt-6 text-center text-gray-500">Тохирох мэргэжил олдсонгүй</p>}
       </Card>
     </div>
   );

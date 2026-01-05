@@ -58,7 +58,7 @@ export default function UniversityCard({ id, name, location, image, status, minS
       <div className="p-4 pt-0 space-y-4">
         <div className="flex items-start gap-3">
           <div className="bg-[#00BCD4]/10 p-2 rounded-lg">
-            <Icon className="h-5 w-5 text-sky-600" />
+            <Icon className="h-5 w-5 text-sky-500" />
           </div>
           <div className="flex-1">
             <h3 className="font-bold text-lg">{name}</h3>
@@ -80,7 +80,7 @@ export default function UniversityCard({ id, name, location, image, status, minS
             handleViewDetails();
           }}
           variant="outline"
-          className="w-full border-sky-600 cursor-pointer text-sky-600 hover:bg-sky-600 hover:text-white"
+          className="w-full border-sky-500 cursor-pointer text-sky-500 hover:bg-sky-500 hover:text-white"
         >
           Дэлгэрэнгүй
         </Button>
