@@ -93,7 +93,7 @@ export default function ClubCard({ club }: { club: NewClubType }) {
   };
 
   return (
-    <div className="max-w-lg mx-auto relative">
+    <div className="w-80 relative">
       <div className="bg-white rounded-2xl border-2 border-slate-200 overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col h-full">
         <div className="aspect-video relative overflow-hidden bg-slate-100">
           {club.clubImage && <img src={typeof club.clubImage === 'string' ? club.clubImage : ''} alt={club.clubName} className="w-full h-full object-cover" />}

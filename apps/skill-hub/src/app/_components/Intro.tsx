@@ -1,38 +1,16 @@
 'use client';
 
-import { motion, useMotionValue, Variants } from 'framer-motion';
-import { BookOpen, GraduationCap, Users } from 'lucide-react';
+import { motion, Variants } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export const Intro = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const [trail, setTrail] = useState<{ x: number; y: number }[]>([]);
-  const cursorX = useMotionValue(0);
-  const cursorY = useMotionValue(0);
-
-  // const springConfig = { damping: 25, stiffness: 150 };
-  // const cursorXSpring = useSpring(cursorX, springConfig);
-  // const cursorYSpring = useSpring(cursorY, springConfig);
+  const router = useRouter();
 
   useEffect(() => {
     setIsVisible(true);
-
-    const handleMouseMove = (e: MouseEvent) => {
-      cursorX.set(e.clientX);
-      cursorY.set(e.clientY);
-
-      setTrail((prevTrail) => {
-        const newTrail = [
-          { x: e.clientX, y: e.clientY },
-          ...prevTrail.slice(0, 19), // Keep last 20 positions
-        ];
-        return newTrail;
-      });
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, [cursorX, cursorY]);
+  }, []);
 
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -66,52 +44,10 @@ export const Intro = () => {
   //   },
   // };
 
-  const features = [
-    {
-      icon: <BookOpen className="w-8 h-8" />,
-      title: 'Олон төрлийн дугуйлан',
-      description: 'Спорт, урлаг, боловсролын сургалт',
-    },
-    {
-      icon: <GraduationCap className="w-8 h-8" />,
-      title: 'Амжилтын баталгаа',
-      description: 'Мэргэжлийн багш, батлагдсан арга зүй',
-    },
-    {
-      icon: <Users className="w-8 h-8" />,
-      title: 'Хүүхдийн хөгжил',
-      description: 'Авьяас чадвар, өөртөө итгэх итгэл',
-    },
-  ];
+  const features: Array<{ icon: React.ReactNode; title: string; description: string }> = [];
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-linear-to-br from-orange-50 via-white to-purple-50 cursor-none">
-      {/* Snake Trail Following Cursor */}
-      <div className="fixed inset-0 pointer-events-none z-50">
-        {trail.map((point, index) => (
-          <motion.div
-            key={index}
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{
-              opacity: 1 - index * 0.05,
-              scale: 1 - index * 0.03,
-            }}
-            transition={{ duration: 0.3 }}
-            style={{
-              position: 'absolute',
-              left: point.x - 8,
-              top: point.y - 8,
-              width: 16,
-              height: 16,
-              borderRadius: '50%',
-              background: `linear-gradient(135deg, 
-                ${index % 3 === 0 ? '#F59E0B' : index % 3 === 1 ? '#A855F7' : '#EC4899'})`,
-              boxShadow: '0 0 10px rgba(245, 158, 11, 0.5)',
-            }}
-          />
-        ))}
-      </div>
-
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-linear-to-br from-orange-50 via-white to-purple-50">
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         {/* Gradient Blobs */}
@@ -506,6 +442,38 @@ export const Intro = () => {
             Growly
           </span>
         </motion.h1>
+
+        {/* Buttons */}
+        <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+          <motion.button
+            whileHover={{ scale: 1.05, y: -2 }}
+            whileTap={{ scale: 0.95 }}
+            className="group relative px-10 py-4 bg-linear-to-r from-orange-500 to-pink-500 text-white rounded-full hover:from-orange-600 hover:to-pink-600 transition-all duration-300 font-bold text-lg shadow-2xl hover:shadow-orange-500/50 overflow-hidden"
+            onClick={() => router.push('/clubs')}
+          >
+            <span className="relative z-10 flex items-center justify-center gap-2">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              Дугуйлан хайх
+            </span>
+            <motion.div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20" initial={false} whileHover={{ scale: 1.5 }} transition={{ duration: 0.4 }} />
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.05, y: -2 }}
+            whileTap={{ scale: 0.95 }}
+            className="group relative px-10 py-4 bg-linear-to-r from-purple-500 to-indigo-600 text-white rounded-full hover:from-purple-600 hover:to-indigo-700 transition-all duration-300 font-bold text-lg shadow-2xl hover:shadow-purple-500/50 overflow-hidden"
+            onClick={() => router.push('/sign-in')}
+          >
+            <span className="relative z-10 flex items-center justify-center gap-2">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+              </svg>
+              Нэвтрэх
+            </span>
+            <motion.div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20" initial={false} whileHover={{ scale: 1.5 }} transition={{ duration: 0.4 }} />
+          </motion.button>
+        </motion.div>
 
         {/* Subtitle */}
         <motion.p variants={itemVariants} className="text-xl md:text-2xl lg:text-3xl text-slate-600 mb-4 max-w-3xl mx-auto font-semibold">
