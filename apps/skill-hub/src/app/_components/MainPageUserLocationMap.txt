@@ -5,7 +5,7 @@ import { Button } from '@intern-3a/shadcn';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 
-const UserMapContent = dynamic(() => import('./UserMapContent'), { ssr: false });
+const UserMapContent = dynamic(() => import('../map/_components/UserMapContent'), { ssr: false });
 
 export default function MainPageUserLocationMap({ allClubs }: { allClubs: NewClubType[] }) {
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);

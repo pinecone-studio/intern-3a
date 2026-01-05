@@ -1,10 +1,10 @@
 'use client';
 
 import { useAuth, useUser } from '@clerk/nextjs';
-import { Spinner } from '@intern-3a/shadcn';
+import { Button, Spinner } from '@intern-3a/shadcn';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { AllClubsCardScrollAnimation, BookingStyleMap, FilteredClubsForUser, Intro } from './_components';
+import { AllClubsCardScrollAnimation, FilteredClubsForUser, Intro } from './_components';
 import { useClub } from './hook/use-club';
 
 export default function Index() {
@@ -50,8 +50,10 @@ export default function Index() {
 
   return (
     <div>
-      {/* <Intro /> */}
-      <BookingStyleMap allClubs={allClubs} />
+      <Intro />
+      <Button onClick={() => router.push('/map')} className="cursor-pointer">
+        Дугуйлан Хайх
+      </Button>
       <AllClubsCardScrollAnimation allClubs={allClubs} isLoading={isLoading} />
       <FilteredClubsForUser allClubs={allClubs} />
     </div>

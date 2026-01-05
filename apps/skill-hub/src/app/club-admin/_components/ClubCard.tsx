@@ -27,7 +27,7 @@ const PRICE_LABEL_MN: { [K in ClassLevelsType]: string } = {
   High: 'Ахлах /IX-XII анги/',
 };
 
-export default function ClubCard({ club }: { club: NewClubType }) {
+export const ClubCard = ({ club }: { club: NewClubType }) => {
   const [open, setOpen] = useState(false);
   const [modalDescExpanded, setModalDescExpanded] = useState(false);
 
@@ -281,4 +281,4 @@ export default function ClubCard({ club }: { club: NewClubType }) {
       )}
     </div>
   );
-}
+};

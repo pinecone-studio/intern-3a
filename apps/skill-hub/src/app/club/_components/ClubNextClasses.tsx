@@ -8,7 +8,7 @@ interface Props {
   scheduledTimes: Record<string, { startTime: string; endTime: string }>;
 }
 
-export default function ClubNextClasses({ availableWeekdays, scheduledTimes }: Props) {
+export const ClubNextClasses = ({ availableWeekdays, scheduledTimes }: Props) => {
   // Түвшин солигдоход хуваарийг дахин тооцоолох
   const nextClasses = useMemo(() => {
     const dates: {
@@ -84,4 +84,4 @@ export default function ClubNextClasses({ availableWeekdays, scheduledTimes }: P
       </div>
     </div>
   );
-}
+};

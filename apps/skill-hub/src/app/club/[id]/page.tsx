@@ -1,7 +1,6 @@
 'use client';
 
 import { ClubDetailPageSkeleton } from '@/app/_components/ClubDetailPageSkeleton';
-import ClubNextClasses from '@/app/_components/ClubNextClasses';
 import MapView from '@/app/_components/MapView';
 import { useClubById } from '@/app/hook/use-club-by-id';
 import { SignedIn, SignedOut } from '@clerk/nextjs';
@@ -10,7 +9,7 @@ import { ArrowLeft, Calendar, Clock, Mail, MapPin, Phone, User } from 'lucide-re
 import Image from 'next/image';
 import { notFound, useRouter } from 'next/navigation';
 import { use, useMemo, useState } from 'react';
-import { RegisterLoginAlertDialog } from '../_components';
+import { ClubNextClasses, RegisterLoginAlertDialog } from '../_components';
 
 interface PageProps {
   params: Promise<{ id: string }>;
