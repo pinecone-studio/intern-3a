@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
 import { Input } from '../components/ui/input';
+import MajorSelector from './MajorSelector';
 
 const SUBJECTS = [
   { id: 1, name: 'Математик' },
@@ -28,6 +29,8 @@ export function SearchCard() {
   const [subject2, setSubject2] = useState<number | null>(null);
   const [score1, setScore1] = useState('');
   const [score2, setScore2] = useState('');
+  const [score1Error, setScore1Error] = useState('');
+  const [score2Error, setScore2Error] = useState('');
   const [showSub1, setShowSub1] = useState(false);
   const [showSub2, setShowSub2] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
@@ -65,7 +68,7 @@ export function SearchCard() {
       return;
     }
 
-    setHasSearched(true); // ✅ ADD THIS
+    setHasSearched(true);
     setLoading(true);
     setResults([]);
 
@@ -88,38 +91,7 @@ export function SearchCard() {
       <Card className="p-8 max-w-5xl mx-auto mt-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
           {/* MAJOR POPOVER */}
-          <div ref={majorRef} className="relative">
-            <Input
-              className="h-12 cursor-pointer"
-              placeholder="Мэргэжил (optional)"
-              value={majorQuery}
-              onFocus={() => setShowMajor(true)}
-              onChange={(e) => {
-                setMajorQuery(e.target.value);
-                setSelectedMajor(null);
-                setShowMajor(true);
-              }}
-            />
-            <ChevronDown className="absolute right-3 top-3 text-gray-400" />
-
-            {showMajor && majorQuery && (
-              <div className="absolute z-50 mt-1 w-full bg-white dark:bg-slate-800 border rounded-lg shadow-lg max-h-56 overflow-auto">
-                {filteredMajors.slice(0, 6).map((m) => (
-                  <div
-                    key={m.id}
-                    onClick={() => {
-                      setMajorQuery(m.name);
-                      setSelectedMajor(m.id);
-                      setShowMajor(false);
-                    }}
-                    className="px-3 py-2 text-sm cursor-pointer hover:bg-slate-100"
-                  >
-                    {m.name}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+          <MajorSelector filteredMajors={filteredMajors} />
 
           {/* SUBJECT 1 */}
           <div ref={sub1Ref} className="relative">
@@ -137,7 +109,7 @@ export function SearchCard() {
                       setSubject1(s.id);
                       setShowSub1(false);
                     }}
-                    className={`px-3 py-2 cursor-pointer hover:bg-slate-100 ${subject2 === s.id ? 'opacity-50 pointer-events-none' : ''}`}
+                    className={`px-3 py-2 cursor-pointer text-sm hover:bg-slate-100 dark:hover:bg-neutral-700 rounded-lg ${subject2 === s.id ? 'opacity-50 pointer-events-none' : ''}`}
                   >
                     {s.name}
                   </div>
@@ -145,7 +117,24 @@ export function SearchCard() {
               </div>
             )}
 
-            <Input className="mt-2 h-12" placeholder="Оноо" type="number" value={score1} onChange={(e) => setScore1(e.target.value)} />
+            <div className="flex flex-row justify-center">
+              <Input
+                className="mt-2 h-12"
+                placeholder="Оноо"
+                type="number"
+                value={score1}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setScore1(val);
+                  if (val && Number(val) > 800) {
+                    setScore1Error('800 онооноос доош утга оруулна уу');
+                  } else {
+                    setScore1Error('');
+                  }
+                }}
+              />
+              {score1Error && <p className="flex absolute text-red-500 text-[12px] justify-center mt-15">{score1Error}</p>}
+            </div>
           </div>
 
           {/* SUBJECT 2 */}
@@ -164,7 +153,7 @@ export function SearchCard() {
                       setSubject2(s.id);
                       setShowSub2(false);
                     }}
-                    className={`px-3 py-2 cursor-pointer hover:bg-slate-100 ${subject1 === s.id ? 'opacity-50 pointer-events-none' : ''}`}
+                    className={`px-3 py-2 cursor-pointer text-sm hover:bg-slate-100 dark:hover:bg-neutral-700 ${subject1 === s.id ? 'opacity-50 pointer-events-none' : ''}`}
                   >
                     {s.name}
                   </div>
@@ -172,7 +161,24 @@ export function SearchCard() {
               </div>
             )}
 
-            <Input className="mt-2 h-12" placeholder="Оноо" type="number" value={score2} onChange={(e) => setScore2(e.target.value)} />
+            <div className="flex justify-center flex-row">
+              <Input
+                className="mt-2 h-12"
+                placeholder="Оноо"
+                type="number"
+                value={score2}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setScore2(val);
+                  if (val && Number(val) > 800) {
+                    setScore2Error('800 онооноос доош утга оруулна уу');
+                  } else {
+                    setScore2Error('');
+                  }
+                }}
+              />
+              {score2Error && <p className="flex  absolute text-red-500 text-[12px] justify-center mt-15">{score2Error}</p>}
+            </div>
           </div>
 
           <Button onClick={handleSearch} className="h-12 bg-sky-500 hover:bg-sky-600 text-white">
@@ -182,11 +188,10 @@ export function SearchCard() {
         </div>
 
         {/* RESULTS */}
-        {/* RESULTS */}
         {loading && (
           <div className="mt-6 space-y-3 animate-pulse">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-24 rounded-xl bg-slate-100" />
+              <div key={i} className="h-24 rounded-xl bg-slate-100 dark:bg-neutral-800" />
             ))}
           </div>
         )}
@@ -207,7 +212,7 @@ export function SearchCard() {
                     key={idx}
                     onClick={() => passed && router.push(`/mergejil/${m.majorid}`)}
                     className={`relative rounded-xl border p-5 transition-all ${
-                      passed ? 'bg-white hover:shadow-lg hover:-translate-y-0.5 cursor-pointer' : 'bg-slate-50 opacity-60 cursor-not-allowed'
+                      passed ? 'bg-white dark:bg-neutral-900 hover:shadow-lg hover:-translate-y-0.5 cursor-pointer' : 'bg-slate-50 dark:bg-neutral-800 opacity-60 cursor-not-allowed'
                     }`}
                   >
                     {/* STATUS BADGE */}

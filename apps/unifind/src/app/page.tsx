@@ -10,7 +10,7 @@ export default function Home() {
       {/* <Header></Header> */}
       <main>
         <HeroSection />
-        <div className="container mx-auto px-4 -mt-20 relative z-10">
+        <div className="container mx-auto px-4 -mt-20 relative z-10 ">
           <SearchCard />
         </div>
         <PopularUniversities />
