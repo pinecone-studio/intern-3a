@@ -1,5 +1,5 @@
 import { SidebarProvider } from '@intern-3a/shadcn';
-import { SideBarComponent } from '../_components/adminPage';
+import SideBarComponent from '../_components/adminPage/SideBarComponent';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (

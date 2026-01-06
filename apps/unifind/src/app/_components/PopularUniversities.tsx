@@ -1,18 +1,20 @@
 'use client';
-
 import Link from 'next/link';
 import useSWR from 'swr';
-import { University } from '../../lib/types/type';
 import { Button } from '../components/ui/button';
 import UniversityCard from './UniversityCard';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export function PopularUniversities() {
-  const { data, error, isLoading } = useSWR<University[]>('/api/universities', fetcher);
+  // data-г анхнаас нь хоосон жагсаалт байхаар default утга өгч болно
+  const { data, error, isLoading } = useSWR<any>('/api/universities', fetcher);
+
+  // Өгөгдөл Array мөн эсэхийг шалгах логик
+  const universities = Array.isArray(data) ? data : data && typeof data === 'object' && Array.isArray(data.universities) ? data.universities : [];
 
   return (
-    <section className="py-20 bg-background">
+    <section className="py-20 pb-6 bg-background">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
@@ -36,32 +38,32 @@ export function PopularUniversities() {
               </div>
             ))}
 
-          {!isLoading &&
-            !error &&
-            data
-              ?.slice(0, 6)
-              .map((uni) => (
-                <UniversityCard
-                  key={uni.id}
-                  id={uni.id}
-                  name={uni.name}
-                  location={uni.city}
-                  image={uni.image || ''}
-                  status="open"
-                  admissionRate={null}
-                  deadline={null}
-                  nextCycle={null}
-                  minScore={''}
-                />
-              ))}
+          {!isLoading && !error && universities.length > 0
+            ? universities
+                .slice(0, 6)
+                .map((uni: any) => (
+                  <UniversityCard
+                    key={uni.id}
+                    id={uni.id}
+                    name={uni.name}
+                    location={uni.city || 'Улаанбаатар'}
+                    image={uni.image || ''}
+                    status="open"
+                    admissionRate={null}
+                    deadline={null}
+                    nextCycle={null}
+                    minScore={''}
+                  />
+                ))
+            : !isLoading && !error && <p className="col-span-full text-center text-gray-400">Мэдээлэл олдсонгүй</p>}
 
-          {error && <p className="col-span-full text-red-500">Өгөгдөл авахад алдаа гарлаа</p>}
+          {error && <p className="col-span-full text-red-500 text-center">Өгөгдөл авахад алдаа гарлаа</p>}
         </div>
 
         {/* Load more */}
         <div className="text-center">
-          <Link href="/universities">
-            <button className="px-8 py-3 border-2 border-slate-300 rounded-lg font-semibold text-foreground hover:bg-slate-50 transition-colors">Бүгдийг үзэх</button>
+          <Link href={'/universities'}>
+            <Button variant={'outline'}>Бүгдийг үзэх</Button>
           </Link>
         </div>
       </div>

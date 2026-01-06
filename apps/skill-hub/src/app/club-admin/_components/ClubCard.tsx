@@ -1,8 +1,9 @@
 'use client';
 
 import { ClassLevelsType, NewClubType, WeekDayType } from '@/lib/utils/types';
-import { Card, CardContent } from '@intern-3a/shadcn';
-import { Calendar, Mail, MapPin, Phone, X } from 'lucide-react';
+import { Button, Card, CardContent } from '@intern-3a/shadcn';
+import { Calendar, ChevronDown, Mail, MapPin, Phone, X } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 
 const CLASS_LEVEL_LABEL_MN: { [K in ClassLevelsType]: string } = {
@@ -30,6 +31,8 @@ const PRICE_LABEL_MN: { [K in ClassLevelsType]: string } = {
 export const ClubCard = ({ club }: { club: NewClubType }) => {
   const [open, setOpen] = useState(false);
   const [modalDescExpanded, setModalDescExpanded] = useState(false);
+  const [expandedClass, setExpandedClass] = useState<ClassLevelsType | null>(null);
+  const router = useRouter();
 
   const levelLabel = useMemo(() => club.selectedClassLevelNames?.map((l) => CLASS_LEVEL_LABEL_MN[l]).join(' · ') || '—', [club.selectedClassLevelNames]);
 
@@ -43,6 +46,23 @@ export const ClubCard = ({ club }: { club: NewClubType }) => {
   // const [selectedDay, setSelectedDay] = useState<WeekDayType | null>(null);
 
   const classLevels: ClassLevelsType[] = ['Elementary', 'Middle', 'High'];
+
+  const toggleClassDetails = (level: ClassLevelsType) => {
+    setExpandedClass(expandedClass === level ? null : level);
+  };
+
+  const formatDayName = (day: string) => {
+    const dayMap: Record<string, string> = {
+      MON: 'Даваа',
+      TUE: 'Мягмар',
+      WED: 'Лхагва',
+      THU: 'Пүрэв',
+      FRI: 'Баасан',
+      SAT: 'Бямба',
+      SUN: 'Ням',
+    };
+    return dayMap[day] || day;
+  };
 
   const clubImageSrc = useMemo(() => {
     if (!club.clubImage) return '/default-avatar.png';
@@ -73,58 +93,96 @@ export const ClubCard = ({ club }: { club: NewClubType }) => {
   };
 
   return (
-    <div className="max-w-lg mx-auto relative">
-      <Card
-        className="group overflow-hidden rounded-2xl shadow-lg transition-transform transform hover:-translate-y-1 hover:shadow-2xl cursor-pointer"
-        onClick={() => setOpen(true)}
-        role="button"
-        tabIndex={0}
-        onKeyDown={handleKeyDown}
-      >
-        <div className="relative">
-          <img src={club.clubImage as string} alt={club.clubName} className="w-full h-56 object-cover" />
+    <div className="w-80 relative">
+      <div className="bg-white rounded-2xl border-2 border-slate-200 overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col h-full">
+        <div className="aspect-video relative overflow-hidden bg-slate-100">
+          {club.clubImage && <img src={typeof club.clubImage === 'string' ? club.clubImage : ''} alt={club.clubName} className="w-full h-full object-cover" />}
+        </div>
+        <div className="p-6 flex flex-col flex-grow">
+          <h4 className="text-xl font-bold text-[#0A427A] mb-2 line-clamp-1">{club.clubName}</h4>
 
-          <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent" aria-hidden />
+          <p className="text-slate-600 text-sm mb-4 line-clamp-2 h-10">{club.clubDescription}</p>
 
-          <div className="absolute left-4 bottom-4 text-white">
-            <h2 className="text-2xl font-bold drop-shadow">{club.clubName}</h2>
+          <div className="mb-3">
+            <div className="flex flex-wrap gap-2 min-h-[28px]">
+              {club.selectedClassLevelNames && club.selectedClassLevelNames.length > 0 ? (
+                club.selectedClassLevelNames.map((level) => (
+                  <div key={level} className="relative">
+                    <button
+                      onClick={() => toggleClassDetails(level)}
+                      className="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-full flex items-center gap-1 transition-colors cursor-pointer"
+                    >
+                      {level}
+                      <ChevronDown className={`w-3 h-3 transition-transform ${expandedClass === level ? 'rotate-180' : ''}`} />
+                    </button>
+                  </div>
+                ))
+              ) : (
+                <span className="invisible">placeholder</span>
+              )}
+            </div>
+
+            {/* Dropdown for selected class */}
+            {club.selectedClassLevelNames?.map(
+              (level) =>
+                expandedClass === level && (
+                  <div key={`${level}-dropdown`} className="mt-2 p-3 bg-slate-50 rounded-lg border border-slate-200 text-xs">
+                    <div className="mb-2">
+                      <strong className="text-slate-700">Үнэ:</strong>{' '}
+                      <span className="text-slate-600">{club.clubPrices?.[level] ? `${club.clubPrices[level].toLocaleString()}₮` : 'Мэдээлэл байхгүй'}</span>
+                    </div>
+                    <div>
+                      <strong className="text-slate-700">Хичээлийн цаг:</strong>
+                      <div className="mt-1 space-y-1">
+                        {club.scheduledClubTimes?.[level] && Object.keys(club.scheduledClubTimes[level]).length > 0 ? (
+                          Object.entries(club.scheduledClubTimes[level]).map(([day, time]) => (
+                            <div key={day} className="text-slate-600">
+                              {formatDayName(day)}: {time?.startTime} - {time?.endTime}
+                            </div>
+                          ))
+                        ) : (
+                          <span className="text-slate-600">Мэдээлэл байхгүй</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ),
+            )}
           </div>
 
-          <div className="absolute top-4 right-4">
-            <span className="inline-flex items-center px-3 py-1 rounded-full bg-[#FCB027] text-white text-xs font-medium">{levelLabel}</span>
+          <div className="mb-4 min-h-[60px]">
+            {club.teachersInfoByClass && Object.keys(club.teachersInfoByClass).length > 0 ? (
+              <div>
+                <p className="text-xs font-semibold text-slate-700 mb-2">Багш:</p>
+                <div className="flex flex-wrap gap-2">
+                  {Object.entries(club.teachersInfoByClass)
+                    .filter(([_, teacher]) => teacher?.teacherName)
+                    .map(([level, teacher]) => (
+                      <div key={level} className="flex items-center gap-2 group">
+                        <div className="relative w-10 h-10 rounded-full overflow-hidden bg-slate-200 border-2 border-slate-300 group-hover:border-orange-500 transition-colors">
+                          {teacher?.teacherImage ? (
+                            <img src={typeof teacher.teacherImage === 'string' ? teacher.teacherImage : ''} alt={teacher?.teacherName || 'Teacher'} className="w-full h-full object-cover" />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center text-slate-500 text-xs font-bold">{teacher?.teacherName?.charAt(0).toUpperCase()}</div>
+                          )}
+                        </div>
+                        <span className="text-xs text-slate-600">{teacher?.teacherName}</span>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            ) : (
+              <span className="invisible">placeholder</span>
+            )}
+          </div>
+
+          <div className="flex justify-center mt-auto">
+            <Button onClick={() => setOpen(true)} className="bg-[#FCB027] hover:bg-[#e69f1c] text-white rounded-full px-5 cursor-pointer w-full">
+              Дэлгэрэнгүй
+            </Button>
           </div>
         </div>
-
-        <CardContent className="space-y-4 bg-white">
-          <div>
-            <div className="items-center gap-2 inline-flex">
-              <h4 className="font-semibold text-black">
-                <span className="inline-flex items-center">
-                  <Calendar className="w-5 h-5" style={{ color: '#FCB027' }} aria-hidden />
-                </span>
-              </h4>
-              <div className="flex gap-5">
-                {Object.entries(club.scheduledClubTimes || {}).length === 0 ? (
-                  <p>Хуваарь оруулаагүй</p>
-                ) : (
-                  Object.entries(club.scheduledClubTimes || {}).map(([day, t]) => (
-                    <div key={day} className="flex ">
-                      <span className="font-medium">{WEEK_DAY_LABEL_MN[day as WeekDayType]}</span>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
-            <div className="mt-3 flex gap-4">
-              <div className="inline-flex items-center gap-2">
-                <MapPin className="w-5 h-5" style={{ color: '#FCB027' }} aria-hidden />
-                <span className="sr-only">Хаяг</span>
-              </div>
-              <p className="font-medium mt-1">{club.clubAddress}</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      </div>
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
@@ -142,36 +200,40 @@ export const ClubCard = ({ club }: { club: NewClubType }) => {
 
                 {club.teachersInfoByClass && Object.entries(club.teachersInfoByClass).length > 0 ? (
                   <div className="flex flex-col gap-4">
-                    {Object.entries(club.teachersInfoByClass).map(([classLevel, teacher]) => (
-                      <div key={classLevel} className="flex items-center gap-3 flex-col border p-3 rounded-lg bg-gray-50">
-                        <div className="text-center">
-                          <p className="font-medium">{teacher.teacherName || '—'}</p>
-                          <img src={getImageSrc(teacher.teacherImage)} alt={teacher.teacherName} className="w-16 h-16 rounded-full object-cover mx-auto my-2" />
-                          <div className="text-sm text-gray-600 mt-1 flex">
+                    {Object.entries(club.teachersInfoByClass)
+                      .filter(([classLevel]) => classLevel === selectedClass)
+                      .map(([classLevel, teacher]) => (
+                        <div key={classLevel} className="border rounded-xl p-5 bg-white shadow-sm text-center">
+                          <img src={getImageSrc(teacher.teacherImage)} alt={teacher.teacherName} className="w-20 h-20 rounded-full object-cover mx-auto" />
+
+                          <h3 className="mt-2 font-semibold text-lg">{teacher.teacherName || '—'}</h3>
+
+                          <p className="text-sm text-gray-500 mb-3">{CLASS_LEVEL_LABEL_MN[classLevel as ClassLevelsType]} анги</p>
+
+                          <div className="text-sm text-gray-700 space-y-1">
                             <div>
-                              <span className="font-semibold">Анги:</span> {CLASS_LEVEL_LABEL_MN[classLevel as ClassLevelsType]}
+                              <b>Мэргэжил:</b> {teacher.teacherProfession || '—'}
                             </div>
                             <div>
-                              <span className="font-semibold">Мэргэжил:</span> {teacher.teacherProfession || '—'}
+                              <b>Туршлага:</b> {teacher.teacherExperience || '—'}
                             </div>
                             <div>
-                              <span className="font-semibold">Туршлага:</span> {teacher.teacherExperience || '—'}
-                            </div>
-                            <div>
-                              <span className="font-semibold">Амжилт:</span> {teacher.teacherAchievement || '—'}
+                              <b>Амжилт:</b> {teacher.teacherAchievement || '—'}
                             </div>
                           </div>
-                          <div className="mt-2 text-sm text-gray-700">
-                            <div className="flex items-center gap-2 justify-center">
-                              <Phone className="w-4 h-4 text-gray-500" /> <span>{teacher.teacherPhone || '—'}</span>
+
+                          <div className="mt-3 text-sm text-gray-600 space-y-1">
+                            <div className="flex justify-center items-center gap-2">
+                              <Phone className="w-4 h-4" />
+                              {teacher.teacherPhone || '—'}
                             </div>
-                            <div className="flex items-center gap-2 justify-center mt-1">
-                              <Mail className="w-4 h-4 text-gray-500" /> <span>{teacher.teacherEmail || '—'}</span>
+                            <div className="flex justify-center items-center gap-2">
+                              <Mail className="w-4 h-4" />
+                              {teacher.teacherEmail || '—'}
                             </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
                   </div>
                 ) : (
                   <span>Багшийн мэдээлэл алга</span>
@@ -218,12 +280,15 @@ export const ClubCard = ({ club }: { club: NewClubType }) => {
                   <div>
                     {open && (
                       <div className="">
-                        <div className="flex gap-2 mb-3">
-                          {classLevels.map((level) => (
+                        <div className="flex gap-2 mb-4">
+                          {club.selectedClassLevelNames?.map((level) => (
                             <button
                               key={level}
-                              className={`px-3 py-1 rounded ${selectedClass === level ? 'bg-[#FCB027] text-white' : 'bg-gray-200 text-gray-800'}`}
                               onClick={() => setSelectedClass(level)}
+                              className={`
+        px-4 py-1.5 rounded-full text-sm font-medium transition-all
+        ${selectedClass === level ? 'bg-[#FCB027] text-white shadow' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}
+      `}
                             >
                               {CLASS_LEVEL_LABEL_MN[level]}
                             </button>

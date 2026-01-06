@@ -25,7 +25,7 @@ const Page = () => {
         Таны хувийн календарь {user?.lastName}
       </h1>
 
-      <TeamCalendar />
+      <TeamCalendar userId={1} />
     </div>
   );
 };

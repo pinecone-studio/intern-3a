@@ -9,6 +9,14 @@ const DaytimeSchema = new Schema(
   { _id: false },
 );
 
+const ClubClassDateSchema = new Schema(
+  {
+    startDate: { type: Date, required: true },
+    endDate: { type: Date, required: true },
+  },
+  { _id: false },
+);
+
 const ClassLevelScheduleSchema = new Schema(
   {
     MON: { type: DaytimeSchema },
@@ -47,6 +55,11 @@ export type NewClubSchemaType = {
     High?: number;
   };
 
+  clubClassDate?: Array<{
+    startDate: Date;
+    endDate: Date;
+  }>;
+
   scheduledClubTimes: Map<string, ClassLevelScheduleType>;
   teachersInfoByClass: Map<string, TeacherInfoType>;
 
@@ -74,6 +87,7 @@ export const NewClubSchema = new Schema(
       Middle: { type: Number },
       High: { type: Number },
     },
+    clubClassDate: { type: [ClubClassDateSchema], default: [] },
     scheduledClubTimes: { type: Map, of: ClassLevelScheduleSchema, default: {} },
     teachersInfoByClass: { type: Map, of: TeacherInfoSchema, default: {} },
     clubDescription: { type: String, required: true },
