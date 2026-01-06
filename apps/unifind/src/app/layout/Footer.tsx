@@ -1,9 +1,9 @@
-import Link from "next/link";
-import { GraduationCap, Globe, Mail, Phone } from "lucide-react";
+import { Globe, GraduationCap, Mail, Phone } from 'lucide-react';
+import Link from 'next/link';
 
 export function Footer() {
   return (
-    <footer className="bg-white border-t border-border pt-12 pb-6">
+    <footer className="bg-white dark:bg-black border-t border-border pt-12 pb-6">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           {/* Brand */}
@@ -12,27 +12,15 @@ export function Footer() {
               <GraduationCap className="h-6 w-6 " />
               <span className="font-bold text-xl text-foreground">UniFind</span>
             </Link>
-            <p className="text-sm text-muted-foreground mb-4 text-pretty">
-              Дээд боловсролыг хүн бүрт хүртээмжтэй болгоно. Өөрийн ирээдүйг
-              өнөөдрөөс эхлүүлээрэй.
-            </p>
+            <p className="text-sm text-muted-foreground mb-4 text-pretty">Дээд боловсролыг хүн бүрт хүртээмжтэй болгоно. Өөрийн ирээдүйг өнөөдрөөс эхлүүлээрэй.</p>
             <div className="flex items-center gap-3">
-              <a
-                href="#"
-                className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-muted-foreground hove hover:text-white transition-colors"
-              >
+              <a href="#" className="w-9 h-9 rounded-full bg-slate-100 dark:bg-neutral-800 flex items-center justify-center text-muted-foreground hove hover:text-white transition-colors">
                 <Globe className="h-4 w-4" />
               </a>
-              <a
-                href="#"
-                className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-muted-foreground hove hover:text-white transition-colors"
-              >
+              <a href="#" className="w-9 h-9 rounded-full bg-slate-100 dark:bg-neutral-800   flex items-center justify-center text-muted-foreground hove hover:text-white transition-colors">
                 <Mail className="h-4 w-4" />
               </a>
-              <a
-                href="#"
-                className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-muted-foreground hove hover:text-white transition-colors"
-              >
+              <a href="#" className="w-9 h-9 rounded-full bg-slate-100 dark:bg-neutral-800 flex items-center justify-center text-muted-foreground hove hover:text-white transition-colors">
                 <Phone className="h-4 w-4" />
               </a>
             </div>
@@ -112,9 +100,7 @@ export function Footer() {
 
         {/* Copyright */}
         <div className="pt-6 border-t border-border text-center">
-          <p className="text-sm text-muted-foreground">
-            © 2025 UniFind. Бүх эрх хуулиар хамгаалагдаагүй ккк.
-          </p>
+          <p className="text-sm text-muted-foreground">© 2025 UniFind. Бүх эрх хуулиар хамгаалагдаагүй ккк.</p>
         </div>
       </div>
     </footer>

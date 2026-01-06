@@ -6,6 +6,7 @@ import { Button } from '../components/ui/button';
 import { Checkbox } from '../components/ui/checkbox';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
+import { Slider } from '../components/ui/slider';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -76,7 +77,7 @@ export function FilterSidebar({ filters, setFilters, resetFilters }: any) {
             </span>
           </div>
           <Slider value={[filters.minScore]} onValueChange={(val) => setFilters({ ...filters, minScore: val[0] })} max={800} step={10} className="py-4" />
-        </div> */}
+        </div>
       </div>
 
       {/* Promo Box */}

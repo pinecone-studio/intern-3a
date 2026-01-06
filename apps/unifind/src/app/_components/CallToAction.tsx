@@ -2,7 +2,7 @@ import { Button } from '../components/ui/button';
 
 export function CallToAction() {
   return (
-    <section className="py-20 bg-slate-50">
+    <section className="py-20 bg-slate-50 dark:bg-black">
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 text-balance">Суралцах аяллаа эхлүүлэхэд бэлэн үү?</h2>

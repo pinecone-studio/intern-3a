@@ -1,5 +1,7 @@
 'use client';
 import { Building2, GraduationCap, Landmark, MapPin, Palette, School } from 'lucide-react';
+
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Button } from '../components/ui/button';
@@ -53,20 +55,20 @@ export default function UniversityCard({ id, name, location, image, status, minS
         </div>
       </div>
 
-      <div className="p-4 pt-0 space-y-4">
-        <div className="flex items-start gap-3">
-          <div className="bg-[#00BCD4]/10 p-2 rounded-lg">
+      <div className="p-4 pt-0 space-y-4 pb-0">
+        <div className="flex items-start gap-2 lg:gap-3 min-h-18">
+          <div className="bg-[#00BCD4]/10 p-2 rounded-lg shrink-0">
             <Icon className="h-5 w-5 text-sky-500" />
           </div>
-          <div className="flex-1">
-            <h3 className="font-bold text-lg">{name}</h3>
+
+          <div className="flex-1 max-w-[calc(100%-3rem)]">
+            <h3 className="font-bold text-lg line-clamp-2 min-h-6">{name}</h3>
             <p className="text-sm text-muted-foreground flex items-center gap-1">
               <MapPin className="h-3.5 w-3.5" />
               {location}
             </p>
           </div>
         </div>
-
         <div className="flex justify-between text-sm border-t pt-2">
           <span>Босго оноо</span>
           <span className="font-semibold">{minScore ?? '–'}</span>
@@ -78,7 +80,7 @@ export default function UniversityCard({ id, name, location, image, status, minS
             handleViewDetails();
           }}
           variant="outline"
-          className="w-full border-sky-500 cursor-pointer text-sky-500 hover:bg-sky-500 hover:text-white"
+          className="w-full border-sky-500 cursor-pointer dark:hover:bg-sky-500 daark:hover:text-white text-sky-500 hover:bg-sky-500 hover:text-white"
         >
           Дэлгэрэнгүй
         </Button>

@@ -1,6 +1,6 @@
 'use client';
-import { Info, LayoutGrid, List, X } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { Info, LayoutGrid, List, SlidersHorizontal, X } from 'lucide-react';
+import { useState } from 'react';
 import useSWR from 'swr';
 import { Button } from '../components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
@@ -29,7 +29,12 @@ export function ProgramGrid({ programs, isLoading, filters, setFilters, resetFil
     <div className="space-y-8">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <h1 className="text-2xl font-black text-gray-900">~ Ирээдүйн их сургуулиа төлөвлө ~</h1>
+        <div>
+          <h1 className="text-2xl font-black text-gray-900">~ Ирээдүйн их сургуулиа төлөвлө ~</h1>
+          <p className="text-gray-500 text-sm mt-1">
+            Нийт <span className="text-sky-600 font-bold">{programs.length}</span> сургууль олдлоо
+          </p>
+        </div>
 
         <div className="flex items-center gap-3">
           <Select value={filters?.sortBy} onValueChange={(val) => setFilters({ ...filters, sortBy: val })}>

@@ -8,7 +8,7 @@ import MapView from '@/app/_components/MapView';
 import { useClubById } from '@/app/hook/use-club-by-id';
 import { SignedIn, SignedOut } from '@clerk/nextjs';
 import { Badge, Button, Dialog, DialogContent, DialogTitle, DialogTrigger } from '@intern-3a/shadcn';
-import { ArrowLeft, Info, Mail, MapPin, Phone, User } from 'lucide-react';
+import { ArrowLeft, Info, Mail, MapPin, Phone } from 'lucide-react';
 import Image from 'next/image';
 import { notFound, useRouter } from 'next/navigation';
 import { use, useMemo, useState } from 'react';
@@ -125,47 +125,50 @@ export default function ClubDetailPage({ params }: PageProps) {
 
             {/* БАГШИЙН МЭДЭЭЛЭЛ */}
             {currentTeacher && (
-              <div className="bg-linear-to-br from-slate-50 to-white rounded-3xl md:rounded-4xl border border-slate-100 p-4 md:p-6 space-y-4 md:space-y-5">
-                <div className="flex items-center gap-3">
-                  <User className="w-5 h-5 text-orange-600" />
-                  <h3 className="font-black text-slate-900 uppercase text-xs md:text-sm tracking-wider">Багшийн мэдээлэл</h3>
-                </div>
+              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm h-25 px-4">
+                <div className="flex h-full items-center gap-4">
+                  {/* ЗҮҮН ТАЛ — БАГШ */}
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    <img src={currentTeacher.teacherImage} alt={currentTeacher.teacherName} className="w-14 h-14 rounded-xl object-cover ring-2 ring-slate-50 shrink-0" />
 
-                <div className="flex gap-4 items-center bg-white p-3 md:p-4 rounded-2xl shadow-sm">
-                  <img
-                    src={currentTeacher.teacherImage}
-                    alt={currentTeacher.teacherName}
-                    className="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl object-cover ring-2 ring-orange-100 shrink-0"
-                  />
-                  <div className="min-w-0">
-                    <p className="font-black text-slate-900 truncate text-sm md:text-base">{currentTeacher.teacherName}</p>
-                    <p className="text-orange-600 text-[10px] md:text-[11px] font-black uppercase truncate">{currentTeacher.teacherProfession}</p>
+                    <div className="min-w-0">
+                      <p className="font-black text-slate-900 text-sm md:text-base leading-tight truncate">{currentTeacher.teacherName}</p>
+                      <p className="text-orange-600 text-[11px] font-bold uppercase tracking-tight truncate">{currentTeacher.teacherProfession}</p>
+                    </div>
                   </div>
-                </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-3">
-                  <div className="flex items-center gap-2 p-2.5 md:p-3 bg-white rounded-xl text-[11px] md:text-xs font-bold text-slate-700 shadow-sm border border-slate-50">
-                    <Phone className="w-4 h-4 text-orange-600 shrink-0" />
-                    <span className="truncate">{currentTeacher.teacherPhone}</span>
-                  </div>
-                  <div className="flex items-center gap-2 p-2.5 md:p-3 bg-white rounded-xl text-[11px] md:text-xs font-bold text-slate-700 shadow-sm border border-slate-50">
-                    <Mail className="w-4 h-4 text-orange-600 shrink-0" />
-                    <span className="truncate">{currentTeacher.teacherEmail || 'Холбоо барих'}</span>
+                  {/*  — ХОЛБОО БАРИХ */}
+                  <div className="flex flex-col justify-center gap-2 w-70">
+                    <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 rounded-lg border border-slate-100">
+                      <Phone className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                      <span className="text-[13px] font-bold text-slate-700 truncate">{currentTeacher.teacherPhone}</span>
+                    </div>
+
+                    <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 rounded-lg border border-slate-100">
+                      <Mail className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                      <span className="text-[13px] font-bold text-slate-700 truncate">{currentTeacher.teacherEmail || 'И-мэйлгүй'}</span>
+                    </div>
                   </div>
                 </div>
               </div>
             )}
 
-            {/* ҮНЭ */}
-            <div className="bg-slate-50 rounded-3xl md:rounded-3xl p-5 md:p-6 border border-slate-100 flex flex-row items-center justify-between gap-4">
+            {/* ҮНЭ -  */}
+            <div className="bg-orange-50 rounded-2xl p-4 md:p-5 border border-orange-100 flex flex-row items-center justify-between gap-4">
               <div className="min-w-0">
-                <h2 className="text-lg md:text-2xl font-black text-slate-900 truncate">{levelLabels[selectedLevel]}</h2>
-                <p className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-tight mt-1">Хичээлийн хөтөлбөр</p>
+                <div className="flex items-center gap-2 mb-1">
+                  <div className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse" />
+                  <p className="text-[10px] font-black text-orange-700/70 uppercase tracking-widest">Сонгосон түвшин</p>
+                </div>
+                <h2 className="text-lg md:text-xl font-black text-slate-900 truncate pl-3 border-l-2 border-orange-200">{levelLabels[selectedLevel]}</h2>
               </div>
 
               <div className="text-right shrink-0">
-                <p className="text-[9px] md:text-[10px] font-black text-orange-600 uppercase mb-0.5 md:mb-1">Сарын төлбөр</p>
-                <p className="text-2xl md:text-4xl font-black text-orange-600 whitespace-nowrap">{currentPrice?.toLocaleString()}₮</p>
+                <p className="text-[10px] font-bold text-slate-500 uppercase mb-0.5">Сарын төлбөр</p>
+                <p className="text-2xl md:text-3xl font-black text-orange-600 tabular-nums">
+                  {currentPrice?.toLocaleString()}
+                  <span className="text-sm ml-1 font-bold">₮</span>
+                </p>
               </div>
             </div>
 

@@ -120,19 +120,19 @@ export default function UniversityDetailPage2({ params }: Props) {
 
   if (majorsLoading || !majors) {
     return (
-      <div className="min-h-screen bg-white animate-pulse">
-        <div className="h-64 bg-gray-200 w-full mb-6 rounded-lg" />
+      <div className="min-h-screen bg-white dark:bg-black animate-pulse">
+        <div className="h-64 bg-gray-200 dark:bg-neutral-800 w-full mb-6 rounded-lg" />
         <div className="max-w-7xl mx-auto px-6 space-y-4">
-          <div className="h-6 bg-gray-200 w-1/4 rounded" />
-          <div className="h-4 bg-gray-200 w-1/6 rounded" />
+          <div className="h-6 bg-gray-200 dark:bg-neutral-700 w-1/4 rounded" />
+          <div className="h-4 bg-gray-200 dark:bg-neutral-700 w-1/6 rounded" />
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
             {[...Array(3)].map((_, idx) => (
-              <div key={idx} className="h-48 bg-gray-200 rounded-lg" />
+              <div key={idx} className="h-48 bg-gray-200 dark:bg-neutral-700rounded-lg" />
             ))}
           </div>
           <div className="space-y-4 mt-8">
             {[...Array(5)].map((_, idx) => (
-              <div key={idx} className="h-6 bg-gray-200 w-full rounded" />
+              <div key={idx} className="h-6 bg-gray-200 dark:bg-neutral-700 w-full rounded" />
             ))}
           </div>
         </div>
@@ -144,15 +144,15 @@ export default function UniversityDetailPage2({ params }: Props) {
   const university = majors[0]?.universities;
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="bg-white border-b border-gray-200">
+    <div className="min-h-screen bg-white dark:bg-black">
+      <div className="bg-white dark:bg-black dark:border-neutral-800 border-b border-gray-200">
         <div className="container mx-auto px-4 py-3">
           <div className="flex items-center gap-2 text-sm">
-            <a href="/" className="text-gray-600 hover:text-gray-900">
+            <a href="/" className="text-gray-600 dark:text-neutral-300  hover:text-gray-900">
               Нүүр хуудас
             </a>
             <ChevronRight className="w-4 h-4 text-gray-400" />
-            <span className="text-gray-900 font-medium">{university?.name}</span>
+            <span className="text-gray-900 font-medium dark:text-neutral-400">{university?.name}</span>
           </div>
         </div>
       </div>
@@ -166,58 +166,59 @@ export default function UniversityDetailPage2({ params }: Props) {
   "
       >
         {/* Overlay */}
-        <div className="bg-linear-to-br from-slate-600/90 to-slate-900/90 px-6 py-16">
+        <div className="px-6 py-16 bg-gradient-to-br from-slate-600/90 to-slate-900/90 dark:from-gray-900/90 dark:to-gray-800/90">
           <div className="mx-auto max-w-7xl">
             <div className="flex items-start gap-4 mb-6">
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-white shadow-sm">
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-white shadow-sm dark:bg-gray-700">
                 <img src="/university-logo-arts.jpg" className="h-full w-full object-contain" />
               </div>
 
-              <Badge variant="secondary" className="bg-gray-600/50 text-white border-gray-500">
+              <Badge variant="secondary" className="bg-gray-600/50 text-white border-gray-500 dark:bg-gray-700/50 dark:text-gray-100 dark:border-gray-600">
                 {university?.name ?? 'Мэдээлэл олдсонгүй'}
               </Badge>
             </div>
 
             <div className="flex items-end justify-between">
               <div>
-                <h1 className="text-5xl font-bold text-white mb-3">{university?.name}</h1>
-                <div className="flex items-center gap-2 text-white/90">
+                <h1 className="text-5xl font-bold text-white mb-3 dark:text-gray-100">{university?.name}</h1>
+                <div className="flex items-center gap-2 text-white/90 dark:text-gray-300">
                   <MapPin className="h-4 w-4" />
                   <span>{university?.city ?? 'Мэдээлэл олдсонгүй'}</span>
                 </div>
               </div>
 
               <div className="flex gap-3">
-                <Button variant="outline" className="bg-white/10 border-white/20 cursor-pointer text-white hover:bg-white/20">
+                <Button variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20 dark:bg-gray-700/20 dark:border-gray-600 dark:text-gray-100 dark:hover:bg-gray-700/40">
                   <Globe className="h-4 w-4 mr-2" />
                   Вэбсайт үзэх
                 </Button>
 
-                <Button onClick={handleRegisterClick} className="bg-cyan-500 cursor-pointer hover:bg-cyan-600 text-white">
+                <Button onClick={handleRegisterClick} className="bg-cyan-500 hover:bg-cyan-600 text-white dark:bg-cyan-600 dark:hover:bg-cyan-700">
                   Бүртгүүлэх
                   <ChevronRight className="h-4 w-4 ml-1" />
                 </Button>
+
                 <Dialog open={open} onOpenChange={setOpen}>
-                  <DialogContent className="sm:max-w-md">
+                  <DialogContent className="sm:max-w-md bg-white dark:bg-gray-900 dark:text-gray-100">
                     <DialogHeader>
                       <DialogTitle>Бүртгэлийн хураамж төлөх</DialogTitle>
                     </DialogHeader>
 
                     <div className="flex flex-col items-center text-center gap-4">
                       {/* QR Image */}
-                      <div className="w-48 h-48 rounded-lg border bg-white p-2">
+                      <div className="w-48 h-48 rounded-lg border bg-white p-2 dark:bg-gray-800 dark:border-gray-700">
                         <Image src="/qr-mock.png" alt="Payment QR" width={192} height={192} className="rounded-md" />
                       </div>
 
                       {/* Amount */}
                       <div>
-                        <p className="text-sm text-gray-500">Төлөх дүн</p>
-                        <p className="text-2xl font-bold text-gray-900">37,500 ₮</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">Төлөх дүн</p>
+                        <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">37,500 ₮</p>
                       </div>
 
-                      <p className="text-xs text-gray-500">Энэхүү хураамжийг төлснөөр та их сургуулийн өргөдөл гаргах эрхтэй болно. Төлбөрийг буцаан олгохгүй.</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Энэхүү хураамжийг төлснөөр та их сургуулийн өргөдөл гаргах эрхтэй болно. Төлбөрийг буцаан олгохгүй.</p>
 
-                      <Button className="w-full bg-cyan-500 hover:bg-cyan-600 text-white" onClick={() => setOpen(false)}>
+                      <Button className="w-full bg-sky-500 hover:bg-sky-600 text-white dark:bg-sky-600 dark:hover:bg-sky-700" onClick={() => setOpen(false)}>
                         Төлбөр баталгаажуулах
                       </Button>
                     </div>
@@ -230,20 +231,20 @@ export default function UniversityDetailPage2({ params }: Props) {
       </div>
 
       {/* Tabs */}
-      <div className="border-b bg-white sticky top-0 z-10">
+      <div className="border-b bg-white dark:bg-black dark:border-neutral-800 sticky top-0 z-10">
         <div className="mx-auto max-w-7xl px-6">
           <nav className="flex gap-8 text-sm">
-            <a href="#" className="border-b-2 border-cyan-500 py-4 text-cyan-500 font-medium">
+            <a href="#" className="border-b-2 border-sky-500 py-4 text-sky-500 font-medium">
               Тойм
             </a>
             <button
               onClick={() => setActiveTab('scholarships')}
-              className={`py-4 ${activeTab === 'scholarships' ? 'border-b-2 border-cyan-500 text-cyan-500 cursor-pointer font-medium' : 'text-gray-600 hover:text-gray-900'}`}
+              className={`py-4 ${activeTab === 'scholarships' ? 'border-b-2 border-sky-500 text-sky-500 cursor-pointer font-medium' : 'text-gray-600 dark:text-neutral-300 hover:text-gray-900 dark:hover:text-white'}`}
             >
               Тэтгэлгийн мэдээлэл
             </button>
 
-            <a href="#" className="py-4 text-gray-600 hover:text-gray-900">
+            <a href="#" className="py-4 text-gray-600 dark:text-neutral-300 hover:text-gray-900 dark:hover:text-white">
               Мэргэжлүүд & Хөтөлбөрүүд
             </a>
           </nav>
@@ -258,9 +259,9 @@ export default function UniversityDetailPage2({ params }: Props) {
             {/* About Section */}
             <section>
               <h2 className="text-2xl font-bold mb-4">Их сургуулийн тухай</h2>
-              <div className="space-y-4 text-gray-700 leading-relaxed">{university.name}</div>
-              <div className="space-y-4 text-gray-700 leading-relaxed">{university.description}</div>
-              <div className="space-y-4 text-gray-700 font-bold leading-relaxed">{university.city}</div>
+              <div className="space-y-4 text-gray-700 dark:text-neutral-300 leading-relaxed">{university.name}</div>
+              <div className="space-y-4 text-gray-700 dark:text-neutral-300 leading-relaxed">{university.description}</div>
+              <div className="space-y-4 text-gray-700 dark:text-neutral-300 font-bold leading-relaxed">{university.city}</div>
 
               {/* Stats */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-8">
@@ -351,11 +352,11 @@ export default function UniversityDetailPage2({ params }: Props) {
           </div>
 
           {/* Right Sidebar */}
-          <div className="space-y-6">
+          <div className="space-y-6 ">
             {/* Admission Timeline */}
-            <Card className="p-6">
+            <Card className="p-6 dark:bg-neutral-900">
               <div className="flex items-center gap-2 mb-4">
-                <Calendar className="h-5 w-5 text-cyan-500" />
+                <Calendar className="h-5 w-5 text-sky-500" />
                 <h3 className="font-semibold">Элсэлтийн хуваарь</h3>
               </div>
               <div className="space-y-4">

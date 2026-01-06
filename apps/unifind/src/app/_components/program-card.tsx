@@ -29,11 +29,8 @@ export function ProgramCard({ program, viewMode }: any) {
           <div className="grid grid-cols-2 gap-4 mb-5">
             <div className="space-y-1">
               <p className="text-[10px] text-gray-400 uppercase font-bold">Босго оноо</p>
-
               <div className="flex items-center gap-1.5 font-bold text-gray-700 text-sm">
-                <GraduationCap className="w-4 h-4 text-sky-500" />
-                {/* Эхний мэргэжлийн босго оноог харуулах (эсвэл logic нэмж болно) */}
-                {program.majors?.[0]?.major_requirements?.[0]?.min_score || 400}+
+                <GraduationCap className="w-4 h-4 text-sky-500" /> 500+
               </div>
             </div>
             <div className="space-y-1 text-right">
