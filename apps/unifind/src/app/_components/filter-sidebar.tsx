@@ -68,7 +68,7 @@ export function FilterSidebar({ filters, setFilters, resetFilters }: any) {
         </div>
 
         {/* Score Slider */}
-        <div className="border-t border-gray-50 mt-6 pt-6">
+        {/* <div className="border-t border-gray-50 mt-6 pt-6">
           <div className="flex justify-between items-end mb-4">
             <Label className="font-bold text-sm text-gray-700">Босго оноо</Label>
             <span className="text-sky-600 font-bold text-lg">

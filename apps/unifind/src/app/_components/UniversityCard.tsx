@@ -76,7 +76,7 @@ export default function UniversityCard({ id, name, location, image, status, minS
 
         <Button
           onClick={(e) => {
-            e.stopPropagation(); // давхар click-оос сэргийлэх
+            e.stopPropagation();
             handleViewDetails();
           }}
           variant="outline"

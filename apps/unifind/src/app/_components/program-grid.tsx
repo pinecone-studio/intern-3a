@@ -14,7 +14,8 @@ export function ProgramGrid({ programs, isLoading, filters, setFilters, resetFil
   if (isLoading) return <LoadingSkeleton />;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
+      {/* Header хэсэг */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black text-gray-900">~ Ирээдүйн их сургуулиа төлөвлө ~</h1>
@@ -71,6 +72,7 @@ export function ProgramGrid({ programs, isLoading, filters, setFilters, resetFil
         </div>
       )}
 
+      {/* Үндсэн жагсаалт (Гарчиг + Сургуулиуд) */}
       {programs.length > 0 ? (
         <div className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6' : 'space-y-4'}>
           {programs.map((p: any) => (

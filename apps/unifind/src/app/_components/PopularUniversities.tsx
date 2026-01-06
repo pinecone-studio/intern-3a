@@ -1,8 +1,6 @@
 'use client';
-
 import Link from 'next/link';
 import useSWR from 'swr';
-import { University } from '../../lib/types/type';
 import { Button } from '../components/ui/button';
 import UniversityCard from './UniversityCard';
 import { UniversityCardSkeleton } from './UniversityCardSkeleton';
@@ -10,7 +8,11 @@ import { UniversityCardSkeleton } from './UniversityCardSkeleton';
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export function PopularUniversities() {
-  const { data, error, isLoading } = useSWR<University[]>('/api/universities', fetcher);
+  // data-г анхнаас нь хоосон жагсаалт байхаар default утга өгч болно
+  const { data, error, isLoading } = useSWR<any>('/api/universities', fetcher);
+
+  // Өгөгдөл Array мөн эсэхийг шалгах логик
+  const universities = Array.isArray(data) ? data : data && typeof data === 'object' && Array.isArray(data.universities) ? data.universities : [];
 
   return (
     <section className="py-20 pb-6 bg-background">
@@ -30,26 +32,26 @@ export function PopularUniversities() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {isLoading && Array.from({ length: 6 }).map((_, i) => <UniversityCardSkeleton key={i} />)}
 
-          {!isLoading &&
-            !error &&
-            data
-              ?.slice(0, 6)
-              .map((uni) => (
-                <UniversityCard
-                  key={uni.id}
-                  id={uni.id}
-                  name={uni.name}
-                  location={uni.city}
-                  image={uni.image || ''}
-                  status="open"
-                  admissionRate={null}
-                  deadline={null}
-                  nextCycle={null}
-                  minScore={''}
-                />
-              ))}
+          {!isLoading && !error && universities.length > 0
+            ? universities
+                .slice(0, 6)
+                .map((uni: any) => (
+                  <UniversityCard
+                    key={uni.id}
+                    id={uni.id}
+                    name={uni.name}
+                    location={uni.city || 'Улаанбаатар'}
+                    image={uni.image || ''}
+                    status="open"
+                    admissionRate={null}
+                    deadline={null}
+                    nextCycle={null}
+                    minScore={''}
+                  />
+                ))
+            : !isLoading && !error && <p className="col-span-full text-center text-gray-400">Мэдээлэл олдсонгүй</p>}
 
-          {error && <p className="col-span-full text-red-500">Өгөгдөл авахад алдаа гарлаа</p>}
+          {error && <p className="col-span-full text-red-500 text-center">Өгөгдөл авахад алдаа гарлаа</p>}
         </div>
 
         {/* Load more */}

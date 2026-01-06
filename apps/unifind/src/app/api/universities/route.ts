@@ -1,34 +1,25 @@
-import prisma from 'apps/unifind/src/lib/prisma';
-import { NextResponse } from 'next/server';
+import prisma from "apps/unifind/src/lib/prisma";
+import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const search = searchParams.get('search') || '';
-    const minScore = parseInt(searchParams.get('minScore') || '0');
+    const categoriesStr = searchParams.get('categories') || '';
+    const categoryIds = categoriesStr ? categoriesStr.split(',').map(id => parseInt(id)) : [];
 
-    const where: any = {
-      AND: [],
-    };
-
+    const where: any = {};
     if (search) {
-      where.AND.push({
-        name: { contains: search, mode: 'insensitive' },
-      });
+      where.name = { contains: search, mode: 'insensitive' };
     }
-
-    if (minScore > 0) {
-      where.AND.push({
-        majors: {
-          some: {
-            major_requirements: {
-              some: {
-                min_score: { gte: minScore },
-              },
-            },
-          },
-        },
-      });
+    
+    // Хэрэв категори сонгосон бол тухайн категорийн мэргэжилтэй сургуулиудыг шүүнэ
+    if (categoryIds.length > 0) {
+      where.majors = {
+        some: {
+          category_id: { in: categoryIds }
+        }
+      };
     }
 
     const universities = await prisma.universities.findMany({
@@ -36,23 +27,18 @@ export async function GET(req: Request) {
       include: {
         majors: {
           include: {
-            major_requirements: {
-              include: {
-                subjects: true,
-              },
-            },
+            major_categories: true
           },
         },
       },
       orderBy: { name: 'asc' },
     });
-
     return NextResponse.json(universities);
   } catch (error: any) {
-    console.error('API Error details:', error);
-    return NextResponse.json({ error: 'Internal Server Error', message: error.message }, { status: 500 });
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
+
 
 export async function POST(req: Request) {
   const body = await req.json();
@@ -68,3 +54,4 @@ export async function POST(req: Request) {
 
   return NextResponse.json(university);
 }
+
