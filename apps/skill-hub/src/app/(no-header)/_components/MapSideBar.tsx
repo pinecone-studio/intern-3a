@@ -23,7 +23,8 @@ export default function MapSideBar({ visibleClubs, sidebarOpen, onToggle, hovere
   return (
     <div>
       <div className={`fixed left-0 top-0 h-screen bg-white/5 z-20 transition-all duration-300 ${sidebarOpen ? 'w-85' : 'w-0 pointer-events-none'}`}>
-        <div className="p-4 border-b flex justify-between items-center">
+        <div className="p-5">Буцах</div>
+        <div className="p-5 border-b flex justify-between items-center">
           <p className="font-bold">Надад ойр дугуйлан: {visibleClubs.length}</p>
         </div>
 
@@ -36,7 +37,7 @@ export default function MapSideBar({ visibleClubs, sidebarOpen, onToggle, hovere
                 key={club._id}
                 onMouseEnter={() => club._id && setHoveredClubId(club._id)}
                 onMouseLeave={() => setHoveredClubId(null)}
-                className={`p-3 border-b transition-all duration-200 flex flex-col gap-2 ${hoveredClubId === club._id ? 'bg-white shadow-[0_6px_16px_rgba(0,0,0,0.15)] scale-101' : 'bg-white hover:shadow-[0_4px_12px_rgba(0,0,0,0.12)]'}`}
+                className={`p-4 border-b transition-all duration-200 flex flex-col gap-2 ${hoveredClubId === club._id ? 'bg-white shadow-[0_6px_16px_rgba(0,0,0,0.15)] scale-101' : 'bg-white hover:shadow-[0_4px_12px_rgba(0,0,0,0.12)]'}`}
               >
                 <img onClick={() => router.push(`/club/${club._id}`)} src={imageSrc} className="w-full h-32 aspect-\[16/9]\ object-cover rounded-md cursor-pointer" />
                 <div className="flex justify-between items-center">
@@ -45,7 +46,7 @@ export default function MapSideBar({ visibleClubs, sidebarOpen, onToggle, hovere
                   </p>
                   <p onMouseEnter={() => setHoveredHeart(club._id!)} onMouseLeave={() => setHoveredHeart(null)} className="relative cursor-pointer">
                     {hoveredHeart === club._id ? <IoMdHeart size={18} className="text-red-500" /> : <IoMdHeartEmpty size={18} className="text-red-500" />}
-                    {hoveredHeart === club._id && <p className="absolute top-0 right-1 bg-black text-white rounded-lg px-2 py-1.5 z-50 text-xs">Хадгалах</p>}
+                    {hoveredHeart === club._id && <span className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black text-white rounded-lg px-2 py-1.5 z-50 text-xs">Хадгалах</span>}
                   </p>
                 </div>
                 <div className="flex justify-between items-center">
@@ -57,7 +58,7 @@ export default function MapSideBar({ visibleClubs, sidebarOpen, onToggle, hovere
                         </Badge>
 
                         {hoveredPrice?.clubId === club._id && hoveredPrice?.level === level && (
-                          <div className="absolute bottom-6 left-1 bg-black text-white rounded-lg px-2 py-1.5 z-50">
+                          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-black text-white rounded-lg px-2 py-1.5 z-50">
                             <p className="text-xs">{club?.clubPrices?.[level as keyof typeof club.clubPrices] ?? 0}</p>
                           </div>
                         )}
@@ -74,7 +75,7 @@ export default function MapSideBar({ visibleClubs, sidebarOpen, onToggle, hovere
                     />
 
                     {hoveredAddress === club._id && (
-                      <div className="absolute bottom-9 left-1 bg-black text-white rounded-lg px-2 py-1.5 z-50">
+                      <div className="absolute bottom-10 right-0 bg-black text-white rounded-lg px-2 py-1.5 z-50">
                         <p className="text-xs">{club.clubAddress}</p>
                       </div>
                     )}

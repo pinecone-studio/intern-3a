@@ -2,6 +2,7 @@
 
 import { NewClubType } from '@/lib/utils/types';
 import type { LatLngBounds } from 'leaflet';
+import { useRouter } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 
 type UserMapContentProps = {
@@ -19,6 +20,7 @@ export default function UserMapContent({ visibleClubs, userLocation, zoom, setZo
   const mapInstance = useRef<L.Map | null>(null);
   const clubLayerRef = useRef<L.LayerGroup | null>(null);
   const hasFittedRef = useRef(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (!mapRef.current || !userLocation || mapInstance.current) return;
@@ -123,7 +125,7 @@ export default function UserMapContent({ visibleClubs, userLocation, zoom, setZo
         const isHovered = hoveredClubId === club._id;
 
         const markerHtml = `
-        <div style="position: relative; width: 60px; height: 80px;">
+        <div style="position: relative; width: 60px; height: 100px;">
 
         ${
           isHovered
@@ -131,8 +133,8 @@ export default function UserMapContent({ visibleClubs, userLocation, zoom, setZo
           position: absolute;
           bottom: 5px;
           left: 50%;
-          width: 18px;
-          height: 18px;
+          width: 20px;
+          height: 20px;
           background: rgba(10,66,122,0.35);
           border-radius: 50%;
           transform:translateX(-50%);
@@ -145,8 +147,8 @@ export default function UserMapContent({ visibleClubs, userLocation, zoom, setZo
         <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
-        width="${isHovered ? 42 : 34}"
-        height="${isHovered ? 64 : 50}"
+        width="${isHovered ? 48 : 40}"
+        height="${isHovered ? 72 : 60}"
         fill="#0A427A"
         stroke="white"
         stroke-width="1"
@@ -156,8 +158,8 @@ export default function UserMapContent({ visibleClubs, userLocation, zoom, setZo
           position:absolute;
           bottom:0;
           left:50%;
-          transform:translateX(-50%);
-          transition:all 0.25s ease;
+          transform:translateX(-50%) scale(${isHovered ? 1.1 : 1});
+          transition:transform 0.25s ease, width 0.25s ease, height 0.25s ease;
           z-index:2;
           animation: ${isHovered ? 'bounce 0.2s ease infinite alternate' : 'none'}
         "
@@ -170,10 +172,10 @@ export default function UserMapContent({ visibleClubs, userLocation, zoom, setZo
         @keyframes pulse {
           0% {
             transform: translateX(-50%) scale(1);
-            opacity: 0.8;
+            opacity: 0.9;
           }
           100% {
-            transform: translateX(-50%) scale(2.4);
+            transform: translateX(-50%) scale(4.4);
             opacity: 0;
           }
         }
@@ -199,12 +201,42 @@ export default function UserMapContent({ visibleClubs, userLocation, zoom, setZo
         });
 
         marker.bindTooltip(
-          `<div>
-              <img src="${club.clubImage}" style="width:100%; height:100px; object-fit:cover; border-radius:6px"/>
+          `<div style="width:150px; border-radius:14px overflow-hidden">
+              <img src="${club.clubImage}" style="width:100%; height:120px; object-fit:cover; border-radius:6px"/>
               <strong>${club.clubName}</strong>
             </div>`,
-          { direction: 'top', offset: [0, -12] },
+          { direction: 'top', offset: [0, -12], opacity: 1, permanent: false, interactive: true, className: 'club-tooltip' },
         );
+
+        marker.on('mouseover', () => {
+          marker.openTooltip();
+        });
+
+        marker.on('mouseout', () => {
+          setTimeout(() => {
+            if (!marker.isTooltipOpen()) return;
+            marker.closeTooltip();
+          }, 100);
+        });
+
+        marker.on('tooltipopen', (e) => {
+          const el = e.tooltip.getElement();
+          if (!el) return;
+
+          el.addEventListener('mouseenter', () => {
+            marker.openTooltip();
+          });
+
+          el.addEventListener('mouseleave', () => {
+            marker.closeTooltip();
+          });
+          const content = el.querySelector<HTMLElement>('.club-tooltip-content');
+          if (!content) return;
+          content.addEventListener('click', () => {
+            const id = content.dataset.clubId;
+            if (id) router.push(`club/${id}`);
+          });
+        });
 
         clubLayerRef.current!.addLayer(marker);
       });

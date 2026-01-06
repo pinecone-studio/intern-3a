@@ -11,7 +11,7 @@ export const AllClubsCardScrollAnimation = ({ allClubs, isLoading }: { allClubs:
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center h-20 gap-5">
+      <div className="flex flex-col items-center justify-center h-20 gap-5 py-10">
         <p className="text-gray-400 font-semibold text-xl">Уншиж байна</p>
         <Spinner className="w-10 h-10" />
       </div>
@@ -19,7 +19,7 @@ export const AllClubsCardScrollAnimation = ({ allClubs, isLoading }: { allClubs:
   }
 
   if (!allClubs.length) {
-    return <p className="text-center text-gray-400 font-semibold text-xl">Клуб олдсонгүй</p>;
+    return <p className="text-center text-gray-400 font-semibold text-xl py-10">Клуб олдсонгүй</p>;
   }
 
   return (
@@ -32,7 +32,9 @@ export const AllClubsCardScrollAnimation = ({ allClubs, isLoading }: { allClubs:
         {[...allClubs, ...allClubs].map((club, index) => (
           <div key={`${club._id}-${index}`} className="w-80 h-45 shrink-0 border-2 border-slate-200 rounded-xl p-6 shadow-lg hover:shadow-2xl transition">
             <div className="flex justify-between items-center mb-4">
-              <h4 className="text-xl font-bold text-black hover:text-[#0A427A] truncate cursor-pointer">{club.clubName}</h4>
+              <h4 onClick={() => router.push(`/club/${club._id}`)} className="text-xl font-bold text-black hover:text-[#0A427A] truncate cursor-pointer">
+                {club.clubName}
+              </h4>
               <div className="flex gap-1">
                 {club.selectedClassLevelNames?.map((level) => (
                   <Badge key={level} className="bg-orange-50 text-orange-600 hover:text-orange-700 cursor-pointer">
