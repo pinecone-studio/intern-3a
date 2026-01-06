@@ -6,7 +6,6 @@ import { Button } from '../components/ui/button';
 import { Checkbox } from '../components/ui/checkbox';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
-import { Slider } from '../components/ui/slider';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -66,21 +65,8 @@ export function FilterSidebar({ filters, setFilters, resetFilters }: any) {
             </div>
           )}
         </div>
-
-        {/* Score Slider */}
-        {/* <div className="border-t border-gray-50 mt-6 pt-6">
-          <div className="flex justify-between items-end mb-4">
-            <Label className="font-bold text-sm text-gray-700">Босго оноо</Label>
-            <span className="text-sky-600 font-bold text-lg">
-              {filters.minScore}
-              <span className="text-xs ml-0.5">+</span>
-            </span>
-          </div>
-          <Slider value={[filters.minScore]} onValueChange={(val) => setFilters({ ...filters, minScore: val[0] })} max={800} step={10} className="py-4" />
-        </div>
       </div>
 
-      {/* Promo Box */}
       <div className="bg-sky-600 hover:bg-sky-700 rounded-2xl p-6 text-white relative overflow-hidden group">
         <div className="relative z-10">
           <p className="font-bold mb-1">Тусламж хэрэгтэй юу?</p>

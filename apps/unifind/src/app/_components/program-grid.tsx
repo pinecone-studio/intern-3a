@@ -1,6 +1,6 @@
 'use client';
 import { Info, LayoutGrid, List, SlidersHorizontal, X } from 'lucide-react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import useSWR from 'swr';
 import { Button } from '../components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';

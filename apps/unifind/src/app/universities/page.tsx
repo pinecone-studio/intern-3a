@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+'use client';
+
+import { useState } from 'react';
 import useSWR from 'swr';
 import { FilterSidebar } from '../_components/filter-sidebar';
 import { ProgramGrid } from '../_components/program-grid';
