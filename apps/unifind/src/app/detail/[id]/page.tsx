@@ -52,11 +52,25 @@ export default function UniversityDetailPage2({ params }: Props) {
   }, []);
 
   useEffect(() => {
-    fetch('/api/turshih')
-      .then((res) => res.json())
-      .then((json) => setData(json))
-      .catch((err) => console.error(err));
-  }, []);
+    const fetchScrapeData = async () => {
+      try {
+        const resolvedParams = await params; // params нь Promise<{id:string}>
+        const uniId = Number(resolvedParams.id);
+        const res = await fetch(`/api/scrape/${uniId}`);
+        if (!res.ok) throw new Error('Fetch failed');
+
+        const json = await res.json();
+        setData(json); // {start_date, end_date}
+      } catch (err) {
+        console.error(err);
+        setError('Элсэлтийн огноог авахад алдаа гарлаа');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchScrapeData();
+  }, [params]);
 
   const formatDate = (dateStr: string) => {
     const d = new Date(dateStr);

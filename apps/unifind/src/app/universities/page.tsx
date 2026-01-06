@@ -1,51 +1,7 @@
-'use client';
+import React from 'react';
 
-import { useState } from 'react';
-import useSWR from 'swr';
-import { FilterSidebar } from '../_components/filter-sidebar';
-import { ProgramGrid } from '../_components/program-grid';
+const page = () => {
+  return <div>page</div>;
+};
 
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
-
-export default function UniversitiesPage() {
-  const [filters, setFilters] = useState({
-    search: '',
-    categories: [],
-    minScore: 0,
-    sortBy: 'name',
-  });
-
-  const resetFilters = () => {
-    setFilters({
-      search: '',
-      categories: [],
-      minScore: 0,
-      sortBy: 'name',
-    });
-  };
-
-  const query = new URLSearchParams({
-    search: filters.search,
-    categories: filters.categories.join(','),
-    minScore: filters.minScore.toString(),
-    sortBy: filters.sortBy,
-  }).toString();
-  console.log({ query });
-
-  const { data: programs = [], isLoading } = useSWR(
-    `/api/universities?search=${filters.search}&categories=${filters.categories.join(',')}&minScore=${filters.minScore}&sortBy=${filters.sortBy}`,
-    fetcher,
-  );
-  console.log({ programs });
-
-  return (
-    <div className="min-h-screen bg-[#F8FAFC]">
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-8">
-          <FilterSidebar filters={filters} setFilters={setFilters} resetFilters={resetFilters} />
-          <ProgramGrid programs={programs} isLoading={isLoading} filters={filters} setFilters={setFilters} resetFilters={resetFilters} />
-        </div>
-      </div>
-    </div>
-  );
-}
+export default page;
