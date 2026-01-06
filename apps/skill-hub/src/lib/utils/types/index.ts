@@ -148,3 +148,16 @@ export const SUBCATEGORY_ICON_MAP: Record<string, string> = {
   'Volleyball Club': '🏐',
   'Wrestling Club': '🤼',
 };
+
+export function getClassLevelMN(level: ClassLevelsType): string {
+  switch (level) {
+    case 'Elementary':
+      return 'Бага';
+    case 'Middle':
+      return 'Дунд';
+    case 'High':
+      return 'Ахлах';
+    default:
+      return level;
+  }
+}

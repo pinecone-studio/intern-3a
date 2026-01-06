@@ -10,6 +10,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import EditMyClubsTrigger from './EditMyClubsTrigger';
 import { MyClubCategoryComponent } from './MyClubCategoryComponent';
+import ProjectDialog from './ProjectDialog';
 
 const AdminMyClubsComponent = () => {
   const searchParams = useSearchParams();
@@ -78,6 +79,8 @@ const AdminMyClubsComponent = () => {
                 {selectedClub.clubAddress}
               </p>
               <p>{selectedClub.clubDescription}</p>
+
+              <ProjectDialog clubId={clubId} />
             </div>
 
             <div className="flex justify-end gap-5">

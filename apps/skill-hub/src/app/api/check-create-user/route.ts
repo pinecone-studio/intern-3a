@@ -1,7 +1,7 @@
 import { User } from '@/lib/models/User';
 import connectDB from '@/lib/mongodb';
 import { createUser } from '@/lib/services/user-service';
-import { verifyToken } from '@clerk/backend';
+import { createClerkClient, verifyToken } from '@clerk/backend';
 import { headers } from 'next/headers';
 import { NextResponse } from 'next/server';
 
@@ -45,8 +45,24 @@ export const POST = async () => {
     user.userStatus = status as 'ADMIN' | 'GENERAL';
     await user.save();
   }
+
   if (!user) {
     return NextResponse.json({ message: 'Failed to check or create user!' }, { status: 500 });
+  }
+
+  // Always update Clerk publicMetadata with MongoDB user ID to ensure it's set
+  try {
+    const clerkClient = createClerkClient({
+      secretKey: process.env.CLERK_SECRET_KEY,
+    });
+    await clerkClient.users.updateUserMetadata(userClerkId as string, {
+      publicMetadata: {
+        mongoUserId: user._id.toString(),
+      },
+    });
+    console.log('Updated Clerk metadata for user:', userClerkId, 'with MongoDB ID:', user._id.toString());
+  } catch (error) {
+    console.error('Failed to update Clerk metadata:', error);
   }
 
   return NextResponse.json({ message: 'User checked or created successfully', userId: user._id });

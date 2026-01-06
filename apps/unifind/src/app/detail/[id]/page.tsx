@@ -1,33 +1,19 @@
-"use client";
+'use client';
 
-import {
-  Calendar,
-  CheckCircle2,
-  ChevronRight,
-  Clock,
-  ExternalLink,
-  Globe,
-  Mail,
-  MapPin,
-  Phone,
-} from "lucide-react";
-import Link from "next/link";
-import React, { useState } from "react";
-import useSWR from "swr";
-import { Badge } from "../../components/ui/badge";
-import { Button } from "../../components/ui/button";
-import { Card } from "../../components/ui/card";
-import { Major } from "@/src/lib/types/type";
-import Image from "next/image";
-import { useUser } from "@clerk/nextjs";
-import { toast } from "sonner"; // shadcn toast
+import { Calendar, CheckCircle2, ChevronRight, Clock, ExternalLink, Globe, Mail, MapPin, Phone } from 'lucide-react';
+import Link from 'next/link';
+import React, { useEffect, useState } from 'react';
+import useSWR from 'swr';
+import { Badge } from '../../components/ui/badge';
+import { Button } from '../../components/ui/button';
+import { Card } from '../../components/ui/card';
 
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "../../components/ui/dialog";
+import { useUser } from '@clerk/nextjs';
+import Image from 'next/image';
+import { toast } from 'sonner'; // shadcn toast
+
+import { Major, MONGOL_MONTHS, NumDates } from 'apps/unifind/src/lib/types/type';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../../components/ui/dialog';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -35,44 +21,132 @@ interface Props {
   params: Promise<{ id: string }>;
 }
 
+type Scholarship = {
+  title: string;
+  link: string;
+  image?: string;
+};
+
 export default function UniversityDetailPage2({ params }: Props) {
   const [open, setOpen] = useState(false);
+  const [data, setData] = useState<NumDates | null>(null);
+  const [activeTab, setActiveTab] = useState<'overview' | 'scholarships' | 'majors'>('overview');
+  const [data2, setData2] = useState<Scholarship[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    fetch('/api/tetgeleg')
+      .then((res) => {
+        if (!res.ok) throw new Error('Fetch failed');
+        return res.json();
+      })
+      .then((json) => {
+        setData2(json);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError('Мэдээлэл ачаалж чадсангүй');
+        setLoading(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    const fetchScrapeData = async () => {
+      try {
+        const resolvedParams = await params; // params нь Promise<{id:string}>
+        const uniId = Number(resolvedParams.id);
+        const res = await fetch(`/api/scrape/${uniId}`);
+        if (!res.ok) throw new Error('Fetch failed');
+
+        const json = await res.json();
+        setData(json); // {start_date, end_date}
+      } catch (err) {
+        console.error(err);
+        setError('Элсэлтийн огноог авахад алдаа гарлаа');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchScrapeData();
+  }, [params]);
+
+  const formatDate = (dateStr: string) => {
+    const d = new Date(dateStr);
+    const month = MONGOL_MONTHS[d.getMonth()];
+    const day = d.getDate();
+    return `${month} ${day}`;
+  };
+  const daysLeft = (endDateStr: string) => {
+    const today = new Date();
+    const endDate = new Date(endDateStr);
+    const diffTime = endDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays > 0 ? diffDays : 0;
+  };
+
   const resolvedParams = React.use(params);
   const uniId = Number(resolvedParams.id);
-  const {
-    data: majors,
-    error: majorsError,
-    isLoading: majorsLoading,
-  } = useSWR<Major[]>(`/api/majors?university_id=${uniId}`, fetcher);
-  const { isSignedIn } = useUser();
+  const { data: majors, error: majorsError, isLoading: majorsLoading } = useSWR<Major[]>(`/api/majors?university_id=${uniId}`, fetcher);
+  const { isSignedIn, user } = useUser();
 
-  const handleRegisterClick = () => {
-    if (!isSignedIn) {
-      toast.warning("Нэвтэрч орно уу", {
-        description: "Өргөдөл гаргахын тулд эхлээд нэвтрэх шаардлагатай.",
+  const handleRegisterClick = async () => {
+    if (!isSignedIn || !user) {
+      toast.warning('Нэвтэрч орно уу', {
+        description: 'Өргөдөл гаргахын тулд эхлээд нэвтрэх шаардлагатай.',
       });
       return;
     }
 
-    setOpen(true); // QR modal нээх
-  };
+    const userId = Number(1);
+    const universityId = uniId;
 
-  console.log({ majors });
+    const startDateStr = data?.start_date ?? '2025-12-01';
+    const endDateStr = data?.end_date ?? '2025-12-15';
+    try {
+      const res = await fetch('/api/datesave', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_id: userId,
+          university_id: universityId,
+          start_date: startDateStr,
+          end_date: endDateStr,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.error('Өргөдөл гаргах явцад алдаа гарлаа: ' + data.error);
+        return;
+      }
+
+      toast.success('Амжилттай бүртгэгдлээ!');
+      setOpen(false); // modal хаах
+    } catch (error) {
+      console.error(error);
+      toast.error('Серверийн алдаа гарлаа');
+    }
+  };
+  console.log(user?.primaryEmailAddress?.id);
+
   if (majorsLoading || !majors) {
     return (
-      <div className="min-h-screen bg-white animate-pulse">
-        <div className="h-64 bg-gray-200 w-full mb-6 rounded-lg" />
+      <div className="min-h-screen bg-white dark:bg-black animate-pulse">
+        <div className="h-64 bg-gray-200 dark:bg-neutral-800 w-full mb-6 rounded-lg" />
         <div className="max-w-7xl mx-auto px-6 space-y-4">
-          <div className="h-6 bg-gray-200 w-1/4 rounded" />
-          <div className="h-4 bg-gray-200 w-1/6 rounded" />
+          <div className="h-6 bg-gray-200 dark:bg-neutral-700 w-1/4 rounded" />
+          <div className="h-4 bg-gray-200 dark:bg-neutral-700 w-1/6 rounded" />
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
             {[...Array(3)].map((_, idx) => (
-              <div key={idx} className="h-48 bg-gray-200 rounded-lg" />
+              <div key={idx} className="h-48 bg-gray-200 dark:bg-neutral-700rounded-lg" />
             ))}
           </div>
           <div className="space-y-4 mt-8">
             {[...Array(5)].map((_, idx) => (
-              <div key={idx} className="h-6 bg-gray-200 w-full rounded" />
+              <div key={idx} className="h-6 bg-gray-200 dark:bg-neutral-700 w-full rounded" />
             ))}
           </div>
         </div>
@@ -82,18 +156,17 @@ export default function UniversityDetailPage2({ params }: Props) {
   if (majorsError) return <p>Өгөгдөл авахад алдаа гарлаа</p>;
   if (!majors) return <p>Их сургуулийн мэдээлэл олдсонгүй</p>;
   const university = majors[0]?.universities;
+
   return (
-    <div className="min-h-screen bg-white">
-      <div className="bg-white border-b border-gray-200">
+    <div className="min-h-screen bg-white dark:bg-black">
+      <div className="bg-white dark:bg-black dark:border-neutral-800 border-b border-gray-200">
         <div className="container mx-auto px-4 py-3">
           <div className="flex items-center gap-2 text-sm">
-            <a href="/" className="text-gray-600 hover:text-gray-900">
+            <a href="/" className="text-gray-600 dark:text-neutral-300  hover:text-gray-900">
               Нүүр хуудас
             </a>
             <ChevronRight className="w-4 h-4 text-gray-400" />
-            <span className="text-gray-900 font-medium">
-              {university?.name}
-            </span>
+            <span className="text-gray-900 font-medium dark:text-neutral-400">{university?.name}</span>
           </div>
         </div>
       </div>
@@ -107,86 +180,59 @@ export default function UniversityDetailPage2({ params }: Props) {
   "
       >
         {/* Overlay */}
-        <div className="bg-linear-to-br from-slate-600/90 to-slate-900/90 px-6 py-16">
+        <div className="px-6 py-16 bg-gradient-to-br from-slate-600/90 to-slate-900/90 dark:from-gray-900/90 dark:to-gray-800/90">
           <div className="mx-auto max-w-7xl">
             <div className="flex items-start gap-4 mb-6">
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-white shadow-sm">
-                <img
-                  src="/university-logo-arts.jpg"
-                  className="h-full w-full object-contain"
-                />
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-white shadow-sm dark:bg-gray-700">
+                <img src="/university-logo-arts.jpg" className="h-full w-full object-contain" />
               </div>
 
-              <Badge
-                variant="secondary"
-                className="bg-gray-600/50 text-white border-gray-500"
-              >
-                {university?.name ?? "Мэдээлэл олдсонгүй"}
+              <Badge variant="secondary" className="bg-gray-600/50 text-white border-gray-500 dark:bg-gray-700/50 dark:text-gray-100 dark:border-gray-600">
+                {university?.name ?? 'Мэдээлэл олдсонгүй'}
               </Badge>
             </div>
 
             <div className="flex items-end justify-between">
               <div>
-                <h1 className="text-5xl font-bold text-white mb-3">
-                  {university?.name}
-                </h1>
-                <div className="flex items-center gap-2 text-white/90">
+                <h1 className="text-5xl font-bold text-white mb-3 dark:text-gray-100">{university?.name}</h1>
+                <div className="flex items-center gap-2 text-white/90 dark:text-gray-300">
                   <MapPin className="h-4 w-4" />
-                  <span>{university?.city ?? "Мэдээлэл олдсонгүй"}</span>
+                  <span>{university?.city ?? 'Мэдээлэл олдсонгүй'}</span>
                 </div>
               </div>
 
               <div className="flex gap-3">
-                <Button
-                  variant="outline"
-                  className="bg-white/10 border-white/20 cursor-pointer text-white hover:bg-white/20"
-                >
+                <Button variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20 dark:bg-gray-700/20 dark:border-gray-600 dark:text-gray-100 dark:hover:bg-gray-700/40">
                   <Globe className="h-4 w-4 mr-2" />
                   Вэбсайт үзэх
                 </Button>
 
-                <Button
-                  onClick={handleRegisterClick}
-                  className="bg-cyan-500 cursor-pointer hover:bg-cyan-600 text-white"
-                >
+                <Button onClick={handleRegisterClick} className="bg-cyan-500 hover:bg-cyan-600 text-white dark:bg-cyan-600 dark:hover:bg-cyan-700">
                   Бүртгүүлэх
                   <ChevronRight className="h-4 w-4 ml-1" />
                 </Button>
+
                 <Dialog open={open} onOpenChange={setOpen}>
-                  <DialogContent className="sm:max-w-md">
+                  <DialogContent className="sm:max-w-md bg-white dark:bg-gray-900 dark:text-gray-100">
                     <DialogHeader>
                       <DialogTitle>Бүртгэлийн хураамж төлөх</DialogTitle>
                     </DialogHeader>
 
                     <div className="flex flex-col items-center text-center gap-4">
                       {/* QR Image */}
-                      <div className="w-48 h-48 rounded-lg border bg-white p-2">
-                        <Image
-                          src="/qr-mock.png"
-                          alt="Payment QR"
-                          width={192}
-                          height={192}
-                          className="rounded-md"
-                        />
+                      <div className="w-48 h-48 rounded-lg border bg-white p-2 dark:bg-gray-800 dark:border-gray-700">
+                        <Image src="/qr-mock.png" alt="Payment QR" width={192} height={192} className="rounded-md" />
                       </div>
 
                       {/* Amount */}
                       <div>
-                        <p className="text-sm text-gray-500">Төлөх дүн</p>
-                        <p className="text-2xl font-bold text-gray-900">
-                          37,500 ₮
-                        </p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">Төлөх дүн</p>
+                        <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">37,500 ₮</p>
                       </div>
 
-                      <p className="text-xs text-gray-500">
-                        Энэхүү хураамжийг төлснөөр та их сургуулийн өргөдөл
-                        гаргах эрхтэй болно. Төлбөрийг буцаан олгохгүй.
-                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Энэхүү хураамжийг төлснөөр та их сургуулийн өргөдөл гаргах эрхтэй болно. Төлбөрийг буцаан олгохгүй.</p>
 
-                      <Button
-                        className="w-full bg-cyan-500 hover:bg-cyan-600 text-white"
-                        onClick={() => setOpen(false)}
-                      >
+                      <Button className="w-full bg-sky-500 hover:bg-sky-600 text-white dark:bg-sky-600 dark:hover:bg-sky-700" onClick={() => setOpen(false)}>
                         Төлбөр баталгаажуулах
                       </Button>
                     </div>
@@ -199,19 +245,20 @@ export default function UniversityDetailPage2({ params }: Props) {
       </div>
 
       {/* Tabs */}
-      <div className="border-b bg-white sticky top-0 z-10">
+      <div className="border-b bg-white dark:bg-black dark:border-neutral-800 sticky top-0 z-10">
         <div className="mx-auto max-w-7xl px-6">
           <nav className="flex gap-8 text-sm">
-            <a
-              href="#"
-              className="border-b-2 border-cyan-500 py-4 text-cyan-500 font-medium"
-            >
+            <a href="#" className="border-b-2 border-sky-500 py-4 text-sky-500 font-medium">
               Тойм
             </a>
-            <a href="#" className="py-4 text-gray-600 hover:text-gray-900">
-              Элсэлт
-            </a>
-            <a href="#" className="py-4 text-gray-600 hover:text-gray-900">
+            <button
+              onClick={() => setActiveTab('scholarships')}
+              className={`py-4 ${activeTab === 'scholarships' ? 'border-b-2 border-sky-500 text-sky-500 cursor-pointer font-medium' : 'text-gray-600 dark:text-neutral-300 hover:text-gray-900 dark:hover:text-white'}`}
+            >
+              Тэтгэлгийн мэдээлэл
+            </button>
+
+            <a href="#" className="py-4 text-gray-600 dark:text-neutral-300 hover:text-gray-900 dark:hover:text-white">
               Мэргэжлүүд & Хөтөлбөрүүд
             </a>
           </nav>
@@ -226,44 +273,28 @@ export default function UniversityDetailPage2({ params }: Props) {
             {/* About Section */}
             <section>
               <h2 className="text-2xl font-bold mb-4">Их сургуулийн тухай</h2>
-              <div className="space-y-4 text-gray-700 leading-relaxed">
-                {university.name}
-              </div>
-              <div className="space-y-4 text-gray-700 leading-relaxed">
-                {university.description}
-              </div>
-              <div className="space-y-4 text-gray-700 font-bold leading-relaxed">
-                {university.city}
-              </div>
+              <div className="space-y-4 text-gray-700 dark:text-neutral-300 leading-relaxed">{university.name}</div>
+              <div className="space-y-4 text-gray-700 dark:text-neutral-300 leading-relaxed">{university.description}</div>
+              <div className="space-y-4 text-gray-700 dark:text-neutral-300 font-bold leading-relaxed">{university.city}</div>
 
               {/* Stats */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-8">
                 <div>
-                  <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">
-                    Босго оноо
-                  </div>
+                  <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">Босго оноо</div>
                   <div className="text-3xl font-bold">550-650</div>
                 </div>
                 <div>
-                  <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">
-                    Дундаж голч
-                  </div>
+                  <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">Дундаж голч</div>
                   <div className="text-3xl font-bold">3.2</div>
                 </div>
                 <div>
-                  <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">
-                    Бакалавр оюутнууд
-                  </div>
+                  <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">Бакалавр оюутнууд</div>
                   <div className="text-3xl font-bold">7,645</div>
                 </div>
                 <div>
-                  <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">
-                    Дундаж крэдитийн үнэ
-                  </div>
+                  <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">Дундаж крэдитийн үнэ</div>
                   <div className="text-3xl font-bold">₮ 106,169</div>
-                  <div className="text-xs text-gray-400 pt-4 uppercase tracking-wide mb-1">
-                    Жил бүр өөрчлөгддөг
-                  </div>
+                  <div className="text-xs text-gray-400 pt-4 uppercase tracking-wide mb-1">Жил бүр өөрчлөгддөг</div>
                 </div>
               </div>
             </section>
@@ -271,9 +302,7 @@ export default function UniversityDetailPage2({ params }: Props) {
             {/* Majors Section */}
             <section>
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold">
-                  Мэргэжлүүд & Элсэлтийн оноо
-                </h2>
+                <h2 className="text-2xl font-bold">Мэргэжлүүд & Элсэлтийн оноо</h2>
               </div>
 
               <div className="space-y-6">
@@ -284,21 +313,14 @@ export default function UniversityDetailPage2({ params }: Props) {
                       <div className="flex items-start justify-between mb-4">
                         <div>
                           <div className="flex items-center gap-2 mb-1">
-                            <h3 className="text-lg font-semibold">
-                              {major.name}
-                            </h3>
-                            <Badge className="bg-green-100 text-green-700 text-xs">
-                              {major.degree_type}
-                            </Badge>
+                            <h3 className="text-lg font-semibold">{major.name}</h3>
+                            <Badge className="bg-green-100 text-green-700 text-xs">{major.degree_type}</Badge>
                           </div>
 
                           {/* Major Requirements */}
                           <div className="flex flex-wrap gap-2 mt-2">
                             {major?.major_requirements?.map((req) => (
-                              <Badge
-                                key={req.id}
-                                className="bg-blue-50 text-blue-700 px-3 py-1 text-sm rounded hover:bg-blue-100 transition"
-                              >
+                              <Badge key={req.id} className="bg-blue-50 text-blue-700 px-3 py-1 text-sm rounded hover:bg-blue-100 transition">
                                 {req.subjects.name} – {req.min_score} оноо
                               </Badge>
                             ))}
@@ -307,18 +329,8 @@ export default function UniversityDetailPage2({ params }: Props) {
 
                         {/* Minimum Score (Highest among requirements) */}
                         <div className="text-right">
-                          <div className="text-xs text-gray-500 uppercase mb-1">
-                            Хамгийн бага оноо
-                          </div>
-                          <div className="text-2xl font-bold">
-                            {major.major_requirements.length > 0
-                              ? Math.min(
-                                  ...major.major_requirements.map(
-                                    (req) => req.min_score
-                                  )
-                                )
-                              : "--"}
-                          </div>
+                          <div className="text-xs text-gray-500 uppercase mb-1">Хамгийн бага оноо</div>
+                          <div className="text-2xl font-bold">{major.major_requirements.length > 0 ? Math.min(...major.major_requirements.map((req) => req.min_score)) : '--'}</div>
                         </div>
                       </div>
 
@@ -326,46 +338,71 @@ export default function UniversityDetailPage2({ params }: Props) {
                     </Card>
                   </Link>
                 ))}
+                {activeTab === 'scholarships' && (
+                  <div className="max-w-4xl mx-auto p-6">
+                    <h1 className="text-2xl font-bold mb-6">🎓 Тэтгэлгийн мэдээнүүд</h1>
+
+                    <ul className="grid gap-6 md:grid-cols-2">
+                      {data2.map((item, i) => (
+                        <li key={i} className="border rounded-xl overflow-hidden bg-white hover:shadow-md transition">
+                          {/* IMAGE */}
+                          {item.image && <img src={item.image} alt={item.title} className="w-full h-44 object-cover" />}
+
+                          {/* CONTENT */}
+                          <div className="p-4">
+                            <a href={item.link} target="_blank" rel="noopener noreferrer" className="block font-medium text-blue-600 hover:underline">
+                              {item.title}
+                            </a>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+
+                    {data2.length === 0 && <p className="text-center text-gray-500 mt-10">Одоогоор тэтгэлгийн мэдээлэл алга байна.</p>}
+                  </div>
+                )}
               </div>
             </section>
           </div>
 
           {/* Right Sidebar */}
-          <div className="space-y-6">
+          <div className="space-y-6 ">
             {/* Admission Timeline */}
-            <Card className="p-6">
+            <Card className="p-6 dark:bg-neutral-900">
               <div className="flex items-center gap-2 mb-4">
-                <Calendar className="h-5 w-5 text-cyan-500" />
+                <Calendar className="h-5 w-5 text-sky-500" />
                 <h3 className="font-semibold">Элсэлтийн хуваарь</h3>
               </div>
               <div className="space-y-4">
+                {/* Бүртгэл эхлэх */}
                 <div className="flex items-start gap-3">
                   <div className="flex h-6 w-6 items-center justify-center rounded-full bg-green-100">
                     <CheckCircle2 className="h-4 w-4 text-green-600" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm font-medium">7 САР 1, 2026</p>
+                    <p className="text-sm font-medium">{data ? formatDate(data.start_date) : '-'}</p>
                     <p className="text-sm text-gray-600">Бүртгэл эхлэх</p>
                   </div>
                 </div>
+
+                {/* Бүртгэл дуусах */}
                 <div className="flex items-start gap-3">
                   <div className="flex h-6 w-6 items-center justify-center rounded-full bg-orange-100">
                     <div className="h-2 w-2 rounded-full bg-orange-600"></div>
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm font-medium">8 САР 1, 2026</p>
+                    <p className="text-sm font-medium">{data ? formatDate(data.end_date) : '-'}</p>
                     <p className="text-sm text-gray-600">Бүртгэл дуусах</p>
-                    <Badge variant="destructive" className="mt-1 text-xs">
-                      30 хоногт хаагдах
-                    </Badge>
+                    {data && (
+                      <Badge variant="destructive" className="mt-1 text-xs">
+                        {daysLeft(data.end_date)} хоногт хаагдах
+                      </Badge>
+                    )}
                   </div>
                 </div>
               </div>
-              <Button
-                onClick={handleRegisterClick}
-                variant="link"
-                className="w-full mt-4 cursor-pointer text-cyan-500 p-0"
-              >
+
+              <Button onClick={handleRegisterClick} variant="link" className="w-full mt-4 cursor-pointer text-cyan-500 p-0">
                 Миний xуанлид нэмэх
               </Button>
             </Card>
@@ -392,8 +429,7 @@ export default function UniversityDetailPage2({ params }: Props) {
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="h-4 w-4 text-green-600 shrink-0" />
                   <span className="text-sm">
-                    САТ эсвэл IELTS оноо{" "}
-                    <span className="text-blue-500">байхгүй байсанч болно</span>
+                    САТ эсвэл IELTS оноо <span className="text-blue-500">байхгүй байсанч болно</span>
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
@@ -401,10 +437,7 @@ export default function UniversityDetailPage2({ params }: Props) {
                   <span className="text-sm">Багшийн үнэлгээ</span>
                 </div>
               </div>
-              <Button
-                variant="link"
-                className="w-full mt-4 text-cyan-500 p-0 justify-start"
-              >
+              <Button variant="link" className="w-full mt-4 text-cyan-500 p-0 justify-start">
                 Бүрэн жагсаалт үзэх
                 <ExternalLink className="h-3 w-3 ml-1" />
               </Button>
@@ -416,27 +449,19 @@ export default function UniversityDetailPage2({ params }: Props) {
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
                   <Phone className="h-4 w-4 text-cyan-500 mt-0.5 shrink-0" />
-                  <a
-                    href="tel:6507232091"
-                    className="text-sm text-gray-700 hover:text-cyan-500"
-                  >
+                  <a href="tel:6507232091" className="text-sm text-gray-700 hover:text-cyan-500">
                     (976) 7023-2091
                   </a>
                 </div>
                 <div className="flex items-start gap-3">
                   <Mail className="h-4 w-4 text-cyan-500 mt-0.5 shrink-0" />
-                  <a
-                    href="mailto:admission@stanford.edu"
-                    className="text-sm text-gray-700 hover:text-cyan-500"
-                  >
+                  <a href="mailto:admission@stanford.edu" className="text-sm text-gray-700 hover:text-cyan-500">
                     admission@num.edu
                   </a>
                 </div>
                 <div className="flex items-start gap-3">
                   <Clock className="h-4 w-4 text-cyan-500 mt-0.5 shrink-0" />
-                  <span className="text-sm text-gray-700">
-                    Даваа-Баасан, 8:00 - 17:00
-                  </span>
+                  <span className="text-sm text-gray-700">Даваа-Баасан, 8:00 - 17:00</span>
                 </div>
               </div>
             </Card>

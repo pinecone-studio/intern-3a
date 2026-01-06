@@ -1,76 +1,52 @@
 'use client';
 
-import { Skeleton } from '@intern-3a/shadcn';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Skeleton } from '@intern-3a/shadcn'; // Өөрийн сангийн замаар солиорой
 import { usePathname, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useClub } from '../hook/use-club';
 
 export const CategoryDropdown = () => {
-  // ✅ Hook-ууд дандаа эхэнд
   const router = useRouter();
   const pathname = usePathname();
   const { allClubs, isLoading } = useClub();
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
 
-  const [selectedCategory, setSelectedCategory] = useState('');
-
-  // ✅ Route өөрчлөгдөхийг ажиглана
   useEffect(() => {
     if (pathname === '/') {
       setSelectedCategory('');
     }
   }, [pathname]);
 
-  // ⛔ Hook-уудын ДАРАА early return хийнэ
   if (isLoading) {
-    return <Skeleton className="w-37 h-9 flex items-center justify-center text-sm">Ачааллаж байна...</Skeleton>;
+    return <Skeleton className="w-40 h-9 flex items-center justify-center text-sm">Ачааллаж байна...</Skeleton>;
   }
 
   if (!allClubs || allClubs.length === 0) {
-    return <Skeleton className="w-37 h-9 flex items-center justify-center text-sm">Дата олдсонгүй</Skeleton>;
+    return <div className="text-sm text-muted-foreground">Дата олдсонгүй</div>;
   }
 
   const categories = Array.from(new Set(allClubs.map((club: any) => club.clubCategoryName)));
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const category = e.target.value;
-    setSelectedCategory(category);
-    router.push(`/genre?id=${category}&name=${category}`);
+  const handleValueChange = (value: string) => {
+    setSelectedCategory(value);
+    router.push(`/genre?id=${value}&name=${value}`);
   };
 
   return (
-    <div
-      className="
-        h-9 w-full max-w-xs
-        rounded-md border border-input
-        bg-background
-        focus-within:ring-2 focus-within:ring-primary/20
-        focus-within:border-primary
-        transition-colors
-      "
-    >
-      <select
-        value={selectedCategory}
-        onChange={handleChange}
-        className="
-          h-9 w-full
-          bg-transparent
-          px-3 text-sm
-          outline-none
-          border-0
-          cursor-pointer
-          text-muted-foreground
-        "
-      >
-        <option value="" disabled>
-          Ангилал сонгох
-        </option>
+    <div className="w-40 h-9 max-w-xs relative bg-white text-black border-0 shadow-md rounded-md">
+      <Select value={selectedCategory} onValueChange={handleValueChange}>
+        <SelectTrigger className="h-9 w-full">
+          <SelectValue placeholder="Ангилал сонгох" className='"data-placeholder:text-muted-foreground"' />
+        </SelectTrigger>
 
-        {categories.map((category) => (
-          <option key={category} value={category}>
-            {category}
-          </option>
-        ))}
-      </select>
+        <SelectContent position="popper" sideOffset={6} className="absolute top-[-9] right-[-82] ">
+          {categories.map((category) => (
+            <SelectItem key={category} value={category}>
+              {category}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </div>
   );
 };

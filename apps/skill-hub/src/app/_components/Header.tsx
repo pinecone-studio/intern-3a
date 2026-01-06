@@ -4,6 +4,7 @@ import { useUser } from '@clerk/nextjs';
 import { Button, Dialog, DialogTrigger } from '@intern-3a/shadcn';
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import React, { useState } from 'react';
 import { CategoryDropdown } from './CategoryDropdown';
 import { ClubRegisterBtnDialogContent } from './ClubRegisterBtnDialogContent';
@@ -14,6 +15,9 @@ export const Header = () => {
   const [open, setOpen] = useState(false);
   const { user } = useUser();
   const role = user?.publicMetadata?.role;
+  const pathname = usePathname();
+
+  if (pathname === '/map') return null;
 
   return (
     <div className="w-full h-20 bg-[#0A427A] sticky top-0 z-50 flex flex-col sm:flex-row justify-between items-center px-4 sm:px-10">
