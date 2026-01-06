@@ -6,6 +6,7 @@ import ClubNextClasses from '@/app/_components/ClubNextClasses';
 import { ClubRating } from '@/app/_components/ClubRating';
 import MapView from '@/app/_components/MapView';
 import { useClubById } from '@/app/hook/use-club-by-id';
+import { useProjects } from '@/app/hook/use-projects';
 import { SignedIn, SignedOut } from '@clerk/nextjs';
 import { Badge, Button, Dialog, DialogContent, DialogTitle, DialogTrigger } from '@intern-3a/shadcn';
 import { ArrowLeft, Info, Mail, MapPin, Phone } from 'lucide-react';
@@ -22,6 +23,8 @@ export default function ClubDetailPage({ params }: PageProps) {
   const router = useRouter();
   const { id } = use(params);
   const { club, loading } = useClubById(id);
+  const { projects, loading: projectsLoading } = useProjects(id);
+
   const [selectedLevel, setSelectedLevel] = useState<string>('');
   const [showLoginAlert, setShowLoginAlert] = useState<boolean>(false);
 
@@ -196,6 +199,49 @@ export default function ClubDetailPage({ params }: PageProps) {
       </div>
 
       <RegisterLoginAlertDialog showLoginAlert={showLoginAlert} setShowLoginAlert={setShowLoginAlert} id={id} />
+      <div className="mt-8">
+        <h3 className="text-lg font-bold mb-3">Projects</h3>
+
+        {projectsLoading && <p>Loading projects...</p>}
+
+        {!projectsLoading && projects.length === 0 && <p>No projects found</p>}
+
+        <ul className="space-y-3">
+          {projects.map((project) => (
+            <li key={project._id} className="border rounded-lg p-3">
+              <h4 className="font-semibold">{project.title}</h4>
+
+              <p className="text-sm text-gray-600">{project.description}</p>
+
+              <div className="text-xs text-gray-500 mt-1">
+                {project.classLevel} · {project.difficultyLevel} ·{project.childrenCount} хүүхэд
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+      {/* Шинэ компонентүүд projects гэх коллекц */}
+      <div className="mt-8">
+        <h3 className="text-lg font-bold mb-3">Projects</h3>
+
+        {projectsLoading && <p>Loading projects...</p>}
+
+        {!projectsLoading && projects.length === 0 && <p>No projects found</p>}
+
+        <ul className="space-y-3">
+          {projects.map((project) => (
+            <li key={project._id} className="border rounded-lg p-3">
+              <h4 className="font-semibold">{project.title}</h4>
+
+              <p className="text-sm text-gray-600">{project.description}</p>
+
+              <div className="text-xs text-gray-500 mt-1">
+                {project.classLevel} · {project.difficultyLevel} ·{project.childrenCount} хүүхэд
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
