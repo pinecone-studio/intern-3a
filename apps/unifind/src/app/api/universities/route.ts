@@ -4,67 +4,63 @@ import { NextResponse } from 'next/server';
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
-    const search = searchParams.get('search') || '';
-    const minScore = parseInt(searchParams.get('minScore') || '0');
 
-    const where: any = {
-      AND: [],
-    };
+    const search = searchParams.get('search') || '';
+    const majorNamesStr = searchParams.get('majorNames') || '';
+    const majorNames = majorNamesStr ? majorNamesStr.split(',').filter(Boolean) : [];
+
+    const where: any = {};
 
     if (search) {
-      where.AND.push({
-        name: { contains: search, mode: 'insensitive' },
-      });
+      where.name = {
+        contains: search,
+        mode: 'insensitive',
+      };
     }
 
-    if (minScore > 0) {
-      where.AND.push({
-        majors: {
-          some: {
-            major_requirements: {
-              some: {
-                min_score: { gte: minScore },
-              },
-            },
+    if (majorNames.length > 0) {
+      where.majors = {
+        some: {
+          name: {
+            in: majorNames,
           },
         },
-      });
+      };
     }
 
     const universities = await prisma.universities.findMany({
-      where: where,
+      where,
       include: {
-        majors: {
-          include: {
-            major_requirements: {
-              include: {
-                subjects: true,
-              },
-            },
-          },
-        },
+        majors: true,
       },
-      orderBy: { name: 'asc' },
+      orderBy: {
+        name: 'asc',
+      },
     });
 
     return NextResponse.json(universities);
-  } catch (error: any) {
-    console.error('API Error details:', error);
-    return NextResponse.json({ error: 'Internal Server Error', message: error.message }, { status: 500 });
+  } catch (error) {
+    console.error('GET /api/universities error:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
 
 export async function POST(req: Request) {
-  const body = await req.json();
+  try {
+    const body = await req.json();
 
-  const university = await prisma.universities.create({
-    data: {
-      name: body.name,
-      city: body.city,
-      description: body.description,
-      website: body.website,
-    },
-  });
+    const university = await prisma.universities.create({
+      data: {
+        name: body.name,
+        city: body.city,
+        description: body.description ?? null,
+        website: body.website ?? null,
+      },
+    });
 
-  return NextResponse.json(university);
+    return NextResponse.json(university);
+  } catch (error) {
+    console.error('POST /api/universities error:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
 }
