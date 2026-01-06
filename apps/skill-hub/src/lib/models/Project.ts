@@ -11,7 +11,8 @@ const ProjectSchema = new Schema(
       required: true,
     },
     adminId: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: 'User',
       required: true,
     },
     title: {

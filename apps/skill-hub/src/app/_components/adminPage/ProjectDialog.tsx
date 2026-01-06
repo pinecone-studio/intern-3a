@@ -43,22 +43,20 @@ const ProjectDialog = ({ clubId }: ProjectDialogProps) => {
     setLoading(true);
 
     try {
-      // Check if user is loaded
-      if (!user?.id) {
-        alert('Хэрэглэгчийн мэдээлэл олдсонгүй. Дахин нэвтэрнэ үү.');
+      // Check if user is loaded and has mongoUserId
+      if (!user?.publicMetadata?.mongoUserId) {
+        alert('Хэрэглэгчийн MongoDB мэдээлэл олдсонгүй. Дахин нэвтэрнэ үү.');
         setLoading(false);
         return;
       }
 
-      // Use mongoUserId if available, otherwise use Clerk user ID
-      const adminId = user.publicMetadata?.mongoUserId || user.id;
-
       const dataToSend = {
         clubId,
-        adminId,
+        adminId: user.publicMetadata.mongoUserId,
         ...projectData,
       };
       console.log('Sending data to API:', dataToSend);
+      console.log('User publicMetadata:', user.publicMetadata);
 
       const response = await fetch('/api/projects', {
         method: 'POST',
