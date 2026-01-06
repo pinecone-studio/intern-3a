@@ -1,44 +1,23 @@
-import prisma from "apps/unifind/src/lib/prisma";
-import { NextResponse } from "next/server";
+import prisma from 'apps/unifind/src/lib/prisma';
+import { NextResponse } from 'next/server';
 
-export async function GET(req: Request) {
+export async function GET() {
   try {
-    const { searchParams } = new URL(req.url);
-    const search = searchParams.get('search') || '';
-    const categoriesStr = searchParams.get('categories') || '';
-    const categoryIds = categoriesStr ? categoriesStr.split(',').map(id => parseInt(id)) : [];
-
-    const where: any = {};
-    if (search) {
-      where.name = { contains: search, mode: 'insensitive' };
-    }
-    
-    // Хэрэв категори сонгосон бол тухайн категорийн мэргэжилтэй сургуулиудыг шүүнэ
-    if (categoryIds.length > 0) {
-      where.majors = {
-        some: {
-          category_id: { in: categoryIds }
-        }
-      };
-    }
-
     const universities = await prisma.universities.findMany({
-      where: where,
       include: {
-        majors: {
-          include: {
-            major_categories: true
-          },
+        _count: {
+          select: { majors: true },
         },
       },
-      orderBy: { name: 'asc' },
+      orderBy: [{ created_at: 'desc' }, { id: 'desc' }],
     });
+
     return NextResponse.json(universities);
-  } catch (error: any) {
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  } catch (error) {
+    console.error('GET /api/universities error:', error);
+    return NextResponse.json({ error: 'Failed to fetch universities' }, { status: 500 });
   }
 }
-
 
 export async function POST(req: Request) {
   const body = await req.json();
@@ -47,11 +26,12 @@ export async function POST(req: Request) {
     data: {
       name: body.name,
       city: body.city,
-      description: body.description,
       website: body.website,
+      description: body.description,
+      burtgelehleh_start_date: body.startDate ? new Date(body.startDate) : undefined,
+      burtgelduusah_end_date: body.endDate ? new Date(body.endDate) : undefined,
     },
   });
 
   return NextResponse.json(university);
 }
-

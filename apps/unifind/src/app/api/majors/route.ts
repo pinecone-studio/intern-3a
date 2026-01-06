@@ -3,15 +3,21 @@ import { NextResponse } from 'next/server';
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
-  const universityId = searchParams.get('university_id');
+  const universityId = searchParams.get('universityId');
+
+  if (!universityId) {
+    return NextResponse.json([]);
+  }
 
   const majors = await prisma.majors.findMany({
-    where: universityId ? { university_id: Number(universityId) } : undefined,
+    where: {
+      university_id: Number(universityId),
+    },
     include: {
-      major_requirements: {
-        include: { subjects: true },
-      },
       universities: true,
+    },
+    orderBy: {
+      created_at: 'desc',
     },
   });
 
@@ -19,16 +25,27 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-  const body = await req.json();
+  try {
+    const body = await req.json();
 
-  const major = await prisma.majors.create({
-    data: {
-      name: body.name,
-      description: body.description,
-      degree_type: body.degree_type,
-      university_id: body.university_id,
-    },
-  });
+    const universityId = Number(body.university_id);
 
-  return NextResponse.json(major);
+    if (!body.name || Number.isNaN(universityId)) {
+      return NextResponse.json({ error: 'Invalid input' }, { status: 400 });
+    }
+
+    const major = await prisma.majors.create({
+      data: {
+        name: body.name,
+        description: body.description || null,
+        degree_type: body.degree_type,
+        university_id: universityId,
+      },
+    });
+
+    return NextResponse.json(major, { status: 201 });
+  } catch (error) {
+    console.error('POST /api/majors error:', error);
+    return NextResponse.json({ error: 'Failed to create major' }, { status: 500 });
+  }
 }
