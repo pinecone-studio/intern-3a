@@ -1,8 +1,7 @@
-import React from 'react';
-
-const page = () => {
-  return <div>page</div>;
-};
+import React, { useState } from 'react';
+import useSWR from 'swr';
+import { FilterSidebar } from '../_components/filter-sidebar';
+import { ProgramGrid } from '../_components/program-grid';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
