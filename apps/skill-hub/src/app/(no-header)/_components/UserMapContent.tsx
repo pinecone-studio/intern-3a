@@ -19,14 +19,15 @@ export default function UserMapContent({ visibleClubs, userLocation, zoom, setZo
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<L.Map | null>(null);
   const userMarkerRef = useRef<L.Marker | null>(null);
+  const clubLayerRef = useRef<L.LayerGroup | null>(null);
   const [locateLoading, setLocateLoading] = useState(false);
+  const hasFittedRef = useRef(false);
 
   useEffect(() => {
-    if (!mapRef.current || mapInstance.current) return;
+    if (!mapRef.current || !userLocation || mapInstance.current) return;
 
     (async () => {
       const L = (await import('leaflet')).default;
-
       await import('leaflet/dist/leaflet.css');
 
       delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -36,8 +37,12 @@ export default function UserMapContent({ visibleClubs, userLocation, zoom, setZo
         shadowUrl: '/leaflet/marker-shadow.png',
       });
 
-      const map = L.map(mapRef.current!).setView(userLocation, zoom);
+      const map = L.map(mapRef.current!);
       mapInstance.current = map;
+      map.setView(userLocation, 17);
+
+      setZoom(map.getZoom());
+      setBounds(map.getBounds());
 
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap',
@@ -48,21 +53,50 @@ export default function UserMapContent({ visibleClubs, userLocation, zoom, setZo
         setBounds(map.getBounds());
       });
 
-      const redIcon = L.icon({
-        iconUrl: '',
-        iconSize: [30, 42],
-        iconAnchor: [15, 42],
-      });
+      L.circle(userLocation, {
+        radius: zoom >= 15 ? 300 : zoom >= 13 ? 800 : 3000,
+        color: '#2563eb',
+        fillOpacity: 0.15,
+      }).addTo(map);
 
-      const marker = L.marker(userLocation, { icon: redIcon }).addTo(map);
-      userMarkerRef.current = marker;
-      // L.circle(userLocation, {
-      //   radius: zoom >= 15 ? 300 : zoom >= 13 ? 800 : 3000,
-      //   color: '#2563eb',
-      //   fillOpacity: 0.15,
-      // }).addTo(map);
+      const userMarketHtml = `
+      <div style="position: relative; width: 60px; height: 80px;">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          width="42"
+          height="64"
+          fill="#dc2626" 
+          stroke="white"
+          stroke-width="1"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          style="
+            position:absolute;
+            bottom:0;
+            left:50%;
+            transform:translateX(-50%);
+            z-index:2;
+          "
+        >
+          <path d="M12 22s8-4 8-10a8 8 0 1 0-16 0c0 6 8 10 8 10z"/>
+          <circle cx="12" cy="12" r="3" fill="white"/>
+        </svg>
+      </div>
+    `;
 
-      L.marker(userLocation).addTo(map).bindPopup('Таны байршил');
+      L.marker(userLocation, {
+        icon: L.divIcon({
+          html: userMarketHtml,
+          className: '',
+          iconAnchor: [30, 80],
+        }),
+        zIndexOffset: 1000,
+      })
+        .addTo(map)
+        .bindPopup('Таны байршил');
+
+      clubLayerRef.current = L.layerGroup().addTo(map);
     })();
 
     return () => {
@@ -78,9 +112,11 @@ export default function UserMapContent({ visibleClubs, userLocation, zoom, setZo
     (async () => {
       const L = (await import('leaflet')).default;
 
-      map.eachLayer((l: any) => {
-        if (l._icon) map.removeLayer(l);
-      });
+      if (!clubLayerRef.current) {
+        clubLayerRef.current = L.layerGroup().addTo(map);
+      } else {
+        clubLayerRef.current.clearLayers();
+      }
 
       visibleClubs.forEach((club) => {
         const isHovered = hoveredClubId === club._id;
@@ -153,24 +189,53 @@ export default function UserMapContent({ visibleClubs, userLocation, zoom, setZo
     </div>
     `;
 
-        L.marker([club.clubLat, club.clubLong], {
+        const marker = L.marker([club.clubLat, club.clubLong], {
           icon: L.divIcon({
             html: markerHtml,
             className: '',
             iconAnchor: [30, 80],
           }),
-        })
-          .addTo(map)
-          .bindTooltip(
-            `<div>
+        });
+
+        marker.bindTooltip(
+          `<div>
               <img src="${club.clubImage}" style="width:100%; height:100px; object-fit:cover; border-radius:6px"/>
               <strong>${club.clubName}</strong>
             </div>`,
-            { direction: 'top', offset: [0, -12] },
-          );
+          { direction: 'top', offset: [0, -12] },
+        );
+
+        clubLayerRef.current!.addLayer(marker);
       });
     })();
   }, [visibleClubs, hoveredClubId]);
 
-  return <div ref={mapRef} className={`w-full h-screen transition-all duration-300 ${sidebarOpen ? 'ml-85' : 'ml-0'}`} />;
+  useEffect(() => {
+    const map = mapInstance.current;
+    if (!map || visibleClubs.length === 0) return;
+    if (hasFittedRef.current) return;
+
+    const bounds = L.latLngBounds([userLocation, ...visibleClubs.map((c) => [c.clubLat, c.clubLong] as [number, number])]);
+
+    map.fitBounds(bounds, {
+      padding: [60, 60],
+      maxZoom: 16,
+    });
+
+    hasFittedRef.current = true;
+  }, [visibleClubs]);
+
+  const handleLocateMe = () => {
+    if (!mapInstance.current) return;
+
+    mapInstance.current.setView(userLocation, 16, { animate: true });
+  };
+
+  return (
+    <>
+      <div ref={mapRef} className={`w-full h-screen transition-all duration-300 ${sidebarOpen ? 'ml-85' : 'ml-0'}`} />
+
+      {/* <LocateFixed onClick={handleLocateMe} className="absolute bottom-6 left-6 z-\[1000]\ shadow-lg" /> */}
+    </>
+  );
 }
