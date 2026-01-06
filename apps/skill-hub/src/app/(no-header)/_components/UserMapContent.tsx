@@ -1,16 +1,15 @@
 'use client';
 
 import { NewClubType } from '@/lib/utils/types';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
-import { useEffect, useRef, useState } from 'react';
+import type { LatLngBounds } from 'leaflet';
+import { useEffect, useRef } from 'react';
 
 type UserMapContentProps = {
   visibleClubs: NewClubType[];
   userLocation: [number, number];
   zoom: number;
   setZoom: (z: number) => void;
-  setBounds: (b: L.LatLngBounds) => void;
+  setBounds: (b: LatLngBounds) => void;
   hoveredClubId: string | null;
   sidebarOpen: boolean;
 };
@@ -18,9 +17,7 @@ type UserMapContentProps = {
 export default function UserMapContent({ visibleClubs, userLocation, zoom, setZoom, setBounds, hoveredClubId, sidebarOpen }: UserMapContentProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<L.Map | null>(null);
-  const userMarkerRef = useRef<L.Marker | null>(null);
   const clubLayerRef = useRef<L.LayerGroup | null>(null);
-  const [locateLoading, setLocateLoading] = useState(false);
   const hasFittedRef = useRef(false);
 
   useEffect(() => {
@@ -37,29 +34,33 @@ export default function UserMapContent({ visibleClubs, userLocation, zoom, setZo
         shadowUrl: '/leaflet/marker-shadow.png',
       });
 
-      const map = L.map(mapRef.current!);
-      mapInstance.current = map;
-      map.setView(userLocation, 17);
+      if (mapRef.current && !(mapRef.current as any)._leaflet_id) {
+        const map = L.map(mapRef.current, {
+          zoomControl: false,
+        });
+        mapInstance.current = map;
+        map.setView(userLocation, 17);
 
-      setZoom(map.getZoom());
-      setBounds(map.getBounds());
+        L.control.zoom({ position: 'topright' }).addTo(map);
 
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap',
-      }).addTo(map);
-
-      map.on('moveend zoomend', () => {
         setZoom(map.getZoom());
         setBounds(map.getBounds());
-      });
 
-      L.circle(userLocation, {
-        radius: zoom >= 15 ? 300 : zoom >= 13 ? 800 : 3000,
-        color: '#2563eb',
-        fillOpacity: 0.15,
-      }).addTo(map);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; OpenStreetMap',
+        }).addTo(map);
 
-      const userMarketHtml = `
+        map.on('moveend zoomend', () => {
+          setZoom(map.getZoom());
+          setBounds(map.getBounds());
+        });
+        L.circle(userLocation, {
+          radius: zoom >= 15 ? 300 : zoom >= 13 ? 800 : 3000,
+          color: '#2563eb',
+          fillOpacity: 0.15,
+        }).addTo(map);
+
+        const userMarketHtml = `
       <div style="position: relative; width: 60px; height: 80px;">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -85,35 +86,35 @@ export default function UserMapContent({ visibleClubs, userLocation, zoom, setZo
       </div>
     `;
 
-      L.marker(userLocation, {
-        icon: L.divIcon({
-          html: userMarketHtml,
-          className: '',
-          iconAnchor: [30, 80],
-        }),
-        zIndexOffset: 1000,
-      })
-        .addTo(map)
-        .bindPopup('Таны байршил');
+        L.marker(userLocation, {
+          icon: L.divIcon({
+            html: userMarketHtml,
+            className: '',
+            iconAnchor: [30, 80],
+          }),
+          zIndexOffset: 1000,
+        })
+          .addTo(map)
+          .bindPopup('Таны байршил');
 
-      clubLayerRef.current = L.layerGroup().addTo(map);
+        clubLayerRef.current = L.layerGroup().addTo(map);
+      }
     })();
 
     return () => {
       mapInstance.current?.remove();
       mapInstance.current = null;
     };
-  }, []);
+  }, [userLocation]);
 
   useEffect(() => {
-    const map = mapInstance.current;
-    if (!map) return;
+    if (!mapInstance.current) return;
 
     (async () => {
       const L = (await import('leaflet')).default;
 
       if (!clubLayerRef.current) {
-        clubLayerRef.current = L.layerGroup().addTo(map);
+        clubLayerRef.current = L.layerGroup().addTo(mapInstance.current!);
       } else {
         clubLayerRef.current.clearLayers();
       }
@@ -135,7 +136,7 @@ export default function UserMapContent({ visibleClubs, userLocation, zoom, setZo
           background: rgba(10,66,122,0.35);
           border-radius: 50%;
           transform:translateX(-50%);
-          animation:pulse 1.4s ease-out infinite;
+          animation:pulse 0.6s ease-out infinite;
           z-index:1;
           "></span>`
             : ''
@@ -158,7 +159,7 @@ export default function UserMapContent({ visibleClubs, userLocation, zoom, setZo
           transform:translateX(-50%);
           transition:all 0.25s ease;
           z-index:2;
-          animation: ${isHovered ? 'bounce 0.6s ease infinite alternate' : 'none'}
+          animation: ${isHovered ? 'bounce 0.2s ease infinite alternate' : 'none'}
         "
       >
         <path d="M12 22s8-4 8-10a8 8 0 1 0-16 0c0 6 8 10 8 10z"/>
@@ -211,31 +212,35 @@ export default function UserMapContent({ visibleClubs, userLocation, zoom, setZo
   }, [visibleClubs, hoveredClubId]);
 
   useEffect(() => {
-    const map = mapInstance.current;
-    if (!map || visibleClubs.length === 0) return;
-    if (hasFittedRef.current) return;
+    if (!mapInstance.current || hasFittedRef.current || visibleClubs.length === 0) return;
 
-    const bounds = L.latLngBounds([userLocation, ...visibleClubs.map((c) => [c.clubLat, c.clubLong] as [number, number])]);
+    (async () => {
+      const L = (await import('leaflet')).default;
 
-    map.fitBounds(bounds, {
-      padding: [60, 60],
-      maxZoom: 16,
-    });
+      const bounds = L.latLngBounds([userLocation, ...visibleClubs.map((c) => [c.clubLat, c.clubLong] as [number, number])]);
 
-    hasFittedRef.current = true;
-  }, [visibleClubs]);
+      mapInstance?.current?.fitBounds(bounds, {
+        padding: [60, 60],
+        maxZoom: 16,
+      });
 
-  const handleLocateMe = () => {
+      hasFittedRef.current = true;
+    })();
+  }, [visibleClubs, userLocation]);
+
+  useEffect(() => {
     if (!mapInstance.current) return;
 
-    mapInstance.current.setView(userLocation, 16, { animate: true });
-  };
+    const timer = setTimeout(() => {
+      mapInstance.current?.invalidateSize();
+    }, 350);
+
+    return () => clearTimeout(timer);
+  }, [sidebarOpen]);
 
   return (
     <>
-      <div ref={mapRef} className={`w-full h-screen transition-all duration-300 ${sidebarOpen ? 'ml-85' : 'ml-0'}`} />
-
-      {/* <LocateFixed onClick={handleLocateMe} className="absolute bottom-6 left-6 z-\[1000]\ shadow-lg" /> */}
+      <div ref={mapRef} className="w-full h-full" />
     </>
   );
 }
