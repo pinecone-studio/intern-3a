@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useUser } from "@clerk/nextjs";
-import TeamCalendar from "../_components/Teamcalendar";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useUser } from '@clerk/nextjs';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+import TeamCalendar from '../_components/Teamcalendar';
 
 const Page = () => {
   const { user, isLoaded } = useUser();
@@ -11,7 +11,7 @@ const Page = () => {
 
   useEffect(() => {
     if (isLoaded && !user) {
-      router.push("/");
+      router.push('/');
     }
   }, [isLoaded, user, router]);
 
@@ -21,9 +21,7 @@ const Page = () => {
 
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-xl font-bold mb-4">
-        Таны хувийн календарь {user?.lastName}
-      </h1>
+      <h1 className="text-xl font-bold mb-4">Таны хувийн календарь {user?.firstName}</h1>
 
       <TeamCalendar userId={1} />
     </div>
