@@ -13,6 +13,8 @@ const AnimatedCounter = ({ target, duration = 2, shouldStart }: { target: number
   useEffect(() => {
     if (!shouldStart) return;
 
+    console.log('Starting counter animation to:', target);
+
     const controls = animate(count, target, {
       duration,
       ease: 'easeOut',
@@ -33,11 +35,22 @@ const AnimatedCounter = ({ target, duration = 2, shouldStart }: { target: number
 
 export const Intro = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const [startCounting, setStartCounting] = useState(false);
+  const [shouldStartCounting, setShouldStartCounting] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     setIsVisible(true);
+
+    // Calculate total time before stats section finishes animating:
+    // delayChildren (0.3s) + staggerChildren * 3 items (0.2s * 3 = 0.6s) + animation duration (1.5s) = 2.4s
+    const totalDelay = 300 + 200 * 3 + 1500; // 2.4 seconds
+
+    const timer = setTimeout(() => {
+      console.log('Stats animation completed, starting counters');
+      setShouldStartCounting(true);
+    }, totalDelay);
+
+    return () => clearTimeout(timer);
   }, []);
 
   const containerVariants: Variants = {
@@ -378,8 +391,8 @@ export const Intro = () => {
         {/* Main Heading - Website Description */}
         <motion.div variants={itemVariants} className="mb-8">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-transparent bg-clip-text bg-linear-to-r from-orange-500 via-pink-500 to-purple-600">
-            Хүүхдийн хөгжлийн <br className="hidden sm:block" />
-            төв платформ
+            Хүүхдийн дугуйлангын <br className="hidden sm:block" />
+            нэгдсэн платформ
           </h1>
           <p className="text-lg md:text-xl lg:text-2xl text-slate-700 max-w-4xl mx-auto leading-relaxed">Таны хүүхдэд тохирсон спорт, урлаг, боловсролын дугуйланг олоход туслах платформ.</p>
         </motion.div>
@@ -417,7 +430,7 @@ export const Intro = () => {
         </motion.div>
 
         {/* Stats Section with Animated Counters */}
-        <motion.div variants={itemVariants} onAnimationComplete={() => setStartCounting(true)} className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-8">
+        <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-8">
           {/* Customers */}
           <motion.div
             whileHover={{ scale: 1.05, y: -5 }}
@@ -425,7 +438,7 @@ export const Intro = () => {
           >
             <div className="text-5xl mb-2">👨‍👩‍👧‍👦</div>
             <div className="text-4xl font-bold text-orange-600 mb-2">
-              <AnimatedCounter target={5000} duration={2.5} shouldStart={startCounting} />
+              <AnimatedCounter target={5000} duration={2.5} shouldStart={shouldStartCounting} />
             </div>
             <div className="text-lg font-semibold text-slate-700">Хэрэглэгчид</div>
           </motion.div>
@@ -437,7 +450,7 @@ export const Intro = () => {
           >
             <div className="text-5xl mb-2">👨‍🏫</div>
             <div className="text-4xl font-bold text-purple-600 mb-2">
-              <AnimatedCounter target={300} duration={2.5} shouldStart={startCounting} />
+              <AnimatedCounter target={300} duration={2.5} shouldStart={shouldStartCounting} />
             </div>
             <div className="text-lg font-semibold text-slate-700">Багш нар</div>
           </motion.div>
@@ -446,7 +459,7 @@ export const Intro = () => {
           <motion.div whileHover={{ scale: 1.05, y: -5 }} className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-xl border-2 border-pink-200 hover:border-pink-400 transition-all duration-300">
             <div className="text-5xl mb-2">🏫</div>
             <div className="text-4xl font-bold text-pink-600 mb-2">
-              <AnimatedCounter target={150} duration={2.5} shouldStart={startCounting} />
+              <AnimatedCounter target={150} duration={2.5} shouldStart={shouldStartCounting} />
             </div>
             <div className="text-lg font-semibold text-slate-700">Дугуйлан</div>
           </motion.div>
