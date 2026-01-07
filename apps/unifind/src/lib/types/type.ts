@@ -47,5 +47,12 @@ export type NumDates = {
   end_date: string;
   raw_text: string;
 };
+// src/types/filters.ts
+export type Filters = {
+  search: string;
+  majorNames: string[];
+  minScore: number;
+  sortBy: string;
+};
 
 export const MONGOL_MONTHS = ['1 сарын', '2 сарын', '3 сарын', '4 сарын', '5 сарын', '6 сарын', '7 сарын', '8 сарын', '9 сарын', '10 сарын', '11 сарын', '12 сарын'];

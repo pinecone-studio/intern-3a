@@ -10,7 +10,7 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 export default function UniversitiesPage() {
   const [filters, setFilters] = useState({
     search: '',
-    categories: [],
+    majorNames: [] as string[],
     minScore: 0,
     sortBy: 'name',
   });
@@ -18,7 +18,7 @@ export default function UniversitiesPage() {
   const resetFilters = () => {
     setFilters({
       search: '',
-      categories: [],
+      majorNames: [],
       minScore: 0,
       sortBy: 'name',
     });
@@ -26,16 +26,14 @@ export default function UniversitiesPage() {
 
   const query = new URLSearchParams({
     search: filters.search,
-    categories: filters.categories.join(','),
+    majors: filters.majorNames.join(','),
     minScore: filters.minScore.toString(),
     sortBy: filters.sortBy,
   }).toString();
   console.log({ query });
 
-  const { data: programs = [], isLoading } = useSWR(
-    `/api/universities?search=${filters.search}&categories=${filters.categories.join(',')}&minScore=${filters.minScore}&sortBy=${filters.sortBy}`,
-    fetcher,
-  );
+  const { data: programs = [], isLoading } = useSWR(`/api/universities?search=${filters.search}&majorNames=${filters.majorNames.join(',')}`, fetcher);
+
   console.log({ programs });
 
   return (

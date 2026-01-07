@@ -1,5 +1,5 @@
 'use client';
-import { Info, LayoutGrid, List, X } from 'lucide-react';
+import { Info, LayoutGrid, List, SlidersHorizontal, X } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import useSWR from 'swr';
 import { Button } from '../components/ui/button';
@@ -9,43 +9,35 @@ import { ProgramCard } from './program-card';
 export function ProgramGrid({ programs, isLoading, filters, setFilters, resetFilters }: any) {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
-  // Мэргэжлийн ангиллуудыг шинэ API-аас татаж авна
-  const { data: categories = [] } = useSWR('/api/majorCategories');
+  const safePrograms = Array.isArray(programs) ? programs : [];
 
-  // Мэргэжил бүрээр сургуулиудыг бүлэглэх логик (Шинэчилсэн)
+  const { data: majors = [] } = useSWR('/api/majors');
+
   const groupedData = useMemo(() => {
-    // Хэрэв ямар нэг мэргэжил сонгоогүй бол бүгдийг нь нэг жагсаалтаар харуулна
-    if (filters.categories.length === 0) {
-      return [{ title: 'Бүх сургуулиуд', list: programs }];
+    if (filters.majorNames.length === 0) {
+      return [{ title: 'Бүх сургуулиуд', list: safePrograms }];
     }
 
-    // Сонгосон ангилал бүрийн хувьд
-    return filters.categories.map((catId: number) => {
-      const categoryName = categories.find((c: any) => c.id === catId)?.name || 'Мэргэжил';
-
-      // Сургуулийн majors дотор энэ ангиллын (category_id) мэргэжил байгаа эсэхийг шүүнэ
-      const filteredSchools = programs.filter((p: any) => p.majors.some((m: any) => m.category_id === catId));
-
-      return {
-        id: catId,
-        title: categoryName,
-        list: filteredSchools,
-      };
-    });
-  }, [programs, filters.categories, categories]);
-
+    return filters.majorNames.map((name: string) => ({
+      title: name,
+      list: safePrograms.filter((u: any) => u.majors?.some((m: any) => m.name === name)),
+    }));
+  }, [safePrograms, filters.majorNames]);
   if (isLoading) return <LoadingSkeleton />;
 
   return (
     <div className="space-y-8">
-      {/* Header хэсэг */}
+      {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black text-gray-900">~ Ирээдүйн их сургуулиа төлөвлө ~</h1>
+          <p className="text-gray-500 text-sm mt-1">
+            Нийт <span className="text-sky-600 font-bold">{programs.length}</span> сургууль олдлоо
+          </p>
         </div>
 
         <div className="flex items-center gap-3">
-          <Select value={filters.sortBy} onValueChange={(val) => setFilters({ ...filters, sortBy: val })}>
+          <Select value={filters?.sortBy} onValueChange={(val) => setFilters({ ...filters, sortBy: val })}>
             <SelectTrigger className="w-40 bg-white border-none shadow-sm rounded-xl">
               <SelectValue placeholder="Эрэмбэлэх" />
             </SelectTrigger>
@@ -66,12 +58,13 @@ export function ProgramGrid({ programs, isLoading, filters, setFilters, resetFil
         </div>
       </div>
 
-      {/* Идэвхтэй шүүлтүүрүүд (Badge) */}
-      {(filters.categories.length > 0 || filters.search || filters.minScore > 0) && (
+      {/* Active filters */}
+      {(filters?.majors?.length > 0 || filters?.search || filters?.minScore > 0) && (
         <div className="flex flex-wrap gap-2 items-center">
-          {filters.search && <Badge label={`"${filters.search}"`} onRemove={() => setFilters({ ...filters, search: '' })} />}
-          {filters.categories.map((catId: number) => {
-            const catName = categories.find((c: any) => c.id === catId)?.name || 'Категори';
+          {filters?.search && <Badge label={`"${filters.search}"`} onRemove={() => setFilters({ ...filters, search: '' })} />}
+
+          {filters?.majors?.map((catId: number) => {
+            const catName = majors.find((c: any) => c.id === catId)?.name || 'Категори';
             return (
               <Badge
                 key={catId}
@@ -79,28 +72,30 @@ export function ProgramGrid({ programs, isLoading, filters, setFilters, resetFil
                 onRemove={() =>
                   setFilters({
                     ...filters,
-                    categories: filters.categories.filter((c: any) => c !== catId),
+                    majors: filters.majors.filter((c: number) => c !== catId),
                   })
                 }
               />
             );
           })}
-          {filters.minScore > 0 && <Badge label={`${filters.minScore}+ оноо`} onRemove={() => setFilters({ ...filters, minScore: 0 })} />}
+
+          {filters?.minScore > 0 && <Badge label={`${filters.minScore}+ оноо`} onRemove={() => setFilters({ ...filters, minScore: 0 })} />}
+
           <Button variant="link" onClick={resetFilters} className="text-xs text-red-500 font-bold h-7">
             Бүгдийг арилгах
           </Button>
         </div>
       )}
 
-      {/* Үндсэн жагсаалт (Гарчиг + Сургуулиуд) */}
-      {programs.length > 0 ? (
+      {/* Main list */}
+      {safePrograms.length > 0 ? (
         <div className="space-y-12">
           {groupedData.map((group: any) => (
-            <div key={group.id || group.title} className="space-y-5 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              {filters.categories.length > 0 && (
+            <div key={group.id || group.title} className="space-y-5">
+              {filters?.majors?.length > 0 && (
                 <div className="flex items-center gap-3">
                   <div className="h-8 w-1.5 bg-sky-600 rounded-full" />
-                  <h2 className="text-xl font-bold text-gray-800 uppercase tracking-tight">{group.title}</h2>
+                  <h2 className="text-xl font-bold text-gray-800">{group.title}</h2>
                   <span className="bg-gray-100 text-gray-500 text-xs px-2 py-1 rounded-lg">{group.list.length} сургууль</span>
                 </div>
               )}
@@ -113,7 +108,7 @@ export function ProgramGrid({ programs, isLoading, filters, setFilters, resetFil
                 </div>
               ) : (
                 <div className="bg-gray-50 border border-dashed border-gray-200 rounded-2xl p-8 text-center">
-                  <p className="text-gray-400 text-sm italic">"{group.title}" чиглэлээр босго оноонд тэнцэх сургууль олдсонгүй.</p>
+                  <p className="text-gray-400 text-sm italic">"{group.title}" чиглэлээр сургууль олдсонгүй.</p>
                 </div>
               )}
             </div>
@@ -128,9 +123,9 @@ export function ProgramGrid({ programs, isLoading, filters, setFilters, resetFil
 
 function Badge({ label, onRemove }: any) {
   return (
-    <div className="flex items-center gap-1.5 bg-white border border-gray-200 px-3 py-1.5 rounded-full text-[13px] font-medium text-gray-700 shadow-sm animate-in fade-in zoom-in duration-200">
+    <div className="flex items-center gap-1.5 bg-white border border-gray-200 px-3 py-1.5 rounded-full text-[13px] font-medium text-gray-700 shadow-sm">
       {label}
-      <button onClick={onRemove} className="text-gray-400 hover:text-red-500 transition-colors">
+      <button onClick={onRemove} className="text-gray-400 hover:text-red-500">
         <X className="w-3.5 h-3.5" />
       </button>
     </div>

@@ -11,13 +11,13 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export function FilterSidebar({ filters, setFilters, resetFilters }: any) {
   const [fieldExpanded, setFieldExpanded] = useState(true);
-  const { data: categories = [] } = useSWR('/api/majorCategories', fetcher);
+  const { data: majors = [] } = useSWR('/api/majors', fetcher);
 
-  const handleCategoryChange = (id: number, checked: boolean) => {
-    const newCats = checked ? [...filters.categories, id] : filters.categories.filter((c: number) => c !== id);
-    setFilters({ ...filters, categories: newCats });
+  const handleMajorChange = (name: string, checked: boolean) => {
+    const newList = checked ? [...filters.majorNames, name] : filters.majorNames.filter((n: string) => n !== name);
+
+    setFilters({ ...filters, majorNames: newList });
   };
-  console.log({ filters });
 
   return (
     <aside className="space-y-6 sticky top-24">
@@ -54,32 +54,19 @@ export function FilterSidebar({ filters, setFilters, resetFilters }: any) {
 
           {fieldExpanded && (
             <div className="space-y-2.5 max-h-75 overflow-y-auto pr-2 custom-scrollbar">
-              {categories.map((cat: any) => (
-                <div key={cat.id} className="flex items-center gap-3 group cursor-pointer">
-                  <Checkbox id={`cat-${cat.id}`} checked={filters.categories.includes(cat.id)} onCheckedChange={(checked) => handleCategoryChange(cat.id, !!checked)} />
-                  <Label htmlFor={`cat-${cat.id}`} className="text-sm text-gray-600 group-hover:text-sky-600 transition-colors cursor-pointer">
-                    {cat.name}
-                  </Label>
-                </div>
-              ))}
+              {majors
+                .filter((m: any, i: number, arr: any[]) => arr.findIndex((x) => x.name === m.name) === i)
+                .map((major: any) => (
+                  <div key={major.name} className="flex items-center gap-3">
+                    <Checkbox checked={filters.majorNames.includes(major.name)} onCheckedChange={(checked) => handleMajorChange(major.name, !!checked)} />
+                    <Label>{major.name}</Label>
+                  </div>
+                ))}
             </div>
           )}
         </div>
-
-        {/* Score Slider */}
-        {/* <div className="border-t border-gray-50 mt-6 pt-6">
-          <div className="flex justify-between items-end mb-4">
-            <Label className="font-bold text-sm text-gray-700">Босго оноо</Label>
-            <span className="text-sky-600 font-bold text-lg">
-              {filters.minScore}
-              <span className="text-xs ml-0.5">+</span>
-            </span>
-          </div>
-          <Slider value={[filters.minScore]} onValueChange={(val) => setFilters({ ...filters, minScore: val[0] })} max={800} step={10} className="py-4" />
-        </div> */}
       </div>
 
-      {/* Promo Box */}
       <div className="bg-sky-600 hover:bg-sky-700 rounded-2xl p-6 text-white relative overflow-hidden group">
         <div className="relative z-10">
           <p className="font-bold mb-1">Тусламж хэрэгтэй юу?</p>
