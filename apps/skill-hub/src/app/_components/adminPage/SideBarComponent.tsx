@@ -4,7 +4,7 @@ import { useCreatedClubs } from '@/app/hook/use-created-club';
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@intern-3a/shadcn';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { HiOutlineUserCircle } from 'react-icons/hi';
 
 const SideBarComponent = () => {
@@ -20,11 +20,19 @@ const SideBarComponent = () => {
 
   const handleMyClubs = () => {
     setOpen(!open);
+
+    if (!selectedId && myCreatedClubs?.length > 0) {
+      router.push(`/club-admin/my-clubs?id=${myCreatedClubs[0]._id}`);
+    }
   };
 
   const handleAllClubs = () => {
     router.push(`/club-admin/`);
   };
+
+  useEffect(() => {
+    if (selectedId) setOpen(true);
+  }, [selectedId]);
 
   return (
     <Sidebar className="sticky top-0 left-0 bottom-0 w-75 h-screen">

@@ -4,7 +4,7 @@ import { ClassLevelsType, NewClubType } from '@/lib/utils/types';
 import { useAuth } from '@clerk/nextjs';
 import { Button } from '@intern-3a/shadcn';
 import { Calendar, Coins, Mail, Phone } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { EditClassLevelInfoTrigger } from './EditClassLevelInfoTrigger';
 
@@ -62,13 +62,33 @@ export const MyClubCategoryComponent = ({ selectedClub }: Props) => {
 
       toast.success('Анги амжилттай устгагдлаа');
 
+      // if (selectedClass === level) {
+      //   setSelectedClass(null);
+      // }
+
       if (selectedClass === level) {
-        setSelectedClass(null);
+        const remainingClassLevels = Object.keys(selectedClub.teachersInfoByClass ?? {}).filter((classLevel) => classLevel !== level) as ClassLevelsType[];
+
+        setSelectedClass(remainingClassLevels[0] ?? null);
       }
     } catch (err) {
       toast.error('Алдаа гарлаа');
     }
   };
+
+  useEffect(() => {
+    setSelectedClass(null);
+  }, [selectedClub._id]);
+
+  useEffect(() => {
+    if (!selectedClub || selectedClass) return;
+
+    const classLevel = Object.keys(selectedClub.teachersInfoByClass ?? {}) as ClassLevelsType[];
+
+    if (classLevel.length > 0) {
+      setSelectedClass(classLevel[0]);
+    }
+  }, [selectedClub, selectedClass]);
 
   return (
     <div>
