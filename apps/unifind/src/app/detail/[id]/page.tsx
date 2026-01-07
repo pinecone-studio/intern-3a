@@ -10,7 +10,7 @@ import { Card } from '../../components/ui/card';
 
 import { useUser } from '@clerk/nextjs';
 import Image from 'next/image';
-import { toast } from 'sonner'; // shadcn toast
+import { toast } from 'sonner';
 
 import { Major, MONGOL_MONTHS, NumDates } from 'apps/unifind/src/lib/types/type';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../../components/ui/dialog';

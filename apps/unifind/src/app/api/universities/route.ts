@@ -34,6 +34,9 @@ export async function GET(req: Request) {
     const universities = await prisma.universities.findMany({
       where: where,
       include: {
+        _count: {
+          select: { majors: true },
+        },
         majors: {
           include: {
             major_requirements: {
@@ -44,7 +47,7 @@ export async function GET(req: Request) {
           },
         },
       },
-      orderBy: { name: 'asc' },
+      orderBy: [{ created_at: 'desc' }, { id: 'desc' }],
     });
 
     return NextResponse.json(universities);

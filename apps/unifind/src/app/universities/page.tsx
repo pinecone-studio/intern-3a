@@ -1,5 +1,4 @@
 'use client';
-
 import { useState } from 'react';
 import useSWR from 'swr';
 import { FilterSidebar } from '../_components/filter-sidebar';

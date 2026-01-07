@@ -58,7 +58,7 @@ const AdminMyClubsComponent = () => {
             <div className="w-100 h-100 rounded-lg overflow-hidden">
               <img src={typeof selectedClub.clubImage === 'string' ? selectedClub.clubImage : ''} alt={selectedClub.clubName} className="w-full h-full object-cover" />
             </div>
-            {selectedClub && <MyClubCategoryComponent selectedClub={selectedClub} />}
+            {/* {selectedClub && <MyClubCategoryComponent selectedClub={selectedClub} />} */}
           </div>
 
           <div className="flex flex-col max-w-450 h-100 justify-between">
@@ -91,6 +91,7 @@ const AdminMyClubsComponent = () => {
             </div>
           </div>
         </div>
+        <div className="mt-10">{selectedClub && <MyClubCategoryComponent selectedClub={selectedClub} />}</div>
       </div>
     </div>
   );
