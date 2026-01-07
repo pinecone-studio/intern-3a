@@ -88,7 +88,7 @@ export function SearchCard() {
 
   return (
     <div className="relative">
-      <Card className="p-8 max-w-5xl mx-auto mt-10">
+      <Card className="p-8 max-w-5xl mx-auto mt-10 dark:bg-gray-900">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
           {/* MAJOR POPOVER */}
           <MajorSelector filteredMajors={filteredMajors} />
@@ -101,7 +101,7 @@ export function SearchCard() {
             </Button>
 
             {showSub1 && (
-              <div className="absolute z-50 mt-1 w-full bg-white dark:bg-neutral-800 border rounded-lg shadow-lg">
+              <div className="absolute z-50 mt-1 w-full bg-white dark:bg-gray-800 border rounded-lg shadow-lg">
                 {SUBJECTS.map((s) => (
                   <div
                     key={s.id}
@@ -109,7 +109,7 @@ export function SearchCard() {
                       setSubject1(s.id);
                       setShowSub1(false);
                     }}
-                    className={`px-3 py-2 cursor-pointer text-sm hover:bg-slate-100 dark:hover:bg-neutral-700 rounded-lg ${subject2 === s.id ? 'opacity-50 pointer-events-none' : ''}`}
+                    className={`px-3 py-2 cursor-pointer text-sm hover:bg-slate-100 dark:hover:bg-gray-700 rounded-lg ${subject2 === s.id ? 'opacity-50 pointer-events-none' : ''}`}
                   >
                     {s.name}
                   </div>
@@ -145,7 +145,7 @@ export function SearchCard() {
             </Button>
 
             {showSub2 && (
-              <div className="absolute z-50 mt-1 w-full bg-white dark:bg-neutral-800 border rounded-lg shadow-lg">
+              <div className="absolute z-50 mt-1 w-full bg-white dark:bg-gray-800 border rounded-lg shadow-lg">
                 {SUBJECTS.map((s) => (
                   <div
                     key={s.id}
@@ -153,7 +153,7 @@ export function SearchCard() {
                       setSubject2(s.id);
                       setShowSub2(false);
                     }}
-                    className={`px-3 py-2 cursor-pointer text-sm hover:bg-slate-100 dark:hover:bg-neutral-700 ${subject1 === s.id ? 'opacity-50 pointer-events-none' : ''}`}
+                    className={`px-3 py-2 cursor-pointer text-sm hover:bg-slate-100 dark:hover:bg-gray-700 ${subject1 === s.id ? 'opacity-50 pointer-events-none' : ''}`}
                   >
                     {s.name}
                   </div>
@@ -191,7 +191,7 @@ export function SearchCard() {
         {loading && (
           <div className="mt-6 space-y-3 animate-pulse">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-24 rounded-xl bg-slate-100 dark:bg-neutral-800" />
+              <div key={i} className="h-24 rounded-xl bg-slate-100 dark:bg-gray-800" />
             ))}
           </div>
         )}
@@ -212,7 +212,7 @@ export function SearchCard() {
                     key={idx}
                     onClick={() => passed && router.push(`/mergejil/${m.majorid}`)}
                     className={`relative rounded-xl border p-5 transition-all ${
-                      passed ? 'bg-white dark:bg-neutral-900 hover:shadow-lg hover:-translate-y-0.5 cursor-pointer' : 'bg-slate-50 dark:bg-neutral-800 opacity-60 cursor-not-allowed'
+                      passed ? 'bg-white dark:bg-gray-900 hover:shadow-lg hover:-translate-y-0.5 cursor-pointer' : 'bg-slate-50 dark:bg-gray-800 opacity-60 cursor-not-allowed'
                     }`}
                   >
                     {/* STATUS BADGE */}

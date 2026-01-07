@@ -13,7 +13,7 @@ export function CallToAction() {
             <Button size="lg" className="bg-sky-500 hover:bg-sky-600 text-white px-8">
               Үнэгүй бүртгэл үүсгэх
             </Button>
-            <Button size="lg" variant="outline">
+            <Button className="dark:bg-gray-900 dark:hover:bg-gray-800" size="lg" variant="outline">
               Дэлгэрэнгүй мэдээлэл
             </Button>
           </div>

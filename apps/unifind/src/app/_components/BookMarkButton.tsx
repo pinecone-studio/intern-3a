@@ -27,7 +27,10 @@ export default function BookmarkButton({ majorId }: { majorId: number }) {
   };
 
   return (
-    <button onClick={toggleFavorite} className={`p-2 rounded-xl transition-colors ${isFavorite ? 'text-amber-500 bg-amber-50' : 'text-gray-400 hover:text-sky-500 hover:bg-sky-50'}`}>
+    <button
+      onClick={toggleFavorite}
+      className={`p-2 rounded-xl transition-colors ${isFavorite ? 'text-amber-500 dark:bg-black bg-amber-50' : 'text-gray-400 hover:text-sky-500  dark:hover:bg-neutral-800 hover:bg-sky-50'}`}
+    >
       <Bookmark className="w-5 h-5" />
     </button>
   );

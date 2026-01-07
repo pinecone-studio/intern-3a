@@ -43,7 +43,7 @@ export default function UniversityCard({ id, name, location, image, status, minS
   };
 
   return (
-    <Card onClick={handleViewDetails} className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer mt-0 pt-0">
+    <Card onClick={handleViewDetails} className="overflow-hidden hover:shadow-lg dark:bg-gray-900 transition-shadow cursor-pointer mt-0 pt-0">
       <div className="relative h-48">
         {/* ✅ Fallback image ашиглаж харуулах */}
         <ImageWithFallback src={image} />

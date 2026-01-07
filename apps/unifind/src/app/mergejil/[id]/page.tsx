@@ -80,7 +80,7 @@ export default function Mergejil() {
   const daysLeft = getDaysLeft('2026-8-15');
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-sky-50 to-white">
+    <div className="min-h-screen bg-linear-to-b from-sky-50 to-white dark:from-slate-900 dark:to-black">
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm mb-8">
@@ -92,7 +92,7 @@ export default function Mergejil() {
             {data.universities?.name || 'Их сургууль'}
           </Link>
           <ChevronRight className="w-4 h-4 text-gray-300" />
-          <span className="text-gray-900 font-medium">{data.name}</span>
+          <span className="text-gray-900 dark:text-white font-medium">{data.name}</span>
         </nav>
 
         {/* Header Section */}
@@ -100,11 +100,11 @@ export default function Mergejil() {
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-4">
-                <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-sky-500 text-white">#КШУ-2024</span>
+                <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-sky-500 text-white">#КШУ-2025</span>
                 <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-emerald-500 text-white">Элсэлт нээлттэй</span>
               </div>
-              <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4 text-balance">{data.name}</h1>
-              <p className="text-gray-600 leading-relaxed max-w-3xl text-pretty">
+              <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4 text-balance">{data.name}</h1>
+              <p className="text-gray-600 dark:text-neutral-300 leading-relaxed max-w-3xl text-pretty">
                 Програм хангамж боловсруулах, дэвшилтэт алгоритм, хиймэл оюун ухаан болон системийн архитектур дээр төвлөрсөн иж бүрэн хөтөлбөр. Онолын үндэс ба практик хэрэглээний хослолоор дээд
                 зэргийн технологийн карьерт оюутнуудыг бэлтгэхэд зориулагдсан.
               </p>
@@ -122,60 +122,68 @@ export default function Mergejil() {
         {/* Stats Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
           {/* Score Card */}
-          <div className="bg-white rounded-2xl p-5 shadow-sm border border-sky-100 hover:shadow-md hover:border-sky-200 transition-all">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl p-5 shadow-sm dark:shadow-gray-800 border border-sky-100 dark:border-neutral-800 hover:shadow-md hover:border-sky-200 transition-all">
             <div className="flex items-center justify-between mb-4">
-              <span className="text-sm text-gray-500 font-medium">Босго оноо (2025)</span>
-              <div className="w-10 h-10 bg-sky-100 rounded-xl flex items-center justify-center">
+              <span className="text-sm text-gray-500 dark:text-neutral-300 font-medium">Босго оноо (2025)</span>
+              <div className="w-10 h-10 bg-sky-100 dark:bg-neutral-800 rounded-xl flex items-center justify-center">
                 <FileText className="w-5 h-5 text-sky-500" />
               </div>
             </div>
             <div className="flex flex-wrap gap-2 mb-3">
-              <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-sky-50 text-sky-500 border border-sky-200">∑ Математик A</span>
-              <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-sky-50 text-sky-500 border border-sky-200">⚛ Физик</span>
+              <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-sky-50 dark:bg-gray-800 text-sky-500 dark:text-sky-400 border border-sky-200 dark:border-neutral-700">
+                ∑ Математик A
+              </span>
+              <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-sky-50 dark:bg-gray-800 text-sky-500 dark:text-sky-400 border border-sky-200 dark:border-neutral-700">
+                ⚛ Физик
+              </span>
             </div>
             <div className="flex items-baseline gap-3">
-              <span className="text-3xl font-bold text-gray-900">500</span>
+              <span className="text-3xl font-bold text-gray-900 dark:text-neutral-100">500</span>
               <span className="text-sm text-emerald-600 font-medium">↑ +0.5</span>
             </div>
           </div>
 
           {/* Tuition Card */}
-          <div className="bg-white rounded-2xl p-5 shadow-sm border border-sky-100 hover:shadow-md hover:border-sky-200 transition-all">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl p-5 shadow-sm dark:shadow-gray-800 border border-sky-100 dark:border-neutral-800 hover:shadow-md hover:border-sky-200 transition-all">
             <div className="flex items-center justify-between mb-4">
-              <span className="text-sm text-gray-500 font-medium">Нэг крэдитийн үнэ</span>
-              <div className="w-10 h-10 bg-sky-100 rounded-xl flex items-center justify-center">
+              <span className="text-sm text-gray-500 dark:text-neutral-300 font-medium">Нэг крэдитийн үнэ</span>
+              <div className="w-10 h-10 bg-sky-100 dark:bg-neutral-800 rounded-xl flex items-center justify-center">
                 <Wallet className="w-5 h-5 text-sky-500" />
               </div>
             </div>
-            <div className="text-3xl font-bold text-gray-900 mb-2">₮103,500</div>
-            <p className="text-sm text-gray-500">Жил бүр өөрчлөгддөг</p>
+            <div className="text-3xl font-bold text-gray-900 dark:text-neutral-100 mb-2">₮103,500</div>
+            <p className="text-sm text-gray-500 dark:text-neutral-400">Жил бүр өөрчлөгддөг</p>
           </div>
 
           {/* Duration Card */}
-          <div className="bg-white rounded-2xl p-5 shadow-sm border border-sky-100 hover:shadow-md hover:border-sky-200 transition-all">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl p-5 shadow-sm dark:shadow-gray-800 border border-sky-100 dark:border-neutral-800 hover:shadow-md hover:border-sky-200 transition-all">
             <div className="flex items-center justify-between mb-4">
-              <span className="text-sm text-gray-500 font-medium">Хугацаа</span>
-              <div className="w-10 h-10 bg-sky-100 rounded-xl flex items-center justify-center">
+              <span className="text-sm text-gray-500 dark:text-neutral-300 font-medium">Хугацаа</span>
+              <div className="w-10 h-10 bg-sky-100 dark:bg-neutral-800 rounded-xl flex items-center justify-center">
                 <Clock className="w-5 h-5 text-sky-500" />
               </div>
             </div>
             <div className="flex items-baseline gap-2 mb-2">
-              <span className="text-3xl font-bold text-gray-900">4</span>
-              <span className="text-lg text-gray-500">Жил</span>
+              <span className="text-3xl font-bold text-gray-900 dark:text-neutral-100">4</span>
+              <span className="text-lg text-gray-500 dark:text-neutral-400">Жил</span>
             </div>
-            <p className="text-sm text-gray-500">Шинжлэх ухааны бакалавр</p>
+            <p className="text-sm text-gray-500 dark:text-neutral-400">Шинжлэх ухааны бакалавр</p>
           </div>
 
           {/* Registration Card */}
-          <div className="bg-white rounded-2xl p-5 shadow-sm border border-sky-100 hover:shadow-md hover:border-sky-200 transition-all">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl p-5 shadow-sm dark:shadow-gray-800 border border-sky-100 dark:border-neutral-800 hover:shadow-md hover:border-sky-200 transition-all">
             <div className="flex items-center justify-between mb-4">
-              <span className="text-sm text-gray-500 font-medium">Бүртгэлийн хугацаа</span>
-              <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
-                <Calendar className="w-5 h-5 text-amber-600" />
+              <span className="text-sm text-gray-500 dark:text-neutral-300 font-medium">Бүртгэлийн хугацаа</span>
+              <div className="w-10 h-10 bg-amber-100 dark:bg-neutral-800 rounded-xl flex items-center justify-center">
+                <Calendar className="w-5 h-5 text-amber-600 dark:text-amber-300" />
               </div>
             </div>
-            <div className="text-lg font-bold text-gray-900 mb-1">7/1 - 8/15</div>
-            <div className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${daysLeft > 0 ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700'}`}>
+            <div className="text-lg font-bold text-gray-900 dark:text-neutral-100 mb-1">7/1 - 8/15</div>
+            <div
+              className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${
+                daysLeft > 0 ? 'bg-amber-100 text-amber-700 dark:bg-neutral-700 dark:text-amber-200' : 'bg-red-100 text-red-700 dark:bg-red-800 dark:text-red-300'
+              }`}
+            >
               {daysLeft > 0 ? `${daysLeft} хоног үлдсэн` : 'Хугацаа дууссан'}
             </div>
           </div>
@@ -186,47 +194,51 @@ export default function Mergejil() {
           {/* Left Column */}
           <div className="lg:col-span-2 space-y-6">
             {/* Requirements Card */}
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-sky-100">
+            <div className="bg-white dark:bg-gray-900 dark:border-neutral-800 rounded-2xl p-6 shadow-sm border border-sky-100">
               <div className="flex items-center gap-3 mb-5">
                 <div className="w-10 h-10 bg-sky-500 rounded-xl flex items-center justify-center">
                   <ClipboardCheck className="w-5 h-5 text-white" />
                 </div>
-                <h2 className="text-xl font-bold text-gray-900">Элсэлтийн шаардлага</h2>
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">Элсэлтийн шаардлага</h2>
               </div>
 
-              <p className="text-gray-600 mb-6 leading-relaxed">Өргөдөл гаргагчид дараах хичээлүүдийн оноог илгээх хэрэгтэй. Эдгээр хичээлүүдийн дунджийг элсэлтийн оноо тооцоход ашигладаг.</p>
+              <p className="text-gray-600 mb-6 leading-relaxed dark:text-neutral-300">
+                Өргөдөл гаргагчид дараах хичээлүүдийн оноог илгээх хэрэгтэй. Эдгээр хичээлүүдийн дунджийг элсэлтийн оноо тооцоход ашигладаг.
+              </p>
 
               <div className="space-y-4 mb-6">
                 <div>
-                  <p className="text-sm font-medium text-gray-500 mb-3">Шаардлагатай хичээлүүд</p>
+                  <p className="text-sm font-medium text-gray-500 mb-3 dark:text-neutral-300">Шаардлагатай хичээлүүд</p>
                   <div className="flex flex-wrap gap-2">
-                    <span className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium bg-sky-50 text-sky-500 border border-sky-200">
+                    <span className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium dark:bg-gray-800 dark:border-neutral-700 bg-sky-50 text-sky-500 border border-sky-200">
                       <span className="text-base">∑</span> Математик A
                     </span>
-                    <span className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium bg-sky-50 text-sky-500 border border-sky-200">
+                    <span className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium dark:bg-gray-800 dark:border-neutral-700 bg-sky-50 text-sky-500 border border-sky-200">
                       <span className="text-base">⚛</span> Физик
                     </span>
-                    <span className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium bg-sky-50 text-sky-500 border border-sky-200">
+                    <span className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium dark:bg-gray-800 dark:border-neutral-700 bg-sky-50 text-sky-500 border border-sky-200">
                       <span className="text-base">⚗</span> Хими
                     </span>
                   </div>
                 </div>
 
                 <div>
-                  <p className="text-sm font-medium text-gray-500 mb-3">Хэлний шаардлага</p>
-                  <span className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium bg-sky-50 text-sky-500 border border-sky-200">🌐 Англи хэлний түвшин</span>
+                  <p className="text-sm font-medium text-gray-500 mb-3  dark:text-neutral-300">Хэлний шаардлага</p>
+                  <span className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium bg-sky-50 dark:bg-gray-800 dark:border-neutral-700 text-sky-500 border border-sky-200">
+                    🌐 Англи хэлний түвшин
+                  </span>
                 </div>
               </div>
 
-              <div className="border-t border-sky-100 pt-5">
-                <h3 className="font-semibold text-gray-900 mb-3">Нэмэлт шаардлага</h3>
+              <div className="border-t border-sky-100 dark:border-sky-600 pt-5">
+                <h3 className="font-semibold text-gray-900 mb-3 dark:text-neutral-300">Нэмэлт шаардлага</h3>
                 <ul className="space-y-2">
-                  <li className="flex items-start gap-3 text-gray-600">
-                    <span className="w-1.5 h-1.5 bg-sky-500 rounded-full mt-2 shrink-0"></span>
+                  <li className="flex items-start gap-3 text-gray-600 dark:text-neutral-300">
+                    <span className="w-1.5 h-1.5 bg-sky-500 rounded-full mt-2 shrink-0 "></span>
                     Ахлах сургуулийн голч дүн хамгийн багадаа 80
                   </li>
-                  <li className="flex items-start gap-3 text-gray-600">
-                    <span className="w-1.5 h-1.5 bg-sky-500 rounded-full mt-2 shrink-0"></span>
+                  <li className="flex items-start gap-3 text-gray-600 dark:text-neutral-300">
+                    <span className="w-1.5 h-1.5 bg-sky-500 rounded-full mt-2 shrink-0 dark:text-neutral-300 "></span>
                     Шинжлэх ухааны багшийн зөвлөмжийн захидал
                   </li>
                 </ul>
@@ -234,31 +246,31 @@ export default function Mergejil() {
             </div>
 
             {/* Resources Card */}
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-sky-100">
-              <h2 className="text-xl font-bold text-gray-900 mb-5">Материалууд</h2>
+            <div className="bg-white dark:bg-gray-900 dark:border-neutral-800 rounded-2xl p-6 shadow-sm border border-sky-100">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white  mb-5">Материалууд</h2>
 
               <div className="space-y-3">
-                <button className="w-full flex items-center justify-between p-4 bg-sky-50 rounded-xl hover:bg-sky-100 transition-colors group">
+                <button className="w-full flex items-center justify-between p-4 bg-sky-50 dark:bg-gray-800 dark:hover:bg-gray-700 rounded-xl hover:bg-sky-100 transition-colors group">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm border border-sky-100">
+                    <div className="w-12 h-12 bg-white dark:bg-neutral-800 dark:border-neutral-700 rounded-xl flex items-center justify-center shadow-sm border border-sky-100">
                       <FileText className="w-6 h-6 text-sky-500" />
                     </div>
                     <div className="text-left">
-                      <div className="font-medium text-gray-900">Хөтөлбөрийн агуулга</div>
-                      <div className="text-sm text-gray-500">PDF • 2.4 MB</div>
+                      <div className="font-medium text-gray-900 dark:text-white ">Хөтөлбөрийн агуулга</div>
+                      <div className="text-sm text-gray-500 dark:text-neutral-300">PDF • 2.4 MB</div>
                     </div>
                   </div>
                   <Download className="w-5 h-5 text-gray-400 group-hover:text-sky-500 transition-colors" />
                 </button>
 
-                <button className="w-full flex items-center justify-between p-4 bg-sky-50 rounded-xl hover:bg-sky-100 transition-colors group">
+                <button className="w-full flex items-center justify-between p-4 bg-sky-50 dark:bg-gray-800 dark:hover:bg-gray-700 rounded-xl hover:bg-sky-100 transition-colors group">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm border border-sky-100">
+                    <div className="w-12 h-12 bg-white dark:bg-neutral-800 dark:border-neutral-700  rounded-xl flex items-center justify-center shadow-sm border border-sky-100">
                       <GraduationCap className="w-6 h-6 text-sky-500" />
                     </div>
                     <div className="text-left">
-                      <div className="font-medium text-gray-900">Тэтгэлгийн заавар</div>
-                      <div className="text-sm text-gray-500">Гадаад холбоос</div>
+                      <div className="font-medium text-gray-900 dark:text-white">Тэтгэлгийн заавар</div>
+                      <div className="text-sm text-gray-500 dark:text-neutral-300">Гадаад холбоос</div>
                     </div>
                   </div>
                   <ExternalLink className="w-5 h-5 text-gray-400 group-hover:text-sky-500 transition-colors" />
@@ -270,13 +282,16 @@ export default function Mergejil() {
           {/* Right Column */}
           <div className="space-y-6">
             {/* Apply Card */}
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-sky-100">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Өргөдөл гаргахад бэлэн үү?</h3>
-              <p className="text-sm text-gray-600 mb-6 leading-relaxed">
-                Өргөдөл гаргахын өмнө <span className="font-semibold text-gray-900">бүртгэлийн хураамжийг</span> төлсөн байх шаардлагатай.
+            <div className="bg-white dark:bg-gray-900 dark:border-neutral-800 rounded-2xl p-6 shadow-sm border border-sky-100">
+              <h3 className="text-xl font-bold text-gray-900 mb-2 dark:text-white">Өргөдөл гаргахад бэлэн үү?</h3>
+              <p className="text-sm text-gray-600 dark:text-white mb-6 leading-relaxed">
+                Өргөдөл гаргахын өмнө <span className="font-semibold text-gray-900 dark:text-neutral-300">бүртгэлийн хураамжийг</span> төлсөн байх шаардлагатай.
               </p>
 
-              <Button className="w-full bg-sky-500 hover:bg-sky-600 text-white mb-3 h-12 text-base font-semibold rounded-xl shadow-sm shadow-sky-200" onClick={handleRegisterClick}>
+              <Button
+                className="w-full bg-sky-500 hover:bg-sky-600 text-white mb-3 h-12 text-base font-semibold rounded-xl shadow-sm shadow-sky-200 dark:shadow-gray-800"
+                onClick={handleRegisterClick}
+              >
                 Бүртгэлийн хураамж төлөх
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
@@ -288,14 +303,14 @@ export default function Mergejil() {
             </div>
 
             {/* Questions Card */}
-            <div className="bg-white rounded-2xl p-5 shadow-sm border border-sky-100">
+            <div className="bg-white rounded-2xl p-5 shadow-sm border dark:bg-gray-900 dark:border-neutral-800 border-sky-100">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-sky-100 rounded-xl flex items-center justify-center">
+                <div className="w-12 h-12 bg-sky-100 dark:bg-gray-800 rounded-xl flex items-center justify-center">
                   <MessageCircle className="w-6 h-6 text-sky-500" />
                 </div>
                 <div className="flex-1">
-                  <div className="font-semibold text-gray-900">Асуулт байна уу?</div>
-                  <p className="text-sm text-gray-500">Бидэнтэй холбогдоорой</p>
+                  <div className="font-semibold dark:text-white text-gray-900">Асуулт байна уу?</div>
+                  <p className="text-sm text-gray-500 dark:text-neutral-300">Бидэнтэй холбогдоорой</p>
                 </div>
                 <ChevronRight className="w-5 h-5 text-gray-400" />
               </div>
