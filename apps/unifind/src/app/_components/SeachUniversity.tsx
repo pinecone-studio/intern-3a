@@ -1,6 +1,7 @@
 'use client';
 
 import { Search } from 'lucide-react';
+import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { Card } from '../components/ui/card';
 import { Input } from '../components/ui/input';
@@ -19,7 +20,7 @@ export function SearchUniversity() {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [showDropdown, setShowDropdown] = useState(false);
 
-  // Click outside-д dropdown хаах
+  // Close dropdown on click outside
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
@@ -38,19 +39,11 @@ export function SearchUniversity() {
     }
 
     setLoading(true);
-
     const timeoutId = setTimeout(async () => {
       try {
         const res = await fetch(`/api/searchuniversity/?query=${encodeURIComponent(query)}`);
         const data: University[] = await res.json();
-
-        // Англи үг оруулвал Монгол нэртэй filter хийх жишээ
-        const filteredData = data.map((u) => ({
-          ...u,
-          displayName: u.name, // Хэрвээ шаардлагатай бол Mongolian нэрийг map хийж болно
-        }));
-
-        setResults(filteredData);
+        setResults(data.map((u) => ({ ...u, displayName: u.name })));
         setShowDropdown(true);
       } catch (error) {
         console.error(error);
@@ -65,37 +58,48 @@ export function SearchUniversity() {
   // Skeleton card
   function SkeletonCard() {
     return (
-      <Card className="p-2 border rounded-md shadow-sm mb-1">
-        <div className="h-4 w-3/4 bg-slate-200 rounded animate-pulse mb-2" />
-        <div className="h-3 w-1/2 bg-slate-200 rounded animate-pulse" />
+      <Card className="p-2 border-b flex rounded-md last:mb-0[-2] pt-0 dark:bg-neutral-800 animate-pulse mt-1 ">
+        <div className="h-3 w-3/4 bg-gray-300 dark:bg-neutral-700 rounded mt-1" />
+        <div className="h-2 w-1/2 bg-gray-300 dark:bg-neutral-700 rounded mt-1" />
       </Card>
     );
   }
 
   return (
-    <div ref={wrapperRef} className="relative hidden md:block w-64">
-      <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-      <Input placeholder="Их сургууль хайх..." className="pl-9 bg-gray-50  dark:border-neutral-800 border-gray-200" value={query} onChange={(e) => setQuery(e.target.value)} />
+    <div ref={wrapperRef} className="relative w-full md:w-80">
+      {/* Search Input */}
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+        <Input
+          placeholder="Их сургууль хайх..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          className="pl-9 pr-3 py-1.5 rounded-md border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-sm focus:outline-none focus:ring-1 focus:ring-sky-500 shadow-sm transition"
+        />
+      </div>
 
+      {/* Dropdown */}
       {showDropdown && (
-        <div className="absolute top-full left-0 w-full bg-white border rounded-lg shadow-lg mt-1 max-h-64 overflow-auto z-50">
-          {loading && [1].map((i) => <SkeletonCard key={i} />)}
+        <div className="absolute top-full pt-0 left-0 w-full mt-1 pb-1 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700 rounded-md shadow-md overflow-auto max-h-60 z-50 text-sm p-2 px-1">
+          {loading && [1, 2].map((i) => <SkeletonCard key={i} />)}
 
-          {!loading && results.length === 0 && <div className=" text-gray-500 text-sm h-13 flex justify-center w-full items-center">Тохирох их сургууль олдсонгүй</div>}
+          {!loading && results.length === 0 && <div className="text-gray-500 dark:text-gray-400 py-2 text-center mt-2 mb-1">Тохирох их сургууль олдсонгүй</div>}
 
           {!loading &&
             results.map((u) => (
-              <Card
-                key={u.id}
-                className="p-3 mb-1 border rounded-md cursor-pointer hover:bg-gray-100"
-                onClick={() => {
-                  setQuery(u.name);
-                  setShowDropdown(false);
-                }}
-              >
-                <p className="font-bold text-gray-800">{u.displayName || u.name}</p>
-                <p className="text-sm text-gray-500">{u.city}</p>
-              </Card>
+              <Link key={u.id} href={`/detail/${u.id}`} passHref>
+                <Card
+                  key={u.id}
+                  className="p-2 border-b cursor-pointer mt-1 hover:bg-sky-50 dark:hover:bg-gray-800 transition flex flex-col gap-0.5 rounded-md"
+                  onClick={() => {
+                    setQuery(u.name);
+                    setShowDropdown(false);
+                  }}
+                >
+                  <p className="font-medium text-gray-900 dark:text-white">{u.displayName}</p>
+                  <p className="text-gray-500 dark:text-gray-400">{u.city}</p>
+                </Card>
+              </Link>
             ))}
         </div>
       )}

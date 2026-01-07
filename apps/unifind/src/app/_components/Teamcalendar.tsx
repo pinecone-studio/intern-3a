@@ -42,9 +42,6 @@ export default function TeamCalendar({ userId }: TeamCalendarProps) {
     } finally {
       setLoading(false);
     }
-  };
-
-  useEffect(() => {
     fetchEvents();
 
     if (typeof window !== 'undefined') {
@@ -81,34 +78,23 @@ export default function TeamCalendar({ userId }: TeamCalendarProps) {
   if (loading) return <p>Loading calendar...</p>;
 
   return (
-    <div className="bg-white rounded-xl p-4 shadow">
+    <div className="bg-white dark:bg-gray-900 rounded-xl p-4 shadow">
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
+        initialDate="2026-01-01" // January 2026
+        events={events}
         headerToolbar={{
           left: 'prev,next today',
           center: 'title',
           right: 'dayGridMonth,timeGridWeek,timeGridDay',
         }}
-        events={events}
-        selectable
-        select={async (info) => {
-          try {
-            await fetch('/api/user-university-selection', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                user_id: userId,
-                university_id: 0, // тухайн сургууль id-г оруулна
-                start_date: info.startStr,
-                end_date: info.endStr,
-              }),
-            });
-            fetchEvents();
-          } catch (err) {
-            console.error(err);
-          }
+        dayCellClassNames={(arg) => {
+          const today = new Date();
+          const isToday = arg.date.getFullYear() === today.getFullYear() && arg.date.getMonth() === today.getMonth() && arg.date.getDate() === today.getDate();
+          return isToday ? 'fc-today-bold' : '';
         }}
+        eventContent={(arg) => <div className="rounded px-2 py-1 text-sm bg-sky-500 text-white dark:bg-sky-600">{arg.event.title}</div>}
       />
     </div>
   );

@@ -26,7 +26,7 @@ const SideBarComponent = () => {
   };
 
   return (
-    <Sidebar className="sticky top-0 left-0  w-85 h-screen">
+    <Sidebar className="sticky top-0 left-0 bottom-0 w-85 h-screen">
       <SidebarContent className="py-5">
         <SidebarGroup className="flex flex-col gap-4">
           <div>

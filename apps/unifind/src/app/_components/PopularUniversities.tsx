@@ -24,7 +24,9 @@ export function PopularUniversities() {
             <p className="text-muted-foreground">Таны профайл болон сонголтоор үндэслэн</p>
           </div>
           <Link href={'/universities'}>
-            <Button variant={'outline'}>Бүгдийг үзэх</Button>
+            <Button className="dark:bg-gray-900 dark:hover:bg-gray-800" variant={'outline'}>
+              Бүгдийг үзэх
+            </Button>
           </Link>
         </div>
 
@@ -57,7 +59,9 @@ export function PopularUniversities() {
         {/* Load more */}
         <div className="text-center">
           <Link href={'/universities'}>
-            <Button variant={'outline'}>Бүгдийг үзэх</Button>
+            <Button className="dark:bg-gray-900 dark:hover:bg-gray-800" variant={'outline'}>
+              Бүгдийг үзэх
+            </Button>
           </Link>
         </div>
       </div>

@@ -1,20 +1,44 @@
 'use client';
 import { ArrowRight, Calendar, GraduationCap, MapPin } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useMemo } from 'react';
 import { Button } from '../components/ui/button';
 
 export function ProgramCard({ program, viewMode }: any) {
   const router = useRouter();
+
+  // 1. Хамгийн бага босго оноог тооцоолох
+  const minScore = useMemo(() => {
+    if (!program.majors || program.majors.length === 0) return 400;
+
+    const scores: number[] = [];
+    program.majors.forEach((major: any) => {
+      major.major_requirements?.forEach((req: any) => {
+        if (req.min_score) {
+          scores.push(req.min_score);
+        }
+      });
+    });
+
+    return scores.length > 0 ? Math.min(...scores) : 400;
+  }, [program]);
+
+  // 2. Хугацаа форматлах
+  const endDate = useMemo(() => {
+    if (!program.burtgelduusah_end_date) return '08.15';
+    const date = new Date(program.burtgelduusah_end_date);
+    return date.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' });
+  }, [program.burtgelduusah_end_date]);
 
   return (
     <div
       className={`group bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden ${viewMode === 'list' ? 'flex' : ''}`}
     >
       <div className={`relative ${viewMode === 'list' ? 'w-64' : 'h-40'}`}>
-        <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent z-10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
         <img src={program.image || '/university-logo-arts.jpg'} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt={program.name} />
         <div className="absolute bottom-3 left-3 z-20">
-          <span className="bg-sky-600 text-white text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wide">Элсэлт нээлттэй</span>
+          <span className="bg-green-500 text-white text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wide">Элсэлт нээлттэй</span>
         </div>
       </div>
 
@@ -22,7 +46,7 @@ export function ProgramCard({ program, viewMode }: any) {
         <div>
           <div className="flex items-center gap-2 text-gray-400 text-[11px] font-bold uppercase mb-2">
             <MapPin className="w-3 h-3 text-red-400" />
-            {program.city}
+            {program.city || 'Улаанбаатар'}
           </div>
           <h3 className="font-bold text-gray-900 group-hover:text-sky-600 transition-colors line-clamp-1 mb-3">{program.name}</h3>
 
@@ -30,13 +54,15 @@ export function ProgramCard({ program, viewMode }: any) {
             <div className="space-y-1">
               <p className="text-[10px] text-gray-400 uppercase font-bold">Босго оноо</p>
               <div className="flex items-center gap-1.5 font-bold text-gray-700 text-sm">
-                <GraduationCap className="w-4 h-4 text-sky-500" /> 500+
+                <GraduationCap className="w-4 h-4 text-sky-500" /> {minScore}+
               </div>
             </div>
+
             <div className="space-y-1 text-right">
               <p className="text-[10px] text-gray-400 uppercase font-bold">Дуусах хугацаа</p>
               <div className="flex items-center justify-end gap-1.5 font-bold text-gray-700 text-sm">
-                <Calendar className="w-4 h-4 text-orange-500" /> 08.15
+                <Calendar className="w-4 h-4 text-orange-500" />
+                {endDate}
               </div>
             </div>
           </div>

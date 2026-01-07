@@ -3,10 +3,10 @@ import SideBarComponent from '../_components/adminPage/SideBarComponent';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <SidebarProvider className="bg-white h-screen">
-      <div className="flex h-full">
+    <SidebarProvider className="bg-white ">
+      <div className="flex h-[calc(100vh-80px)]">
         <SideBarComponent />
-        <main className="">{children}</main>
+        <main className="flex-1 overflow-y-auto">{children}</main>
       </div>
     </SidebarProvider>
   );

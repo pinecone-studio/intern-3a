@@ -1,5 +1,5 @@
 'use client';
-import { Info, LayoutGrid, List, SlidersHorizontal, X } from 'lucide-react';
+import { Info, LayoutGrid, List, X } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import useSWR from 'swr';
 import { Button } from '../components/ui/button';
@@ -31,9 +31,9 @@ export function ProgramGrid({ programs, isLoading, filters, setFilters, resetFil
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black text-gray-900">~ Ирээдүйн их сургуулиа төлөвлө ~</h1>
-          <p className="text-gray-500 text-sm mt-1">
+          {/* <p className="text-gray-500 text-sm mt-1">
             Нийт <span className="text-sky-600 font-bold">{programs.length}</span> сургууль олдлоо
-          </p>
+          </p> */}
         </div>
 
         <div className="flex items-center gap-3">
@@ -91,19 +91,19 @@ export function ProgramGrid({ programs, isLoading, filters, setFilters, resetFil
       {safePrograms.length > 0 ? (
         <div className="space-y-12">
           {groupedData.map((group: any) => (
-            <div key={group.id || group.title} className="space-y-5">
-              {filters?.majors?.length > 0 && (
-                <div className="flex items-center gap-3">
-                  <div className="h-8 w-1.5 bg-sky-600 rounded-full" />
-                  <h2 className="text-xl font-bold text-gray-800">{group.title}</h2>
-                  <span className="bg-gray-100 text-gray-500 text-xs px-2 py-1 rounded-lg">{group.list.length} сургууль</span>
-                </div>
-              )}
+            <div key={group.title} className="space-y-5">
+              <div className="flex items-center gap-3">
+                <div className="h-8 w-1.5 bg-sky-600 rounded-full" />
+                <h2 className="text-xl font-bold text-gray-800">{group.title}</h2>
+                <span className="bg-gray-100 text-gray-500 text-xs px-2 py-1 rounded-lg">
+                  Нийт <span className="text-sky-600 font-bold">{group.list.length}</span> сургууль олдлоо
+                </span>
+              </div>
 
               {group.list.length > 0 ? (
                 <div className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6' : 'space-y-4'}>
                   {group.list.map((p: any) => (
-                    <ProgramCard key={`${group.id}-${p.id}`} program={p} viewMode={viewMode} />
+                    <ProgramCard key={`${group.title}-${p.id}`} program={p} viewMode={viewMode} />
                   ))}
                 </div>
               ) : (
