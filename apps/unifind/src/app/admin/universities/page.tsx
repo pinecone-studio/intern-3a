@@ -78,7 +78,7 @@ export default function UniversitiesPage() {
                   <TableCell>
                     {u.burtgelehleh_start_date} – {u.burtgelduusah_end_date}
                   </TableCell>
-                  <TableCell>{u._count.majors}</TableCell>
+                  <TableCell>{u._count?.majors}</TableCell>
 
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">

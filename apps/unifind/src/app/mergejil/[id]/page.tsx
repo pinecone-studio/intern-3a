@@ -1,11 +1,13 @@
 'use client';
-import { ArrowRight, Bookmark, Calendar, ChevronRight, ClipboardCheck, Clock, Download, ExternalLink, FileText, GraduationCap, MessageCircle, Share2, Wallet } from 'lucide-react';
+import { ArrowRight, Calendar, ChevronRight, ClipboardCheck, Clock, Download, ExternalLink, FileText, GraduationCap, MessageCircle, Share2, Wallet } from 'lucide-react';
 
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
+import { useUser } from '@clerk/nextjs';
 import { useState } from 'react';
+import { toast } from 'sonner';
 import useSWR from 'swr';
 import BookmarkButton from '../../_components/BookMarkButton';
 import { Button } from '../../components/ui/button';
@@ -15,10 +17,13 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function Mergejil() {
   const [open, setOpen] = useState(false);
+
   const params = useParams();
+
+  // 🚫 Эдгээр нь synchronous, Promise биш
   const majorId = Number(params.id);
-  const [isFavorite, setIsFavorite] = useState(false);
-  const handleFavorite = () => setIsFavorite(!isFavorite);
+
+  const { isSignedIn, user } = useUser();
   const handleShare = () => {
     if (!data) return; // <-- safety check
 
@@ -35,11 +40,73 @@ export default function Mergejil() {
     }
   };
 
-  const handleRegisterClick = () => {
-    setOpen(true);
+  const handleRegisterClick = async () => {
+    try {
+      if (!isSignedIn || !user) {
+        toast.warning('Нэвтэрч орно уу', { description: 'Өргөдөл гаргахын тулд эхлээд нэвтрэх шаардлагатай.' });
+        return;
+      }
+
+      // 1️⃣ MRUser үүсгэх
+      const mrRes = await fetch('/api/mruser', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: user.emailAddresses[0].emailAddress,
+          name: `${user.firstName} ${user.lastName}`,
+        }),
+      });
+
+      const mrData = await mrRes.json();
+      if (!mrRes.ok) {
+        toast.error('MRUser үүсгэхэд алдаа гарлаа: ' + (mrData.error || mrData.message));
+        return;
+      }
+      const userId = mrData.id;
+
+      // 2️⃣ Өргөдөл хадгалах
+      const universityData = data.universities; // ✅ шууд объект
+      const startDateStr = universityData.burtgelehleh_start_date;
+      const endDateStr = universityData.burtgelduusah_end_date;
+
+      if (!startDateStr || !endDateStr) {
+        toast.error('Эхлэх болон дуусах огноо байхгүй байна');
+        return;
+      }
+
+      const res = await fetch('/api/datesave', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_id: userId,
+          university_id: universityData.id,
+          start_date: startDateStr,
+          end_date: endDateStr,
+        }),
+      });
+
+      const result = await res.json();
+
+      if (result.message) {
+        toast.info(result.message); // аль хэдийн хадгалагдсан
+        return;
+      }
+
+      if (!res.ok || result.error) {
+        toast.error('Өргөдөл хадгалахад алдаа гарлаа: ' + (result.error || 'Server error'));
+        return;
+      }
+
+      toast.success('Амжилттай бүртгэгдлээ!');
+      setOpen(false);
+    } catch (err: any) {
+      console.error(err);
+      toast.error('Серверийн алдаа гарлаа: ' + (err.message || err));
+    }
   };
 
   const { data, error, isLoading } = useSWR(`/api/majors/${majorId}`, fetcher);
+  console.log({ data });
 
   if (isLoading || !data) {
     return (

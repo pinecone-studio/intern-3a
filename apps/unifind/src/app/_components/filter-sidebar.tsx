@@ -12,12 +12,14 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 export function FilterSidebar({ filters, setFilters, resetFilters }: any) {
   const [fieldExpanded, setFieldExpanded] = useState(true);
   const { data: majors = [] } = useSWR('/api/majors', fetcher);
+  console.log({ majors });
 
   const handleMajorChange = (name: string, checked: boolean) => {
     const newList = checked ? [...filters.majorNames, name] : filters.majorNames.filter((n: string) => n !== name);
 
     setFilters({ ...filters, majorNames: newList });
   };
+  console.log({ fieldExpanded });
 
   return (
     <aside className="space-y-6 sticky top-24">

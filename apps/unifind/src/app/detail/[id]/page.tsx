@@ -99,12 +99,29 @@ export default function UniversityDetailPage2({ params }: Props) {
       return;
     }
 
-    const userId = Number(1);
-    const universityId = uniId;
-
-    const startDateStr = data?.start_date ?? '2025-12-01';
-    const endDateStr = data?.end_date ?? '2025-12-15';
     try {
+      // 1️⃣ Clerk user → MRUser id авах
+      const mrRes = await fetch('/api/mruser', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: user.emailAddresses[0].emailAddress,
+          name: `${user.firstName} ${user.lastName}`,
+        }),
+      });
+
+      const mrData = await mrRes.json();
+      if (!mrRes.ok) {
+        toast.error('MRUser үүсгэхэд алдаа гарлаа: ' + (mrData.error || mrData.message));
+        return;
+      }
+
+      const userId = mrData.id; // жинхэнэ MRUser id
+      const universityId = uniId;
+      const startDateStr = data?.start_date ?? '2025-12-01';
+      const endDateStr = data?.end_date ?? '2025-12-15';
+
+      // 2️⃣ Өргөдөл хадгалах API
       const res = await fetch('/api/datesave', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -116,20 +133,27 @@ export default function UniversityDetailPage2({ params }: Props) {
         }),
       });
 
-      const data = await res.json();
+      const result = await res.json();
 
-      if (!res.ok) {
-        toast.error('Өргөдөл гаргах явцад алдаа гарлаа: ' + data.error);
+      // ✅ Хадгалагдсан эсэхийг шууд message-аар шалгах
+      if (result.message) {
+        toast.info(result.message); // аль хэдийн хадгалагдсан бол info
+        return;
+      }
+
+      if (!res.ok || result.error) {
+        toast.error('Өргөдөл гаргах явцад алдаа гарлаа: ' + (result.error || 'Server error'));
         return;
       }
 
       toast.success('Амжилттай бүртгэгдлээ!');
       setOpen(false); // modal хаах
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      toast.error('Серверийн алдаа гарлаа');
+      toast.error('Серверийн алдаа гарлаа: ' + (error.message || error));
     }
   };
+
   console.log(user?.primaryEmailAddress?.id);
 
   if (majorsLoading || !majors) {
@@ -307,7 +331,7 @@ export default function UniversityDetailPage2({ params }: Props) {
 
               <div className="space-y-6">
                 {majors?.map((major) => (
-                  <Link key={major.id} href={`/mergejil/${major.id}`}>
+                  <Link key={major.id} href={`/mergejil/${major.id}`} passHref>
                     <Card className="p-6 hover:shadow-lg transition-shadow duration-300 cursor-pointer mt-3">
                       {/* Major Info */}
                       <div className="flex items-start justify-between mb-4">
