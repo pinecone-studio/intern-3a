@@ -1,6 +1,7 @@
 'use client';
 
 import { animate, motion, useMotionValue, useTransform, Variants } from 'framer-motion';
+import { LogIn } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { ImSearch } from 'react-icons/im';
