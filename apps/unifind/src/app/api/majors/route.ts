@@ -3,15 +3,12 @@ import { NextResponse } from 'next/server';
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
-  const universityId = searchParams.get('university_id');
+  const universityId = searchParams.get('universityId');
 
   const majors = await prisma.majors.findMany({
     where: universityId ? { university_id: Number(universityId) } : undefined,
-    include: {
-      major_requirements: {
-        include: { subjects: true },
-      },
-      universities: true,
+    orderBy: {
+      created_at: 'desc',
     },
   });
 

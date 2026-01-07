@@ -1,27 +1,58 @@
-// src/app/api/universities/route.ts
-import prisma from '@/lib/prisma';
+import { latinToCyrillic } from 'apps/unifind/src/lib/latinToCyrillic';
+import prisma from 'apps/unifind/src/lib/prisma';
 import { NextResponse } from 'next/server';
 
-export const runtime = 'nodejs';
-
 export async function GET(req: Request) {
-  try {
-    const url = new URL(req.url);
-    const query = url.searchParams.get('query') || ''; // search text
-    const limit = parseInt(url.searchParams.get('limit') || '10'); // default 10
+  const { searchParams } = new URL(req.url);
+  const q = searchParams.get('q');
 
-    // Хайлтаар filter
-    const universities = await prisma.universities.findMany({
-      where: {
-        OR: [{ name: { contains: query, mode: 'insensitive' } }, { city: { contains: query, mode: 'insensitive' } }],
-      },
-      take: limit,
-      orderBy: { name: 'asc' },
+  if (!q) {
+    return NextResponse.json({
+      universities: [],
+      majors: [],
     });
-
-    return NextResponse.json(universities);
-  } catch (error) {
-    console.error('Error in /api/universities:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
+
+  const query = latinToCyrillic(q);
+
+  const universities = await prisma.universities.findMany({
+    where: {
+      name: {
+        contains: query,
+        mode: 'insensitive',
+      },
+    },
+    select: {
+      id: true,
+      name: true,
+      city: true,
+    },
+    take: 5,
+  });
+
+  const majors = await prisma.majors.findMany({
+    where: {
+      name: {
+        contains: query,
+        mode: 'insensitive',
+      },
+    },
+    select: {
+      id: true,
+      name: true,
+      universities: {
+        select: {
+          id: true,
+          name: true,
+          city: true,
+        },
+      },
+    },
+    take: 5,
+  });
+
+  return NextResponse.json({
+    universities,
+    majors,
+  });
 }
