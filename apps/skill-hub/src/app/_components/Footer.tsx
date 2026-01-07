@@ -1,11 +1,17 @@
+'use client';
+
 import { Facebook, Instagram, Mail, MapPin, Phone, Twitter } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import React from 'react';
 
-export default function Footer() {
+export const Footer = () => {
+  const pathname = usePathname();
+  if (pathname === '/map') return null;
+
   return (
-    <footer className="w-full bg-[#0A427A] text-gray-200 py-12 px-6 sm:px-16 flex flex-col md:flex-row justify-between gap-8 mt-10 h-50">
+    <footer className="w-full h-fit bg-[#0A427A] text-gray-200 py-12 px-6 sm:px-16 flex flex-col md:flex-row justify-between gap-8">
       <div className="flex flex-col gap-2 flex-1 items-center">
         <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-5 flex-1">
           <div className="mr-20 flex items-center gap-3">
@@ -50,4 +56,4 @@ export default function Footer() {
       </div>
     </footer>
   );
-}
+};

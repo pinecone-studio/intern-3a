@@ -7,7 +7,6 @@ import { BookingStyleMap } from '../_components';
 const MapPage = () => {
   const { allClubs } = useClub();
   const [userLocation, setUserLoaction] = useState<[number, number] | null>(null);
-  console.log({ userLocation });
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -20,7 +19,7 @@ const MapPage = () => {
     );
   }, []);
 
-  if (!userLocation) return <div className="w-full h-screen grid place-items-center">Ачааллаж байна</div>;
+  if (!userLocation) return <div className="w-full h-screen grid place-items-center">Газрын зураг ачааллаж байна</div>;
 
   return (
     <div className="w-full h-screen">

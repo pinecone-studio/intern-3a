@@ -9,7 +9,7 @@ export const RegisterLoginAlertDialog = ({ showLoginAlert, setShowLoginAlert, id
     <AlertDialog open={showLoginAlert} onOpenChange={setShowLoginAlert}>
       <AlertDialogContent className="w-fit gap-10">
         <AlertDialogHeader className="gap-0">
-          <AlertDialogTitle>Та нэвтэрч орох уу?</AlertDialogTitle>
+          <AlertDialogTitle>Та нэвтэрч орно уу</AlertDialogTitle>
           <AlertDialogDescription>Дугуйланд бүртгүүлэхийн тулд эхлээд нэвтрэх шаардлагатай.</AlertDialogDescription>
         </AlertDialogHeader>
         <div className="flex justify-between">

@@ -23,7 +23,7 @@ export default function MapSideBar({ visibleClubs, sidebarOpen, onToggle, hovere
   return (
     <div>
       <div className={`fixed left-0 top-0 h-screen bg-white/5 z-20 transition-all duration-300 ${sidebarOpen ? 'w-85' : 'w-0 pointer-events-none'}`}>
-        <div className="p-5">
+        <div onClick={() => router.back()} className="p-5">
           <ArrowLeftToLine size={24} className="text-orange-500 hover:text-black cursor-pointer" />
         </div>
         <div className="p-5 border-b flex justify-between items-center">
