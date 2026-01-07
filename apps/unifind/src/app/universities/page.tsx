@@ -36,7 +36,7 @@ export default function UniversitiesPage() {
   console.log({ programs });
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC]">
+    <div className="min-h-screen bg-[#F8FAFC]  inset-0 bg-linear-to-b from-sky-100 via-sky-50 to-white dark:from-slate-900 dark:via-slate-800 dark:to-black">
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-8">
           <FilterSidebar filters={filters} setFilters={setFilters} resetFilters={resetFilters} />
