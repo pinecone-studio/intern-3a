@@ -3,12 +3,12 @@
 import { GraduationCap, Loader2, MapPin, School, Search, Sparkles, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { latinToCyrillic } from '../../lib/latinToCyrillic';
 import { SearchResult } from '../../lib/types/type';
 import { Input } from '../components/ui/input';
 
 export function SearchUniversity() {
   const router = useRouter();
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
 
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult>({
@@ -18,43 +18,46 @@ export function SearchUniversity() {
   const [loading, setLoading] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
 
-  // Close dropdown on click outside
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
         setShowDropdown(false);
       }
     }
+
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  /* ---------------- search logic ---------------- */
   useEffect(() => {
-    if (!query) {
+    if (!query.trim()) {
       setResults({ universities: [], majors: [] });
       setShowDropdown(false);
       return;
     }
 
     setLoading(true);
+
     const timeoutId = setTimeout(async () => {
       try {
-        const res = await fetch(`/api/searchuniversity/?query=${encodeURIComponent(query)}`);
-        const data: University[] = await res.json();
-        setResults(data.map((u) => ({ ...u, displayName: u.name })));
+        const res = await fetch(`/api/searchuniversity?query=${encodeURIComponent(query)}`);
+
+        if (!res.ok) throw new Error('Search failed');
+
+        const data: SearchResult = await res.json();
+        setResults(data);
         setShowDropdown(true);
       } catch (err) {
         console.error(err);
+        setResults({ universities: [], majors: [] });
       } finally {
         setLoading(false);
       }
     }, 300);
 
-    return () => clearTimeout(timer);
+    return () => clearTimeout(timeoutId);
   }, [query]);
 
-  /* ---------------- navigate helper ---------------- */
   const goToDetail = (id: number | string) => {
     setShowDropdown(false);
     setQuery('');
@@ -87,8 +90,8 @@ export function SearchUniversity() {
 
       {/* dropdown */}
       {showDropdown && (
-        <div className="absolute top-full left-0 mt-2 w-[360px] bg-white dark:bg-neutral-900 border rounded-2xl shadow-xl z-50">
-          <div className="max-h-[420px] overflow-y-auto p-2">
+        <div className="absolute top-full left-0 mt-2 w-90 bg-white dark:bg-neutral-900 border rounded-2xl shadow-xl z-50">
+          <div className="max-h-105 overflow-y-auto p-2">
             {/* Universities */}
             {results.universities.length > 0 && (
               <div className="mb-2">

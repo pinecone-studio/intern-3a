@@ -1,58 +1,66 @@
-import { latinToCyrillic } from 'apps/unifind/src/lib/latinToCyrillic';
-import prisma from 'apps/unifind/src/lib/prisma';
+import { latinToCyrillic } from '@/lib/latinToCyrillic';
+import prisma from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 
+export const runtime = 'nodejs';
+
 export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url);
-  const q = searchParams.get('q');
+  try {
+    const { searchParams } = new URL(req.url);
 
-  if (!q) {
-    return NextResponse.json({
-      universities: [],
-      majors: [],
-    });
-  }
+    const q = searchParams.get('query');
 
-  const query = latinToCyrillic(q);
+    if (!q || !q.trim()) {
+      return NextResponse.json({
+        universities: [],
+        majors: [],
+      });
+    }
 
-  const universities = await prisma.universities.findMany({
-    where: {
-      name: {
-        contains: query,
-        mode: 'insensitive',
-      },
-    },
-    select: {
-      id: true,
-      name: true,
-      city: true,
-    },
-    take: 5,
-  });
+    const query = latinToCyrillic(q.trim());
 
-  const majors = await prisma.majors.findMany({
-    where: {
-      name: {
-        contains: query,
-        mode: 'insensitive',
-      },
-    },
-    select: {
-      id: true,
-      name: true,
-      universities: {
-        select: {
-          id: true,
-          name: true,
-          city: true,
+    const universities = await prisma.universities.findMany({
+      where: {
+        name: {
+          contains: query,
+          mode: 'insensitive',
         },
       },
-    },
-    take: 5,
-  });
+      select: {
+        id: true,
+        name: true,
+        city: true,
+      },
+      take: 5,
+    });
 
-  return NextResponse.json({
-    universities,
-    majors,
-  });
+    const majors = await prisma.majors.findMany({
+      where: {
+        name: {
+          contains: query,
+          mode: 'insensitive',
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        universities: {
+          select: {
+            id: true,
+            name: true,
+            city: true,
+          },
+        },
+      },
+      take: 5,
+    });
+
+    return NextResponse.json({
+      universities,
+      majors,
+    });
+  } catch (error) {
+    console.error('SEARCH ERROR:', error);
+    return NextResponse.json({ error: 'Search failed' }, { status: 500 });
+  }
 }

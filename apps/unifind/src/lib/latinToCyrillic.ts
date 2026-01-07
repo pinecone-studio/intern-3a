@@ -27,14 +27,18 @@ export const latinToCyrillicMap: Record<string, string> = {
   u: 'у',
   f: 'ф',
   h: 'х',
-  c: 'к',
+  c: 'с',
   y: 'й',
+
+  ö: 'ө',
+  ü: 'ү',
 };
 
-export function latinToCyrillic(input: string) {
+export function latinToCyrillic(input: string): string {
+  if (!input) return '';
+
   let result = input.toLowerCase();
 
-  // 2 үсэгтэй strings-ийг эхлээд солих
   Object.keys(latinToCyrillicMap)
     .sort((a, b) => b.length - a.length)
     .forEach((latin) => {
