@@ -1,5 +1,6 @@
-import { adminMessaging } from 'apps/unifind/src/lib/firebaseAdmin';
-import prisma from 'apps/unifind/src/lib/prisma';
+import { adminMessaging } from '@/lib/firebaseAdmin';
+import prisma from '@/lib/prisma';
+
 import { NextResponse } from 'next/server';
 
 export async function GET() {

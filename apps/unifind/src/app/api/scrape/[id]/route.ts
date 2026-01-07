@@ -1,8 +1,9 @@
 // src/app/api/scrape/[id]/route.ts
 
+import { extractDatesRegex } from '@/lib/dateRegex';
+import { SCRAPE_CONFIG } from '@/lib/scrape-config';
 import { GoogleGenAI } from '@google/genai';
-import { extractDatesRegex } from 'apps/unifind/src/lib/dateRegex';
-import { SCRAPE_CONFIG } from 'apps/unifind/src/lib/scrape-config';
+
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { NextResponse } from 'next/server';

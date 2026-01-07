@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from 'apps/unifind/src/lib/utils';
+import { cn } from '@/lib/utils';
 import { Moon, Sun } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';

@@ -1,7 +1,7 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as HoverCardPrimitive from '@radix-ui/react-hover-card';
-import { cn } from 'apps/unifind/src/lib/utils';
 import * as React from 'react';
 
 function HoverCard({ ...props }: React.ComponentProps<typeof HoverCardPrimitive.Root>) {

@@ -10,4 +10,5 @@ if (!admin.apps.length) {
   });
 }
 
-export const adminMessaging = admin.messaging();
+// Explicit type annotation нэмэх
+export const adminMessaging: admin.messaging.Messaging = admin.messaging();

@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from 'apps/unifind/src/lib/utils';
+import { cn } from '@/lib/utils';
 import useEmblaCarousel, { type UseEmblaCarouselType } from 'embla-carousel-react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import * as React from 'react';
