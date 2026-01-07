@@ -4,7 +4,7 @@ import { Input } from '../components/ui/input';
 
 export default function MajorSelector({ filteredMajors }: { filteredMajors: { id: string; name: string }[] }) {
   const [majorQuery, setMajorQuery] = useState('');
-  const [selectedMajor, setSelectedMajor] = useState<string | null>(null);
+  const [, setSelectedMajor] = useState<string | null>(null);
   const [showMajor, setShowMajor] = useState(false);
 
   // ✅ TypeScript-д зориулж төрөл заав
