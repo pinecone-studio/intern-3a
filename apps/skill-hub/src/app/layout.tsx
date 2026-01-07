@@ -1,5 +1,8 @@
 import { ClerkProvider } from '@clerk/nextjs';
+
 import { Toaster } from '../../../../libs/shared/shadcn/src/components/ui/sonner';
+
+import Footer from './_components/Footer';
 import { Header } from './_components/Header';
 import './global.css';
 
@@ -14,8 +17,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <html lang="en">
         <body className="">
           <Header />
+
           <div className="max-w-\[1440px]\ m-auto">{children}</div>
           <Toaster position="top-center" />
+          <Footer />
         </body>
       </html>
     </ClerkProvider>
