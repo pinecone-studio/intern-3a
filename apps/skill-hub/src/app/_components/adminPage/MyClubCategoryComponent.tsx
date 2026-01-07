@@ -93,7 +93,7 @@ export const MyClubCategoryComponent = ({ selectedClub }: Props) => {
       <div className="mt-4">
         {teacher ? (
           <div className="flex gap-20">
-            <div className="border rounded-xl p-5 bg-white shadow-sm w-120">
+            <div className="border rounded-xl p-7 bg-white shadow-sm w-120">
               <img src={typeof teacher.teacherImage === 'string' ? teacher.teacherImage : '/default-avatar.png'} alt={teacher.teacherName} className="w-20 h-20 rounded-full object-cover mx-auto" />
 
               <h3 className="mt-2 text-center font-semibold text-lg">{teacher.teacherName}</h3>
