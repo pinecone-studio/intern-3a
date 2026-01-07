@@ -1,6 +1,6 @@
 'use client';
 
-import { NewClubType } from '@/lib/utils/types';
+import { ClubFilters, NewClubType } from '@/lib/utils/types';
 import { LatLngBounds } from 'leaflet';
 import React, { useState } from 'react';
 import MapSideBar from './MapSideBar';
@@ -11,6 +11,14 @@ export const BookingStyleMap = ({ allClubs, userLocation }: { allClubs: NewClubT
   const [bounds, setBounds] = useState<LatLngBounds | null>(null);
   const [hoveredClubId, setHoveredClubId] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  const [filters, setFilters] = useState<ClubFilters>({
+    classLevels: [],
+    days: [],
+    timeSlots: [],
+    selectedCategory: undefined,
+    selectedSubCategory: undefined,
+  });
 
   const visibleClubs = bounds ? allClubs.filter((c) => bounds.contains([c.clubLat, c.clubLong])) : allClubs;
 

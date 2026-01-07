@@ -17,7 +17,7 @@ export const MyUserButton = () => {
       <SignedOut>
         <div className="flex gap-5">
           <SignInButton>
-            <Button className="rounded-full cursor-pointer bg-[#FCB027] hover:bg-[#f5a81d]">Нэвтрэх</Button>
+            <Button className="rounded-full cursor-pointer bg-[#FCB027] hover:bg-[#f5a81d]">Дугуйлан бүртгүүлэх</Button>
           </SignInButton>
         </div>
       </SignedOut>

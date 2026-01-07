@@ -20,7 +20,7 @@ export const Header = () => {
   if (pathname === '/map') return null;
 
   return (
-    <div className="w-full h-20 bg-[#0A427A] sticky top-0 z-50 flex flex-col sm:flex-row justify-between items-center px-4 sm:px-10">
+    <div className="w-full h-16 bg-[#0A427A] sticky top-0 z-50 flex flex-col sm:flex-row justify-between items-center px-4 sm:px-10">
       <div className="flex flex-1 flex-col sm:flex-row items-center gap-2 sm:gap-5">
         <Image className="text-white font-bold text-xl" width={40} height={40} src="/logo.png" alt="Logo" />
         <Link href={'/'}>
