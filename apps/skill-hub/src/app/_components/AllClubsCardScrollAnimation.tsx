@@ -1,13 +1,19 @@
 'use client';
 
 import { getClassLevelMN, NewClubType } from '@/lib/utils/types';
+import { SignedIn, SignedOut } from '@clerk/nextjs';
 import { Badge, Button, Spinner } from '@intern-3a/shadcn';
 import { MapPin } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { RegisterLoginAlertDialog } from '../club/_components';
 
 export const AllClubsCardScrollAnimation = ({ allClubs, isLoading }: { allClubs: NewClubType[]; isLoading: boolean }) => {
   const router = useRouter();
+  const [showLoginAlert, setShowLoginAlert] = useState<boolean>(false);
+
+  const handleSendRegisterRequest = () => {};
 
   if (isLoading) {
     return (
@@ -54,10 +60,19 @@ export const AllClubsCardScrollAnimation = ({ allClubs, isLoading }: { allClubs:
                 <Button className="bg-[#FCB027] hover:bg-[#e69f1c] text-white rounded-full px-5 cursor-pointer">Дэлгэрэнгүй</Button>
               </Link>
 
-              <Button className="bg-[#0A427A] hover:bg-[#093662] text-white rounded-full px-5 cursor-pointer" onClick={() => router.push('/register')}>
-                Бүртгүүлэх
-              </Button>
+              <SignedOut>
+                <Button onClick={() => setShowLoginAlert(true)} className="bg-[#0A427A] hover:bg-[#093662] text-white rounded-full px-5 cursor-pointer">
+                  Бүртгүүлэх
+                </Button>
+              </SignedOut>
+
+              <SignedIn>
+                <Button onClick={handleSendRegisterRequest} className="bg-[#0A427A] hover:bg-[#093662] text-white rounded-full px-5 cursor-pointer">
+                  Бүртгүүлэх
+                </Button>
+              </SignedIn>
             </div>
+            <RegisterLoginAlertDialog showLoginAlert={showLoginAlert} setShowLoginAlert={setShowLoginAlert} id={club._id!} />
           </div>
         ))}
       </div>
