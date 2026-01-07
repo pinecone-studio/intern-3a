@@ -51,7 +51,13 @@ export async function GET(req: Request) {
       orderBy: [{ created_at: 'desc' }, { id: 'desc' }],
     });
 
-    return NextResponse.json(universities);
+    const universitiesWithMinScore = universities.map((univ) => {
+      const allMinScores = univ.majors.flatMap((m: any) => m.major_requirements.map((r: any) => r.min_score));
+      const minScore = allMinScores.length > 0 ? Math.min(...allMinScores) : null;
+      return { ...univ, minScore };
+    });
+
+    return NextResponse.json(universitiesWithMinScore);
   } catch (error: any) {
     console.error('API Error details:', error);
     return NextResponse.json({ error: 'Internal Server Error', message: error.message }, { status: 500 });

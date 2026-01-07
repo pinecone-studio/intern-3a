@@ -1,34 +1,20 @@
 'use client';
-import { Building2, GraduationCap, Landmark, MapPin, Palette, School } from 'lucide-react';
-
-import Image from 'next/image';
+import { GraduationCap, Landmark, MapPin, Palette, School } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { UniversityCardProps } from '../../lib/types/type';
 import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
 
-type UniversityCardProps = {
-  id: number;
-  name: string;
-  location: string;
-  image: string;
-  status: 'open' | 'closing-soon' | 'closed';
-  minScore?: string;
-  admissionRate?: string | null;
-  deadline?: string | null;
-  nextCycle?: string | null;
-};
-
 const getIconForUniversity = (name: string) => {
-  if (name.includes('Tech')) return Building2;
-  if (name.includes('Liberal Arts')) return Landmark;
-  if (name.includes('Science')) return School;
-  if (name.includes('Business')) return Building2;
-  if (name.includes('Arts')) return Palette;
+  if (name.includes('Tech') || name.includes('Технологи')) return School;
+  if (name.includes('Arts') || name.includes('Урлаг')) return Palette;
+  if (name.includes('Medical') || name.includes('Анагаах')) return Landmark;
   return GraduationCap;
 };
 
 export default function UniversityCard({ id, name, location, image, status, minScore }: UniversityCardProps) {
+  console.log('min Score', minScore);
   const router = useRouter();
   const Icon = getIconForUniversity(name);
 
@@ -36,7 +22,6 @@ export default function UniversityCard({ id, name, location, image, status, minS
     router.push(`/detail/${id}`);
   };
 
-  // ✅ Image fallback component
   const ImageWithFallback = ({ src }: { src: string }) => {
     const [imgSrc, setImgSrc] = useState(src || '/university-logo-arts.jpg');
     return <img src={imgSrc} alt={name} className="w-full h-full object-cover rounded-md" onError={(e) => (e.currentTarget.src = '/university-logo-arts.jpg')} />;
@@ -45,7 +30,6 @@ export default function UniversityCard({ id, name, location, image, status, minS
   return (
     <Card onClick={handleViewDetails} className="overflow-hidden hover:shadow-lg dark:bg-gray-900 transition-shadow cursor-pointer mt-0 pt-0">
       <div className="relative h-48">
-        {/* ✅ Fallback image ашиглаж харуулах */}
         <ImageWithFallback src={image} />
 
         <div className="absolute top-4 right-4">
@@ -70,8 +54,11 @@ export default function UniversityCard({ id, name, location, image, status, minS
           </div>
         </div>
         <div className="flex justify-between text-sm border-t pt-2">
-          <span>Босго оноо</span>
-          <span className="font-semibold">{minScore ?? '–'}</span>
+          <div className="flex items-center gap-1.5 font-bold text-gray-700 text-sm">
+            <GraduationCap className="w-5 h-5 text-sky-500" /> {minScore}+
+          </div>
+          {/* <span>Босго оноо</span> */}
+          <span className="font-semibold">{minScore ? `${minScore}+` : '--'}</span>
         </div>
 
         <Button

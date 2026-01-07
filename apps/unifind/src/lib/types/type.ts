@@ -10,6 +10,35 @@ export type University = {
   burtgelehleh_start_date: string;
 };
 
+export type UniversityCardProps = {
+  id: number;
+  name: string;
+  location: string;
+  image: string;
+  status: 'open' | 'closing-soon' | 'closed';
+  minScore: number;
+  admissionRate?: string | null;
+  deadline?: string | null;
+  nextCycle?: string | null;
+};
+
+export type UniversityName = {
+  id: number;
+  name: string;
+  city: string | null;
+};
+
+export type MajorResult = {
+  id: number;
+  name: string;
+  universities: University;
+};
+
+export type SearchResult = {
+  universities: University[];
+  majors: MajorResult[];
+};
+
 export type Subject = {
   id: number;
   name: string;
