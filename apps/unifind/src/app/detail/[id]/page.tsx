@@ -30,7 +30,7 @@ type Scholarship = {
 export default function UniversityDetailPage2({ params }: Props) {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState<NumDates | null>(null);
-  const [activeTab, setActiveTab] = useState<'overview' | 'scholarships' | 'majors'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'scholarships' | 'majors'>('majors');
   const [data2, setData2] = useState<Scholarship[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
