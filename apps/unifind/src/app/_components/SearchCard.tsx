@@ -21,9 +21,9 @@ export function SearchCard() {
   const router = useRouter();
 
   const [majors, setMajors] = useState<any[]>([]);
-  const [majorQuery, setMajorQuery] = useState('');
-  const [selectedMajor, setSelectedMajor] = useState<number | null>(null);
-  const [showMajor, setShowMajor] = useState(false);
+  const [majorQuery] = useState('');
+  const [selectedMajor] = useState<number | null>(null);
+  const [, setShowMajor] = useState(false);
 
   const [subject1, setSubject1] = useState<number | null>(null);
   const [subject2, setSubject2] = useState<number | null>(null);

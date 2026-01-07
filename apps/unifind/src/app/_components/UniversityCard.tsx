@@ -1,7 +1,5 @@
 'use client';
 import { Building2, GraduationCap, Landmark, MapPin, Palette, School } from 'lucide-react';
-
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Button } from '../components/ui/button';
@@ -38,7 +36,7 @@ export default function UniversityCard({ id, name, location, image, status, minS
 
   // ✅ Image fallback component
   const ImageWithFallback = ({ src }: { src: string }) => {
-    const [imgSrc, setImgSrc] = useState(src || '/university-logo-arts.jpg');
+    const [imgSrc] = useState(src || '/university-logo-arts.jpg');
     return <img src={imgSrc} alt={name} className="w-full h-full object-cover rounded-md" onError={(e) => (e.currentTarget.src = '/university-logo-arts.jpg')} />;
   };
 
