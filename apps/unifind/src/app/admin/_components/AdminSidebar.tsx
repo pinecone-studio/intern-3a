@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from 'apps/unifind/src/lib/utils';
+import { cn } from '@/lib/utils';
 import { Award, BookOpen, ClipboardCheck, GraduationCap, LayoutDashboard } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';

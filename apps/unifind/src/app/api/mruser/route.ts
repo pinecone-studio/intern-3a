@@ -1,5 +1,5 @@
 // apps/unifind/src/app/api/mruser/route.ts
-import prisma from 'apps/unifind/src/lib/prisma';
+import prisma from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {

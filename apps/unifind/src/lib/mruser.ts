@@ -1,4 +1,4 @@
-import { User } from 'node_modules/@clerk/backend/dist/api';
+import { User } from '@clerk/nextjs/server';
 import prisma from './prisma';
 export async function createOrGetMRUser(clerkUser: User) {
   const email = clerkUser.emailAddresses?.[0]?.emailAddress;

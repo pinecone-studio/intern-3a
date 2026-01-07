@@ -5,9 +5,9 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import FullCalendar from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import { getToken, isSupported } from 'firebase/messaging';
+// import { getToken, isSupported } from 'firebase/messaging';
 import { useEffect, useState } from 'react';
-import { messaging } from '../../lib/firebaseClient';
+// import { messaging } from '../../lib/firebaseClient';
 
 type TeamCalendarProps = {
   userId: number;
@@ -17,18 +17,18 @@ export default function TeamCalendar({ userId }: TeamCalendarProps) {
   const [events, setEvents] = useState<EventInput[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const registerPushTokenOnServer = async (token: string) => {
-    try {
-      await fetch('/api/push-token', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user_id: userId, token }),
-      });
-      console.log('Push token saved to server:', token);
-    } catch (err) {
-      console.error('Failed to save push token:', err);
-    }
-  };
+  // const registerPushTokenOnServer = async (token: string) => {
+  //   try {
+  //     await fetch('/api/push-token', {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({ user_id: userId, token }),
+  //     });
+  //     console.log('Push token saved to server:', token);
+  //   } catch (err) {
+  //     console.error('Failed to save push token:', err);
+  //   }
+  // };
 
   useEffect(() => {
     if (!userId) return;
@@ -45,27 +45,27 @@ export default function TeamCalendar({ userId }: TeamCalendarProps) {
       }
     };
 
-    const registerPush = async () => {
-      try {
-        if (!(await isSupported())) return;
+    // const registerPush = async () => {
+    //   try {
+    //     if (!(await isSupported())) return;
 
-        const permission = await Notification.requestPermission();
-        if (permission !== 'granted') return;
+    //     const permission = await Notification.requestPermission();
+    //     if (permission !== 'granted') return;
 
-        if (!messaging) return;
-        const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-        const token = await getToken(messaging, {
-          vapidKey: process.env.NEXT_PUBLIC_VAPID_KEY,
-          serviceWorkerRegistration: registration,
-        });
-        if (token) await registerPushTokenOnServer(token);
-      } catch (err) {
-        console.error('Push token registration failed:', err);
-      }
-    };
+    //     if (!messaging) return;
+    //     const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+    //     const token = await getToken(messaging, {
+    //       vapidKey: process.env.NEXT_PUBLIC_VAPID_KEY,
+    //       serviceWorkerRegistration: registration,
+    //     });
+    //     if (token) await registerPushTokenOnServer(token);
+    //   } catch (err) {
+    //     console.error('Push token registration failed:', err);
+    //   }
+    // };
 
     fetchEvents();
-    registerPush();
+    // registerPush();
 
     const interval = setInterval(fetchEvents, 30_000);
     return () => clearInterval(interval);

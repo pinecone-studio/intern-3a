@@ -12,7 +12,7 @@ import { useUser } from '@clerk/nextjs';
 import Image from 'next/image';
 import { toast } from 'sonner';
 
-import { Major, MONGOL_MONTHS, NumDates } from 'apps/unifind/src/lib/types/type';
+import { Major, MONGOL_MONTHS, NumDates } from '@/lib/types/type';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../../components/ui/dialog';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());

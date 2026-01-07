@@ -1,5 +1,6 @@
 // src/app/api/user-university-selection/route.ts
-import prisma from 'apps/unifind/src/lib/prisma';
+
+import prisma from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';

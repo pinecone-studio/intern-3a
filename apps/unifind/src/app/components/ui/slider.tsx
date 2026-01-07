@@ -1,7 +1,7 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as SliderPrimitive from '@radix-ui/react-slider';
-import { cn } from 'apps/unifind/src/lib/utils';
 import * as React from 'react';
 
 function Slider({ className, defaultValue, value, min = 0, max = 100, ...props }: React.ComponentProps<typeof SliderPrimitive.Root>) {

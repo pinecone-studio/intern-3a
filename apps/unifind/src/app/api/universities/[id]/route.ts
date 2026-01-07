@@ -1,4 +1,4 @@
-import prisma from 'apps/unifind/src/lib/prisma';
+import prisma from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 
 type Params = {
