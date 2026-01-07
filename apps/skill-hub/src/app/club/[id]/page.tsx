@@ -1,19 +1,16 @@
 'use client';
 
-import { ClubProjectsSection } from '@/app/_components/clubDetailPage/ClubProjectsSection';
 import { ClubDetailPageSkeleton } from '@/app/_components/ClubDetailPageSkeleton';
-import ClubNextClasses from '@/app/_components/ClubNextClasses';
+import ClubOngoingProjects from '@/app/_components/ClubOngoingProjects';
 import { ClubRating } from '@/app/_components/ClubRating';
 import MapView from '@/app/_components/MapView';
 import { useClubById } from '@/app/hook/use-club-by-id';
 import { useProjects } from '@/app/hook/use-projects';
-import { SignedIn, SignedOut } from '@clerk/nextjs';
 import { Badge, Button, Dialog, DialogContent, DialogTitle, DialogTrigger } from '@intern-3a/shadcn';
 import { ArrowLeft, Info, Mail, MapPin, Phone } from 'lucide-react';
 import Image from 'next/image';
 import { notFound, useRouter } from 'next/navigation';
 import { use, useEffect, useMemo, useState } from 'react';
-import { RegisterLoginAlertDialog } from '../_components';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -24,10 +21,9 @@ export default function ClubDetailPage({ params }: PageProps) {
   const { id } = use(params);
 
   const { club, loading } = useClubById(id);
-  const { projects, loading: projectsLoading } = useProjects(id);
+  const { projects } = useProjects(id);
 
   const [selectedLevel, setSelectedLevel] = useState<string>('');
-  const [showLoginAlert, setShowLoginAlert] = useState<boolean>(false);
 
   /* ----------------------------------
      INITIAL LEVEL (хуучин логик хэвээр)
@@ -63,12 +59,6 @@ export default function ClubDetailPage({ params }: PageProps) {
 
   const currentTeacher = club.teachersInfoByClass?.[selectedLevel];
   const currentPrice = club.clubPrices?.[selectedLevel];
-  const currentSchedule = club.scheduledClubTimes?.[selectedLevel] || {};
-  const availableWeekdays = Object.keys(currentSchedule);
-
-  const handleRegisterClick = () => {
-    setShowLoginAlert(true);
-  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-4 md:py-10">
@@ -193,31 +183,25 @@ export default function ClubDetailPage({ params }: PageProps) {
               </div>
             </div>
 
-            {/* ХУВААРЬ + CTA */}
+            {/* ТӨСЛҮҮД + CTA */}
             <div className="relative pt-2">
               <div className="hidden md:block absolute -top-4 left-1/2 -translate-x-1/2 w-24 h-1 rounded-full bg-orange-200" />
 
-              <SignedIn>
-                <ClubNextClasses availableWeekdays={availableWeekdays} scheduledTimes={currentSchedule} onRegister={() => router.push(`/register?clubId=${id}&level=${selectedLevel}`)} />
-              </SignedIn>
-
-              <SignedOut>
-                <ClubNextClasses availableWeekdays={availableWeekdays} scheduledTimes={currentSchedule} onRegister={handleRegisterClick} />
-              </SignedOut>
+              <ClubOngoingProjects
+                projects={filteredProjects}
+                onViewProject={(projectId) => {
+                  // You can add navigation to project detail page here
+                  console.log('View project:', projectId);
+                }}
+              />
             </div>
 
             <div className="p-4 bg-slate-50/50 rounded-2xl border border-slate-50">
-              <p className="text-[10px] md:text-[11px] text-slate-400 font-medium leading-relaxed">
-                * Та өөрт тохирох хуваарийг сонгон бүртгүүлэх товчийг дарна уу. Манай менежер тантай эргэн холбогдох болно.
-              </p>
+              <p className="text-[10px] md:text-[11px] text-slate-400 font-medium leading-relaxed">* Дэлгэрэнгүй мэдээлэл авахын тулд төсөл дээр дарж үзнэ үү.</p>
             </div>
-            {/* projects-ийг selectedLevel-ээр шүүж харуулах */}
-            <ClubProjectsSection projects={filteredProjects} loading={projectsLoading} selectedLevelName={levelLabels[selectedLevel] || selectedLevel} />
           </div>
         </div>
       </div>
-
-      <RegisterLoginAlertDialog showLoginAlert={showLoginAlert} setShowLoginAlert={setShowLoginAlert} id={id} />
     </div>
   );
 }

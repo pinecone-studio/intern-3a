@@ -117,7 +117,7 @@ const AdminMyClubsComponent = () => {
 
               <p className="text-sm md:text-base leading-relaxed">{selectedClub.clubDescription}</p>
 
-              <div className="mt-2 mb-2">
+              <div className="mt-2 mb-2 flex gap-3 flex-wrap">
                 <ProjectDialog clubId={clubId} />
               </div>
             </div>
