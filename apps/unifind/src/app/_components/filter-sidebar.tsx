@@ -11,22 +11,25 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export function FilterSidebar({ filters, setFilters, resetFilters }: any) {
   const [fieldExpanded, setFieldExpanded] = useState(true);
-  const { data: categories = [] } = useSWR('/api/majorCategories', fetcher);
+  const { data: majors = [] } = useSWR('/api/majors', fetcher);
+  console.log({ majors });
 
-  const handleCategoryChange = (id: number, checked: boolean) => {
-    const newCats = checked ? [...filters.categories, id] : filters.categories.filter((c: number) => c !== id);
-    setFilters({ ...filters, categories: newCats });
+  const handleMajorChange = (name: string, checked: boolean) => {
+    const newList = checked ? [...filters.majorNames, name] : filters.majorNames.filter((n: string) => n !== name);
+
+    setFilters({ ...filters, majorNames: newList });
   };
-  console.log({ filters });
+  console.log({ fieldExpanded });
 
   return (
     <aside className="space-y-6 sticky top-24">
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+      <div className="bg-white dark:bg-gray-900 dark:border-neutral-800 rounded-2xl shadow-sm border border-gray-100 p-5">
+        {/* header */}
         <div className="flex items-center justify-between mb-6">
-          <h2 className="font-bold text-gray-900 flex items-center gap-2">
-            <GraduationCap className="w-5 h-5 text-sky-600" /> Шүүлтүүр
+          <h2 className="font-bold text-gray-900 flex items-center gap-2 dark:text-white">
+            <GraduationCap className="w-5 h-5 text-sky-500" /> Шүүлтүүр
           </h2>
-          <Button variant="ghost" onClick={resetFilters} className="h-8 text-xs text-gray-500 hover:text-sky-600">
+          <Button variant="ghost" onClick={resetFilters} className="h-8 text-xs text-gray-500 hover:text-sky-500 dark:text-white dark:hover:text-sky-500">
             <RotateCcw className="w-3 h-3 mr-1" /> Шинэчлэх
           </Button>
         </div>
@@ -46,41 +49,30 @@ export function FilterSidebar({ filters, setFilters, resetFilters }: any) {
         </div>
 
         {/* majors */}
-        <div className="border-t border-gray-50 pt-4">
+
+        <div className="border-t border-gray-50 dark:border-gray-800 pt-4">
           <button onClick={() => setFieldExpanded(!fieldExpanded)} className="flex items-center justify-between w-full mb-4">
-            <span className="font-bold text-sm text-gray-700">Мэргэжлийн чиглэл</span>
+            <span className="font-bold text-sm text-gray-700 dark:text-white">Мэргэжлийн чиглэл</span>
             {fieldExpanded ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
           </button>
 
           {fieldExpanded && (
             <div className="space-y-2.5 max-h-75 overflow-y-auto pr-2 custom-scrollbar">
-              {categories.map((cat: any) => (
-                <div key={cat.id} className="flex items-center gap-3 group cursor-pointer">
-                  <Checkbox id={`cat-${cat.id}`} checked={filters.categories.includes(cat.id)} onCheckedChange={(checked) => handleCategoryChange(cat.id, !!checked)} />
-                  <Label htmlFor={`cat-${cat.id}`} className="text-sm text-gray-600 group-hover:text-sky-600 transition-colors cursor-pointer">
-                    {cat.name}
-                  </Label>
-                </div>
-              ))}
+              {majors
+                .filter((m: any, i: number, arr: any[]) => arr.findIndex((x) => x.name === m.name) === i)
+                .map((major: any) => (
+                  <div key={major.name} className="flex items-center gap-3 ">
+                    <Checkbox checked={filters.majorNames.includes(major.name)} onCheckedChange={(checked) => handleMajorChange(major.name, !!checked)} />
+                    <Label>{major.name}</Label>
+                  </div>
+                ))}
             </div>
           )}
         </div>
-
-        {/* Score Slider */}
-        {/* <div className="border-t border-gray-50 mt-6 pt-6">
-          <div className="flex justify-between items-end mb-4">
-            <Label className="font-bold text-sm text-gray-700">Босго оноо</Label>
-            <span className="text-sky-600 font-bold text-lg">
-              {filters.minScore}
-              <span className="text-xs ml-0.5">+</span>
-            </span>
-          </div>
-          <Slider value={[filters.minScore]} onValueChange={(val) => setFilters({ ...filters, minScore: val[0] })} max={800} step={10} className="py-4" />
-        </div> */}
       </div>
 
       {/* Promo Box */}
-      <div className="bg-sky-600 hover:bg-sky-700 rounded-2xl p-6 text-white relative overflow-hidden group">
+      <div className="bg-sky-500 hover:bg-sky-600 dark:bg-gray-900 dark:border-neutral-800 dark:border rounded-2xl p-6 text-white  relative overflow-hidden group">
         <div className="relative z-10">
           <p className="font-bold mb-1">Тусламж хэрэгтэй юу?</p>
           <p className="text-sky-100 text-xs mb-4 opacity-90">Мэргэжлийн зөвлөх танд чиглүүлэхэд бэлэн байна.</p>

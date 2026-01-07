@@ -18,14 +18,32 @@
         "name": "next"
       }
     ],
+
+    "baseUrl": ".",
+    "rootDir": "../..",
     "paths": {
       "@/*": ["./src/*"]
     },
     "types": ["jest", "node"],
     "outDir": "dist",
-    "rootDir": "src", // source файлууд src-д байгаа
-    "tsBuildInfoFile": "dist/tsconfig.tsbuildinfo"
+
+    "tsBuildInfoFile": "dist/tsconfig.tsbuildinfo",
+    "skipLibCheck": true
   },
-  "include": ["../../dist/apps/unifind/.next/types/**/*.ts", "next-env.d.ts", "src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules", "dist", ".next", "out-tsc", "src/**/*.spec.ts", "src/**/*.test.ts"]
+  "include": [
+    "../../apps/unifind/.next/types/**/*.ts",
+    "../../dist/apps/unifind/.next/types/**/*.ts",
+    "next-env.d.ts",
+    "src/**/*.js",
+    "src/**/*.jsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": ["out-tsc", "dist", "node_modules", "jest.config.ts", "jest.config.cts", "src/**/*.spec.ts", "src/**/*.test.ts", ".next", "eslint.config.js", "eslint.config.cjs", "eslint.config.mjs"],
+  "references": [
+    {
+      "path": "../../libs/shared/shadcn"
+    }
+  ]
 }

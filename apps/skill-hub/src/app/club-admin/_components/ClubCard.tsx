@@ -1,10 +1,11 @@
 'use client';
 
 import { ClassLevelsType, NewClubType, WeekDayType } from '@/lib/utils/types';
-import { Button, Card, CardContent } from '@intern-3a/shadcn';
-import { Calendar, ChevronDown, Mail, MapPin, Phone, X } from 'lucide-react';
+import { Button } from '@intern-3a/shadcn';
+import { Calendar, ChevronDown, ChevronUp, Layers, MapPin, Phone, Wallet, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
+import { IoIosMail } from 'react-icons/io';
 
 const CLASS_LEVEL_LABEL_MN: { [K in ClassLevelsType]: string } = {
   Elementary: 'Бага',
@@ -31,10 +32,12 @@ const PRICE_LABEL_MN: { [K in ClassLevelsType]: string } = {
 export const ClubCard = ({ club }: { club: NewClubType }) => {
   const [open, setOpen] = useState(false);
   const [modalDescExpanded, setModalDescExpanded] = useState(false);
+
   const [expandedClass, setExpandedClass] = useState<ClassLevelsType | null>(null);
   const router = useRouter();
 
   const levelLabel = useMemo(() => club.selectedClassLevelNames?.map((l) => CLASS_LEVEL_LABEL_MN[l]).join(' · ') || '—', [club.selectedClassLevelNames]);
+  const CLASS_PRIORITY: ClassLevelsType[] = ['Elementary', 'Middle', 'High'];
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -42,6 +45,7 @@ export const ClubCard = ({ club }: { club: NewClubType }) => {
       setOpen(true);
     }
   };
+
   const [selectedClass, setSelectedClass] = useState<ClassLevelsType | null>(null);
   // const [selectedDay, setSelectedDay] = useState<WeekDayType | null>(null);
 
@@ -91,46 +95,53 @@ export const ClubCard = ({ club }: { club: NewClubType }) => {
 
     return image;
   };
+  useEffect(() => {
+    if (!open) return;
+
+    if (!club.selectedClassLevelNames || club.selectedClassLevelNames.length === 0) {
+      setSelectedClass(null);
+      return;
+    }
+
+    const defaultClass = CLASS_PRIORITY.find((level) => club.selectedClassLevelNames?.includes(level));
+
+    setSelectedClass(defaultClass ?? null);
+  }, [open, club.selectedClassLevelNames]);
 
   return (
     <div className="w-80 relative">
       <div className="bg-white rounded-2xl border-2 border-slate-200 overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col h-full">
-        <div className="aspect-video relative overflow-hidden bg-slate-100">
+        <div className="aspect-video relative overflow-hidden bg-slate-100 w-full">
           {club.clubImage && <img src={typeof club.clubImage === 'string' ? club.clubImage : ''} alt={club.clubName} className="w-full h-full object-cover" />}
         </div>
+
         <div className="p-6 flex flex-col flex-grow">
+          {/* Club Name - дээд талд */}
           <h4 className="text-xl font-bold text-[#0A427A] mb-2 line-clamp-1">{club.clubName}</h4>
 
-          <p className="text-slate-600 text-sm mb-4 line-clamp-2 h-10">{club.clubDescription}</p>
+          {/* Description - дунд хэсэг, line-clamp-2 хэвээр */}
+          <p className="text-slate-600 text-sm mb-4 line-clamp-2">{club.clubDescription}</p>
 
+          {/* Class Levels */}
           <div className="mb-3">
-            <div className="flex flex-wrap gap-2 min-h-[28px]">
-              {club.selectedClassLevelNames && club.selectedClassLevelNames.length > 0 ? (
-                club.selectedClassLevelNames.map((level) => (
-                  <div key={level} className="relative">
-                    <button
-                      onClick={() => toggleClassDetails(level)}
-                      className="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-full flex items-center gap-1 transition-colors cursor-pointer"
-                    >
-                      {level}
-                      <ChevronDown className={`w-3 h-3 transition-transform ${expandedClass === level ? 'rotate-180' : ''}`} />
-                    </button>
-                  </div>
-                ))
-              ) : (
-                <span className="invisible">placeholder</span>
-              )}
+            <div className="flex gap-2 flex-wrap">
+              {club.selectedClassLevelNames?.map((level) => (
+                <div key={level} className="relative">
+                  <button
+                    onClick={() => toggleClassDetails(level)}
+                    className="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-full flex items-center gap-1 transition-colors cursor-pointer"
+                  >
+                    {level}
+                    <ChevronDown className={`w-3 h-3 transition-transform ${expandedClass === level ? 'rotate-180' : ''}`} />
+                  </button>
+                </div>
+              ))}
             </div>
 
-            {/* Dropdown for selected class */}
             {club.selectedClassLevelNames?.map(
               (level) =>
                 expandedClass === level && (
                   <div key={`${level}-dropdown`} className="mt-2 p-3 bg-slate-50 rounded-lg border border-slate-200 text-xs">
-                    <div className="mb-2">
-                      <strong className="text-slate-700">Үнэ:</strong>{' '}
-                      <span className="text-slate-600">{club.clubPrices?.[level] ? `${club.clubPrices[level].toLocaleString()}₮` : 'Мэдээлэл байхгүй'}</span>
-                    </div>
                     <div>
                       <strong className="text-slate-700">Хичээлийн цаг:</strong>
                       <div className="mt-1 space-y-1">
@@ -145,16 +156,21 @@ export const ClubCard = ({ club }: { club: NewClubType }) => {
                         )}
                       </div>
                     </div>
+                    <div className="mb-2">
+                      <strong className="text-slate-700">Үнэ:</strong>{' '}
+                      <span className="text-slate-600">{club.clubPrices?.[level] ? `${club.clubPrices[level].toLocaleString()}₮` : 'Мэдээлэл байхгүй'}</span>
+                    </div>
                   </div>
                 ),
             )}
           </div>
 
-          <div className="mb-4 min-h-[60px]">
+          {/* Teachers */}
+          <div className="mb-4">
             {club.teachersInfoByClass && Object.keys(club.teachersInfoByClass).length > 0 ? (
               <div>
                 <p className="text-xs font-semibold text-slate-700 mb-2">Багш:</p>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-col gap-2">
                   {Object.entries(club.teachersInfoByClass)
                     .filter(([_, teacher]) => teacher?.teacherName)
                     .map(([level, teacher]) => (
@@ -176,7 +192,8 @@ export const ClubCard = ({ club }: { club: NewClubType }) => {
             )}
           </div>
 
-          <div className="flex justify-center mt-auto">
+          {/* Button at the bottom */}
+          <div className="mt-auto flex justify-center">
             <Button onClick={() => setOpen(true)} className="bg-[#FCB027] hover:bg-[#e69f1c] text-white rounded-full px-5 cursor-pointer w-full">
               Дэлгэрэнгүй
             </Button>
@@ -195,8 +212,8 @@ export const ClubCard = ({ club }: { club: NewClubType }) => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <img className="w-70" src={clubImageSrc} alt={club.clubName} />
-                <div className="font-semibold mb-2">Багш</div>
+                <img className="w-80 rounded-2xl" src={clubImageSrc} alt={club.clubName} />
+                <div className="font-semibold mb-2 mt-5">Багш</div>
 
                 {club.teachersInfoByClass && Object.entries(club.teachersInfoByClass).length > 0 ? (
                   <div className="flex flex-col gap-4">
@@ -224,11 +241,11 @@ export const ClubCard = ({ club }: { club: NewClubType }) => {
 
                           <div className="mt-3 text-sm text-gray-600 space-y-1">
                             <div className="flex justify-center items-center gap-2">
-                              <Phone className="w-4 h-4" />
+                              <Phone className="w-4 h-4 text-black fill-black" />
                               {teacher.teacherPhone || '—'}
                             </div>
                             <div className="flex justify-center items-center gap-2">
-                              <Mail className="w-4 h-4" />
+                              <IoIosMail className="w-5 h-5 stroke-white fill-black" strokeWidth={2} />
                               {teacher.teacherEmail || '—'}
                             </div>
                           </div>
@@ -241,9 +258,10 @@ export const ClubCard = ({ club }: { club: NewClubType }) => {
               </div>
 
               <div className="space-y-4">
+                <h4 className="text-xl font-bold text-[#FCB027] mb-2 line-clamp-1">{club.clubName}</h4>
                 <div>
                   <p
-                    className="text-sm text-black/90"
+                    className="text-ls text-black/90"
                     style={modalDescExpanded ? ({} as React.CSSProperties) : ({ display: '-webkit-box', WebkitLineClamp: 5, WebkitBoxOrient: 'vertical', overflow: 'hidden' } as React.CSSProperties)}
                   >
                     {club.clubDescription}
@@ -257,19 +275,49 @@ export const ClubCard = ({ club }: { club: NewClubType }) => {
                     className="mt-2 text-sm text-blue-600 underline"
                     type="button"
                   >
-                    {modalDescExpanded ? '⇧' : '⇩'}
+                    {modalDescExpanded ? <ChevronUp className="w-5 h-5 text-black" /> : <ChevronDown className="w-5 h-5 text-black" />}
                   </button>
                 </div>
                 <div className="mt-3 flex gap-4">
                   <div className="inline-flex items-center gap-2">
-                    <span className="text-[#FCB027]">Категори</span>:
+                    <div className="relative group inline-flex items-center">
+                      <Layers className="w-5 h-5 text-orange-600" />
+
+                      <span
+                        className="
+                         absolute -top-8 left-1/2 -translate-x-1/2
+                         whitespace-nowrap
+                         rounded-md bg-black px-2 py-1
+                         text-xs text-white
+                         opacity-0 group-hover:opacity-100
+                         transition
+                       "
+                      >
+                        Категори
+                      </span>
+                    </div>
                   </div>
                   <p className="font-medium mt-1">{CLASS_LEVEL_LABEL_MN[club.clubCategoryName as ClassLevelsType] || club.clubCategoryName}</p>
                 </div>
 
-                <div className="flex gap-4">
+                <div className="flex gap-4 ">
                   <div className="inline-flex items-center gap-2">
-                    <Calendar className="w-5 h-5" style={{ color: '#FCB027' }} aria-hidden />
+                    <div className="relative group inline-flex items-center">
+                      <Calendar className="w-5 h-5 text-orange-600" />
+
+                      <span
+                        className="
+                         absolute -top-8 left-1/2 -translate-x-1/2
+                         whitespace-nowrap
+                         rounded-md bg-black px-2 py-1
+                         text-xs text-white
+                         opacity-0 group-hover:opacity-100
+                         transition
+                       "
+                      >
+                        Хичээлийн цаг
+                      </span>
+                    </div>
                     <span className="sr-only">Хичээлийн хуваарь</span>
                     {club.scheduledClubTimes && Object.entries(club.scheduledClubTimes).length > 0 ? (
                       <div className="mt-2 flex flex-wrap gap-3"></div>
@@ -280,15 +328,15 @@ export const ClubCard = ({ club }: { club: NewClubType }) => {
                   <div>
                     {open && (
                       <div className="">
-                        <div className="flex gap-2 mb-4">
+                        <div className="flex gap-2 mb-4 ">
                           {club.selectedClassLevelNames?.map((level) => (
                             <button
                               key={level}
                               onClick={() => setSelectedClass(level)}
                               className={`
-        px-4 py-1.5 rounded-full text-sm font-medium transition-all
-        ${selectedClass === level ? 'bg-[#FCB027] text-white shadow' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}
-      `}
+                                 px-4 py-1.5 rounded-full text-sm font-medium transition-all
+                                 ${selectedClass === level ? 'bg-[#FCB027] text-white shadow' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}
+                               `}
                             >
                               {CLASS_LEVEL_LABEL_MN[level]}
                             </button>
@@ -300,7 +348,7 @@ export const ClubCard = ({ club }: { club: NewClubType }) => {
                             {Object.entries(club.scheduledClubTimes?.[selectedClass]).map(([day, schedule]) => (
                               <div key={day} className=" flex gap-3">
                                 <span className="font-semibold">{WEEK_DAY_LABEL_MN[day as WeekDayType]}:</span>
-                                <span>
+                                <span className="text-sl">
                                   Эхлэх: {schedule.startTime} - Дуусах: {schedule.endTime}
                                 </span>
                               </div>
@@ -312,12 +360,35 @@ export const ClubCard = ({ club }: { club: NewClubType }) => {
                   </div>
                 </div>
                 <div>
-                  <p className=" text-[#FCB027]">Төлбөр сараар</p>
+                  <div className="relative group inline-flex items-center">
+                    <Wallet className="w-5 h-5 text-orange-600" />
+
+                    <span
+                      className="
+                         absolute -top-8 left-1/2 -translate-x-1/2
+                         whitespace-nowrap
+                         rounded-md bg-black px-2 py-1
+                         text-xs text-white
+                         opacity-0 group-hover:opacity-100
+                         transition
+                       "
+                    >
+                      Төлбөр
+                    </span>
+                  </div>
                   <div className="mt-2 flex flex-wrap gap-2 ml-8">
                     {club.clubPrices ? (
                       Object.entries(club.clubPrices).map(([k, v]) => (
                         <span key={k} className="px-3 py-1 rounded-full bg-gray-100 text-gray-800 text-sm">
-                          {PRICE_LABEL_MN[k as ClassLevelsType]}: {v ? `${v.toLocaleString()}₮/сар` : '—'}
+                          {PRICE_LABEL_MN[k as ClassLevelsType]}:{' '}
+                          {v ? (
+                            <>
+                              <span className="text-black font-semibold">{v.toLocaleString()}</span>
+                              ₮/сар
+                            </>
+                          ) : (
+                            '—'
+                          )}
                         </span>
                       ))
                     ) : (
@@ -328,10 +399,25 @@ export const ClubCard = ({ club }: { club: NewClubType }) => {
 
                 <div className="mt-3 flex gap-4">
                   <div className="inline-flex items-center gap-2">
-                    <MapPin className="w-5 h-5" style={{ color: '#FCB027' }} aria-hidden />
+                    <div className="relative group inline-flex items-center">
+                      <MapPin className="w-5 h-5 text-orange-600" />
+
+                      <span
+                        className="
+                         absolute -top-8 left-1/2 -translate-x-1/2
+                         whitespace-nowrap
+                         rounded-md bg-black px-2 py-1
+                         text-xs text-white
+                         opacity-0 group-hover:opacity-100
+                         transition
+                       "
+                      >
+                        Хаяг
+                      </span>
+                    </div>
                     <span className="sr-only">Хаяг</span>
                   </div>
-                  <p className="font-medium mt-1">{club.clubAddress}</p>
+                  <p className="font-medium mt-1 text-lx text-gray-800">{club.clubAddress}</p>
                 </div>
               </div>
             </div>

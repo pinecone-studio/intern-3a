@@ -10,7 +10,7 @@ import { Card } from '../../components/ui/card';
 
 import { useUser } from '@clerk/nextjs';
 import Image from 'next/image';
-import { toast } from 'sonner'; // shadcn toast
+import { toast } from 'sonner';
 
 import { Major, MONGOL_MONTHS, NumDates } from 'apps/unifind/src/lib/types/type';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../../components/ui/dialog';
@@ -30,7 +30,7 @@ type Scholarship = {
 export default function UniversityDetailPage2({ params }: Props) {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState<NumDates | null>(null);
-  const [activeTab, setActiveTab] = useState<'overview' | 'scholarships' | 'majors'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'scholarships' | 'majors'>('majors');
   const [data2, setData2] = useState<Scholarship[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -44,6 +44,7 @@ export default function UniversityDetailPage2({ params }: Props) {
       .then((json) => {
         setData2(json);
         setLoading(false);
+        console.log(json);
       })
       .catch(() => {
         setError('Мэдээлэл ачаалж чадсангүй');
@@ -51,12 +52,29 @@ export default function UniversityDetailPage2({ params }: Props) {
       });
   }, []);
 
+  // ✅ Resolve params FIRST
+  const resolvedParams = React.use(params);
+  const uniId = Number(resolvedParams.id);
+
+  // ✅ Now it's safe to use uniId
   useEffect(() => {
-    fetch('/api/turshih')
-      .then((res) => res.json())
-      .then((json) => setData(json))
-      .catch((err) => console.error(err));
-  }, []);
+    if (!uniId) return;
+
+    const fetchScrapeData = async () => {
+      try {
+        const res = await fetch(`/api/scrape/${uniId}`);
+        if (!res.ok) throw new Error('Fetch failed');
+        const json = await res.json();
+        setData(json);
+      } catch (err) {
+        setError('Элсэлтийн огноог авахад алдаа гарлаа');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchScrapeData();
+  }, [uniId]);
 
   const formatDate = (dateStr: string) => {
     const d = new Date(dateStr);
@@ -72,10 +90,9 @@ export default function UniversityDetailPage2({ params }: Props) {
     return diffDays > 0 ? diffDays : 0;
   };
 
-  const resolvedParams = React.use(params);
-  const uniId = Number(resolvedParams.id);
   const { data: majors, error: majorsError, isLoading: majorsLoading } = useSWR<Major[]>(`/api/majors?university_id=${uniId}`, fetcher);
   const { isSignedIn, user } = useUser();
+  console.log({ majors });
 
   const handleRegisterClick = async () => {
     if (!isSignedIn || !user) {
@@ -85,12 +102,29 @@ export default function UniversityDetailPage2({ params }: Props) {
       return;
     }
 
-    const userId = Number(1);
-    const universityId = uniId;
-
-    const startDateStr = data?.start_date ?? '2025-12-01';
-    const endDateStr = data?.end_date ?? '2025-12-15';
     try {
+      // 1️⃣ Clerk user → MRUser id авах
+      const mrRes = await fetch('/api/mruser', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: user.emailAddresses[0].emailAddress,
+          name: `${user.firstName} ${user.lastName}`,
+        }),
+      });
+
+      const mrData = await mrRes.json();
+      if (!mrRes.ok) {
+        toast.error('MRUser үүсгэхэд алдаа гарлаа: ' + (mrData.error || mrData.message));
+        return;
+      }
+
+      const userId = mrData.id; // жинхэнэ MRUser id
+      const universityId = uniId;
+      const startDateStr = data?.start_date ?? '2025-12-01';
+      const endDateStr = data?.end_date ?? '2025-12-15';
+
+      // 2️⃣ Өргөдөл хадгалах API
       const res = await fetch('/api/datesave', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -102,57 +136,123 @@ export default function UniversityDetailPage2({ params }: Props) {
         }),
       });
 
-      const data = await res.json();
+      const result = await res.json();
 
-      if (!res.ok) {
-        toast.error('Өргөдөл гаргах явцад алдаа гарлаа: ' + data.error);
+      // ✅ Хадгалагдсан эсэхийг шууд message-аар шалгах
+      if (result.message) {
+        toast.info(result.message); // аль хэдийн хадгалагдсан бол info
+        return;
+      }
+
+      if (!res.ok || result.error) {
+        toast.error('Өргөдөл гаргах явцад алдаа гарлаа: ' + (result.error || 'Server error'));
         return;
       }
 
       toast.success('Амжилттай бүртгэгдлээ!');
       setOpen(false); // modal хаах
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      toast.error('Серверийн алдаа гарлаа');
+      toast.error('Серверийн алдаа гарлаа: ' + (error.message || error));
     }
   };
+
   console.log(user?.primaryEmailAddress?.id);
 
-  if (majorsLoading || !majors) {
+  if (majorsLoading || !majors || data === null) {
     return (
-      <div className="min-h-screen bg-white animate-pulse">
-        <div className="h-64 bg-gray-200 w-full mb-6 rounded-lg" />
-        <div className="max-w-7xl mx-auto px-6 space-y-4">
-          <div className="h-6 bg-gray-200 w-1/4 rounded" />
-          <div className="h-4 bg-gray-200 w-1/6 rounded" />
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-            {[...Array(3)].map((_, idx) => (
-              <div key={idx} className="h-48 bg-gray-200 rounded-lg" />
-            ))}
+      <div className="min-h-screen bg-white mt-10 dark:bg-black animate-pulse">
+        {/* HERO */}
+        <div className="h-72 w-full bg-gray-200 dark:bg-gray-800" />
+
+        {/* TABS */}
+        <div className="border-b border-gray-200 dark:border-gray-800">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="flex gap-8 py-4">
+              <div className="h-4 w-16 bg-gray-300 dark:bg-gray-700 rounded" />
+              <div className="h-4 w-40 bg-gray-300 dark:bg-gray-700 rounded" />
+              <div className="h-4 w-44 bg-gray-300 dark:bg-gray-700 rounded" />
+            </div>
           </div>
-          <div className="space-y-4 mt-8">
-            {[...Array(5)].map((_, idx) => (
-              <div key={idx} className="h-6 bg-gray-200 w-full rounded" />
-            ))}
+        </div>
+
+        {/* MAIN */}
+        <div className="max-w-7xl mx-auto px-6 py-12">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* LEFT COLUMN */}
+            <div className="lg:col-span-2 space-y-8">
+              {/* Title */}
+              <div className="h-7 w-64 bg-gray-300 dark:bg-gray-700 rounded" />
+
+              {/* Paragraphs */}
+              <div className="space-y-3">
+                <div className="h-4 w-full bg-gray-200 dark:bg-gray-800 rounded" />
+                <div className="h-4 w-11/12 bg-gray-200 dark:bg-gray-800 rounded" />
+                <div className="h-4 w-10/12 bg-gray-200 dark:bg-gray-800 rounded" />
+              </div>
+
+              {/* STATS */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-8">
+                {[...Array(4)].map((_, i) => (
+                  <div key={i} className="space-y-2">
+                    <div className="h-3 w-20 bg-gray-300 dark:bg-gray-700 rounded" />
+                    <div className="h-8 w-24 bg-gray-200 dark:bg-gray-800 rounded" />
+                  </div>
+                ))}
+              </div>
+
+              {/* MAJOR CARDS */}
+              <div className="space-y-6 mt-12">
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className="p-6 rounded-xl border border-gray-200 dark:border-gray-800">
+                    <div className="flex justify-between">
+                      <div className="space-y-3 w-full">
+                        <div className="h-5 w-48 bg-gray-300 dark:bg-gray-700 rounded" />
+                        <div className="flex gap-2">
+                          <div className="h-4 w-24 bg-gray-200 dark:bg-gray-800 rounded" />
+                          <div className="h-4 w-28 bg-gray-200 dark:bg-gray-800 rounded" />
+                        </div>
+                      </div>
+                      <div className="h-8 w-16 bg-gray-300 dark:bg-gray-700 rounded" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* RIGHT SIDEBAR */}
+            <div className="space-y-6">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="p-6 rounded-xl border border-gray-200 dark:border-gray-800 space-y-4">
+                  <div className="h-5 w-32 bg-gray-300 dark:bg-gray-700 rounded" />
+                  <div className="space-y-3">
+                    <div className="h-4 w-full bg-gray-200 dark:bg-gray-800 rounded" />
+                    <div className="h-4 w-10/12 bg-gray-200 dark:bg-gray-800 rounded" />
+                    <div className="h-4 w-8/12 bg-gray-200 dark:bg-gray-800 rounded" />
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
     );
   }
+
   if (majorsError) return <p>Өгөгдөл авахад алдаа гарлаа</p>;
   if (!majors) return <p>Их сургуулийн мэдээлэл олдсонгүй</p>;
   const university = majors[0]?.universities;
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="bg-white border-b border-gray-200">
+    <div className="min-h-screen bg-white dark:bg-black">
+      <div className="bg-white dark:bg-black dark:border-gray-800 border-b border-gray-200">
         <div className="container mx-auto px-4 py-3">
           <div className="flex items-center gap-2 text-sm">
-            <a href="/" className="text-gray-600 hover:text-gray-900">
+            <a href="/" className="text-sky-600 dark:text-sky-600  font-medium  hover:text-gray-900">
               Нүүр хуудас
             </a>
             <ChevronRight className="w-4 h-4 text-gray-400" />
-            <span className="text-gray-900 font-medium">{university?.name}</span>
+            <span className="text-gray-900 font-medium dark:text-white">{university?.name ? university.name : 'Монгол улсын их сургууль'}</span>
           </div>
         </div>
       </div>
@@ -166,58 +266,61 @@ export default function UniversityDetailPage2({ params }: Props) {
   "
       >
         {/* Overlay */}
-        <div className="bg-linear-to-br from-slate-600/90 to-slate-900/90 px-6 py-16">
+        <div className="px-6 py-16 bg-linear-to-br from-slate-600/90 to-slate-900/90 dark:from-gray-900/90 dark:to-gray-800/90">
           <div className="mx-auto max-w-7xl">
             <div className="flex items-start gap-4 mb-6">
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-white shadow-sm">
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-white shadow-sm dark:bg-gray-700">
                 <img src="/university-logo-arts.jpg" className="h-full w-full object-contain" />
               </div>
 
-              <Badge variant="secondary" className="bg-gray-600/50 text-white border-gray-500">
-                {university?.name ?? 'Мэдээлэл олдсонгүй'}
+              <Badge variant="secondary" className="bg-gray-600/50 text-white border-gray-500 dark:bg-gray-700/50 dark:text-gray-100 dark:border-gray-600">
+                {university?.name ?? 'Монгол улсын их сургууль'}
               </Badge>
             </div>
 
             <div className="flex items-end justify-between">
               <div>
-                <h1 className="text-5xl font-bold text-white mb-3">{university?.name}</h1>
-                <div className="flex items-center gap-2 text-white/90">
+                <h1 className="text-5xl font-bold text-white mb-3 dark:text-gray-100">{university?.name ?? 'Монгол улсын их сургууль'}</h1>
+                <div className="flex items-center gap-2 text-white/90 dark:text-gray-300">
                   <MapPin className="h-4 w-4" />
-                  <span>{university?.city ?? 'Мэдээлэл олдсонгүй'}</span>
+                  <span>{university?.city ?? 'Улаанбаатар'}</span>
                 </div>
               </div>
 
               <div className="flex gap-3">
-                <Button variant="outline" className="bg-white/10 border-white/20 cursor-pointer text-white hover:bg-white/20">
-                  <Globe className="h-4 w-4 mr-2" />
-                  Вэбсайт үзэх
-                </Button>
+                <Link href={`${university?.website ? university.website : 'https://elselt.num.edu.mn/'}`} target="_blank" rel="noopener noreferrer">
+                  <Button variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20 dark:bg-gray-700/20 dark:border-gray-600 dark:text-gray-100 dark:hover:bg-gray-700/40">
+                    <Globe className="h-4 w-4 mr-2" />
+                    Вэбсайт үзэх
+                  </Button>
+                </Link>
 
-                <Button onClick={handleRegisterClick} className="bg-cyan-500 cursor-pointer hover:bg-cyan-600 text-white">
+                <Button onClick={handleRegisterClick} className="bg-sky-500 hover:bg-sky-600 text-white dark:bg-sky-600 dark:hover:bg-sky-700">
                   Бүртгүүлэх
                   <ChevronRight className="h-4 w-4 ml-1" />
                 </Button>
+
                 <Dialog open={open} onOpenChange={setOpen}>
-                  <DialogContent className="sm:max-w-md">
+                  <DialogContent className="sm:max-w-md bg-white dark:bg-gray-900 dark:text-gray-100">
                     <DialogHeader>
                       <DialogTitle>Бүртгэлийн хураамж төлөх</DialogTitle>
                     </DialogHeader>
 
                     <div className="flex flex-col items-center text-center gap-4">
                       {/* QR Image */}
-                      <div className="w-48 h-48 rounded-lg border bg-white p-2">
+                      <div className="w-48 h-48 rounded-lg border bg-white p-2 dark:bg-gray-800 dark:border-gray-700">
                         <Image src="/qr-mock.png" alt="Payment QR" width={192} height={192} className="rounded-md" />
                       </div>
 
                       {/* Amount */}
                       <div>
-                        <p className="text-sm text-gray-500">Төлөх дүн</p>
-                        <p className="text-2xl font-bold text-gray-900">37,500 ₮</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">Төлөх дүн</p>
+                        <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">37,500 ₮</p>
                       </div>
 
-                      <p className="text-xs text-gray-500">Энэхүү хураамжийг төлснөөр та их сургуулийн өргөдөл гаргах эрхтэй болно. Төлбөрийг буцаан олгохгүй.</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Энэхүү хураамжийг төлснөөр та их сургуулийн өргөдөл гаргах эрхтэй болно. Төлбөрийг буцаан олгохгүй.</p>
 
-                      <Button className="w-full bg-cyan-500 hover:bg-cyan-600 text-white" onClick={() => setOpen(false)}>
+                      <Button className="w-full bg-cyan-500 hover:bg-cyan-600 text-white dark:bg-cyan-600 dark:hover:bg-cyan-700" onClick={() => setOpen(false)}>
                         Төлбөр баталгаажуулах
                       </Button>
                     </div>
@@ -230,22 +333,35 @@ export default function UniversityDetailPage2({ params }: Props) {
       </div>
 
       {/* Tabs */}
-      <div className="border-b bg-white sticky top-0 z-10">
+      <div className="border-b bg-white dark:bg-black dark:border-gray-800 sticky top-0 z-10">
         <div className="mx-auto max-w-7xl px-6">
           <nav className="flex gap-8 text-sm">
-            <a href="#" className="border-b-2 border-cyan-500 py-4 text-cyan-500 font-medium">
+            <button
+              onClick={() => setActiveTab('overview')}
+              className={`py-4 font-medium transition ${
+                activeTab === 'overview' ? 'border-b-2 border-sky-500 text-sky-500' : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
+              }`}
+            >
               Тойм
-            </a>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('majors')}
+              className={`py-4 font-medium transition ${
+                activeTab === 'majors' ? 'border-b-2 border-sky-500 text-sky-500' : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
+              }`}
+            >
+              Мэргэжлүүд & Хөтөлбөрүүд
+            </button>
+
             <button
               onClick={() => setActiveTab('scholarships')}
-              className={`py-4 ${activeTab === 'scholarships' ? 'border-b-2 border-cyan-500 text-cyan-500 cursor-pointer font-medium' : 'text-gray-600 hover:text-gray-900'}`}
+              className={`py-4 font-medium transition ${
+                activeTab === 'scholarships' ? 'border-b-2 border-sky-500 text-sky-500' : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
+              }`}
             >
               Тэтгэлгийн мэдээлэл
             </button>
-
-            <a href="#" className="py-4 text-gray-600 hover:text-gray-900">
-              Мэргэжлүүд & Хөтөлбөрүүд
-            </a>
           </nav>
         </div>
       </div>
@@ -255,107 +371,106 @@ export default function UniversityDetailPage2({ params }: Props) {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column */}
           <div className="lg:col-span-2 space-y-12">
-            {/* About Section */}
-            <section>
-              <h2 className="text-2xl font-bold mb-4">Их сургуулийн тухай</h2>
-              <div className="space-y-4 text-gray-700 leading-relaxed">{university.name}</div>
-              <div className="space-y-4 text-gray-700 leading-relaxed">{university.description}</div>
-              <div className="space-y-4 text-gray-700 font-bold leading-relaxed">{university.city}</div>
-
-              {/* Stats */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-8">
-                <div>
-                  <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">Босго оноо</div>
-                  <div className="text-3xl font-bold">550-650</div>
-                </div>
-                <div>
-                  <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">Дундаж голч</div>
-                  <div className="text-3xl font-bold">3.2</div>
-                </div>
-                <div>
-                  <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">Бакалавр оюутнууд</div>
-                  <div className="text-3xl font-bold">7,645</div>
-                </div>
-                <div>
-                  <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">Дундаж крэдитийн үнэ</div>
-                  <div className="text-3xl font-bold">₮ 106,169</div>
-                  <div className="text-xs text-gray-400 pt-4 uppercase tracking-wide mb-1">Жил бүр өөрчлөгддөг</div>
-                </div>
-              </div>
-            </section>
-
             {/* Majors Section */}
-            <section>
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold">Мэргэжлүүд & Элсэлтийн оноо</h2>
-              </div>
-
-              <div className="space-y-6">
-                {majors?.map((major) => (
-                  <Link key={major.id} href={`/mergejil/${major.id}`}>
-                    <Card className="p-6 hover:shadow-lg transition-shadow duration-300 cursor-pointer mt-3">
-                      {/* Major Info */}
-                      <div className="flex items-start justify-between mb-4">
-                        <div>
-                          <div className="flex items-center gap-2 mb-1">
-                            <h3 className="text-lg font-semibold">{major.name}</h3>
-                            <Badge className="bg-green-100 text-green-700 text-xs">{major.degree_type}</Badge>
-                          </div>
-
-                          {/* Major Requirements */}
-                          <div className="flex flex-wrap gap-2 mt-2">
-                            {major?.major_requirements?.map((req) => (
-                              <Badge key={req.id} className="bg-blue-50 text-blue-700 px-3 py-1 text-sm rounded hover:bg-blue-100 transition">
-                                {req.subjects.name} – {req.min_score} оноо
-                              </Badge>
-                            ))}
-                          </div>
-                        </div>
-
-                        {/* Minimum Score (Highest among requirements) */}
-                        <div className="text-right">
-                          <div className="text-xs text-gray-500 uppercase mb-1">Хамгийн бага оноо</div>
-                          <div className="text-2xl font-bold">{major.major_requirements.length > 0 ? Math.min(...major.major_requirements.map((req) => req.min_score)) : '--'}</div>
-                        </div>
-                      </div>
-
-                      {/* Өрсөлдөөн хэсэг байхгүй */}
-                    </Card>
-                  </Link>
-                ))}
-                {activeTab === 'scholarships' && (
-                  <div className="max-w-4xl mx-auto p-6">
-                    <h1 className="text-2xl font-bold mb-6">🎓 Тэтгэлгийн мэдээнүүд</h1>
-
-                    <ul className="grid gap-6 md:grid-cols-2">
-                      {data2.map((item, i) => (
-                        <li key={i} className="border rounded-xl overflow-hidden bg-white hover:shadow-md transition">
-                          {/* IMAGE */}
-                          {item.image && <img src={item.image} alt={item.title} className="w-full h-44 object-cover" />}
-
-                          {/* CONTENT */}
-                          <div className="p-4">
-                            <a href={item.link} target="_blank" rel="noopener noreferrer" className="block font-medium text-blue-600 hover:underline">
-                              {item.title}
-                            </a>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-
-                    {data2.length === 0 && <p className="text-center text-gray-500 mt-10">Одоогоор тэтгэлгийн мэдээлэл алга байна.</p>}
+            {/* TAB CONTENT */}
+            {activeTab === 'overview' && (
+              <section>
+                {/* About Section */}
+                <section>
+                  <h2 className="text-2xl font-bold mb-4">Их сургуулийн тухай</h2>
+                  <div className="space-y-4 text-gray-700 dark:text-gray-300 leading-relaxed text-[24px]">{university?.name ? university.name : 'Монгол улсын их сургууль'}</div>
+                  <div className="space-y-4 text-gray-700 dark:text-gray-300 leading-relaxed">
+                    {university?.description
+                      ? university.description
+                      : 'Эрдмийн эрх чөлөөг баталгаажуулж, эдийн засаг, нийгмийн хөгжил, шинжлэх ухаан, технологи, инновацын тэргүүлэх чиглэлийг хөгжүүлнэ.'}
                   </div>
-                )}
-              </div>
-            </section>
+                  <div className="space-y-4 text-gray-700 dark:text-gray-300 font-bold leading-relaxed">{university?.city ? university.city : 'Улаанбаатар'}</div>
+
+                  {/* Stats */}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-8">
+                    <div>
+                      <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">Босго оноо</div>
+                      <div className="text-3xl font-bold">550-650</div>
+                    </div>
+                    <div>
+                      <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">Дундаж голч</div>
+                      <div className="text-3xl font-bold">3.2</div>
+                    </div>
+                    <div>
+                      <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">Бакалавр оюутнууд</div>
+                      <div className="text-3xl font-bold">7,645</div>
+                    </div>
+                    <div>
+                      <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">Дундаж крэдитийн үнэ</div>
+                      <div className="text-3xl font-bold">₮ 106,169</div>
+                      <div className="text-xs text-gray-400 pt-4 uppercase tracking-wide mb-1">Жил бүр өөрчлөгддөг</div>
+                    </div>
+                  </div>
+                </section>
+              </section>
+            )}
+
+            {activeTab === 'majors' && (
+              <section>
+                <h2 className="text-2xl font-bold mb-6">Мэргэжлүүд & Элсэлтийн оноо</h2>
+
+                <div className="space-y-6">
+                  {majors.map((major) => (
+                    <Link key={major.id} href={`/mergejil/${major.id}`}>
+                      <Card className="p-6 hover:shadow-lg transition cursor-pointer">
+                        <div className="flex justify-between">
+                          <div>
+                            <h3 className="font-semibold">{major.name}</h3>
+                            <div className="flex flex-wrap gap-2 mt-2">
+                              {major.major_requirements.map((req) => (
+                                <Badge key={req.id}>
+                                  {req.subjects.name} – {req.min_score}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+
+                          <div className="text-right">
+                            <div className="text-xs text-gray-500">Хамгийн бага оноо</div>
+                            <div className="text-xl font-bold">{Math.min(...major.major_requirements.map((r) => r.min_score))}</div>
+                          </div>
+                        </div>
+                      </Card>
+                    </Link>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {activeTab === 'scholarships' && (
+              <section>
+                <h2 className="text-2xl font-bold mb-6">🎓 Тэтгэлгийн мэдээлэл</h2>
+
+                <ul className="grid gap-6 md:grid-cols-2">
+                  {data2.map((item, i) => (
+                    <li key={i} className="border rounded-xl overflow-hidden bg-white dark:bg-gray-900 hover:shadow-md transition">
+                      {item.image && <img src={item.image} alt={item.title} className="w-full h-44 object-cover" />}
+
+                      <div className="p-4">
+                        <a href={item.link} target="_blank" rel="noopener noreferrer" className="font-medium text-sky-600 hover:underline">
+                          {item.title}
+                        </a>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+
+                {data2.length === 0 && <p className="text-center text-gray-500 mt-10">Одоогоор тэтгэлгийн мэдээлэл алга байна.</p>}
+              </section>
+            )}
           </div>
 
           {/* Right Sidebar */}
-          <div className="space-y-6">
+          <div className="space-y-6 ">
             {/* Admission Timeline */}
-            <Card className="p-6">
+            <Card className="p-6 dark:bg-gray-900">
               <div className="flex items-center gap-2 mb-4">
-                <Calendar className="h-5 w-5 text-cyan-500" />
+                <Calendar className="h-5 w-5 text-sky-500" />
                 <h3 className="font-semibold">Элсэлтийн хуваарь</h3>
               </div>
               <div className="space-y-4">
@@ -387,66 +502,66 @@ export default function UniversityDetailPage2({ params }: Props) {
                 </div>
               </div>
 
-              <Button onClick={handleRegisterClick} variant="link" className="w-full mt-4 cursor-pointer text-cyan-500 p-0">
+              <Button onClick={handleRegisterClick} variant="link" className="w-full mt-4 cursor-pointer text-sky-500 p-0">
                 Миний xуанлид нэмэх
               </Button>
             </Card>
 
             {/* Requirements */}
-            <Card className="p-6">
+            <Card className="p-6 dark:bg-gray-900">
               <div className="flex items-center gap-2 mb-4">
-                <CheckCircle2 className="h-5 w-5 text-cyan-500" />
+                <CheckCircle2 className="h-5 w-5 text-sky-500" />
                 <h3 className="font-semibold">Шаардлага</h3>
               </div>
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-green-600 shrink-0" />
+                  <CheckCircle2 className="h-4 w-4 text-sky-600 shrink-0" />
                   <span className="text-sm">Нийтлэг өргөдөл</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-green-600 shrink-0" />
+                  <CheckCircle2 className="h-4 w-4 text-sky-600 shrink-0" />
                   <span className="text-sm">₮37500 өргөдлийн хураамж</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-green-600 shrink-0" />
+                  <CheckCircle2 className="h-4 w-4 text-sky-600 shrink-0" />
                   <span className="text-sm">Боловсролын гэрчилгээ</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-green-600 shrink-0" />
+                  <CheckCircle2 className="h-4 w-4 text-sky-600 shrink-0" />
                   <span className="text-sm">
-                    САТ эсвэл IELTS оноо <span className="text-blue-500">байхгүй байсанч болно</span>
+                    САТ эсвэл IELTS оноо <span className="text-sky-500"> байхгүй байсанч болно</span>
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-green-600 shrink-0" />
+                  <CheckCircle2 className="h-4 w-4 text-sky-600 shrink-0" />
                   <span className="text-sm">Багшийн үнэлгээ</span>
                 </div>
               </div>
-              <Button variant="link" className="w-full mt-4 text-cyan-500 p-0 justify-start">
+              <Button variant="link" className="w-full mt-4 text-sky-500 p-0 justify-start">
                 Бүрэн жагсаалт үзэх
                 <ExternalLink className="h-3 w-3 ml-1" />
               </Button>
             </Card>
 
             {/* Admissions Office */}
-            <Card className="p-6">
+            <Card className="p-6 dark:bg-gray-900">
               <h3 className="font-semibold mb-4">ЭЛСЭЛТИЙН АЛБА</h3>
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
-                  <Phone className="h-4 w-4 text-cyan-500 mt-0.5 shrink-0" />
-                  <a href="tel:6507232091" className="text-sm text-gray-700 hover:text-cyan-500">
+                  <Phone className="h-4 w-4 text-sky-500 mt-0.5 shrink-0" />
+                  <a href="tel:6507232091" className="text-sm text-gray-700 hover:text-sky-500  dark:text-gray-400 dark:hover:text-sky-500">
                     (976) 7023-2091
                   </a>
                 </div>
                 <div className="flex items-start gap-3">
-                  <Mail className="h-4 w-4 text-cyan-500 mt-0.5 shrink-0" />
-                  <a href="mailto:admission@stanford.edu" className="text-sm text-gray-700 hover:text-cyan-500">
+                  <Mail className="h-4 w-4 text-sky-500 mt-0.5 shrink-0" />
+                  <a href="mailto:admission@stanford.edu" className="text-sm text-gray-700 hover:text-sky-500  dark:text-gray-400 dark:hover:text-sky-500">
                     admission@num.edu
                   </a>
                 </div>
                 <div className="flex items-start gap-3">
-                  <Clock className="h-4 w-4 text-cyan-500 mt-0.5 shrink-0" />
-                  <span className="text-sm text-gray-700">Даваа-Баасан, 8:00 - 17:00</span>
+                  <Clock className="h-4 w-4 text-sky-500 mt-0.5 shrink-0" />
+                  <span className="text-sm text-gray-700 dark:text-gray-400 dark:hover:text-sky-500">Даваа-Баасан, 8:00 - 17:00</span>
                 </div>
               </div>
             </Card>

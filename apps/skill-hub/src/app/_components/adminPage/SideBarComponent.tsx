@@ -26,11 +26,11 @@ const SideBarComponent = () => {
   };
 
   return (
-    <Sidebar className="sticky top-0 left-0 ">
-      <SidebarContent>
+    <Sidebar className="sticky top-0 left-0 bottom-0 w-85 h-screen">
+      <SidebarContent className="py-5">
         <SidebarGroup className="flex flex-col gap-4">
           <div>
-            <SidebarGroupLabel className="text-xl leading-7 font-semibold text-foreground">Миний цонх</SidebarGroupLabel>
+            <SidebarGroupLabel className="text-2xl leading-7 font-semibold text-foreground">Миний цонх</SidebarGroupLabel>
           </div>
 
           <SidebarGroupContent>
@@ -39,7 +39,7 @@ const SideBarComponent = () => {
                 Бүгд
               </SidebarMenuButton>
               <SidebarMenuButton className="text-md font-normal text-black/70 hover:text-black hover:cursor-pointer" onClick={handleMyClubs}>
-                <div className="flex justify-between w-60 items-center">
+                <div className="flex justify-between w-81 items-center">
                   <p>Миний үүсгэсэн</p>
                   {open ? <ChevronUp className="w-5" /> : <ChevronDown className="w-5" />}
                 </div>
@@ -48,7 +48,7 @@ const SideBarComponent = () => {
             <SidebarMenu>
               {open &&
                 myCreatedClubs?.map((club) => (
-                  <SidebarMenuItem key={club._id} className="pl-4">
+                  <SidebarMenuItem key={club._id} className="pl-4 mt-2">
                     <SidebarMenuButton onClick={() => handleSelectClub(club._id)} className={`justify-start text-left ${selectedId === club._id ? 'bg-gray-100 font-semibold' : ''}`}>
                       {club.clubName}
                     </SidebarMenuButton>

@@ -3,6 +3,7 @@
 import { animate, motion, useMotionValue, useTransform, Variants } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { ImSearch } from 'react-icons/im';
 
 // Counter Animation Component
 const AnimatedCounter = ({ target, duration = 2, shouldStart }: { target: number; duration?: number; shouldStart: boolean }) => {
@@ -402,13 +403,11 @@ export const Intro = () => {
           <motion.button
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
-            className="group relative px-10 py-4 bg-linear-to-r from-orange-500 to-pink-500 text-white rounded-full hover:from-orange-600 hover:to-pink-600 transition-all duration-300 font-bold text-lg shadow-2xl hover:shadow-orange-500/50 overflow-hidden"
-            onClick={() => router.push('/clubs')}
+            className="cursor-pointer group relative px-10 py-4 bg-linear-to-r from-orange-500 to-pink-500 text-white rounded-full hover:from-orange-600 hover:to-pink-600 transition-all duration-300 font-bold text-lg shadow-2xl hover:shadow-orange-500/50 overflow-hidden"
+            onClick={() => router.push('/map')}
           >
             <span className="relative z-10 flex items-center justify-center gap-2">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
+              <ImSearch />
               Дугуйлан хайх
             </span>
             <motion.div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20" initial={false} whileHover={{ scale: 1.5 }} transition={{ duration: 0.4 }} />
@@ -416,14 +415,11 @@ export const Intro = () => {
           <motion.button
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
-            className="group relative px-10 py-4 bg-linear-to-r from-purple-500 to-indigo-600 text-white rounded-full hover:from-purple-600 hover:to-indigo-700 transition-all duration-300 font-bold text-lg shadow-2xl hover:shadow-purple-500/50 overflow-hidden"
+            className="cursor-pointer group relative px-10 py-4 bg-linear-to-r from-purple-500 to-indigo-600 text-white rounded-full hover:from-purple-600 hover:to-indigo-700 transition-all duration-300 font-bold text-lg shadow-2xl hover:shadow-purple-500/50 overflow-hidden"
             onClick={() => router.push('/sign-in')}
           >
             <span className="relative z-10 flex items-center justify-center gap-2">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-              </svg>
-              Нэвтрэх
+              <LogIn /> Нэвтрэх
             </span>
             <motion.div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20" initial={false} whileHover={{ scale: 1.5 }} transition={{ duration: 0.4 }} />
           </motion.button>

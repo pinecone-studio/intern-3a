@@ -3,6 +3,7 @@ import Link from 'next/link';
 import useSWR from 'swr';
 import { Button } from '../components/ui/button';
 import UniversityCard from './UniversityCard';
+import { UniversityCardSkeleton } from './UniversityCardSkeleton';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -23,20 +24,15 @@ export function PopularUniversities() {
             <p className="text-muted-foreground">Таны профайл болон сонголтоор үндэслэн</p>
           </div>
           <Link href={'/universities'}>
-            <Button variant={'outline'}>Бүгдийг үзэх</Button>
+            <Button className="dark:bg-gray-900 dark:hover:bg-gray-800" variant={'outline'}>
+              Бүгдийг үзэх
+            </Button>
           </Link>
         </div>
 
         {/* Cards / Skeleton */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          {isLoading &&
-            Array.from({ length: 6 }).map((_, idx) => (
-              <div key={idx} className="animate-pulse flex flex-col gap-2 border rounded-lg p-4 bg-white shadow-sm">
-                <div className="h-40 bg-gray-200 rounded-lg" />
-                <div className="h-6 bg-gray-200 rounded w-3/4 mt-2" />
-                <div className="h-4 bg-gray-200 rounded w-1/2 mt-1" />
-              </div>
-            ))}
+          {isLoading && Array.from({ length: 6 }).map((_, i) => <UniversityCardSkeleton key={i} />)}
 
           {!isLoading && !error && universities.length > 0
             ? universities
@@ -63,7 +59,9 @@ export function PopularUniversities() {
         {/* Load more */}
         <div className="text-center">
           <Link href={'/universities'}>
-            <Button variant={'outline'}>Бүгдийг үзэх</Button>
+            <Button className="dark:bg-gray-900 dark:hover:bg-gray-800" variant={'outline'}>
+              Бүгдийг үзэх
+            </Button>
           </Link>
         </div>
       </div>

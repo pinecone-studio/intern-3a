@@ -1,0 +1,26 @@
+'use client';
+
+import { NewClubType } from '@/lib/utils/types';
+import { Button, Dialog, DialogTrigger } from '@intern-3a/shadcn';
+import { useState } from 'react';
+import { EditMyClubsDialogContent } from './EditMyClubsDialogContent';
+
+type EditMyClubsTriggerProps = {
+  club: NewClubType;
+};
+
+const EditMyClubsTrigger = ({ club }: EditMyClubsTriggerProps) => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button className="text-sm rounded-lg bg-[#0A427A] hover:bg-[#093662]">Дугуйлан засах</Button>
+      </DialogTrigger>
+
+      <EditMyClubsDialogContent club={club} setOpen={setOpen} />
+    </Dialog>
+  );
+};
+
+export default EditMyClubsTrigger;

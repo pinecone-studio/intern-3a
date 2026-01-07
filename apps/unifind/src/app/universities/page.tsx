@@ -1,5 +1,4 @@
 'use client';
-
 import { useState } from 'react';
 import useSWR from 'swr';
 import { FilterSidebar } from '../_components/filter-sidebar';
@@ -10,7 +9,7 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 export default function UniversitiesPage() {
   const [filters, setFilters] = useState({
     search: '',
-    categories: [],
+    majorNames: [] as string[],
     minScore: 0,
     sortBy: 'name',
   });
@@ -18,7 +17,7 @@ export default function UniversitiesPage() {
   const resetFilters = () => {
     setFilters({
       search: '',
-      categories: [],
+      majorNames: [],
       minScore: 0,
       sortBy: 'name',
     });
@@ -26,20 +25,18 @@ export default function UniversitiesPage() {
 
   const query = new URLSearchParams({
     search: filters.search,
-    categories: filters.categories.join(','),
+    majors: filters.majorNames.join(','),
     minScore: filters.minScore.toString(),
     sortBy: filters.sortBy,
   }).toString();
   console.log({ query });
 
-  const { data: programs = [], isLoading } = useSWR(
-    `/api/universities?search=${filters.search}&categories=${filters.categories.join(',')}&minScore=${filters.minScore}&sortBy=${filters.sortBy}`,
-    fetcher,
-  );
+  const { data: programs = [], isLoading } = useSWR(`/api/universities?search=${filters.search}&majorNames=${filters.majorNames.join(',')}`, fetcher);
+
   console.log({ programs });
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC]">
+    <div className="min-h-screen bg-[#F8FAFC]  inset-0 bg-linear-to-b from-sky-100 via-sky-50 to-white dark:from-slate-900 dark:via-slate-800 dark:to-black">
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-8">
           <FilterSidebar filters={filters} setFilters={setFilters} resetFilters={resetFilters} />
