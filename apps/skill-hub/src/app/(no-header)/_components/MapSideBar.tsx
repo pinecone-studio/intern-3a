@@ -1,8 +1,8 @@
 'use client';
 
 import { ClassLevelsType, getClassLevelMN, NewClubType } from '@/lib/utils/types';
-import { Badge } from '@intern-3a/shadcn';
-import { ArrowLeft, ChevronLeft, ChevronRight, MapPin } from 'lucide-react';
+import { Badge, Button } from '@intern-3a/shadcn';
+import { ArrowLeft, ArrowLeftToLine, ChevronLeft, ChevronRight, MapPin, Undo2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { IoMdHeart, IoMdHeartEmpty } from 'react-icons/io';
@@ -24,7 +24,7 @@ export default function MapSideBar({ visibleClubs, sidebarOpen, onToggle, hovere
     <div>
       <div className={`fixed left-0 top-0 h-screen bg-white/5 z-20 transition-all duration-300 ${sidebarOpen ? 'w-85' : 'w-0 pointer-events-none'}`}>
         <div className="p-5">
-          <ArrowLeft className="text-orange-500 hover:text-black cursor-pointer" />
+          <ArrowLeftToLine size={24} className="text-orange-500 hover:text-black cursor-pointer" />
         </div>
         <div className="p-5 border-b flex justify-between items-center">
           <p className="font-bold">Надад ойр дугуйлан: {visibleClubs.length}</p>
@@ -94,7 +94,7 @@ export default function MapSideBar({ visibleClubs, sidebarOpen, onToggle, hovere
           onClick={onToggle}
           className={`fixed bg-white p-5 rounded-tr-lg rounded-br-lg top-0 z-3000 transition-all duration-300 cursor-pointer hover:text-orange-600 ${sidebarOpen ? 'left-85' : 'left-0'}`}
         >
-          {sidebarOpen ? <ChevronLeft /> : <ChevronRight />}
+          {sidebarOpen ? <ChevronLeft size={24} /> : <ChevronRight size={24} />}
         </div>
       </div>
     </div>
