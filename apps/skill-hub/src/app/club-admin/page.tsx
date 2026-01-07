@@ -19,13 +19,42 @@ const ClubAdminPage = () => {
   return (
     <main className="min-h-screen py-12">
       {isLoading ? (
-        <div className="flex flex-wrap gap-6">
-          {Array.from({ length: 1 }).map((_, idx) => (
-            <div key={idx} className="p-4 border rounded-md shadow-sm mb-2 space-y-2 w-80">
-              <div className="h-36 w-full bg-slate-200 rounded animate-pulse" />
-              <div className="h-5 w-3/4 bg-slate-200 rounded animate-pulse" />
-              <div className="h-3 w-1/2 bg-slate-200 rounded animate-pulse" />
-              <div className="h-8 w-full bg-slate-200 rounded animate-pulse mt-2" />
+        <div className="flex flex-wrap gap-6 animate-pulse px-5">
+          {/* Header Skeleton */}
+          <div className="w-full mb-8">
+            <div className="h-10 w-130 bg-gray-300 rounded-md mb-3" />
+            <div className="h-4 w-120 bg-gray-200 rounded-md" />
+          </div>
+
+          {/* Cards Skeleton */}
+          {Array.from({ length: 20 }).map((_, idx) => (
+            <div key={idx} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6">
+              <div className="bg-white rounded-2xl border-2 border-slate-200 overflow-hidden flex flex-col h-full">
+                <div className="aspect-video bg-slate-200 w-full" />
+                <div className="p-6 flex flex-col flex-grow space-y-4">
+                  <div className="h-6 w-3/4 bg-slate-200 rounded" />
+                  <div className="space-y-2">
+                    <div className="h-3 w-full bg-slate-200 rounded" />
+                    <div className="h-3 w-5/6 bg-slate-200 rounded" />
+                  </div>
+                  <div className="flex gap-2">
+                    <div className="h-6 w-16 bg-slate-200 rounded-full" />
+                    <div className="h-6 w-16 bg-slate-200 rounded-full" />
+                    <div className="h-6 w-16 bg-slate-200 rounded-full" />
+                  </div>
+                  <div className="space-y-2">
+                    <div className="h-4 w-20 bg-slate-200 rounded" />
+                    <div className="flex gap-3">
+                      <div className="w-10 h-10 rounded-full bg-slate-200" />
+                      <div className="w-10 h-10 rounded-full bg-slate-200" />
+                      <div className="w-10 h-10 rounded-full bg-slate-200" />
+                    </div>
+                  </div>
+                  <div className="mt-auto">
+                    <div className="h-10 w-full bg-slate-300 rounded-full" />
+                  </div>
+                </div>
+              </div>
             </div>
           ))}
         </div>

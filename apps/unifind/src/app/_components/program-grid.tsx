@@ -30,7 +30,7 @@ export function ProgramGrid({ programs, isLoading, filters, setFilters, resetFil
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-gray-900">~ Ирээдүйн их сургуулиа төлөвлө ~</h1>
+          <h1 className="text-2xl font-black text-gray-900 dark:text-white">~ Ирээдүйн их сургуулиа төлөвлө ~</h1>
           {/* <p className="text-gray-500 text-sm mt-1">
             Нийт <span className="text-sky-600 font-bold">{programs.length}</span> сургууль олдлоо
           </p> */}
@@ -38,20 +38,24 @@ export function ProgramGrid({ programs, isLoading, filters, setFilters, resetFil
 
         <div className="flex items-center gap-3">
           <Select value={filters?.sortBy} onValueChange={(val) => setFilters({ ...filters, sortBy: val })}>
-            <SelectTrigger className="w-40 bg-white border-none shadow-sm rounded-xl">
+            <SelectTrigger className="w-40 bg-white border shadow-sm rounded-xl dark:bg-gray-900 dark:border-neutral-800 dark:border">
               <SelectValue placeholder="Эрэмбэлэх" />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="name">Нэрээр (A-Z)</SelectItem>
-              <SelectItem value="recommended">Санал болгосон</SelectItem>
+            <SelectContent className="dark:bg-gray-900 dark:border-neutral-800">
+              <SelectItem className="dark:hover:bg-gray-800" value="name">
+                Нэрээр (A-Z)
+              </SelectItem>
+              <SelectItem className="dark:hover:bg-gray-800" value="recommended">
+                Санал болгосон
+              </SelectItem>
             </SelectContent>
           </Select>
 
-          <div className="flex bg-white p-1 rounded-xl shadow-sm border border-gray-100">
-            <Button variant="ghost" size="sm" onClick={() => setViewMode('grid')} className={`h-8 w-8 p-0 ${viewMode === 'grid' ? 'bg-sky-50 text-sky-600' : 'text-gray-400'}`}>
+          <div className="flex bg-white dark:bg-gray-900 dark:border-neutral-800 p-1 rounded-xl shadow-sm border border-gray-100">
+            <Button variant="ghost" size="sm" onClick={() => setViewMode('grid')} className={`h-8 w-8 p-0 ${viewMode === 'grid' ? 'bg-sky-50 dark:bg-gray-800 text-sky-600' : 'text-gray-400'}`}>
               <LayoutGrid className="w-4 h-4" />
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => setViewMode('list')} className={`h-8 w-8 p-0 ${viewMode === 'list' ? 'bg-sky-50 text-sky-600' : 'text-gray-400'}`}>
+            <Button variant="ghost" size="sm" onClick={() => setViewMode('list')} className={`h-8 w-8 p-0 ${viewMode === 'list' ? 'bg-sky-50 dark:bg-gray-800 text-sky-600' : 'text-gray-400'}`}>
               <List className="w-4 h-4" />
             </Button>
           </div>
@@ -93,10 +97,10 @@ export function ProgramGrid({ programs, isLoading, filters, setFilters, resetFil
           {groupedData.map((group: any) => (
             <div key={group.title} className="space-y-5">
               <div className="flex items-center gap-3">
-                <div className="h-8 w-1.5 bg-sky-600 rounded-full" />
-                <h2 className="text-xl font-bold text-gray-800">{group.title}</h2>
-                <span className="bg-gray-100 text-gray-500 text-xs px-2 py-1 rounded-lg">
-                  Нийт <span className="text-sky-600 font-bold">{group.list.length}</span> сургууль олдлоо
+                <div className="h-8 w-1.5 bg-sky-500 rounded-full" />
+                <h2 className="text-xl font-bold text-gray-800 dark:text-white">{group.title}</h2>
+                <span className="bg-gray-100 dark:bg-gray-900 dark:text-gray-200 text-gray-500 text-xs px-2 py-1 rounded-lg">
+                  Нийт <span className="text-sky-500 font-bold">{group.list.length}</span> сургууль олдлоо
                 </span>
               </div>
 

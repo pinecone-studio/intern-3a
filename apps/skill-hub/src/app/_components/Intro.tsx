@@ -1,17 +1,58 @@
 'use client';
 
-import { motion, Variants } from 'framer-motion';
+import { animate, motion, useMotionValue, useTransform, Variants } from 'framer-motion';
 import { LogIn } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { ImSearch } from 'react-icons/im';
 
+// Counter Animation Component
+const AnimatedCounter = ({ target, duration = 2, shouldStart }: { target: number; duration?: number; shouldStart: boolean }) => {
+  const count = useMotionValue(0);
+  const rounded = useTransform(count, (latest) => Math.round(latest));
+  const [displayValue, setDisplayValue] = useState(0);
+
+  useEffect(() => {
+    if (!shouldStart) return;
+
+    console.log('Starting counter animation to:', target);
+
+    const controls = animate(count, target, {
+      duration,
+      ease: 'easeOut',
+    });
+
+    const unsubscribe = rounded.on('change', (latest) => {
+      setDisplayValue(latest);
+    });
+
+    return () => {
+      controls.stop();
+      unsubscribe();
+    };
+  }, [count, rounded, target, duration, shouldStart]);
+
+  return <span>{displayValue.toLocaleString()}+</span>;
+};
+
 export const Intro = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const [shouldStartCounting, setShouldStartCounting] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     setIsVisible(true);
+
+    // Calculate total time before stats section finishes animating:
+    // delayChildren (0.3s) + staggerChildren * 3 items (0.2s * 3 = 0.6s) + animation duration (1.5s) = 2.4s
+    const totalDelay = 300 + 200 * 3 + 1500; // 2.4 seconds
+
+    const timer = setTimeout(() => {
+      console.log('Stats animation completed, starting counters');
+      setShouldStartCounting(true);
+    }, totalDelay);
+
+    return () => clearTimeout(timer);
   }, []);
 
   const containerVariants: Variants = {
@@ -36,17 +77,6 @@ export const Intro = () => {
       },
     },
   };
-
-  // const floatingAnimation = {
-  //   y: [0, -10, 0],
-  //   transition: {
-  //     duration: 3,
-  //     repeat: Infinity,
-  //     ease: 'easeInOut' as const,
-  //   },
-  // };
-
-  const features: Array<{ icon: React.ReactNode; title: string; description: string }> = [];
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-linear-to-br from-orange-50 via-white to-purple-50">
@@ -272,78 +302,6 @@ export const Intro = () => {
           </motion.div>
         </motion.div>
 
-        {/* Decorative Spiral */}
-        <motion.div className="absolute top-[70%] left-[4%] -translate-y-1/2 z-20">
-          <motion.div initial={{ x: -300, y: 0 }} animate={{ x: 0, y: 0 }} transition={{ duration: 0.5, ease: 'easeOut' }}>
-            <motion.div
-              animate={{
-                rotate: [0, 360],
-                scale: [1, 1.15, 1],
-              }}
-              transition={{
-                duration: 8,
-                repeat: Infinity,
-                ease: 'linear',
-                delay: 0.5,
-              }}
-            >
-              <svg width="400" height="400" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="opacity-70">
-                {/* Outer circle - Purple */}
-                <motion.path
-                  d="M100 100C100 85 108 70 122 62C136 54 152 54 166 62C180 70 188 85 188 100C188 115 180 130 166 138C152 146 136 146 122 138C108 130 100 115 100 100"
-                  stroke="#A855F7"
-                  strokeWidth="10"
-                  strokeLinecap="round"
-                  fill="none"
-                  initial={{ pathLength: 0 }}
-                  animate={{ pathLength: [0, 1, 1, 1, 0] }}
-                  transition={{
-                    duration: 8,
-                    repeat: Infinity,
-                    ease: 'easeInOut',
-                    delay: 0.5,
-                    times: [0, 0.25, 0.5, 0.7, 1],
-                  }}
-                />
-                {/* Middle circle - Orange */}
-                <motion.path
-                  d="M100 100C100 92 104 84 112 79C120 74 130 74 138 79C146 84 150 92 150 100C150 108 146 116 138 121C130 126 120 126 112 121C104 116 100 108 100 100"
-                  stroke="#F59E0B"
-                  strokeWidth="10"
-                  strokeLinecap="round"
-                  fill="none"
-                  initial={{ pathLength: 0 }}
-                  animate={{ pathLength: [0, 0, 1, 1, 1, 0] }}
-                  transition={{
-                    duration: 8,
-                    repeat: Infinity,
-                    ease: 'easeInOut',
-                    delay: 0.5,
-                    times: [0, 0.25, 0.5, 0.7, 0.85, 1],
-                  }}
-                />
-                {/* Inner circle - Pink */}
-                <motion.path
-                  d="M100 100C100 96 102 92 106 90C110 88 114 88 118 90C122 92 124 96 124 100C124 104 122 108 118 110C114 112 110 112 106 110C102 108 100 104 100 100"
-                  stroke="#EC4899"
-                  strokeWidth="10"
-                  strokeLinecap="round"
-                  fill="none"
-                  initial={{ pathLength: 0 }}
-                  animate={{ pathLength: [0, 0, 0, 1, 1, 1, 0] }}
-                  transition={{
-                    duration: 8,
-                    repeat: Infinity,
-                    ease: 'easeInOut',
-                    delay: 0.5,
-                    times: [0, 0.25, 0.5, 0.75, 0.85, 0.95, 1],
-                  }}
-                />
-              </svg>
-            </motion.div>
-          </motion.div>
-        </motion.div>
-
         {/* Decorative Rainbow */}
         <motion.div className="absolute top-[20%] right-[10%] z-20">
           <motion.div initial={{ y: -300, scale: 0.5 }} animate={{ y: 0, scale: 1 }} transition={{ duration: 0.5, ease: 'easeOut' }}>
@@ -432,18 +390,14 @@ export const Intro = () => {
 
       {/* Main Content */}
       <motion.div variants={containerVariants} initial="hidden" animate={isVisible ? 'visible' : 'hidden'} className="relative z-10 container mx-auto px-4 text-center">
-        {/* Main Heading */}
-        <motion.h1 variants={itemVariants} className="flex items-center justify-center gap-4 mb-6">
-          <img className="w-24 h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 rounded-full" src="/logo.png" alt="Logo" />
-          <span
-            className="text-5xl md:text-7xl lg:text-8xl font-extrabold uppercase tracking-wider 
-                       text-transparent bg-clip-text bg-linear-to-r 
-                       from-pink-500 via-red-500 to-yellow-400
-                       animate-pulse hover:scale-110 transition-transform duration-300"
-          >
-            Growly
-          </span>
-        </motion.h1>
+        {/* Main Heading - Website Description */}
+        <motion.div variants={itemVariants} className="mb-8">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-transparent bg-clip-text bg-linear-to-r from-orange-500 via-pink-500 to-purple-600">
+            Хүүхдийн дугуйлангын <br className="hidden sm:block" />
+            нэгдсэн платформ
+          </h1>
+          <p className="text-lg md:text-xl lg:text-2xl text-slate-700 max-w-4xl mx-auto leading-relaxed">Таны хүүхдэд тохирсон спорт, урлаг, боловсролын дугуйланг олоход туслах платформ.</p>
+        </motion.div>
 
         {/* Buttons */}
         <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
@@ -472,55 +426,39 @@ export const Intro = () => {
           </motion.button>
         </motion.div>
 
-        {/* Subtitle */}
-        <motion.p variants={itemVariants} className="text-xl md:text-2xl lg:text-3xl text-slate-600 mb-4 max-w-3xl mx-auto font-semibold">
-          Таны хүүхдийн авьяас, амжилтыг хамтдаа хөгжүүлье
-        </motion.p>
-
-        {/* Features */}
-        <motion.div variants={containerVariants} className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          {features.map((feature, index) => (
-            <motion.div
-              key={index}
-              variants={itemVariants}
-              whileHover={{ scale: 1.05, y: -5 }}
-              className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border-2 border-slate-200 hover:border-orange-600 transition-all duration-300"
-            >
-              <motion.div
-                animate={{
-                  rotate: [0, 10, -10, 0],
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                  delay: index * 0.2,
-                }}
-                className="inline-block mb-4 text-orange-600"
-              >
-                {feature.icon}
-              </motion.div>
-              <h3 className="text-xl font-bold text-slate-900 mb-2">{feature.title}</h3>
-              <p className="text-slate-600">{feature.description}</p>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        {/* Scroll Indicator */}
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2, duration: 1 }} className="absolute -bottom-50 left-1/2 -translate-x-1/2">
+        {/* Stats Section with Animated Counters */}
+        <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-8">
+          {/* Customers */}
           <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{
-              duration: 1.5,
-              repeat: Infinity,
-              ease: 'easeInOut',
-            }}
-            className="flex flex-col items-center gap-2 text-black-400"
+            whileHover={{ scale: 1.05, y: -5 }}
+            className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-xl border-2 border-orange-200 hover:border-orange-400 transition-all duration-300"
           >
-            <span className="text-sm font-medium">Доош гүйлгэх</span>
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-            </svg>
+            <div className="text-5xl mb-2">👨‍👩‍👧‍👦</div>
+            <div className="text-4xl font-bold text-orange-600 mb-2">
+              <AnimatedCounter target={5000} duration={2.5} shouldStart={shouldStartCounting} />
+            </div>
+            <div className="text-lg font-semibold text-slate-700">Хэрэглэгчид</div>
+          </motion.div>
+
+          {/* Teachers */}
+          <motion.div
+            whileHover={{ scale: 1.05, y: -5 }}
+            className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-xl border-2 border-purple-200 hover:border-purple-400 transition-all duration-300"
+          >
+            <div className="text-5xl mb-2">👨‍🏫</div>
+            <div className="text-4xl font-bold text-purple-600 mb-2">
+              <AnimatedCounter target={300} duration={2.5} shouldStart={shouldStartCounting} />
+            </div>
+            <div className="text-lg font-semibold text-slate-700">Багш нар</div>
+          </motion.div>
+
+          {/* Clubs */}
+          <motion.div whileHover={{ scale: 1.05, y: -5 }} className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-xl border-2 border-pink-200 hover:border-pink-400 transition-all duration-300">
+            <div className="text-5xl mb-2">🏫</div>
+            <div className="text-4xl font-bold text-pink-600 mb-2">
+              <AnimatedCounter target={150} duration={2.5} shouldStart={shouldStartCounting} />
+            </div>
+            <div className="text-lg font-semibold text-slate-700">Дугуйлан</div>
           </motion.div>
         </motion.div>
       </motion.div>

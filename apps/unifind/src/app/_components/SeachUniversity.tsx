@@ -18,9 +18,7 @@ export function SearchUniversity() {
   const [loading, setLoading] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
 
-  const wrapperRef = useRef<HTMLDivElement>(null);
-
-  /* ---------------- click outside ---------------- */
+  // Close dropdown on click outside
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
@@ -40,13 +38,11 @@ export function SearchUniversity() {
     }
 
     setLoading(true);
-
-    const timer = setTimeout(async () => {
+    const timeoutId = setTimeout(async () => {
       try {
-        const q = latinToCyrillic(query);
-        const res = await fetch(`/api/searchuniversity?q=${encodeURIComponent(q)}`);
-        const data: SearchResult = await res.json();
-        setResults(data);
+        const res = await fetch(`/api/searchuniversity/?query=${encodeURIComponent(query)}`);
+        const data: University[] = await res.json();
+        setResults(data.map((u) => ({ ...u, displayName: u.name })));
         setShowDropdown(true);
       } catch (err) {
         console.error(err);

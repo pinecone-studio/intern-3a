@@ -1,7 +1,7 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import * as AvatarPrimitive from '@radix-ui/react-avatar';
-import { cn } from 'apps/unifind/src/lib/utils';
 import * as React from 'react';
 
 function Avatar({ className, ...props }: React.ComponentProps<typeof AvatarPrimitive.Root>) {

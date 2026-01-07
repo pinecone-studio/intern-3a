@@ -1,11 +1,13 @@
 'use client';
-import { ArrowRight, Bookmark, Calendar, ChevronRight, ClipboardCheck, Clock, Download, ExternalLink, FileText, GraduationCap, MessageCircle, Share2, Wallet } from 'lucide-react';
+import { ArrowRight, Calendar, ChevronRight, ClipboardCheck, Clock, Download, ExternalLink, FileText, GraduationCap, MessageCircle, Share2, Wallet } from 'lucide-react';
 
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
+import { useUser } from '@clerk/nextjs';
 import { useState } from 'react';
+import { toast } from 'sonner';
 import useSWR from 'swr';
 import BookmarkButton from '../../_components/BookMarkButton';
 import { Button } from '../../components/ui/button';
@@ -15,10 +17,13 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function Mergejil() {
   const [open, setOpen] = useState(false);
+
   const params = useParams();
+
+  // 🚫 Эдгээр нь synchronous, Promise биш
   const majorId = Number(params.id);
-  const [isFavorite, setIsFavorite] = useState(false);
-  const handleFavorite = () => setIsFavorite(!isFavorite);
+
+  const { isSignedIn, user } = useUser();
   const handleShare = () => {
     if (!data) return; // <-- safety check
 
@@ -35,31 +40,166 @@ export default function Mergejil() {
     }
   };
 
-  const handleRegisterClick = () => {
-    setOpen(true);
+  const handleRegisterClick = async () => {
+    try {
+      if (!isSignedIn || !user) {
+        toast.warning('Нэвтэрч орно уу', { description: 'Өргөдөл гаргахын тулд эхлээд нэвтрэх шаардлагатай.' });
+        return;
+      }
+
+      // 1️⃣ MRUser үүсгэх
+      const mrRes = await fetch('/api/mruser', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: user.emailAddresses[0].emailAddress,
+          name: `${user.firstName} ${user.lastName}`,
+        }),
+      });
+
+      const mrData = await mrRes.json();
+      if (!mrRes.ok) {
+        toast.error('MRUser үүсгэхэд алдаа гарлаа: ' + (mrData.error || mrData.message));
+        return;
+      }
+      const userId = mrData.id;
+
+      // 2️⃣ Өргөдөл хадгалах
+      const universityData = data.universities; // ✅ шууд объект
+      const startDateStr = universityData.burtgelehleh_start_date;
+      const endDateStr = universityData.burtgelduusah_end_date;
+
+      if (!startDateStr || !endDateStr) {
+        toast.error('Эхлэх болон дуусах огноо байхгүй байна');
+        return;
+      }
+
+      const res = await fetch('/api/datesave', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_id: userId,
+          university_id: universityData.id,
+          start_date: startDateStr,
+          end_date: endDateStr,
+        }),
+      });
+
+      const result = await res.json();
+
+      if (result.message) {
+        toast.info(result.message); // аль хэдийн хадгалагдсан
+        return;
+      }
+
+      if (!res.ok || result.error) {
+        toast.error('Өргөдөл хадгалахад алдаа гарлаа: ' + (result.error || 'Server error'));
+        return;
+      }
+
+      toast.success('Амжилттай бүртгэгдлээ!');
+      setOpen(false);
+    } catch (err: any) {
+      console.error(err);
+      toast.error('Серверийн алдаа гарлаа: ' + (err.message || err));
+    }
   };
 
   const { data, error, isLoading } = useSWR(`/api/majors/${majorId}`, fetcher);
+  console.log({ data });
 
   if (isLoading || !data) {
     return (
-      <div className="min-h-screen bg-sky-50/50 animate-pulse">
-        <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-          {/* Title Skeleton */}
-          <div className="h-6 w-1/3 bg-sky-200 rounded-full mt-20"></div>
-          <div className="h-10 w-3/4 bg-sky-200 rounded-2xl"></div>
-          <div className="h-4 w-full max-w-2xl bg-sky-100 rounded-full mt-2"></div>
-          <div className="h-4 w-full max-w-3xl bg-sky-100 rounded-full mt-1"></div>
+      <div className="min-h-screen bg-linear-to-b from-sky-50 to-white dark:from-gray-900 dark:to-black animate-pulse">
+        <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Breadcrumb */}
+          <div className="flex items-center gap-2 text-sm mb-8 mt-2">
+            <div className="h-3 w-12 bg-gray-300 dark:bg-gray-700 rounded" />
+            <div className="h-3 w-4 bg-gray-300 dark:bg-gray-700 rounded" />
+            <div className="h-3 w-32 bg-gray-300 dark:bg-gray-700 rounded" />
+            <div className="h-3 w-4 bg-gray-300 dark:bg-gray-700 rounded" />
+            <div className="h-3 w-40 bg-gray-300 dark:bg-gray-700 rounded" />
+          </div>
 
-          {/* Stats Cards Skeleton */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+          {/* Header */}
+          <div className="mb-10">
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex-1">
+                <div className="flex gap-2 mb-4">
+                  <div className="h-6 w-24 rounded-full bg-gray-300 dark:bg-gray-700" />
+                  <div className="h-6 w-32 rounded-full bg-gray-300 dark:bg-gray-700" />
+                </div>
+
+                <div className="h-10 w-3/4 bg-gray-400 dark:bg-gray-600 rounded-xl mb-4 mt-7" />
+
+                <div className="space-y-2 max-w-3xl">
+                  <div className="h-4 bg-gray-300 dark:bg-gray-700 rounded" />
+                  <div className="h-4 bg-gray-300 dark:bg-gray-700 rounded w-5/6" />
+                  <div className="h-4 bg-gray-300 dark:bg-gray-700 rounded w-5/6" />
+                </div>
+              </div>
+
+              <div className="flex gap-2">
+                <div className="h-10 w-10 bg-gray-300 dark:bg-gray-700 rounded-xl" />
+                <div className="h-10 w-10 bg-gray-300 dark:bg-gray-700 rounded-xl" />
+              </div>
+            </div>
+          </div>
+
+          {/* Stats Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10 mt-12">
             {[...Array(4)].map((_, i) => (
-              <div key={i} className="h-48 bg-sky-100 rounded-2xl shadow animate-pulse flex flex-col justify-between p-4">
-                <div className="h-5 w-1/2 bg-sky-200 rounded-full"></div>
-                <div className="h-8 w-3/4 bg-sky-200 rounded-xl mt-2"></div>
-                <div className="h-6 w-1/3 bg-sky-200 rounded-full mt-4"></div>
+              <div key={i} className="bg-white dark:bg-gray-900 border border-sky-100 dark:border-gray-800 rounded-2xl p-5">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="h-4 w-28 bg-gray-300 dark:bg-gray-700 rounded" />
+                  <div className="h-10 w-10 bg-gray-300 dark:bg-gray-700 rounded-xl" />
+                </div>
+
+                <div className="flex gap-2 mb-3">
+                  <div className="h-6 w-24 bg-gray-200 dark:bg-gray-800 rounded-lg" />
+                  <div className="h-6 w-20 bg-gray-200 dark:bg-gray-800 rounded-lg" />
+                </div>
+
+                <div className="h-8 w-20 bg-gray-400 dark:bg-gray-600 rounded" />
               </div>
             ))}
+          </div>
+
+          {/* Content */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-5">
+            {/* Left */}
+            <div className="lg:col-span-2 space-y-6">
+              {[...Array(2)].map((_, i) => (
+                <div key={i} className="bg-white dark:bg-gray-900 border border-sky-100 dark:border-gray-800 rounded-2xl p-6">
+                  <div className="flex items-center gap-3 mb-5">
+                    <div className="h-10 w-10 bg-gray-300 dark:bg-gray-700 rounded-xl" />
+                    <div className="h-6 w-48 bg-gray-400 dark:bg-gray-600 rounded" />
+                  </div>
+
+                  <div className="space-y-3 mb-6">
+                    <div className="h-4 bg-gray-300 dark:bg-gray-700 rounded" />
+                    <div className="h-4 bg-gray-300 dark:bg-gray-700 rounded w-5/6" />
+                    <div className="h-4 bg-gray-300 dark:bg-gray-700 rounded w-2/3" />
+                  </div>
+
+                  <div className="flex gap-2">
+                    <div className="h-8 w-32 bg-gray-200 dark:bg-gray-800 rounded-xl" />
+                    <div className="h-8 w-24 bg-gray-200 dark:bg-gray-800 rounded-xl" />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Right */}
+            <div className="space-y-6">
+              {[...Array(2)].map((_, i) => (
+                <div key={i} className="bg-white dark:bg-gray-900 border border-sky-100 dark:border-gray-800 rounded-2xl p-6">
+                  <div className="h-6 w-40 bg-gray-400 dark:bg-gray-600 rounded mb-4" />
+                  <div className="h-12 bg-gray-300 dark:bg-gray-700 rounded-xl mb-3" />
+                  <div className="h-12 bg-gray-200 dark:bg-gray-800 rounded-xl" />
+                </div>
+              ))}
+            </div>
           </div>
         </main>
       </div>
@@ -327,12 +467,12 @@ export default function Mergejil() {
 
             <div className="flex flex-col items-center text-center gap-5 pt-2">
               <div className="w-48 h-48 rounded-2xl border-2 border-sky-100 bg-white p-3 shadow-sm">
-                <Image src="/qr-code-payment.png" alt="Payment QR" width={192} height={192} className="rounded-xl" />
+                <Image src="/qr-mock.png" alt="Payment QR" width={192} height={192} className="rounded-xl" />
               </div>
 
               <div>
                 <p className="text-sm text-gray-500 mb-1">Төлөх дүн</p>
-                <p className="text-3xl font-bold text-gray-900">37,500 ₮</p>
+                <p className="text-3xl font-bold text-gray-900 dark:text-white">37,500 ₮</p>
               </div>
 
               <p className="text-xs text-gray-500 leading-relaxed px-4">Энэхүү хураамжийг төлснөөр та их сургуулийн өргөдөл гаргах эрхтэй болно. Төлбөрийг буцаан олгохгүй.</p>

@@ -23,21 +23,23 @@ export function FilterSidebar({ filters, setFilters, resetFilters }: any) {
 
   const [fieldExpanded, setFieldExpanded] = useState(true);
   const { data: majors = [] } = useSWR('/api/majors', fetcher);
+  console.log({ majors });
 
   const handleMajorChange = (name: string, checked: boolean) => {
     const newList = checked ? [...filters.majorNames, name] : filters.majorNames.filter((n: string) => n !== name);
     setFilters({ ...filters, majorNames: newList });
   };
+  console.log({ fieldExpanded });
 
   return (
     <aside className="space-y-6 sticky top-24">
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 relative">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
-          <h2 className="font-bold text-gray-900 flex items-center gap-2">
-            <GraduationCap className="w-5 h-5 text-sky-600" /> Шүүлтүүр
+          <h2 className="font-bold text-gray-900 flex items-center gap-2 dark:text-white">
+            <GraduationCap className="w-5 h-5 text-sky-500" /> Шүүлтүүр
           </h2>
-          <Button variant="ghost" onClick={resetFilters} className="h-8 text-xs text-gray-500 hover:text-sky-600">
+          <Button variant="ghost" onClick={resetFilters} className="h-8 text-xs text-gray-500 hover:text-sky-500 dark:text-white dark:hover:text-sky-500">
             <RotateCcw className="w-3 h-3 mr-1" /> Шинэчлэх
           </Button>
         </div>
@@ -96,10 +98,11 @@ export function FilterSidebar({ filters, setFilters, resetFilters }: any) {
           </div>
         </div>
 
-        {/* Majors */}
-        <div className="border-t border-gray-50 pt-4">
+        {/* majors */}
+
+        <div className="border-t border-gray-50 dark:border-gray-800 pt-4">
           <button onClick={() => setFieldExpanded(!fieldExpanded)} className="flex items-center justify-between w-full mb-4">
-            <span className="font-bold text-sm text-gray-700">Мэргэжлийн чиглэл</span>
+            <span className="font-bold text-sm text-gray-700 dark:text-white">Мэргэжлийн чиглэл</span>
             {fieldExpanded ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
           </button>
 
@@ -108,7 +111,7 @@ export function FilterSidebar({ filters, setFilters, resetFilters }: any) {
               {majors
                 .filter((m: any, i: number, arr: any[]) => arr.findIndex((x) => x.name === m.name) === i)
                 .map((major: any) => (
-                  <div key={major.name} className="flex items-center gap-3">
+                  <div key={major.name} className="flex items-center gap-3 ">
                     <Checkbox checked={filters.majorNames.includes(major.name)} onCheckedChange={(checked) => handleMajorChange(major.name, !!checked)} />
                     <Label>{major.name}</Label>
                   </div>
@@ -119,7 +122,7 @@ export function FilterSidebar({ filters, setFilters, resetFilters }: any) {
       </div>
 
       {/* Promo Box */}
-      <div className="bg-sky-600 hover:bg-sky-700 rounded-2xl p-6 text-white relative overflow-hidden group">
+      <div className="bg-sky-500 hover:bg-sky-600 dark:bg-gray-900 dark:border-neutral-800 dark:border rounded-2xl p-6 text-white  relative overflow-hidden group">
         <div className="relative z-10">
           <p className="font-bold mb-1">Тусламж хэрэгтэй юу?</p>
           <p className="text-sky-100 text-xs mb-4 opacity-90">Мэргэжлийн зөвлөх танд чиглүүлэхэд бэлэн байна.</p>

@@ -1,10 +1,9 @@
-import prisma from 'apps/unifind/src/lib/prisma';
+import prisma from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
-
     const search = searchParams.get('search') || '';
     const minScore = parseInt(searchParams.get('minScore') || '0');
 
@@ -33,7 +32,7 @@ export async function GET(req: Request) {
     }
 
     const universities = await prisma.universities.findMany({
-      where,
+      where: where,
       include: {
         _count: {
           select: { majors: true },
@@ -71,10 +70,8 @@ export async function POST(req: Request) {
     data: {
       name: body.name,
       city: body.city,
-      website: body.website,
       description: body.description,
-      burtgelehleh_start_date: body.startDate ? new Date(body.startDate) : undefined,
-      burtgelduusah_end_date: body.endDate ? new Date(body.endDate) : undefined,
+      website: body.website,
     },
   });
 

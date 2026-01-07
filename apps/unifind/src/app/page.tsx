@@ -1,10 +1,15 @@
+'use client';
+
 import { CallToAction } from './_components/CallToAction';
 import { HeroSection } from './_components/HeroSection';
-
 import { PopularUniversities } from './_components/PopularUniversities';
 import { SearchCard } from './_components/SearchCard';
 
+import { useUser } from '@clerk/nextjs';
+
 export default function Home() {
+  const { isSignedIn } = useUser(); // 👈 Detect login status
+
   return (
     <div>
       <main>
@@ -13,7 +18,9 @@ export default function Home() {
           <SearchCard />
         </div>
         <PopularUniversities />
-        <CallToAction />
+
+        {/* Show CallToAction ONLY if user is NOT signed in */}
+        {!isSignedIn && <CallToAction />}
       </main>
     </div>
   );

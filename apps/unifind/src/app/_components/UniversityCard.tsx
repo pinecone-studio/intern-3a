@@ -23,7 +23,7 @@ export default function UniversityCard({ id, name, location, image, status, minS
   };
 
   const ImageWithFallback = ({ src }: { src: string }) => {
-    const [imgSrc, setImgSrc] = useState(src || '/university-logo-arts.jpg');
+    const [imgSrc] = useState(src || '/university-logo-arts.jpg');
     return <img src={imgSrc} alt={name} className="w-full h-full object-cover rounded-md" onError={(e) => (e.currentTarget.src = '/university-logo-arts.jpg')} />;
   };
 
