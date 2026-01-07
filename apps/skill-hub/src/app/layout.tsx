@@ -12,7 +12,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <ClerkProvider>
       <html lang="en">
-        <body>
+        <body className="">
           <Header />
           <div className="max-w-\[1440px]\ m-auto">{children}</div>
           <Toaster position="top-center" />
