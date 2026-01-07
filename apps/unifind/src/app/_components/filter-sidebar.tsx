@@ -12,6 +12,7 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 export function FilterSidebar({ filters, setFilters, resetFilters }: any) {
   const [fieldExpanded, setFieldExpanded] = useState(true);
   const { data: majors = [] } = useSWR('/api/majors', fetcher);
+  console.log('majors:', majors);
 
   const handleMajorChange = (name: string, checked: boolean) => {
     const newList = checked ? [...filters.majorNames, name] : filters.majorNames.filter((n: string) => n !== name);
@@ -22,6 +23,7 @@ export function FilterSidebar({ filters, setFilters, resetFilters }: any) {
   return (
     <aside className="space-y-6 sticky top-24">
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+        {/* header */}
         <div className="flex items-center justify-between mb-6">
           <h2 className="font-bold text-gray-900 flex items-center gap-2">
             <GraduationCap className="w-5 h-5 text-sky-600" /> Шүүлтүүр
@@ -46,6 +48,7 @@ export function FilterSidebar({ filters, setFilters, resetFilters }: any) {
         </div>
 
         {/* majors */}
+
         <div className="border-t border-gray-50 pt-4">
           <button onClick={() => setFieldExpanded(!fieldExpanded)} className="flex items-center justify-between w-full mb-4">
             <span className="font-bold text-sm text-gray-700">Мэргэжлийн чиглэл</span>
@@ -57,7 +60,7 @@ export function FilterSidebar({ filters, setFilters, resetFilters }: any) {
               {majors
                 .filter((m: any, i: number, arr: any[]) => arr.findIndex((x) => x.name === m.name) === i)
                 .map((major: any) => (
-                  <div key={major.name} className="flex items-center gap-3">
+                  <div key={major.name} className="flex items-center gap-3 ">
                     <Checkbox checked={filters.majorNames.includes(major.name)} onCheckedChange={(checked) => handleMajorChange(major.name, !!checked)} />
                     <Label>{major.name}</Label>
                   </div>
@@ -68,14 +71,13 @@ export function FilterSidebar({ filters, setFilters, resetFilters }: any) {
       </div>
 
       {/* Promo Box */}
-        <div className="bg-sky-600 hover:bg-sky-700 rounded-2xl p-6 text-white relative overflow-hidden group">
-          <div className="relative z-10">
-            <p className="font-bold mb-1">Тусламж хэрэгтэй юу?</p>
-            <p className="text-sky-100 text-xs mb-4 opacity-90">Мэргэжлийн зөвлөх танд чиглүүлэхэд бэлэн байна.</p>
-            <Button className="w-full bg-white text-sky-500 hover:bg-sky-50 font-bold shadow-lg shadow-sky-900/20">Зөвлөгөө авах</Button>
-          </div>
-          <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500" />
+      <div className="bg-sky-600 hover:bg-sky-700 rounded-2xl p-6 text-white relative overflow-hidden group">
+        <div className="relative z-10">
+          <p className="font-bold mb-1">Тусламж хэрэгтэй юу?</p>
+          <p className="text-sky-100 text-xs mb-4 opacity-90">Мэргэжлийн зөвлөх танд чиглүүлэхэд бэлэн байна.</p>
+          <Button className="w-full bg-white text-sky-500 hover:bg-sky-50 font-bold shadow-lg shadow-sky-900/20">Зөвлөгөө авах</Button>
         </div>
+        <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500" />
       </div>
     </aside>
   );
