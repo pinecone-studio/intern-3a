@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from 'react';
 
-export type Track = 'Math' | 'English' | 'Japanese';
+export type Track = 'Math' | 'English' | 'Japanese' | 'Chinese' | 'Physics' | 'History' | 'Biology' | 'Social Studies';
 
 export interface FocusArea {
   _id: string;
