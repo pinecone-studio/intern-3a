@@ -88,7 +88,7 @@ export const MyClubCurriculum = ({ curriculum, schedule, price }: Props) => {
 
             {filteredCurriculum.map((project) => (
               <div key={project._id} className="flex gap-5 justify-between">
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-4 w-220">
                   <div className="flex gap-3 items-center">
                     <LuGraduationCap className="w-5 h-5 shrink-0" style={{ color: '#FCB027' }} />
                     <p className="text-md">
@@ -115,7 +115,7 @@ export const MyClubCurriculum = ({ curriculum, schedule, price }: Props) => {
 
                   <div className="flex gap-3 items-center">
                     <MdOutlineDescription className="w-5 h-5 shrink-0" style={{ color: '#FCB027' }} />
-                    <p className="text-md">
+                    <p className="text-md truncate">
                       <span className="font-semibold mr-3">Тайлбар:</span>
                       {project.description}
                     </p>

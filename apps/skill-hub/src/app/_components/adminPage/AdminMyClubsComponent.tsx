@@ -24,7 +24,7 @@ const AdminMyClubsComponent = () => {
 
   if (!selectedClub) {
     return (
-      <div className="flex h-screen">
+      <div className="flex h-screen w-full">
         <div className="flex-1 p-8">
           <div className="flex gap-10">
             <div className="flex flex-col gap-10">

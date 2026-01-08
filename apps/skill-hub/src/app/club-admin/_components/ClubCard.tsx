@@ -131,7 +131,8 @@ export const ClubCard = ({ club }: { club: NewClubType }) => {
                     onClick={() => toggleClassDetails(level)}
                     className="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-full flex items-center gap-1 transition-colors cursor-pointer"
                   >
-                    {level}
+                    {/* {level} */}
+                    {CLASS_LEVEL_LABEL_MN[level as ClassLevelsType]}
                     <ChevronDown className={`w-3 h-3 transition-transform ${expandedClass === level ? 'rotate-180' : ''}`} />
                   </button>
                 </div>
@@ -278,7 +279,7 @@ export const ClubCard = ({ club }: { club: NewClubType }) => {
                     {modalDescExpanded ? <ChevronUp className="w-5 h-5 text-black" /> : <ChevronDown className="w-5 h-5 text-black" />}
                   </button>
                 </div>
-                <div className="mt-3 flex gap-4">
+                <div className="mt-3 flex gap-4 items-center">
                   <div className="inline-flex items-center gap-2">
                     <div className="relative group inline-flex items-center">
                       <Layers className="w-5 h-5 text-orange-600" />
@@ -300,10 +301,10 @@ export const ClubCard = ({ club }: { club: NewClubType }) => {
                   <p className="font-medium mt-1">{CLASS_LEVEL_LABEL_MN[club.clubCategoryName as ClassLevelsType] || club.clubCategoryName}</p>
                 </div>
 
-                <div className="flex gap-4 ">
+                <div className="">
                   <div className="inline-flex items-center gap-2">
                     <div className="relative group inline-flex items-center">
-                      <Calendar className="w-5 h-5 text-orange-600" />
+                      {/* <Calendar className="w-5 h-5 text-orange-600" /> */}
 
                       <span
                         className="
@@ -342,24 +343,28 @@ export const ClubCard = ({ club }: { club: NewClubType }) => {
                             </button>
                           ))}
                         </div>
-
-                        {selectedClass && club.scheduledClubTimes?.[selectedClass] && (
-                          <div className="flex flex-col gap-2">
-                            {Object.entries(club.scheduledClubTimes?.[selectedClass]).map(([day, schedule]) => (
-                              <div key={day} className=" flex gap-3">
-                                <span className="font-semibold">{WEEK_DAY_LABEL_MN[day as WeekDayType]}:</span>
-                                <span className="text-sl">
-                                  Эхлэх: {schedule.startTime} - Дуусах: {schedule.endTime}
-                                </span>
+                        <div className="flex gap-4 items-center ">
+                          <Calendar className="w-5 h-5 text-orange-600" />
+                          <div className="">
+                            {selectedClass && club.scheduledClubTimes?.[selectedClass] && (
+                              <div className="flex flex-col gap-2">
+                                {Object.entries(club.scheduledClubTimes?.[selectedClass]).map(([day, schedule]) => (
+                                  <div key={day} className=" flex gap-3">
+                                    <span className="font-semibold">{WEEK_DAY_LABEL_MN[day as WeekDayType]}:</span>
+                                    <span className="text-sl">
+                                      Эхлэх: {schedule.startTime} - Дуусах: {schedule.endTime}
+                                    </span>
+                                  </div>
+                                ))}
                               </div>
-                            ))}
+                            )}
                           </div>
-                        )}
+                        </div>
                       </div>
                     )}
                   </div>
                 </div>
-                <div>
+                <div className="flex items-center gap-4">
                   <div className="relative group inline-flex items-center">
                     <Wallet className="w-5 h-5 text-orange-600" />
 
@@ -376,7 +381,7 @@ export const ClubCard = ({ club }: { club: NewClubType }) => {
                       Төлбөр
                     </span>
                   </div>
-                  <div className="mt-2 flex flex-wrap gap-2 ml-8">
+                  <div className="mt-2 flex flex-wrap gap-2 ">
                     {club.clubPrices ? (
                       Object.entries(club.clubPrices).map(([k, v]) => (
                         <span key={k} className="px-3 py-1 rounded-full bg-gray-100 text-gray-800 text-sm">
