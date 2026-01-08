@@ -12,7 +12,7 @@ export const createNewClub = async (newClubData: NewClubType) => {
 export const getAllClubs = async () => {
   await connectDB();
 
-  return await NewClub.find().sort({ createdAt: 1 });
+  return await NewClub.find().sort({ createdAt: -1 });
 };
 
 export const getClubById = async (id: string) => {
