@@ -57,10 +57,6 @@ export const MyClubCategoryComponent = ({ selectedClub }: Props) => {
 
       toast.success('Анги амжилттай устгагдлаа');
 
-      // if (selectedClass === level) {
-      //   setSelectedClass(null);
-      // }
-
       if (selectedClass === level) {
         const remainingClassLevels = Object.keys(selectedClub.teachersInfoByClass ?? {}).filter((classLevel) => classLevel !== level) as ClassLevelsType[];
 

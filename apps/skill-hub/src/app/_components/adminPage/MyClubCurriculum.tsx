@@ -38,7 +38,6 @@ type Props = {
   selectedClass: ClassLevelsType | null;
   schedule: Partial<Record<WeekDayType, DaytimeType>> | null | undefined;
   price: number | null | undefined;
-  //   selectedClub: NewClubType;
 };
 
 export const MyClubCurriculum = ({ curriculum, schedule, price }: Props) => {
@@ -137,6 +136,7 @@ export const MyClubCurriculum = ({ curriculum, schedule, price }: Props) => {
                       {project.childrenCount}
                     </p>
                   </div>
+                  {/* <div>Бүртгүүлэх хүсэлт</div> */}
                 </div>
 
                 <div className="flex flex-col gap-4">
@@ -161,13 +161,11 @@ export const MyClubCurriculum = ({ curriculum, schedule, price }: Props) => {
                       <p className="text-sm text-gray-500">Хуваарь оруулаагүй</p>
                     )}
                   </div>
-
                   <div className="flex flex-col gap-3">
                     <div className="flex gap-3 items-center">
                       <Calendar className="w-5 h-5 shrink-0" style={{ color: '#FCB027' }} />
                       <p className="font-semibold mr-3">Хичээлэх хугацаа:</p>
                     </div>
-
                     <div className="flex flex-col gap-1 pl-10">
                       <p className="text-md">
                         <span className="mr-3">Эхлэх огноо:</span>
