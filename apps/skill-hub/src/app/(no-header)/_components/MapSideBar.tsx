@@ -1,11 +1,10 @@
 'use client';
 
-import { MyUserButton } from '@/app/_components';
 import { RegisterLoginAlertDialog } from '@/app/club/_components';
 import { ClassLevelsType, getClassLevelMN, NewClubType, WeekDayType } from '@/lib/utils/types';
-import { SignedIn, SignedOut, useAuth } from '@clerk/nextjs';
-import { Badge, Input } from '@intern-3a/shadcn';
-import { ArrowLeftToLine, ChevronLeft, ChevronRight, MapPin, SlidersHorizontal } from 'lucide-react';
+import { SignedIn, SignedOut, SignInButton, useAuth, UserButton, useUser } from '@clerk/nextjs';
+import { Badge, Button, Input } from '@intern-3a/shadcn';
+import { ArrowLeftToLine, ChevronLeft, ChevronRight, Layers2, MapPin, SlidersHorizontal } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { ImSearch } from 'react-icons/im';
@@ -60,6 +59,9 @@ export default function MapSideBar({
   const [isSaving, setIsSaving] = useState(false);
   const [savedFavorites, setSavedFavorites] = useState<string[]>([]);
   const { getToken } = useAuth();
+  const { user } = useUser();
+  const role = user?.publicMetadata?.role;
+
   const categories = Array.from(new Set(visibleClubs.map((club) => club.clubCategoryName)));
 
   const filteredClubs = search.trim() === '' ? visibleClubs : visibleClubs.filter((club) => club.clubName.toLowerCase().includes(search.toLowerCase()));
@@ -98,7 +100,18 @@ export default function MapSideBar({
             <ArrowLeftToLine size={24} className="text-[#0A427A] hover:text-black cursor-pointer" />
           </div>
           <div className="pr-5">
-            <MyUserButton />
+            <SignedOut>
+              <div className="flex gap-5">
+                <SignInButton>
+                  <Button className="rounded-full cursor-pointer bg-[#FCB027] hover:bg-[#f5a81d]">Нэвтрэх</Button>
+                </SignInButton>
+              </div>
+            </SignedOut>
+            <SignedIn>
+              <UserButton>
+                <UserButton.MenuItems>{role !== 'ADMIN' && <UserButton.Action label="Миний хуудас" labelIcon={<Layers2 />} onClick={() => router.push('/user-profile')} />}</UserButton.MenuItems>
+              </UserButton>
+            </SignedIn>
           </div>
         </div>
         <div className="p-6 border-t border-b">
