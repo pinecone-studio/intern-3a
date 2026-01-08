@@ -3,6 +3,7 @@ import { User } from '@/lib/models/User';
 import connectDB from '@/lib/mongodb';
 import { createUser } from '@/lib/services/user-service';
 import { auth } from '@clerk/nextjs/server';
+import Ably from 'ably';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function PATCH(req: NextRequest) {
@@ -49,6 +50,9 @@ export async function PATCH(req: NextRequest) {
     if (!updatedClub) {
       return NextResponse.json({ error: 'Дугуйлан олдсонгүй' }, { status: 404 });
     }
+
+    const ably = new Ably.Rest({ key: process.env.ABLY_API_KEY });
+    await ably.channels.get('clubs').publish('club-updated', updatedClub);
 
     return NextResponse.json({ success: true, updatedClub });
   } catch (error) {

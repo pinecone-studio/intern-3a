@@ -53,10 +53,30 @@ export const useClub = () => {
       toast.success('New club added!');
     };
 
+    const handleUpdated = (message: Ably.Message) => {
+      if (message.name !== 'club-updated') return;
+      const updatedClub = message.data as NewClubType;
+
+      setAllClubs((prev) => prev.map((club) => (club._id === updatedClub._id ? updatedClub : club)));
+      toast.success('Club updated!');
+    };
+
+    const handleDeleted = (message: Ably.Message) => {
+      if (message.name !== 'club-deleted') return;
+      const deleted = message.data as { _id: string };
+
+      setAllClubs((prev) => prev.filter((club) => club._id !== deleted._id));
+      toast.success('Club deleted!');
+    };
+
     channel.subscribe('club-created', handleCreated);
+    channel.subscribe('club-updated', handleUpdated);
+    channel.subscribe('club-deleted', handleDeleted);
 
     return () => {
       channel.unsubscribe('club-created', handleCreated);
+      channel.unsubscribe('club-updated', handleUpdated);
+      channel.unsubscribe('club-deleted', handleDeleted);
     };
   }, []);
 

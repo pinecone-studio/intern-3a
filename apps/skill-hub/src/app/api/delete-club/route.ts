@@ -3,6 +3,7 @@ import { User } from '@/lib/models/User';
 import connectDB from '@/lib/mongodb';
 import { createUser } from '@/lib/services/user-service';
 import { auth } from '@clerk/nextjs/server';
+import Ably from 'ably';
 import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -41,6 +42,9 @@ export async function DELETE(req: NextRequest) {
     if (!deleteClub) {
       return NextResponse.json({ error: 'Дугуйлан олдсонгүй эсвэл та админ биш байна.' }, { status: 404 });
     }
+
+    const ably = new Ably.Rest({ key: process.env.ABLY_API_KEY });
+    await ably.channels.get('clubs').publish('club-deleted', { _id: clubId });
 
     return NextResponse.json({ success: true });
   } catch (error) {

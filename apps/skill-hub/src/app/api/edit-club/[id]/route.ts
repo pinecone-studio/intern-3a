@@ -3,6 +3,7 @@ import { User } from '@/lib/models/User';
 import connectDB from '@/lib/mongodb';
 import { NewClubType } from '@/lib/utils/types';
 import { uploadImageToCloudinary } from '@/lib/utils/uploadImage';
+import Ably from 'ably';
 import { NextRequest, NextResponse } from 'next/server';
 import { checkAuth } from '../../check-create-user/route';
 
@@ -61,6 +62,9 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     if (!updatedClub) {
       return NextResponse.json({ message: 'Дугуйлан олдсонгүй' }, { status: 404 });
     }
+
+    const ably = new Ably.Rest({ key: process.env.ABLY_API_KEY });
+    await ably.channels.get('clubs').publish('club-updated', updatedClub);
 
     return NextResponse.json({ message: 'Дугуйлан амжилттай засагдлаа', data: updatedClub }, { status: 200 });
   } catch (error) {

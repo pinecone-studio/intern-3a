@@ -12,7 +12,7 @@ import EditMyClubsTrigger from './EditMyClubsTrigger';
 import { MyClubCategoryComponent } from './MyClubCategoryComponent';
 import ProjectDialog from './ProjectDialog';
 
-const AdminMyClubsComponent = () => {
+export const AdminMyClubsComponent = () => {
   const searchParams = useSearchParams();
   const clubId = searchParams.get('id');
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -138,4 +138,3 @@ const AdminMyClubsComponent = () => {
     </div>
   );
 };
-export default AdminMyClubsComponent;

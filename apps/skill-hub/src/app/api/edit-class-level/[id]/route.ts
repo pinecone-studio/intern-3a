@@ -2,6 +2,7 @@ import { NewClub } from '@/lib/models/Club';
 import { User } from '@/lib/models/User';
 import connectDB from '@/lib/mongodb';
 import { NewClubType, TeachersByClassLevelsType } from '@/lib/utils/types';
+import Ably from 'ably';
 import fs from 'fs';
 import { NextRequest, NextResponse } from 'next/server';
 import path from 'path';
@@ -84,6 +85,9 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     if (!updatedClassLevel) {
       return NextResponse.json({ message: 'Дугуйлан олдсонгүй' }, { status: 404 });
     }
+
+    const ably = new Ably.Rest({ key: process.env.ABLY_API_KEY });
+    await ably.channels.get('clubs').publish('club-updated', updatedClassLevel);
 
     return NextResponse.json({
       message: 'Анги амжилттай засагдлаа',
