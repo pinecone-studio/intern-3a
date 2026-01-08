@@ -3,10 +3,10 @@ import { GraduationCap, Loader2, MapPin, School, Search, Sparkles, X } from 'luc
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { latinToCyrillic } from '../../lib/latinToCyrillic';
-import { SearchResult, UniversityCardProps } from '../../lib/types/type';
+import { SearchResult } from '../../lib/types/type';
 import { Input } from '../components/ui/input';
 
-export function SearchUniversity({ id }: UniversityCardProps) {
+export function SearchUniversity() {
   const router = useRouter();
 
   const [query, setQuery] = useState('');
@@ -82,8 +82,8 @@ export function SearchUniversity({ id }: UniversityCardProps) {
 
       {/* Dropdown  */}
       {showDropdown && (
-        <div className="absolute top-full left-0 w-[320px] lg:w-[380px] mt-2 bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 shadow-[0_10px_40px_rgba(0,0,0,0.1)] rounded-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
-          <div className="max-h-[420px] overflow-y-auto custom-scrollbar p-2">
+        <div className="absolute top-full left-0 w-[320px] lg:w-95 mt-2 bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 shadow-[0_10px_40px_rgba(0,0,0,0.1)] rounded-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="max-h-105 overflow-y-auto custom-scrollbar p-2">
             {/* 🏫 Universities Section */}
             {results.universities.length > 0 && (
               <div className="mb-2">
