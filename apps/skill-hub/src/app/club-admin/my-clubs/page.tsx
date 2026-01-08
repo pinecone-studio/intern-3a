@@ -1,6 +1,6 @@
 'use client';
 
-import AdminMyClubsComponent from '@/app/_components/adminPage/AdminMyClubsComponent';
+import { AdminMyClubsComponent } from '@/app/_components/adminPage';
 import React, { Suspense } from 'react';
 
 const page = () => {
