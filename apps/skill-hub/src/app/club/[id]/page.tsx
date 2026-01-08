@@ -217,7 +217,7 @@ export default function ClubDetailPage({ params }: PageProps) {
         </div>
       </div>
 
-      <RegisterLoginAlertDialog showLoginAlert={showLoginAlert} setShowLoginAlert={setShowLoginAlert} id={id} />
+      <RegisterLoginAlertDialog showLoginAlert={showLoginAlert} setShowLoginAlert={setShowLoginAlert} id={id} message={'Дугуйланд бүртгүүлэхийн тулд эхлээд нэвтрэх шаардлагатай.'} />
     </div>
   );
 }

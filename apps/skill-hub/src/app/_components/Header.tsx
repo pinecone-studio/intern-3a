@@ -38,9 +38,6 @@ export const Header = () => {
         <div className="hidden sm:block">
           <CategoryDropdown />
         </div>
-        <div className="hidden sm:block">
-          <SearchBar />
-        </div>
       </div>
 
       <div className="flex gap-2 sm:gap-5 items-center pl-4">

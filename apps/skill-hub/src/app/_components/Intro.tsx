@@ -1,7 +1,6 @@
 'use client';
 
 import { SignedIn, SignedOut, SignInButton } from '@clerk/nextjs';
-import { Button } from '@intern-3a/shadcn';
 import { animate, motion, useMotionValue, useTransform, Variants } from 'framer-motion';
 import { LogIn } from 'lucide-react';
 import { useRouter } from 'next/navigation';

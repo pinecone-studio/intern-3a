@@ -55,7 +55,7 @@ export const AllClubsCardScrollAnimation = ({ allClubs, isLoading }: { allClubs:
               Дэлгэрэнгүй
             </Button>
 
-            <RegisterLoginAlertDialog showLoginAlert={showLoginAlert} setShowLoginAlert={setShowLoginAlert} id={club._id!} />
+            <RegisterLoginAlertDialog showLoginAlert={showLoginAlert} setShowLoginAlert={setShowLoginAlert} id={club._id!} message="" />
           </div>
         ))}
       </div>

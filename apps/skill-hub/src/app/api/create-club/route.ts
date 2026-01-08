@@ -21,7 +21,6 @@ export async function POST(req: NextRequest) {
     const admin = await User.findOne({
       userClerkId: userClerkId,
     });
-    console.log({ admin });
 
     const newFormData = await req.formData();
     const clubCategoryName = newFormData.get('clubCategoryName')?.toString();
@@ -48,21 +47,6 @@ export async function POST(req: NextRequest) {
     const clubAddress = newFormData.get('clubAddress')?.toString();
     const clubLat = parseFloat(newFormData.get('clubLat')?.toString() || 'NaN');
     const clubLong = parseFloat(newFormData.get('clubLong')?.toString() || 'NaN');
-
-    console.log({
-      clubCategoryName,
-      clubSubCategoryName,
-      clubName,
-      selectedClassLevelNames,
-      clubPricesRaw,
-      scheduledClubTimesRaw,
-      teachersInfoByClassRaw,
-      clubDescription,
-      clubImage,
-      clubAddress,
-      clubLat,
-      clubLong,
-    });
 
     if (
       !clubCategoryName ||
