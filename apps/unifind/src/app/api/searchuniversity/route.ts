@@ -1,5 +1,5 @@
-import { latinToCyrillic } from 'apps/unifind/src/lib/latinToCyrillic';
-import prisma from 'apps/unifind/src/lib/prisma';
+import { latinToCyrillic } from '@/lib/latinToCyrillic';
+import prisma from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 
 export async function GET(req: Request) {
