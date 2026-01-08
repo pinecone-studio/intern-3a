@@ -49,7 +49,7 @@ export default function Index() {
   }
 
   return (
-    <div>
+    <div className="relative overflow-hidden bg-linear-to-br from-orange-50 via-white to-purple-50">
       <Intro />
       <AllClubsCardScrollAnimation allClubs={allClubs} isLoading={isLoading} />
     </div>

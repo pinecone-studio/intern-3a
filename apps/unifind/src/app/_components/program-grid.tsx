@@ -135,13 +135,62 @@ function Badge({ label, onRemove }: any) {
     </div>
   );
 }
-
 function LoadingSkeleton() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      {[1, 2, 3, 4, 5, 6].map((i) => (
-        <div key={i} className="h-64 bg-gray-100 rounded-2xl animate-pulse" />
-      ))}
+    <div className="space-y-8 animate-pulse">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="space-y-2">
+          <div className="h-6 w-72 rounded-lg bg-gray-200 dark:bg-gray-800" />
+          <div className="h-4 w-40 rounded-lg bg-gray-100 dark:bg-gray-700" />
+        </div>
+
+        <div className="flex items-center gap-3">
+          <div className="h-10 w-40 rounded-xl bg-gray-200 dark:bg-gray-800" />
+          <div className="flex gap-1 p-1 rounded-xl bg-gray-200 dark:bg-gray-800">
+            <div className="h-8 w-8 rounded-lg bg-gray-300 dark:bg-gray-700" />
+            <div className="h-8 w-8 rounded-lg bg-gray-300 dark:bg-gray-700" />
+          </div>
+        </div>
+      </div>
+
+      {/* Active filters */}
+      <div className="flex gap-2">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="h-7 w-24 rounded-full bg-gray-200 dark:bg-gray-800" />
+        ))}
+      </div>
+
+      {/* Section title */}
+      <div className="flex items-center gap-3">
+        <div className="h-8 w-1.5 rounded-full bg-sky-500/40" />
+        <div className="h-5 w-48 rounded-lg bg-gray-200 dark:bg-gray-800" />
+        <div className="h-5 w-28 rounded-lg bg-gray-100 dark:bg-gray-700" />
+      </div>
+
+      {/* Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div
+            key={i}
+            className="rounded-2xl border p-4 space-y-4
+                       border-gray-200 dark:border-gray-800
+                       bg-white dark:bg-gray-900"
+          >
+            <div className="h-40 rounded-xl bg-gray-200 dark:bg-gray-800" />
+
+            <div className="space-y-2">
+              <div className="h-4 w-3/4 rounded bg-gray-200 dark:bg-gray-800" />
+              <div className="h-4 w-1/2 rounded bg-gray-100 dark:bg-gray-700" />
+            </div>
+
+            <div className="flex gap-2">
+              <div className="h-6 w-20 rounded-full bg-gray-100 dark:bg-gray-800" />
+              <div className="h-6 w-16 rounded-full bg-gray-100 dark:bg-gray-800" />
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

@@ -31,7 +31,9 @@ export const EditMyClubsDialogContent = ({ setOpen, club }: Props) => {
   const [clubImagePreview, setClubImagePreview] = useState<string>(typeof club.clubImage === 'string' ? club.clubImage : '');
 
   const [loading, setLoading] = useState(false);
-  const [editedImagePreview, setEditedImagePreview] = useState<string | File | undefined>(club.clubImage);
+  // const [editedImagePreview, setEditedImagePreview] = useState<string | File | undefined>(club.clubImage); // <=======
+
+  const editedImagePreview: string | File | undefined = club.clubImage;
 
   useEffect(() => {
     if (!club) return;

@@ -1,5 +1,7 @@
 export type ClassLevelsType = 'Elementary' | 'Middle' | 'High';
 
+export type DifficultyLevel = 'Beginner' | 'Intermediate' | 'Pro';
+
 export type WeekDayType = 'MON' | 'TUE' | 'WED' | 'THU' | 'FRI' | 'SAT' | 'SUN';
 
 export type ClubPricesType = {
@@ -169,3 +171,15 @@ export function getClassLevelMN(level: ClassLevelsType): string {
       return level;
   }
 }
+export type ClubProjectType = {
+  _id?: string;
+  clubId: NewClubType;
+  adminId: NewClubType;
+  title: string;
+  description: string;
+  classLevel: ClassLevelsType[];
+  difficultyLevel: DifficultyLevel[];
+  childrenCount: number;
+  startDate: Date;
+  finishDate: Date;
+};
