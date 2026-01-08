@@ -1,10 +1,11 @@
 'use client';
 
 import { ClubProjectType } from '@/lib/utils/types';
-import { SignedIn, SignedOut } from '@clerk/nextjs';
+import { SignedIn, SignedOut, useAuth } from '@clerk/nextjs';
 import { Button } from '@intern-3a/shadcn';
 import { Award, Calendar, ChevronRight, FolderKanban, Trophy, Users, Zap } from 'lucide-react';
 import { useState } from 'react';
+import { toast } from 'sonner';
 import { RegisterLoginAlertDialog } from '../club/_components';
 
 interface Props {
@@ -32,6 +33,8 @@ const DIFFICULTY_ICONS: Record<string, React.ReactNode> = {
 
 export default function ClubOngoingProjects({ projects, onViewProject }: Props) {
   const [showLoginAlert, setShowLoginAlert] = useState<boolean>(false);
+  const [registrationStatuses, setRegistrationStatuses] = useState<Record<string, string>>({});
+  const { getToken } = useAuth();
 
   if (!projects || projects.length === 0) {
     return <div className="p-8 text-center bg-slate-50 rounded-3xl border border-dashed border-slate-200 text-slate-400 font-medium text-sm">Төсөл одоогоор байхгүй байна.</div>;
@@ -47,6 +50,32 @@ export default function ClubOngoingProjects({ projects, onViewProject }: Props) 
     const mm = String(d.getMonth() + 1).padStart(2, '0');
     const dd = String(d.getDate()).padStart(2, '0');
     return `${yyyy}/${mm}/${dd}`;
+  };
+
+  const handleRegistrationStatusChange = async (projectId: string) => {
+    const token = await getToken();
+
+    try {
+      const res = await fetch('/api/club-register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ projectId }),
+      });
+
+      if (!res.ok) {
+        console.error('Бүртгэл амжилтгүй');
+        toast.error('Дугуйланд бүртгүүлэхэд алдаа гарлаа!');
+        return;
+      }
+
+      const data = await res.json();
+
+      setRegistrationStatuses((prev) => ({ ...prev, [projectId]: 'PENDING' }));
+
+      console.log('Бүртгэл амжилттай:', data);
+    } catch (error) {
+      console.error('Бүртгэхэд алдаа гарлаа:', error);
+    }
   };
 
   return (
@@ -114,11 +143,13 @@ export default function ClubOngoingProjects({ projects, onViewProject }: Props) 
 
               <SignedIn>
                 <Button
-                  onClick={() => onViewProject(project._id || '')}
+                  onClick={() => handleRegistrationStatusChange(project._id!)}
                   size="sm"
-                  className="w-full sm:w-auto rounded-xl font-bold text-xs h-11 sm:h-10 px-6 transition-all cursor-pointer bg-orange-500 hover:bg-blue-600 text-white"
+                  className={`w-full sm:w-auto rounded-xl font-bold text-xs h-11 sm:h-10 px-6 transition-all cursor-pointer 
+      ${registrationStatuses[project._id ?? ''] === 'PENDING' ? 'bg-gray-300 cursor-not-allowed' : 'bg-orange-500 hover:bg-blue-600 text-white'}`}
+                  disabled={registrationStatuses[project._id ?? ''] === 'PENDING'}
                 >
-                  Бүртгүүлэх
+                  {registrationStatuses[project._id ?? ''] === 'PENDING' ? 'Бүртгэл хийгдсэн' : 'Бүртгүүлэх'}
                   <ChevronRight className="w-3.5 h-3.5 ml-1" />
                 </Button>
               </SignedIn>
