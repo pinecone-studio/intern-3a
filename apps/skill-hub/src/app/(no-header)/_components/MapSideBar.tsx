@@ -17,8 +17,12 @@ type MapSideBarProps = {
   onToggle: () => void;
   hoveredClubId: string | null;
   setHoveredClubId: (id: string | null) => void;
+  selectedLevel: ClassLevelsType | null;
+  setSelectedLevel: React.Dispatch<React.SetStateAction<ClassLevelsType | null>>;
+  selectedCategory: string | null;
+  setSelectedCategory: React.Dispatch<React.SetStateAction<string | null>>;
 };
-export default function MapSideBar({ visibleClubs, sidebarOpen, onToggle, hoveredClubId, setHoveredClubId }: MapSideBarProps) {
+export default function MapSideBar({ visibleClubs, sidebarOpen, onToggle, hoveredClubId, setHoveredClubId, selectedLevel, setSelectedLevel, selectedCategory, setSelectedCategory }: MapSideBarProps) {
   const router = useRouter();
   const [hoveredAddress, setHoveredAddress] = useState<string | null>(null);
   const [hoveredPrice, setHoveredPrice] = useState<{ clubId: string; level: ClassLevelsType } | null>(null);
@@ -28,6 +32,7 @@ export default function MapSideBar({ visibleClubs, sidebarOpen, onToggle, hovere
   const [isLoading, setIsLoading] = useState(false);
   const [savedFavorites, setSavedFavorites] = useState<string[]>([]);
   const { getToken } = useAuth();
+  const categories = Array.from(new Set(visibleClubs.map((club) => club.clubCategoryName)));
 
   const filteredClubs = search.trim() === '' ? visibleClubs : visibleClubs.filter((club) => club.clubName.toLowerCase().includes(search.toLowerCase()));
 
@@ -63,6 +68,39 @@ export default function MapSideBar({ visibleClubs, sidebarOpen, onToggle, hovere
         <div onClick={() => router.back()} className="p-6 pl-6">
           <ArrowLeftToLine size={24} className="text-[#0A427A] hover:text-black cursor-pointer" />
         </div>
+        <div className="flex gap-2 px-4 pb-3">
+          {categories.map((cat) => {
+            const active = selectedCategory === cat;
+
+            return (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(active ? null : cat)}
+                className={`px-3 py-1 rounded-full text-sm font-bold transition
+          ${active ? 'bg-orange-500 text-white' : 'bg-orange-100 text-orange-600 hover:bg-orange-200'}`}
+              >
+                {cat}
+              </button>
+            );
+          })}
+        </div>
+        <div className="flex gap-2 px-4 pb-3">
+          {(['Elementary', 'Middle', 'High'] as ClassLevelsType[]).map((level) => {
+            const active = selectedLevel === level;
+
+            return (
+              <button
+                key={level}
+                onClick={() => setSelectedLevel(active ? null : level)}
+                className={`px-3 py-1 rounded-full text-sm font-bold transition
+          ${active ? 'bg-orange-500 text-white' : 'bg-orange-100 text-orange-600 hover:bg-orange-200'}`}
+              >
+                {getClassLevelMN(level)}
+              </button>
+            );
+          })}
+        </div>
+
         <div className="flex items-center ml-4 p-5">
           <ImSearch size={20} className="-mr-8 text-orange-500" />
           <Input type="text" placeholder="Дугуйлангийн нэрээр хайх" value={search} onChange={(e) => setSearch(e.target.value)} className="pl-11" />
