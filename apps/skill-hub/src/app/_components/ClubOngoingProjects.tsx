@@ -68,7 +68,7 @@ export default function ClubOngoingProjects({ projects, onViewProject }: Props) 
         return;
       }
 
-      const data = await res.json();
+      await res.json();
 
       setRegistrationStatuses((prev) => ({ ...prev, [projectId]: 'PENDING' }));
     } catch (error) {
