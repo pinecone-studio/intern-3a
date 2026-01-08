@@ -55,9 +55,31 @@ export interface ExamQuestion {
 export interface GenerateExamRequest {
   subject: string;
   topic: string;
-  difficulty: "Easy" | "Medium" | "Hard";
+  difficulty: 'Easy' | 'Medium' | 'Hard';
 }
 
 export interface GenerateExamResponse {
   questions: ExamQuestion[];
+}
+
+export type TrackLevel = 'Beginner' | 'Intermediate' | 'Advanced';
+
+export interface LearningTrack {
+  id: string;
+  title: string; // "Learn English"
+  subject: string; // "English"
+  level: TrackLevel;
+  createdAt: string;
+}
+
+export interface RoadmapStage {
+  id: string;
+  title: string;
+  order: number;
+  completed: boolean;
+}
+
+export interface LearningRoadmap {
+  trackId: string;
+  stages: RoadmapStage[];
 }

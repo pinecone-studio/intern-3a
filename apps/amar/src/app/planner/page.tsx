@@ -1,44 +1,67 @@
 'use client';
 
+import { Button } from '@intern-3a/shadcn';
 import { useState } from 'react';
+import { useApp } from '../../context/app-context';
 
-import { StudyPlanForm } from '../../components/forms/StudyPlanForm';
-import { WeeklyGrid } from '../../components/planner/WeeklyGrid';
-import { GenerateStudyPlanRequest, GenerateStudyPlanResponse, WeeklyStudyPlan } from '../../types';
+interface Task {
+  topic: string;
+  duration: number;
+}
 
-export default function StudyPlannerPage() {
-  const [plan, setPlan] = useState<WeeklyStudyPlan | null>(null);
+export default function PlannerPage() {
+  // ✅ Hook calls FIRST
+  const { focus } = useApp();
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(false);
 
-  async function generatePlan(payload: GenerateStudyPlanRequest): Promise<void> {
+  // ✅ Conditional render AFTER hooks
+  if (!focus) {
+    return <div className="p-8">Select a study focus first.</div>;
+  }
+
+  const activeFocus = focus;
+
+  async function generatePlan() {
     setLoading(true);
 
-    try {
-      const res = await fetch('/api/study-plan', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
+    const res = await fetch('/api/plan', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        focusAreaId: activeFocus._id,
+        focusTitle: activeFocus.title,
+      }),
+    });
 
-      if (!res.ok) {
-        throw new Error('Failed to generate study plan');
-      }
-
-      const data: GenerateStudyPlanResponse = await res.json();
-      setPlan(data.plan);
-    } catch (error) {
-      console.error(error);
-      alert('Error generating study plan');
-    } finally {
+    if (!res.ok) {
       setLoading(false);
+      return;
     }
+
+    const plan = await res.json();
+    setTasks(plan.tasks);
+    setLoading(false);
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[360px_1fr] gap-6">
-      <StudyPlanForm onGenerate={generatePlan} loading={loading} />
+    <div className="p-8 space-y-4">
+      <h2 className="text-xl font-semibold">Study Plan</h2>
+      <p className="text-gray-500">{activeFocus.title}</p>
 
-      {plan ? <WeeklyGrid plan={plan} /> : <div className="flex items-center justify-center text-gray-400 border rounded-xl">Your weekly study plan will appear here</div>}
+      {tasks.length === 0 && (
+        <Button onClick={generatePlan} disabled={loading}>
+          {loading ? 'Generating...' : 'Generate Plan'}
+        </Button>
+      )}
+
+      {tasks.map((t, i) => (
+        <div key={i} className="p-3 bg-white border rounded">
+          {t.topic} — {t.duration} min
+        </div>
+      ))}
+
+      {tasks.length > 0 && <Button onClick={() => (window.location.href = '/exercise')}>Start Exercise</Button>}
     </div>
   );
 }
