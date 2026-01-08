@@ -158,6 +158,9 @@ export default function UniversityDetailPage2({ params }: Props) {
   };
 
   console.log(user?.primaryEmailAddress?.id);
+  if (loading || error) {
+    return <div>Loading...</div>;
+  }
 
   if (majorsLoading || !majors || data === null) {
     return (
