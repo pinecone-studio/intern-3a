@@ -1,5 +1,5 @@
 'use client';
-import { GraduationCap, Landmark, MapPin, Palette, School } from 'lucide-react';
+import { GraduationCap, Landmark, MapPin, Palette, School, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { UniversityCardProps } from '../../lib/types/type';
@@ -14,7 +14,6 @@ const getIconForUniversity = (name: string) => {
 };
 
 export default function UniversityCard({ id, name, location, image, status, minScore }: UniversityCardProps) {
-  console.log('min Score', minScore);
   const router = useRouter();
   const Icon = getIconForUniversity(name);
 
@@ -28,8 +27,8 @@ export default function UniversityCard({ id, name, location, image, status, minS
   };
 
   return (
-    <Card onClick={handleViewDetails} className="overflow-hidden hover:shadow-lg dark:bg-gray-900 transition-shadow cursor-pointer mt-0 pt-0">
-      <div className="relative h-48">
+    <Card onClick={handleViewDetails} className="overflow-hidden hover:shadow-lg dark:bg-gray-900 transition-shadow cursor-pointer pt-0">
+      <div className="relative h-58">
         <ImageWithFallback src={image} />
 
         <div className="absolute top-4 right-4">
@@ -39,7 +38,7 @@ export default function UniversityCard({ id, name, location, image, status, minS
         </div>
       </div>
 
-      <div className="p-4 pt-0 space-y-4 pb-0">
+      <div className="pl-5 pr-5 space-y-2 pb-0">
         <div className="flex items-start gap-2 lg:gap-3 min-h-18">
           <div className="bg-[#00BCD4]/10 p-2 rounded-lg shrink-0">
             <Icon className="h-5 w-5 text-sky-500" />
@@ -53,12 +52,24 @@ export default function UniversityCard({ id, name, location, image, status, minS
             </p>
           </div>
         </div>
-        <div className="flex justify-between text-sm border-t pt-2">
-          <div className="flex items-center gap-1.5 font-bold text-gray-700 text-sm">
-            <GraduationCap className="w-5 h-5 text-sky-500" /> {minScore}+
+        <div className="flex items-center justify-between py-3 border-y border-gray-50 dark:border-neutral-800">
+          <div className="flex flex-col">
+            <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Босго оноо</span>
+            <div className="flex items-center gap-1.5 mt-0.5">
+              <Sparkles className="w-4 h-4 text-amber-400" />
+              <span className="font-black text-gray-800 dark:text-gray-100 text-lg">
+                {minScore || '460'}
+                <span className="text-sky-500">+</span>
+              </span>
+            </div>
           </div>
-          {/* <span>Босго оноо</span> */}
-          <span className="font-semibold">{minScore ? `${minScore}+` : '--'}</span>
+
+          <div className="h-8 w-[1px] bg-gray-100 dark:bg-neutral-800" />
+
+          <div className="text-right">
+            <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Хөтөлбөр</span>
+            <p className="font-bold text-gray-700 dark:text-gray-200 text-sm">30+ сонголт</p>
+          </div>
         </div>
 
         <Button
