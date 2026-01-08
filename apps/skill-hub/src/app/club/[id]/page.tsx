@@ -76,7 +76,7 @@ export default function ClubDetailPage({ params }: PageProps) {
         {/* ЗҮҮН ТАЛ */}
         <div className="w-full lg:w-[45%] space-y-6 md:space-y-8">
           <div className="flex items-center">
-            <Button variant="ghost" size="sm" className="hover:bg-slate-100 -ml-2" onClick={() => router.push('/')}>
+            <Button variant="ghost" size="sm" className="hover:bg-slate-100 -ml-2 cursor-pointer" onClick={() => router.back()}>
               <ArrowLeft className="w-4 h-4 mr-2" /> Буцах
             </Button>
           </div>
@@ -217,7 +217,7 @@ export default function ClubDetailPage({ params }: PageProps) {
         </div>
       </div>
 
-      <RegisterLoginAlertDialog showLoginAlert={showLoginAlert} setShowLoginAlert={setShowLoginAlert} id={id} />
+      <RegisterLoginAlertDialog showLoginAlert={showLoginAlert} setShowLoginAlert={setShowLoginAlert} id={id} message={'Дугуйланд бүртгүүлэхийн тулд эхлээд нэвтрэх шаардлагатай.'} />
     </div>
   );
 }

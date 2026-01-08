@@ -149,6 +149,14 @@ export const SUBCATEGORY_ICON_MAP: Record<string, string> = {
   'Wrestling Club': '🤼',
 };
 
+export type ClubFilters = {
+  classLevels: ClassLevelsType[];
+  days: WeekDayType[];
+  timeSlots: TimeSlotValueType[];
+  selectedCategory?: CategoryKeyType;
+  selectedSubCategory?: string;
+};
+
 export function getClassLevelMN(level: ClassLevelsType): string {
   switch (level) {
     case 'Elementary':

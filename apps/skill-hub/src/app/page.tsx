@@ -51,7 +51,6 @@ export default function Index() {
   return (
     <div>
       <Intro />
-
       <AllClubsCardScrollAnimation allClubs={allClubs} isLoading={isLoading} />
     </div>
   );

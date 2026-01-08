@@ -3,6 +3,7 @@ export * from './AllClubsCardScrollAnimation';
 export * from './ClubRegisterBtnDialogContent';
 export * from './FilteredClubsForUser';
 export * from './FilteredResult';
+export * from './Footer';
 export * from './Header';
 export * from './Intro';
 export * from './Map';

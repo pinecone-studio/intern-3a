@@ -220,22 +220,6 @@ export const ClubRegisterBtnDialogContent = ({ setOpen }: { setOpen: Dispatch<Re
     }
   };
 
-  console.log({ clubCategoryName });
-  console.log({ clubSubCategoryName });
-  console.log({ clubName });
-
-  console.log({ selectedClassLevelNames });
-  console.log({ clubPrices });
-  console.log({ scheduledClubTimes });
-  console.log({ teachersInfoByClass });
-
-  console.log({ clubDescription });
-  console.log({ clubImage });
-  console.log({ clubImagePreview });
-  console.log({ clubAddress });
-  console.log({ clubLat });
-  console.log({ clubLong });
-
   return (
     <DialogContent className="sm:max-w-[95vw] max-h-[90vh] gap-10 overflow-y-auto overflow-x-auto">
       <DialogHeader>
