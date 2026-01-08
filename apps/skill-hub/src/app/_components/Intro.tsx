@@ -15,8 +15,6 @@ const AnimatedCounter = ({ target, duration = 2, shouldStart }: { target: number
   useEffect(() => {
     if (!shouldStart) return;
 
-    console.log('Starting counter animation to:', target);
-
     const controls = animate(count, target, {
       duration,
       ease: 'easeOut',
@@ -48,7 +46,6 @@ export const Intro = () => {
     const totalDelay = 300 + 200 * 3 + 1500; // 2.4 seconds
 
     const timer = setTimeout(() => {
-      console.log('Stats animation completed, starting counters');
       setShouldStartCounting(true);
     }, totalDelay);
 

@@ -8,9 +8,9 @@ import { ChartBarStacked, MapPin } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import EditMyClubsTrigger from './EditMyClubsTrigger';
+import { EditMyClubsTrigger } from './EditMyClubsTrigger';
 import { MyClubCategoryComponent } from './MyClubCategoryComponent';
-import ProjectDialog from './ProjectDialog';
+import { ProjectDialog } from './ProjectDialog';
 
 export const AdminMyClubsComponent = () => {
   const searchParams = useSearchParams();

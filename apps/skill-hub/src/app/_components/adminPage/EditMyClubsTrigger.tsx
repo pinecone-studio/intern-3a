@@ -9,7 +9,7 @@ type EditMyClubsTriggerProps = {
   club: NewClubType;
 };
 
-const EditMyClubsTrigger = ({ club }: EditMyClubsTriggerProps) => {
+export const EditMyClubsTrigger = ({ club }: EditMyClubsTriggerProps) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -22,5 +22,3 @@ const EditMyClubsTrigger = ({ club }: EditMyClubsTriggerProps) => {
     </Dialog>
   );
 };
-
-export default EditMyClubsTrigger;

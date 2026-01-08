@@ -48,8 +48,6 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     const scheduledClubTimes = JSON.parse(formData.get('scheduledClubTimes') as string);
     const teachersInfoByClass = JSON.parse(formData.get('teachersInfoByClass')?.toString() || '{}') as TeachersByClassLevelsType;
 
-    // console.log({ formData });
-
     for (const level of Object.keys(teachersInfoByClass) as (keyof TeachersByClassLevelsType)[]) {
       const teacher = teachersInfoByClass[level] || {};
       teachersInfoByClass[level] = {

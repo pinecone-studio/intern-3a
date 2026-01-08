@@ -35,12 +35,6 @@ export const EditClassLevelInfo = ({ setOpen, club }: Props) => {
   const [teachersInfoByClass, setTeachersInfoByClass] = useState<TeachersByClassLevelsType>({});
   //   const [editedImagePreview, setEditedImagePreview] = useState<string>('')
 
-  console.log({ clubCategoryName });
-  console.log({ selectedClassLevelNames });
-  console.log({ clubPrices });
-  console.log({ scheduledClubTimes });
-  console.log({ teachersInfoByClass });
-
   const [loading, setLoading] = useState<boolean>(false);
   const [isClicked, setIsClicked] = useState<boolean>(false);
 

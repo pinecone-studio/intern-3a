@@ -10,7 +10,6 @@ export const MyUserButton = () => {
   const { user } = useUser();
   const router = useRouter();
   const role = user?.publicMetadata?.role;
-  console.log({ user });
 
   return (
     <div className="flex items-center">

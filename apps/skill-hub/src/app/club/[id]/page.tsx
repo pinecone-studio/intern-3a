@@ -228,7 +228,6 @@ export default function ClubDetailPage({ params }: PageProps) {
                 projects={filteredProjects}
                 onViewProject={(projectId) => {
                   // You can add navigation to project detail page here
-                  console.log('View project:', projectId);
                 }}
               />
             </div>

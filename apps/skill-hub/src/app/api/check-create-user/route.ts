@@ -60,7 +60,6 @@ export const POST = async () => {
         mongoUserId: user._id.toString(),
       },
     });
-    console.log('Updated Clerk metadata for user:', userClerkId, 'with MongoDB ID:', user._id.toString());
   } catch (error) {
     console.error('Failed to update Clerk metadata:', error);
   }

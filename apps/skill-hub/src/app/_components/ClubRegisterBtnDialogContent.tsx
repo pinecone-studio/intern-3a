@@ -87,10 +87,6 @@ export const ClubRegisterBtnDialogContent = ({ setOpen }: { setOpen: Dispatch<Re
   const [loading, setLoading] = useState<boolean>(false);
   const [isClicked, setIsClicked] = useState<boolean>(false);
 
-  // Regex patterns for validation
-  // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  // const phoneRegex = /^[0-9]{8}$/;
-
   const clubImageFileChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setClubImage(e.target.files[0]);
@@ -142,20 +138,6 @@ export const ClubRegisterBtnDialogContent = ({ setOpen }: { setOpen: Dispatch<Re
       toast.warning('Бүх талбаруудыг бөглөнө үү!');
       return;
     }
-
-    // Validate email format
-    // if (!emailRegex.test(teacherEmail)) {
-    //   toast.error('Имэйл хаяг буруу байна!');
-    //   return;
-    // }
-
-    // Validate phone number format
-    // if (!phoneRegex.test(teacherPhone)) {
-    //   toast.error('Утасны дугаар буруу байна! (8 оронтой тоо оруулна уу)');
-    //   return;
-    // }
-
-    // Validate category is one of the recommended ones
 
     setLoading(true);
 

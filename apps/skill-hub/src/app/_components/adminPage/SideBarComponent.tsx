@@ -7,7 +7,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { HiOutlineUserCircle } from 'react-icons/hi';
 
-const SideBarComponent = () => {
+export const SideBarComponent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const selectedId = searchParams.get('id');
@@ -72,5 +72,3 @@ const SideBarComponent = () => {
     </Sidebar>
   );
 };
-
-export default SideBarComponent;

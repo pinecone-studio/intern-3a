@@ -12,13 +12,11 @@ export const useFavoriteClubs = () => {
   useEffect(() => {
     // Don't fetch if Clerk hasn't loaded yet
     if (!isLoaded) {
-      console.log('useFavoriteClubs - Clerk not loaded yet');
       return;
     }
 
     // If not signed in, set empty state
     if (!isSignedIn) {
-      console.log('useFavoriteClubs - User not signed in');
       setLoading(false);
       setFavoriteClubs([]);
       return;

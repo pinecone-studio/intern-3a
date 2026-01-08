@@ -91,17 +91,9 @@ export default function UserMapContent({ visibleClubs, userLocation, zoom, setZo
         </svg>
       </div>
     `;
-        // userCircleRef.current = L.circle(userLocation, {
-        //   radius: zoom >= 15 ? 300 : zoom >= 13 ? 800 : 3000,
-        //   color: '#2563eb',
-        //   weight: 2,
-        //   fillColor: '#0A427A',
-        //   fillOpacity: 0.1,
-        //   dashArray: '5,10',
-        // }).addTo(map);
 
         userCircleRef.current = L.circle(userLocation, {
-          radius: 1000, // default том
+          radius: 1000,
           color: '#2563eb',
           weight: 2,
           fillColor: '#0A427A',

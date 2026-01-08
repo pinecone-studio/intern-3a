@@ -24,7 +24,7 @@ type ProjectDialogProps = {
   clubId: string | null;
 };
 
-const ProjectDialog = ({ clubId }: ProjectDialogProps) => {
+export const ProjectDialog = ({ clubId }: ProjectDialogProps) => {
   const { user } = useUser();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -55,8 +55,6 @@ const ProjectDialog = ({ clubId }: ProjectDialogProps) => {
         adminId: user.publicMetadata.mongoUserId,
         ...projectData,
       };
-      console.log('Sending data to API:', dataToSend);
-      console.log('User publicMetadata:', user.publicMetadata);
 
       const response = await fetch('/api/projects', {
         method: 'POST',
@@ -72,7 +70,6 @@ const ProjectDialog = ({ clubId }: ProjectDialogProps) => {
         throw new Error(data.error || 'Failed to create project');
       }
 
-      console.log('Project created successfully:', data);
       alert('Хөтөлбөр амжилттай нэмэгдлээ! ✅');
 
       setOpen(false);
@@ -229,5 +226,3 @@ const ProjectDialog = ({ clubId }: ProjectDialogProps) => {
     </Dialog>
   );
 };
-
-export default ProjectDialog;

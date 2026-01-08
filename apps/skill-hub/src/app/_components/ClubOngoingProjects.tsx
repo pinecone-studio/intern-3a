@@ -71,8 +71,6 @@ export default function ClubOngoingProjects({ projects, onViewProject }: Props) 
       const data = await res.json();
 
       setRegistrationStatuses((prev) => ({ ...prev, [projectId]: 'PENDING' }));
-
-      console.log('Бүртгэл амжилттай:', data);
     } catch (error) {
       console.error('Бүртгэхэд алдаа гарлаа:', error);
     }

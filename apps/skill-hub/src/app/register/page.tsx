@@ -10,7 +10,7 @@ interface RegistrationPageProps {
 
 const page = ({ searchParams }: RegistrationPageProps) => {
   const { clubId, level } = use(searchParams);
-  console.log('clubId and level', clubId, level);
+
   return (
     <div className="h-screen flex flex-col items-center justify-center">
       <h1>Registration Page</h1>

@@ -10,12 +10,6 @@ export const FilteredClubsForUser = ({ allClubs }: { allClubs: NewClubType[] }) 
   const [selectedTime, setSelectedTime] = useState<TimeSlotValueType | ''>('');
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedSubCategory, setSelectedSubCategory] = useState<string>('');
-  console.log({ allClubs });
-  console.log({ selectedClass });
-  console.log({ selectedDate });
-  console.log({ selectedTime });
-  console.log({ selectedCategory });
-  console.log({ selectedSubCategory });
 
   const resetFilters = () => {
     setSelectedClass('');
@@ -118,7 +112,6 @@ export const FilteredClubsForUser = ({ allClubs }: { allClubs: NewClubType[] }) 
 
     return filtered;
   }, [allClubs, selectedClass, selectedDate, selectedTime, selectedCategory, selectedSubCategory]);
-  console.log({ filteredClubs });
 
   const isFiltered = Boolean(selectedClass || selectedDate || selectedTime || selectedCategory || selectedSubCategory);
 

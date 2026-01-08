@@ -9,19 +9,8 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { clubId, adminId, title, description, classLevel, difficultyLevel, childrenCount, startDate, finishDate } = body;
 
-    console.log('Received data:', { clubId, adminId, title, description, classLevel, difficultyLevel, childrenCount, startDate, finishDate });
-
     // Validate required fields
     if (!clubId || !adminId || !title || !description || !classLevel || !difficultyLevel || childrenCount === undefined || childrenCount === null || childrenCount === '') {
-      console.log('Validation failed:', {
-        clubId: !!clubId,
-        adminId: !!adminId,
-        title: !!title,
-        description: !!description,
-        classLevel: !!classLevel,
-        difficultyLevel: !!difficultyLevel,
-        childrenCount: childrenCount,
-      });
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
