@@ -1,12 +1,12 @@
 'use client';
 
 import { Button } from '@intern-3a/shadcn';
-import { Calendar, ChevronRight, Flame, FolderKanban, Sparkles, Sprout, Users } from 'lucide-react';
+import { Award, Calendar, ChevronRight, FolderKanban, Trophy, Users, Zap } from 'lucide-react';
 
 interface Project {
   _id: string;
   projectName: string;
-  difficulty: 'Beginner' | 'Intermediate' | 'Pro';
+  difficultyLevel: 'Beginner' | 'Intermediate' | 'Pro';
   description: string;
   classLevel: string;
   childrenCount: number;
@@ -25,25 +25,10 @@ const DIFFICULTY_MN: Record<string, string> = {
   Pro: 'Ахисан',
 };
 
-const DIFFICULTY_COLOR: Record<string, { bg: string; border: string; text: string; badge: string }> = {
-  Beginner: {
-    bg: 'bg-green-50',
-    border: 'border-green-200',
-    text: 'text-green-600',
-    badge: 'bg-green-100 text-green-700',
-  },
-  Intermediate: {
-    bg: 'bg-blue-50',
-    border: 'border-blue-200',
-    text: 'text-blue-600',
-    badge: 'bg-blue-100 text-blue-700',
-  },
-  Pro: {
-    bg: 'bg-purple-50',
-    border: 'border-purple-200',
-    text: 'text-purple-600',
-    badge: 'bg-purple-100 text-purple-700',
-  },
+const DIFFICULTY_ICONS: Record<string, React.ReactNode> = {
+  Beginner: <Award className="w-3.5 h-3.5 text-green-600" />,
+  Intermediate: <Zap className="w-3.5 h-3.5 text-orange-600" />,
+  Pro: <Trophy className="w-3.5 h-3.5 text-purple-600" />,
 };
 
 export default function ClubOngoingProjects({ projects, onViewProject }: Props) {
@@ -74,13 +59,10 @@ export default function ClubOngoingProjects({ projects, onViewProject }: Props) 
       {/* LIST */}
       <div className="space-y-3">
         {displayProjects.map((project, index) => {
-          const colors = DIFFICULTY_COLOR[project.difficulty] || DIFFICULTY_COLOR.Beginner;
-
           return (
             <div
               key={project._id}
-              className={`group relative flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 md:p-5 rounded-2xl border transition-all active:scale-[0.99]
-                ${index === 0 ? `${colors.bg} ${colors.border} shadow-md` : 'bg-white border-slate-100 hover:border-orange-200'}`}
+              className="group relative flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 md:p-5 rounded-2xl border transition-all active:scale-[0.99] hover:bg-orange-50 bg-white border-slate-100 hover:border-orange-200"
             >
               {/* LEFT INFO */}
               <div className="flex flex-col gap-2 min-w-0">
@@ -88,20 +70,18 @@ export default function ClubOngoingProjects({ projects, onViewProject }: Props) 
                   {/* DIFFICULTY with icon */}
                   <div className="flex items-center gap-2">
                     <span className="text-[10px] font-bold text-slate-500 uppercase">Түвшин:</span>
-                    <div className="flex items-center gap-2">
-                      {project.difficulty === 'Beginner' && <Sprout className="w-4 h-4 shrink-0" style={{ color: '#15803d' }} />}
-                      {project.difficulty === 'Intermediate' && <Flame className="w-4 h-4 shrink-0" style={{ color: '#1d4ed8' }} />}
-                      {project.difficulty === 'Pro' && <Sparkles className="w-4 h-4 shrink-0" style={{ color: '#7e22ce' }} />}
-                      <span className="text-xs font-bold text-slate-700">{DIFFICULTY_MN[project.difficulty]}</span>
+                    <div className="flex items-center gap-1.5">
+                      {DIFFICULTY_ICONS[project.difficultyLevel]}
+                      <span className="text-xs font-bold text-slate-900">{DIFFICULTY_MN[project.difficultyLevel] || project.difficultyLevel}</span>
                     </div>
                   </div>
 
                   {/* CHILDREN COUNT with text label */}
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-bold text-slate-500 uppercase">Суралцагчид:</span>
+                    <span className="text-[10px] font-bold text-slate-500 uppercase">Хүүхдийн тоо:</span>
                     <div className="flex items-center gap-1.5 text-slate-700 bg-orange-50 px-3 py-1 rounded-full">
                       <Users className="w-3.5 h-3.5 text-orange-600 shrink-0" />
-                      <span className="text-xs font-bold">{project.childrenCount}</span>
+                      <span className="text-xs font-bold">0/{project.childrenCount}</span>
                     </div>
                   </div>
                 </div>
@@ -122,10 +102,9 @@ export default function ClubOngoingProjects({ projects, onViewProject }: Props) 
               <Button
                 onClick={() => onViewProject(project._id)}
                 size="sm"
-                className={`w-full sm:w-auto rounded-xl font-bold text-xs h-11 sm:h-10 px-6 transition-all cursor-pointer
-                  ${index === 0 ? 'bg-orange-600 hover:bg-orange-700 text-white shadow-lg shadow-orange-200' : 'bg-slate-900 hover:bg-orange-600 text-white'}`}
+                className="w-full sm:w-auto rounded-xl font-bold text-xs h-11 sm:h-10 px-6 transition-all cursor-pointer bg-orange-500 hover:bg-blue-600 text-white"
               >
-                Дэлгэрэнгүй
+                Бүртгүүлэх
                 <ChevronRight className="w-3.5 h-3.5 ml-1" />
               </Button>
             </div>
