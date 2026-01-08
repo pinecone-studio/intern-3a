@@ -1,10 +1,11 @@
 // app/hook/use-projects.ts
 'use client';
 
+import { ClubProjectType } from '@/lib/utils/types';
 import { useEffect, useState } from 'react';
 
-export const useProjects = (clubId: string) => {
-  const [projects, setProjects] = useState<any[]>([]);
+export const useProjects = (clubId: string | undefined) => {
+  const [projects, setProjects] = useState<ClubProjectType[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
