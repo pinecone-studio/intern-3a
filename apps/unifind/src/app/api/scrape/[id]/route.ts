@@ -9,7 +9,7 @@ import * as cheerio from 'cheerio';
 import { NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
-export const revalidate = 60 * 60 * 24; // 1 өдөр
+export const revalidate: number = 86400;
 
 const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY!,
