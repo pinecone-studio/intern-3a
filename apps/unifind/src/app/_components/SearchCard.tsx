@@ -49,10 +49,24 @@ export function SearchCard() {
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (majorRef.current && !majorRef.current.contains(e.target as Node)) setShowMajor(false);
-      if (sub1Ref.current && !sub1Ref.current.contains(e.target as Node)) setShowSub1(false);
-      if (sub2Ref.current && !sub2Ref.current.contains(e.target as Node)) setShowSub2(false);
+      const target = e.target as Node;
+
+      // major dropdown
+      if (majorRef.current && !majorRef.current.contains(target)) {
+        setShowMajor(false);
+      }
+
+      // sub1 dropdown
+      if (sub1Ref.current && !sub1Ref.current.contains(target)) {
+        setShowSub1(false);
+      }
+
+      // sub2 dropdown
+      if (sub2Ref.current && !sub2Ref.current.contains(target)) {
+        setShowSub2(false);
+      }
     }
+
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
@@ -86,29 +100,30 @@ export function SearchCard() {
   const filteredMajors = majors.filter((m) => m.name.toLowerCase().includes(majorQuery.toLowerCase()));
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-4 mt-10 ">
+    <div className="w-full max-w-5xl mx-auto px-4 mt-10 relative z-0">
       {/* Compact search bar */}
-      <div className="bg-card/90 dark:bg-gray-900 backdrop-blur-md border border-border rounded-2xl p-3 shadow-x px-3 z-1000">
-        <div className="flex flex-wrap items-center gap-2 lg:gap-2 ">
+      <div className="bg-card/90 dark:bg-gray-900 backdrop-blur-md border border-border rounded-2xl p-3 shadow-x px-3 z-10 relative">
+        <div className="flex flex-wrap items-center gap-2 lg:gap-2">
           {/* Major selector */}
-          <div ref={majorRef} className="relative flex-1 min-w-35">
-            <div className="relative">
-              <Input
-                className="h-11 rounded-xl border-0 bg-accent/50 pl-4 pr-8 text-sm focus-visible:ring-1 focus-visible:ring-sky-500"
-                placeholder="Мэргэжил"
-                value={majorQuery}
-                onFocus={() => setShowMajor(true)}
-                onChange={(e) => {
-                  setMajorQuery(e.target.value);
-                  setSelectedMajor(null);
-                  setShowMajor(true);
-                }}
-              />
-              <ChevronDown className={`absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground transition-transform ${showMajor ? 'rotate-180' : ''}`} />
-            </div>
+          <div ref={majorRef} className="flex-1 min-w-35 relative">
+            <Input
+              className="h-11 rounded-xl border-0 bg-accent/50 pl-4 pr-10 text-sm focus-visible:ring-1 focus-visible:ring-sky-500"
+              placeholder="Мэргэжил"
+              value={majorQuery}
+              onFocus={() => setShowMajor(true)}
+              onChange={(e) => {
+                setMajorQuery(e.target.value);
+                setSelectedMajor(null);
+              }}
+            />
+            <ChevronDown
+              className={`absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground transition-transform ${showMajor ? 'rotate-180' : ''}`}
+              onClick={() => setShowMajor((prev) => !prev)}
+            />
 
+            {/* Dropdown */}
             {showMajor && filteredMajors.length > 0 && (
-              <div className="absolute mt-2 w-full dark:bg-[#1c2232] bg-popover border border-border rounded-xl shadow-xl z-[1000]">
+              <div className="absolute mt-2 w-full dark:bg-[#1c2232] bg-popover border border-border rounded-xl shadow-xl z-1000">
                 <div className="max-h-48 overflow-y-auto p-1">
                   {filteredMajors.map((m) => (
                     <div
@@ -128,9 +143,9 @@ export function SearchCard() {
             )}
           </div>
 
-          {/* Subject 1 + Score */}
-          <div className="flex items-center gap-2 flex-1 min-w-45">
-            <div ref={sub1Ref} className="relative flex-1 ">
+          {/* Subject 1 */}
+          <div className="flex items-center gap-2 flex-1 min-w-45 relative">
+            <div ref={sub1Ref} className="flex-1 relative">
               <button
                 onClick={() => setShowSub1(!showSub1)}
                 className="h-11 w-full px-3 flex items-center dark:bg-[#1c2232] justify-between gap-1 text-sm bg-accent/50 hover:bg-accent rounded-xl transition-colors"
@@ -138,9 +153,8 @@ export function SearchCard() {
                 <span className={subject1 ? 'text-foreground' : 'text-muted-foreground'}>{SUBJECTS.find((s) => s.id === subject1)?.name ?? 'Хичээл 1'}</span>
                 <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${showSub1 ? 'rotate-180' : ''}`} />
               </button>
-
               {showSub1 && (
-                <div className="absolute mt-2 w-full dark:bg-[#1c2232] bg-popover border border-border rounded-xl shadow-xl  z-[1000]">
+                <div className="absolute mt-2 w-full dark:bg-[#1c2232] bg-popover border border-border rounded-xl shadow-xl z-1000">
                   <div className="p-1">
                     {SUBJECTS.map((s) => (
                       <div
@@ -158,26 +172,22 @@ export function SearchCard() {
                 </div>
               )}
             </div>
-
-            <div className="relative">
-              <Input
-                className={`h-11 w-20 rounded-xl border-0 bg-accent/50 text-sm text-center  focus-visible:ring-1 focus-visible:ring-sky-500 ${score1Error ? 'text-destructive' : ''}`}
-                placeholder="Оноо"
-                type="number"
-                value={score1}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  setScore1(val);
-                  setScore1Error(val && Number(val) > 800 ? 'Max 800' : '');
-                }}
-              />
-              {score1Error && <p className="absolute -bottom-3.5 left-0 right-0 text-destructive text-[10px] text-center">{score1Error}</p>}
-            </div>
+            <Input
+              className={`h-11 w-20 rounded-xl border-0 bg-accent/50 text-sm text-center  focus-visible:ring-1 focus-visible:ring-sky-500 ${score1Error ? 'text-destructive' : ''}`}
+              placeholder="Оноо"
+              type="number"
+              value={score1}
+              onChange={(e) => {
+                const val = e.target.value;
+                setScore1(val);
+                setScore1Error(val && Number(val) > 800 ? 'Max 800' : '');
+              }}
+            />
           </div>
 
-          {/* Subject 2 + Score */}
-          <div className="flex items-center gap-2  flex-1 min-w-45 ">
-            <div ref={sub2Ref} className="relative flex-1">
+          {/* Subject 2 */}
+          <div className="flex items-center gap-2 flex-1 min-w-45 relative">
+            <div ref={sub2Ref} className="flex-1 relative">
               <button
                 onClick={() => setShowSub2(!showSub2)}
                 className="h-11 w-full px-3 flex items-center dark:bg-[#1c2232] justify-between gap-1 text-sm bg-accent/50 hover:bg-accent rounded-xl transition-colors"
@@ -185,9 +195,8 @@ export function SearchCard() {
                 <span className={subject2 ? 'text-foreground' : 'text-muted-foreground'}>{SUBJECTS.find((s) => s.id === subject2)?.name ?? 'Хичээл 2'}</span>
                 <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${showSub2 ? 'rotate-180' : ''}`} />
               </button>
-
               {showSub2 && (
-                <div className="absolute mt-2 w-full dark:bg-[#1c2232] bg-popover border border-border rounded-xl shadow-xl z-[1000]">
+                <div className="absolute mt-2 w-full dark:bg-[#1c2232] bg-popover border border-border rounded-xl shadow-xl z-1000">
                   <div className="p-1">
                     {SUBJECTS.map((s) => (
                       <div
@@ -205,21 +214,17 @@ export function SearchCard() {
                 </div>
               )}
             </div>
-
-            <div className="relative">
-              <Input
-                className={`h-11 w-20 rounded-xl border-0 bg-accent/50 text-sm text-center focus-visible:ring-1 focus-visible:ring-sky-500 ${score2Error ? 'text-destructive' : ''}`}
-                placeholder="Оноо"
-                type="number"
-                value={score2}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  setScore2(val);
-                  setScore2Error(val && Number(val) > 800 ? 'Max 800' : '');
-                }}
-              />
-              {score2Error && <p className="absolute -bottom-3.5 left-0 right-0 text-destructive text-[10px] text-center">{score2Error}</p>}
-            </div>
+            <Input
+              className={`h-11 w-20 rounded-xl border-0 bg-accent/50 text-sm text-center focus-visible:ring-1 focus-visible:ring-sky-500 ${score2Error ? 'text-destructive' : ''}`}
+              placeholder="Оноо"
+              type="number"
+              value={score2}
+              onChange={(e) => {
+                const val = e.target.value;
+                setScore2(val);
+                setScore2Error(val && Number(val) > 800 ? 'Max 800' : '');
+              }}
+            />
           </div>
 
           {/* Search button */}
@@ -236,18 +241,19 @@ export function SearchCard() {
         </div>
       </div>
 
+      {/* Results */}
       {loading && (
         <div className="mt-4 bg-card/90 backdrop-blur-md border border-border rounded-2xl p-4 shadow-xl">
           <div className="space-y-3 animate-pulse">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-20 rounded-xl bg-gray-900" />
+              <div key={i} className="h-28 rounded-xl bg-gray-200 dark:bg-gray-800" />
             ))}
           </div>
         </div>
       )}
 
       {!loading && results.length > 0 && (
-        <div className="mt-4 bg-card/90 backdrop-blur-md border border-border relative rounded-2xl p-4 shadow-xl max-h-100 overflow-y-auto dark:bg-gray-900 z-1">
+        <div className="mt-4 bg-card/90 backdrop-blur-md border border-border z-0 rounded-2xl p-4 shadow-xl max-h-100 overflow-y-auto dark:bg-gray-900">
           <div className="grid gap-3">
             {results
               .sort((a, b) => {
@@ -257,31 +263,26 @@ export function SearchCard() {
               })
               .map((m, idx) => {
                 const passed = m.allRequirementsMet;
-
                 return (
                   <div
                     key={idx}
                     onClick={() => passed && router.push(`/mergejil/${m.majorid}`)}
-                    className={`relative rounded-xl border p-4 transition-all ${
-                      passed ? 'bg-card hover:shadow-lg hover:-translate-y-0.5 cursor-pointer dark:bg-[#1c2232] border-green-200 dark:border-green-900' : 'bg-muted/50  opacity-60 cursor-not-allowed'
+                    className={`rounded-xl border p-4 transition-all ${
+                      passed ? 'bg-card hover:shadow-lg hover:-translate-y-0.5 cursor-pointer dark:bg-[#1c2232] border-green-200 dark:border-green-900' : 'bg-muted/50 opacity-60 cursor-not-allowed'
                     }`}
                   >
                     {/* Status badge */}
                     <div
-                      className={`absolute top-3 right-3 px-2 py-1 text-xs font-semibold rounded-full ${
+                      className={`top-3 right-3 px-2 py-1 text-xs font-semibold rounded-full ${
                         passed ? 'bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-400' : 'bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-400'
                       }`}
                     >
                       {passed ? 'Тэнцсэн' : 'Тэнцээгүй'}
                     </div>
-
-                    {/* Header */}
                     <div className="pr-20">
                       <p className="font-semibold text-foreground">{m.major}</p>
                       <p className="text-sm text-muted-foreground">{m.university}</p>
                     </div>
-
-                    {/* Requirements */}
                     {m.requirements?.length > 0 && (
                       <div className="mt-2 flex flex-wrap gap-2">
                         {m.requirements.map((r: any, i: number) => (
@@ -296,8 +297,6 @@ export function SearchCard() {
                         ))}
                       </div>
                     )}
-
-                    {/* Scholarship */}
                     {passed && m.scholarshipPercent > 0 && (
                       <div className="mt-2 inline-flex items-center gap-1 rounded-lg bg-sky-100 dark:bg-sky-900/30 px-2 py-1 text-xs font-medium text-sky-600 dark:text-sky-400">
                         🎓 {m.scholarshipPercent}% тэтгэлэг
