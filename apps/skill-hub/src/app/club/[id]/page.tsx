@@ -1,19 +1,16 @@
 'use client';
 
-import { ClubProjectsSection } from '@/app/_components/clubDetailPage/ClubProjectsSection';
 import { ClubDetailPageSkeleton } from '@/app/_components/ClubDetailPageSkeleton';
-import ClubNextClasses from '@/app/_components/ClubNextClasses';
+import ClubOngoingProjects from '@/app/_components/ClubOngoingProjects';
 import { ClubRating } from '@/app/_components/ClubRating';
 import MapView from '@/app/_components/MapView';
 import { useClubById } from '@/app/hook/use-club-by-id';
 import { useProjects } from '@/app/hook/use-projects';
-import { SignedIn, SignedOut } from '@clerk/nextjs';
 import { Badge, Button, Dialog, DialogContent, DialogTitle, DialogTrigger } from '@intern-3a/shadcn';
 import { ArrowLeft, Info, Mail, MapPin, Phone } from 'lucide-react';
 import Image from 'next/image';
 import { notFound, useRouter } from 'next/navigation';
 import { use, useEffect, useMemo, useState } from 'react';
-import { RegisterLoginAlertDialog } from '../_components';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -24,10 +21,9 @@ export default function ClubDetailPage({ params }: PageProps) {
   const { id } = use(params);
 
   const { club, loading } = useClubById(id);
-  const { projects, loading: projectsLoading } = useProjects(id);
+  const { projects } = useProjects(id);
 
   const [selectedLevel, setSelectedLevel] = useState<string>('');
-  const [showLoginAlert, setShowLoginAlert] = useState<boolean>(false);
 
   /* ----------------------------------
      INITIAL LEVEL (хуучин логик хэвээр)
@@ -63,12 +59,7 @@ export default function ClubDetailPage({ params }: PageProps) {
 
   const currentTeacher = club.teachersInfoByClass?.[selectedLevel];
   const currentPrice = club.clubPrices?.[selectedLevel];
-  const currentSchedule = club.scheduledClubTimes?.[selectedLevel] || {};
-  const availableWeekdays = Object.keys(currentSchedule);
-
-  const handleRegisterClick = () => {
-    setShowLoginAlert(true);
-  };
+  const currentSchedule = club.scheduledClubTimes?.[selectedLevel];
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-4 md:py-10">
@@ -138,7 +129,7 @@ export default function ClubDetailPage({ params }: PageProps) {
                     key={level}
                     onClick={() => setSelectedLevel(level)}
                     className={`flex-1 py-3 md:py-4 px-3 md:px-5 rounded-xl text-xs md:text-sm font-black transition-all duration-300 active:scale-95
-                    ${selectedLevel === level ? 'bg-orange-600 text-white shadow-md shadow-orange-200' : 'bg-transparent text-slate-400 hover:text-slate-700'}`}
+                    ${selectedLevel === level ? 'bg-blue-400 text-white shadow-md shadow-blue-200' : 'bg-transparent text-slate-400 hover:text-slate-700'}`}
                   >
                     {levelLabels[level] || level}
                   </button>
@@ -193,26 +184,41 @@ export default function ClubDetailPage({ params }: PageProps) {
               </div>
             </div>
 
-            {/* ХУВААРЬ + CTA */}
+            {/* ХИЧЭЭЛИЙН ХУВААРЬ */}
+            {currentSchedule && (
+              <div className="bg-blue-50 rounded-2xl p-4 md:p-5 border border-blue-100">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+                  <p className="text-[10px] font-black text-blue-700/70 uppercase tracking-widest">Хичээлийн хуваарь</p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {Object.entries(currentSchedule).map(([day, time]) => {
+                    const timeObj = time as { startTime: string; endTime: string };
+                    return (
+                      <div key={day} className="bg-white rounded-lg px-3 py-2 border border-blue-200">
+                        <span className="text-xs font-black text-blue-600">{day}</span>
+                        <span className="text-xs font-bold text-slate-700 ml-2">
+                          {timeObj.startTime} - {timeObj.endTime}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* ТӨСЛҮҮД + CTA */}
             <div className="relative pt-2">
               <div className="hidden md:block absolute -top-4 left-1/2 -translate-x-1/2 w-24 h-1 rounded-full bg-orange-200" />
 
-              <SignedIn>
-                <ClubNextClasses availableWeekdays={availableWeekdays} scheduledTimes={currentSchedule} onRegister={() => router.push(`/register?clubId=${id}&level=${selectedLevel}`)} />
-              </SignedIn>
-
-              <SignedOut>
-                <ClubNextClasses availableWeekdays={availableWeekdays} scheduledTimes={currentSchedule} onRegister={handleRegisterClick} />
-              </SignedOut>
+              <ClubOngoingProjects
+                projects={filteredProjects}
+                onViewProject={(projectId) => {
+                  // You can add navigation to project detail page here
+                  console.log('View project:', projectId);
+                }}
+              />
             </div>
-
-            <div className="p-4 bg-slate-50/50 rounded-2xl border border-slate-50">
-              <p className="text-[10px] md:text-[11px] text-slate-400 font-medium leading-relaxed">
-                * Та өөрт тохирох хуваарийг сонгон бүртгүүлэх товчийг дарна уу. Манай менежер тантай эргэн холбогдох болно.
-              </p>
-            </div>
-            {/* projects-ийг selectedLevel-ээр шүүж харуулах */}
-            <ClubProjectsSection projects={filteredProjects} loading={projectsLoading} selectedLevelName={levelLabels[selectedLevel] || selectedLevel} />
           </div>
         </div>
       </div>
