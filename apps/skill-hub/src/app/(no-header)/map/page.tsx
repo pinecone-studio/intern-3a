@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { BookingStyleMap } from '../_components';
 
 const MapPage = () => {
-  const { allClubs } = useClub();
+  const { allClubs, isLoading } = useClub();
   const [userLocation, setUserLoaction] = useState<[number, number] | null>(null);
 
   useEffect(() => {
@@ -23,7 +23,7 @@ const MapPage = () => {
 
   return (
     <div className="w-full h-screen">
-      <BookingStyleMap allClubs={allClubs} userLocation={userLocation} />
+      <BookingStyleMap allClubs={allClubs} userLocation={userLocation} isLoading={isLoading} />
     </div>
   );
 };

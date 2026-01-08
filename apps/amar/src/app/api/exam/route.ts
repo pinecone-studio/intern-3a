@@ -1,55 +1,32 @@
-import { NextRequest, NextResponse } from "next/server";
-import { GoogleGenAI } from "@google/genai";
-import { GenerateExamRequest, GenerateExamResponse } from "apps/amar/src/types";
-
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY!,
-});
+import { ExamResult } from 'apps/amar/src/lib/models/ExamResult';
+import { FocusArea } from 'apps/amar/src/lib/models/FocusArea';
+import { connectDB } from 'apps/amar/src/lib/mongodb';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
-  try {
-    const body: GenerateExamRequest = await req.json();
+  await connectDB();
 
-    const prompt = `
-Generate 5 multiple-choice exam questions.
+  const { focusAreaId, correct, total } = await req.json();
 
-Rules:
-- Difficulty: ${body.difficulty}
-- Subject: ${body.subject}
-- Topic: ${body.topic}
-
-STRICT JSON:
-{
-  "questions": [
-    {
-      "id": "string",
-      "question": "string",
-      "options": ["A","B","C","D"],
-      "correctAnswerIndex": number
-    }
-  ]
-}
-`;
-
-    const res = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: prompt,
-    });
-
-    if (!res.text) throw new Error();
-
-    const json = JSON.parse(
-      res.text.slice(
-        res.text.indexOf("{"),
-        res.text.lastIndexOf("}") + 1
-      )
-    ) as GenerateExamResponse;
-
-    return NextResponse.json(json);
-  } catch {
-    return NextResponse.json(
-      { error: "Failed to generate exam" },
-      { status: 500 }
-    );
+  if (!focusAreaId || typeof correct !== 'number' || typeof total !== 'number') {
+    return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
   }
+
+  const score = Math.round((correct / total) * 100);
+  const recommendation = score < 70 ? 'REPLAN' : 'ADVANCE';
+
+  await ExamResult.create({
+    focusAreaId,
+    score,
+    recommendation,
+  });
+
+  if (recommendation === 'ADVANCE') {
+    await FocusArea.findByIdAndUpdate(focusAreaId, {
+      status: 'completed',
+      confidence: score,
+    });
+  }
+
+  return NextResponse.json({ score, recommendation });
 }

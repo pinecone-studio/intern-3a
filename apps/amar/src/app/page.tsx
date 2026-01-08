@@ -1,40 +1,55 @@
-/* eslint-disable @nx/enforce-module-boundaries */
-import { Button } from '@intern-3a/shadcn';
+'use client';
 
-const features = [
-  {
-    title: 'Study Planner',
-    desc: 'Generate personalized study plans based on deadlines and time.',
-    href: '/planner',
-  },
-  {
-    title: 'Homework Helper',
-    desc: 'Get AI-guided hints without direct answers.',
-    href: '/homework',
-  },
-  {
-    title: 'Exam & Analysis',
-    desc: 'Generate exams and analyze performance.',
-    href: '/exam',
-  },
-];
+import { Button, Input } from '@intern-3a/shadcn';
+
+import { useState } from 'react';
+import { Track, useApp } from '../context/app-context';
 
 export default function LandingPage() {
-  return (
-    <div>
-      <h1 className="mb-2 text-2xl font-bold">AI Learning Intelligence Platform</h1>
-      <p className="mb-6 text-gray-500">Adaptive learning powered by AI</p>
+  const { track, setTrack, setFocus, clearFocus } = useApp();
+  const [title, setTitle] = useState('');
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-        {features.map((f) => (
-          <div key={f.title} className="p-6 bg-white border rounded-xl">
-            <h3 className="mb-2 font-semibold">{f.title}</h3>
-            <p className="mb-4 text-sm text-gray-500">{f.desc}</p>
-            <Button asChild>
-              <a href={f.href}>Open Demo</a>
-            </Button>
-          </div>
+  async function createFocus() {
+    if (!track || !title.trim()) return;
+
+    const res = await fetch('/api/focus', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ track, title }),
+    });
+
+    const focus = await res.json();
+    setFocus(focus);
+    window.location.href = '/planner';
+  }
+
+  return (
+    <div className="max-w-xl p-8 mx-auto space-y-6">
+      <h1 className="text-2xl font-bold">AI Study Planner</h1>
+
+      {/* Track selector — ALWAYS visible */}
+      <div className="flex gap-2">
+        {(['Math', 'English', 'Japanese'] as Track[]).map((t) => (
+          <Button
+            key={t}
+            variant={track === t ? 'default' : 'outline'}
+            onClick={() => {
+              setTrack(t);
+              clearFocus();
+            }}
+          >
+            {t}
+          </Button>
         ))}
+      </div>
+
+      {/* Focus input */}
+      <div className="space-y-2">
+        <Input placeholder="What are you struggling with?" value={title} onChange={(e) => setTitle(e.target.value)} />
+
+        <Button onClick={createFocus} disabled={!track || !title.trim()}>
+          Create Study Focus
+        </Button>
       </div>
     </div>
   );
