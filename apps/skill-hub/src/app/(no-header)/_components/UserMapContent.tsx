@@ -23,6 +23,8 @@ export default function UserMapContent({ visibleClubs, userLocation, zoom, setZo
   const clubLayerRef = useRef<L.LayerGroup | null>(null);
   const hasFittedRef = useRef(false);
   const router = useRouter();
+  const userCircleRef = useRef<L.Circle | null>(null);
+  const userMarkerRef = useRef<L.Marker | null>(null);
 
   useEffect(() => {
     if (!mapRef.current || !userLocation || mapInstance.current) return;
@@ -57,12 +59,12 @@ export default function UserMapContent({ visibleClubs, userLocation, zoom, setZo
         map.on('moveend zoomend', () => {
           setZoom(map.getZoom());
           setBounds(map.getBounds());
+
+          if (userCircleRef.current) {
+            const z = map.getZoom();
+            userCircleRef.current.setRadius(z >= 15 ? 300 : z >= 13 ? 800 : 3000);
+          }
         });
-        L.circle(userLocation, {
-          radius: zoom >= 15 ? 300 : zoom >= 13 ? 800 : 3000,
-          color: '#2563eb',
-          fillOpacity: 0.15,
-        }).addTo(map);
 
         const userMarketHtml = `
       <div style="position: relative; width: 60px; height: 80px;">
@@ -89,8 +91,34 @@ export default function UserMapContent({ visibleClubs, userLocation, zoom, setZo
         </svg>
       </div>
     `;
+        // userCircleRef.current = L.circle(userLocation, {
+        //   radius: zoom >= 15 ? 300 : zoom >= 13 ? 800 : 3000,
+        //   color: '#2563eb',
+        //   weight: 2,
+        //   fillColor: '#0A427A',
+        //   fillOpacity: 0.1,
+        //   dashArray: '5,10',
+        // }).addTo(map);
 
-        L.marker(userLocation, {
+        userCircleRef.current = L.circle(userLocation, {
+          radius: 1000, // default том
+          color: '#2563eb',
+          weight: 2,
+          fillColor: '#0A427A',
+          fillOpacity: 0.15,
+          dashArray: '5,10',
+        }).addTo(map);
+
+        map.on('zoomend', () => {
+          if (!userCircleRef.current || !mapInstance.current) return;
+
+          const zoom = mapInstance.current.getZoom();
+          const baseRadius = 500;
+          const zoomFactor = Math.pow(2, 17 - zoom);
+          userCircleRef.current.setRadius(baseRadius * zoomFactor);
+        });
+
+        userMarkerRef.current = L.marker(userLocation, {
           icon: L.divIcon({
             html: userMarketHtml,
             className: '',
@@ -284,10 +312,10 @@ export default function UserMapContent({ visibleClubs, userLocation, zoom, setZo
           onClick={() => {
             if (!mapInstance.current || !currentLocation) return;
 
-            mapInstance.current.setView(currentLocation, 17, {
-              animate: true,
-              duration: 0.8,
-            });
+            mapInstance.current.setView(currentLocation, 17, { animate: true, duration: 0.8 });
+
+            if (userCircleRef.current) userCircleRef.current.setLatLng(currentLocation);
+            if (userMarkerRef.current) userMarkerRef.current.setLatLng(currentLocation);
           }}
           className="bg-white rounded-full p-3 shadow-lg hover:scale-105 transition"
           title="Миний байршил"

@@ -92,7 +92,7 @@ export default function ClubDetailPage({ params }: PageProps) {
 
           <div className="space-y-3 md:space-y-4">
             <span className="bg-orange-100 text-orange-700 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest inline-block">{club.clubCategoryName}</span>
-            <h1 className="text-2xl md:text-4xl font-black text-slate-900 leading-tight">{club.clubName}</h1>
+            <h1 className="text-xl md:text-3xl font-black text-slate-900 leading-tight">{club.clubName}</h1>
 
             <Dialog>
               <DialogTrigger asChild>
@@ -142,7 +142,7 @@ export default function ClubDetailPage({ params }: PageProps) {
                     key={level}
                     onClick={() => setSelectedLevel(level)}
                     className={`flex-1 py-3 md:py-4 px-3 md:px-5 rounded-xl text-xs md:text-sm font-black transition-all duration-300 active:scale-95
-                    ${selectedLevel === level ? 'bg-blue-400 text-white shadow-md shadow-blue-200' : 'bg-transparent text-slate-400 hover:text-slate-700'}`}
+                    ${selectedLevel === level ? 'bg-indigo-500 text-white shadow-md shadow-blue-200' : 'bg-transparent text-slate-400 hover:text-slate-700'}`}
                   >
                     {levelLabels[level] || level}
                   </button>
@@ -185,12 +185,12 @@ export default function ClubDetailPage({ params }: PageProps) {
                   <div className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse" />
                   <p className="text-[10px] font-black text-orange-700/70 uppercase tracking-widest">Сонгосон түвшин</p>
                 </div>
-                <h2 className="text-lg md:text-xl font-black text-slate-900 truncate pl-3 border-l-2 border-orange-200">{levelLabels[selectedLevel]}</h2>
+                <h2 className="text-base md:text-lg font-black text-slate-900 truncate pl-3 border-l-2 border-orange-200">{levelLabels[selectedLevel]}</h2>
               </div>
 
               <div className="text-right shrink-0">
                 <p className="text-[10px] font-bold text-slate-500 uppercase mb-0.5">Сарын төлбөр</p>
-                <p className="text-2xl md:text-3xl font-black text-orange-600 tabular-nums">
+                <p className="text-xl md:text-2xl font-black text-orange-600 tabular-nums">
                   {currentPrice?.toLocaleString()}
                   <span className="text-sm ml-1 font-bold">₮</span>
                 </p>
@@ -201,15 +201,15 @@ export default function ClubDetailPage({ params }: PageProps) {
             {currentSchedule && (
               <div className="bg-blue-50 rounded-2xl p-4 md:p-5 border border-blue-100">
                 <div className="flex items-center gap-2 mb-3">
-                  <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
-                  <p className="text-[10px] font-black text-blue-700/70 uppercase tracking-widest">Хичээлийн хуваарь</p>
+                  <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse" />
+                  <p className="text-[10px] font-black text-indigo-700/90 uppercase tracking-widest">Хичээлийн хуваарь</p>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {Object.entries(currentSchedule).map(([day, time]) => {
                     const timeObj = time as { startTime: string; endTime: string };
                     return (
                       <div key={day} className="bg-white rounded-lg px-3 py-2 border border-blue-200">
-                        <span className="text-xs font-black text-blue-600">{dayLabels[day] || day}</span>
+                        <span className="text-xs font-black text-indigo-500">{dayLabels[day] || day}</span>
                         <span className="text-xs font-bold text-slate-700 ml-2">
                           {timeObj.startTime} - {timeObj.endTime}
                         </span>

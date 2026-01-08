@@ -1,5 +1,6 @@
 'use client';
 
+import { MyUserButton } from '@/app/_components';
 import { RegisterLoginAlertDialog } from '@/app/club/_components';
 import { ClassLevelsType, getClassLevelMN, NewClubType, WeekDayType } from '@/lib/utils/types';
 import { SignedIn, SignedOut, useAuth } from '@clerk/nextjs';
@@ -92,8 +93,13 @@ export default function MapSideBar({
   return (
     <div>
       <div className={`fixed left-0 top-0 h-screen bg-white/5 z-20 transition-all duration-300 ${sidebarOpen ? 'w-85' : 'w-0 pointer-events-none'}`}>
-        <div onClick={() => router.back()} className="p-5 pl-6">
-          <ArrowLeftToLine size={24} className="text-[#0A427A] hover:text-black cursor-pointer" />
+        <div className="flex justify-between items-center">
+          <div onClick={() => router.back()} className="p-5 pl-6">
+            <ArrowLeftToLine size={24} className="text-[#0A427A] hover:text-black cursor-pointer" />
+          </div>
+          <div className="pr-5">
+            <MyUserButton />
+          </div>
         </div>
         <div className="p-6 border-t border-b">
           <label className="text-sm font-bold flex gap-1 text-orange-500">
@@ -136,7 +142,6 @@ export default function MapSideBar({
             </select>
           </div>
         </div>
-
         <div className="flex items-center ml-4 p-5">
           <ImSearch size={20} className="-mr-8 text-orange-500" />
           <Input type="text" placeholder="Дугуйлангийн нэрээр хайх" value={search} onChange={(e) => setSearch(e.target.value)} className="pl-11" />
@@ -147,7 +152,6 @@ export default function MapSideBar({
             <span className="hover:text-[#0A427A] text-orange-500">{isLoadingClubs ? '...' : filteredClubs.length}</span>
           </p>
         </div>
-
         <div className="overflow-y-auto overflow-visible h-full flex flex-col gap-1 py-1 px-3">
           {isLoadingClubs
             ? Array.from({ length: 3 }).map((_, index) => <MapCardSkeleton key={index} />)

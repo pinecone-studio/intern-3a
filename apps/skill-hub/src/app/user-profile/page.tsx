@@ -44,7 +44,7 @@ const ProfilePage: React.FC = () => {
             <div className="flex flex-wrap justify-center md:justify-start gap-4">
               <div
                 onClick={() => setActiveTab('Миний Бүртгүүлсэн')}
-                className={`cursor-pointer p-3 rounded-xl shadow-sm border flex items-center gap-4 min-w-[180px] transition-all ${activeTab === 'Миний Бүртгүүлсэн' ? 'bg-orange-50 border-orange-600' : 'bg-white border-gray-100'}`}
+                className={`cursor-pointer p-3 rounded-xl shadow-sm border flex items-center gap-4 min-w-45 transition-all ${activeTab === 'Миний Бүртгүүлсэн' ? 'bg-orange-50 border-orange-600' : 'bg-white border-gray-100'}`}
               >
                 <div className={`p-2 rounded-lg ${activeTab === 'Миний Бүртгүүлсэн' ? 'bg-orange-600 text-white' : 'bg-gray-50 text-[#0A427A]'}`}>
                   <img className="h-10 w-10" src="register.png" alt="" />
@@ -70,7 +70,7 @@ const ProfilePage: React.FC = () => {
 
               <div
                 onClick={() => setActiveTab('Миний сэтгэгдэлүүд')}
-                className={`cursor-pointer p-3 rounded-xl shadow-sm border flex items-center gap-4 min-w-[180px] transition-all ${activeTab === 'Миний сэтгэгдэлүүд' ? 'bg-orange-50 border-orange-600' : 'bg-white border-gray-100'}`}
+                className={`cursor-pointer p-3 rounded-xl shadow-sm border flex items-center gap-4 min-w-45 transition-all ${activeTab === 'Миний сэтгэгдэлүүд' ? 'bg-orange-50 border-orange-600' : 'bg-white border-gray-100'}`}
               >
                 <div className={`p-2 rounded-lg ${activeTab === 'Миний сэтгэгдэлүүд' ? 'bg-orange-600 text-white' : 'bg-gray-50 text-[#0A427A]'}`}>
                   <MessageSquare size={20} />
@@ -85,7 +85,7 @@ const ProfilePage: React.FC = () => {
         </div>
 
         <div className="mt-10 pb-20">
-          <section className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 min-h-[400px]">
+          <section className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 min-h-100">
             <div className="inline-block border-r-4 border-orange-600 pr-4 mb-10">
               <h2 className="text-lg font-bold text-[#0A427A]">{activeTab === 'Хувийн мэдээлэл' ? 'Хувийн мэдээлэл' : activeTab}</h2>
             </div>
