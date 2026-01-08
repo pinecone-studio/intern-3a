@@ -253,7 +253,7 @@ export function SearchCard() {
       )}
 
       {!loading && results.length > 0 && (
-        <div className="mt-4 bg-card/90 backdrop-blur-md border border-border z-0 rounded-2xl p-4 shadow-xl max-h-150 overflow-y-auto dark:bg-gray-900">
+        <div className="mt-4 bg-card/90 backdrop-blur-md border border-border z-0 rounded-2xl p-4 shadow-xl max-h-100 overflow-y-auto dark:bg-gray-900">
           <div className="grid gap-3">
             {results
               .sort((a, b) => {
@@ -279,7 +279,7 @@ export function SearchCard() {
                     >
                       {passed ? 'Тэнцсэн' : 'Тэнцээгүй'}
                     </div>
-                    <div className="pr-20 mt-2">
+                    <div className="pr-20">
                       <p className="font-semibold text-foreground">{m.major}</p>
                       <p className="text-sm text-muted-foreground">{m.university}</p>
                     </div>

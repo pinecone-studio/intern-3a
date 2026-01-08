@@ -1,6 +1,6 @@
 'use client';
 
-import { SignedIn, SignedOut, SignInButton } from '@clerk/nextjs';
+import { SignedOut, SignInButton } from '@clerk/nextjs';
 import { animate, motion, useMotionValue, useTransform, Variants } from 'framer-motion';
 import { LogIn } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -80,7 +80,7 @@ export const Intro = () => {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-linear-to-br from-orange-50 via-white to-purple-50">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         {/* Gradient Blobs */}
@@ -414,29 +414,22 @@ export const Intro = () => {
             </p>
             <motion.div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20" initial={false} whileHover={{ scale: 1.5 }} transition={{ duration: 0.4 }} />
           </motion.button>
-          <motion.button
-            whileHover={{ scale: 1.05, y: -2 }}
-            whileTap={{ scale: 0.95 }}
-            className="cursor-pointer group relative px-10 py-4 bg-linear-to-r from-purple-500 to-indigo-600 text-white rounded-full hover:from-purple-600 hover:to-indigo-700 transition-all duration-300 font-bold text-lg shadow-2xl hover:shadow-purple-500/50 overflow-hidden"
-          >
-            <SignedOut>
+
+          <SignedOut>
+            <motion.button
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+              className="cursor-pointer group relative px-10 py-4 bg-linear-to-r from-purple-500 to-indigo-600 text-white rounded-full hover:from-purple-600 hover:to-indigo-700 transition-all duration-300 font-bold text-lg shadow-2xl hover:shadow-purple-500/50 overflow-hidden"
+            >
               <SignInButton>
                 <p className="relative z-10 flex items-center justify-center gap-2">
                   <LogIn />
                   Нэвтрэх
                 </p>
               </SignInButton>
-            </SignedOut>
-
-            <SignedIn>
-              <p className="relative z-10 flex items-center justify-center gap-2">
-                <LogIn />
-                Нэвтрэх
-              </p>
-            </SignedIn>
-
-            <motion.div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20" initial={false} whileHover={{ scale: 1.5 }} transition={{ duration: 0.4 }} />
-          </motion.button>
+              <motion.div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20" initial={false} whileHover={{ scale: 1.5 }} transition={{ duration: 0.4 }} />
+            </motion.button>
+          </SignedOut>
         </motion.div>
 
         {/* Stats Section with Animated Counters */}

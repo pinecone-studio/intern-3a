@@ -25,12 +25,8 @@ export const AllClubsCardScrollAnimation = ({ allClubs, isLoading }: { allClubs:
   }
 
   return (
-    <div
-      className="w-full overflow-x-auto scroll-smooth [&::-webkit-scrollbar]:hidden
-       [-ms-overflow-style:none]
-      [scrollbar-width:none] py-12"
-    >
-      <div className="flex gap-4 px-6 w-max animate-scroll">
+    <div className="relative w-full overflow-x-auto scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] py-12">
+      <div className="flex gap-4 px-6 w-max animate-scroll relative z-10">
         {[...allClubs, ...allClubs].map((club, index) => (
           <div key={`${club._id}-${index}`} className="w-80 h-45 shrink-0 border-2 border-slate-200 rounded-xl p-6 shadow-lg hover:shadow-2xl transition-all duration-400">
             <div className="flex justify-between items-center mb-4">

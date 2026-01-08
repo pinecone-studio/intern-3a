@@ -8,7 +8,7 @@ export type FavoriteClubSchemaType = {
 export const FavoriteClubSchema = new Schema(
   {
     userId: { type: Schema.ObjectId, ref: 'User', required: true },
-    clubId: { type: Schema.ObjectId, ref: 'Club', required: true },
+    clubId: { type: Schema.ObjectId, ref: 'NewClub', required: true },
   },
   { timestamps: true, versionKey: false },
 );
