@@ -9,7 +9,7 @@ export function ProgramCard({ program, viewMode }: any) {
 
   // 1. Хамгийн бага босго оноог тооцоолох
   const minScore = useMemo(() => {
-    if (!program.majors || program.majors.length === 0) return 400;
+    if (!program.majors || program.majors.length === 0) return 460;
 
     const scores: number[] = [];
     program.majors.forEach((major: any) => {
@@ -20,7 +20,7 @@ export function ProgramCard({ program, viewMode }: any) {
       });
     });
 
-    return scores.length > 0 ? Math.min(...scores) : 400;
+    return scores.length > 0 ? Math.min(...scores) : 460;
   }, [program]);
 
   // 2. Хугацаа форматлах

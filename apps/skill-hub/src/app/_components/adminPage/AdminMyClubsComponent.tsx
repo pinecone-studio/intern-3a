@@ -85,7 +85,6 @@ const AdminMyClubsComponent = () => {
 
   return (
     <div className="flex min-h-screen">
-      {' '}
       <div className="flex-1 p-4 md:p-8">
         {/* Гар утсан дээр дээрээсээ доошоо (flex-col), томоохон дэлгэц дээр хажуугаараа (lg:flex-row) */}
         <div className="flex flex-col lg:flex-row gap-6 md:gap-10">
@@ -96,7 +95,7 @@ const AdminMyClubsComponent = () => {
             </div>
           </div>
 
-          <div className="flex flex-col w-full max-w-full lg:max-w-450 h-auto lg:h-100 justify-between">
+          <div className="flex flex-col w-full max-w-full lg:max-w-450 h-auto lg:h-100 justify-between bg-gray-50 rounded-lg p-5">
             <div className="flex flex-col gap-3">
               <div className="flex flex-wrap gap-4 justify-between items-start md:items-center mb-4">
                 <h1 className="text-2xl md:text-4xl font-bold text-[#FCB027]">{selectedClub.clubName}</h1>

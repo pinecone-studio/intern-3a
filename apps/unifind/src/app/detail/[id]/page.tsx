@@ -32,8 +32,12 @@ export default function UniversityDetailPage2({ params }: Props) {
   const [data, setData] = useState<NumDates | null>(null);
   const [activeTab, setActiveTab] = useState<'overview' | 'scholarships' | 'majors'>('majors');
   const [data2, setData2] = useState<Scholarship[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [, setLoading] = useState(true);
+  const [, setError] = useState('');
+  const [qrOpen, setQrOpen] = useState(false);
+  const [butUsername, setButUsername] = useState('');
+  const [butPassword, setButPassword] = useState('');
+  const showQr = butUsername.length > 0 && butPassword.length > 0;
 
   useEffect(() => {
     fetch('/api/tetgeleg')
@@ -318,7 +322,7 @@ export default function UniversityDetailPage2({ params }: Props) {
                         <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">37,500 ₮</p>
                       </div>
 
-                      <p className="text-xs text-gray-500 dark:text-gray-400">Энэхүү хураамжийг төлснөөр та их сургуулийн өргөдөл гаргах эрхтэй болно. Төлбөрийг буцаан олгохгүй.</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Энэхүү хураамжийг төлснөөр та их сургуулийн өргөдөл эрт гаргаж болно бас</p>
 
                       <Button className="w-full bg-cyan-500 hover:bg-cyan-600 text-white dark:bg-cyan-600 dark:hover:bg-cyan-700" onClick={() => setOpen(false)}>
                         Төлбөр баталгаажуулах
@@ -501,8 +505,78 @@ export default function UniversityDetailPage2({ params }: Props) {
                   </div>
                 </div>
               </div>
+              <Button onClick={() => setQrOpen(true)} className="bg-green-500 hover:bg-green-600 text-white">
+                Эрт Бүртгэл
+              </Button>
+              <Dialog open={qrOpen} onOpenChange={setQrOpen}>
+                <DialogContent className="sm:max-w-md bg-white dark:bg-gray-900 dark:text-gray-100">
+                  <DialogHeader>
+                    <DialogTitle>БҮТ нэвтрэх мэдээлэл</DialogTitle>
+                  </DialogHeader>
 
-              <Button onClick={handleRegisterClick} variant="link" className="w-full mt-4 cursor-pointer text-sky-500 p-0">
+                  <div className="space-y-4">
+                    <input
+                      type="text"
+                      placeholder="БҮТ нэвтрэх нэр (бүртгэлийн дугаар)"
+                      value={butUsername}
+                      onChange={(e) => setButUsername(e.target.value)}
+                      className="w-full rounded-md border px-3 py-2 text-sm
+      bg-white dark:bg-gray-800
+      border-gray-300 dark:border-gray-700
+      focus:outline-none focus:ring-2 focus:ring-sky-500"
+                    />
+
+                    <input
+                      type="password"
+                      placeholder="БҮТ нууц дугаар"
+                      value={butPassword}
+                      onChange={(e) => setButPassword(e.target.value)}
+                      className="w-full rounded-md border px-3 py-2 text-sm
+      bg-white dark:bg-gray-800
+      border-gray-300 dark:border-gray-700
+      focus:outline-none focus:ring-2 focus:ring-sky-500"
+                    />
+
+                    {/* QR wrapper – эхнээсээ зайтай */}
+                    <div className="pt-4 flex justify-center">
+                      <div
+                        className="
+        w-56 h-56 rounded-xl border bg-white p-3
+        dark:bg-gray-800 dark:border-gray-700
+        transition-all duration-300 ease-out
+        flex items-center justify-center
+      "
+                      >
+                        {/* QR image */}
+                        <div
+                          className={`
+          transition-all duration-300 ease-out
+          ${showQr ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}
+        `}
+                        >
+                          <Image src="/qr-mock.png" alt="QR Code" width={224} height={224} className="rounded-lg" />
+                        </div>
+                      </div>
+                    </div>
+
+                    <p
+                      className={`
+      text-sm text-center text-gray-500 dark:text-gray-400
+      transition-opacity duration-300
+      ${showQr ? 'opacity-100' : 'opacity-0'}
+    `}
+                    >
+                      Банкны апп ашиглан QR код уншуулж төлбөрөө хийнэ үү
+                    </p>
+
+                    <Button onClick={() => setQrOpen(false)} className="w-full bg-sky-500 hover:bg-sky-600 text-white">
+                      Хаах
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+
+              <Button onClick={handleRegisterClick} variant="link" className="w-full  cursor-pointer text-sky-500 p-0">
                 Миний xуанлид нэмэх
               </Button>
             </Card>

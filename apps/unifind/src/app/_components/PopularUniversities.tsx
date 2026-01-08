@@ -48,7 +48,7 @@ export function PopularUniversities() {
                     admissionRate={null}
                     deadline={null}
                     nextCycle={null}
-                    minScore={''}
+                    minScore={0}
                   />
                 ))
             : !isLoading && !error && <p className="col-span-full text-center text-gray-400">Мэдээлэл олдсонгүй</p>}

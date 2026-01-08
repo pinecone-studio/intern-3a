@@ -1,5 +1,6 @@
 'use client';
 
+import { SignedIn, SignedOut, SignInButton } from '@clerk/nextjs';
 import { animate, motion, useMotionValue, useTransform, Variants } from 'framer-motion';
 import { LogIn } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -393,7 +394,7 @@ export const Intro = () => {
         {/* Main Heading - Website Description */}
         <motion.div variants={itemVariants} className="mb-8">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-transparent bg-clip-text bg-linear-to-r from-orange-500 via-pink-500 to-purple-600">
-            Хүүхдийн дугуйлангын <br className="hidden sm:block" />
+            Дугуйлангийн <br className="hidden sm:block" />
             нэгдсэн платформ
           </h1>
           <p className="text-lg md:text-xl lg:text-2xl text-slate-700 max-w-4xl mx-auto leading-relaxed">Таны хүүхдэд тохирсон спорт, урлаг, боловсролын дугуйланг олоход туслах платформ.</p>
@@ -407,21 +408,33 @@ export const Intro = () => {
             className="cursor-pointer group relative px-10 py-4 bg-linear-to-r from-orange-500 to-pink-500 text-white rounded-full hover:from-orange-600 hover:to-pink-600 transition-all duration-300 font-bold text-lg shadow-2xl hover:shadow-orange-500/50 overflow-hidden"
             onClick={() => router.push('/map')}
           >
-            <span className="relative z-10 flex items-center justify-center gap-2">
+            <p className="relative z-10 flex items-center justify-center gap-2">
               <ImSearch />
               Дугуйлан хайх
-            </span>
+            </p>
             <motion.div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20" initial={false} whileHover={{ scale: 1.5 }} transition={{ duration: 0.4 }} />
           </motion.button>
           <motion.button
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
             className="cursor-pointer group relative px-10 py-4 bg-linear-to-r from-purple-500 to-indigo-600 text-white rounded-full hover:from-purple-600 hover:to-indigo-700 transition-all duration-300 font-bold text-lg shadow-2xl hover:shadow-purple-500/50 overflow-hidden"
-            onClick={() => router.push('/sign-in')}
           >
-            <span className="relative z-10 flex items-center justify-center gap-2">
-              <LogIn /> Нэвтрэх
-            </span>
+            <SignedOut>
+              <SignInButton>
+                <p className="relative z-10 flex items-center justify-center gap-2">
+                  <LogIn />
+                  Нэвтрэх
+                </p>
+              </SignInButton>
+            </SignedOut>
+
+            <SignedIn>
+              <p className="relative z-10 flex items-center justify-center gap-2">
+                <LogIn />
+                Нэвтрэх
+              </p>
+            </SignedIn>
+
             <motion.div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20" initial={false} whileHover={{ scale: 1.5 }} transition={{ duration: 0.4 }} />
           </motion.button>
         </motion.div>
