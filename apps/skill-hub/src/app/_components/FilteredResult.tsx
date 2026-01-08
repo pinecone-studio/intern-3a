@@ -1,7 +1,7 @@
 'use client';
 
 import { ClassLevelsType, NewClubType } from '@/lib/utils/types';
-import { Badge, Button } from '@intern-3a/shadcn';
+import { Button } from '@intern-3a/shadcn';
 import { ChevronDown, Loader } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
@@ -70,13 +70,13 @@ const FilteredResult = ({ filteredClubs, isFiltered, resetFilters }: FilteredClu
                     <div className="aspect-video relative overflow-hidden bg-slate-100">
                       {club.clubImage && <img src={typeof club.clubImage === 'string' ? club.clubImage : ''} alt={club.clubName} className="w-full h-full object-cover" />}
                     </div>
-                    <div className="p-6 flex flex-col flex-grow">
+                    <div className="p-6 flex flex-col grow">
                       <h4 className="text-xl font-bold text-[#0A427A] mb-2 line-clamp-1">{club.clubName}</h4>
 
                       <p className="text-slate-600 text-sm mb-4 line-clamp-2 h-10">{club.clubDescription}</p>
 
                       <div className="mb-3">
-                        <div className="flex flex-wrap gap-2 min-h-[28px]">
+                        <div className="flex flex-wrap gap-2 min-h-\[28px]\">
                           {club.selectedClassLevelNames && club.selectedClassLevelNames.length > 0 ? (
                             club.selectedClassLevelNames.map((level) => (
                               <div key={level} className="relative">
@@ -123,7 +123,7 @@ const FilteredResult = ({ filteredClubs, isFiltered, resetFilters }: FilteredClu
                         )}
                       </div>
 
-                      <div className="mb-4 min-h-[60px]">
+                      <div className="mb-4 min-h-\[60px]\">
                         {club.teachersInfoByClass && Object.keys(club.teachersInfoByClass).length > 0 ? (
                           <div>
                             <p className="text-xs font-semibold text-slate-700 mb-2">Багш:</p>

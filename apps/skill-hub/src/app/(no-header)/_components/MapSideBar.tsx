@@ -1,16 +1,26 @@
 'use client';
 
 import { RegisterLoginAlertDialog } from '@/app/club/_components';
-import { ClassLevelsType, getClassLevelMN, NewClubType } from '@/lib/utils/types';
+import { ClassLevelsType, getClassLevelMN, NewClubType, WeekDayType } from '@/lib/utils/types';
 import { SignedIn, SignedOut, useAuth } from '@clerk/nextjs';
 import { Badge, Input } from '@intern-3a/shadcn';
-import { ArrowLeftToLine, ChevronLeft, ChevronRight, MapPin } from 'lucide-react';
+import { ArrowLeftToLine, ChevronLeft, ChevronRight, MapPin, SlidersHorizontal } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { ImSearch } from 'react-icons/im';
 import { IoMdHeart, IoMdHeartEmpty } from 'react-icons/io';
 import { toast } from 'sonner';
 import { MapCardSkeleton } from './MapCardSkeleton';
+
+const days = [
+  { label: 'Даваа', value: 'MON' },
+  { label: 'Мягмар', value: 'TUE' },
+  { label: 'Лхагва', value: 'WED' },
+  { label: 'Пүрэв', value: 'THU' },
+  { label: 'Баасан', value: 'FRI' },
+  { label: 'Бямба', value: 'SAT' },
+  { label: 'Ням', value: 'SUN' },
+];
 
 type MapSideBarProps = {
   visibleClubs: NewClubType[];
@@ -23,6 +33,8 @@ type MapSideBarProps = {
   selectedCategory: string | null;
   setSelectedCategory: React.Dispatch<React.SetStateAction<string | null>>;
   isLoadingClubs?: boolean;
+  selectedDay: string | null;
+  setSelectedDay: React.Dispatch<React.SetStateAction<WeekDayType | null>>;
 };
 export default function MapSideBar({
   visibleClubs,
@@ -35,6 +47,8 @@ export default function MapSideBar({
   selectedCategory,
   setSelectedCategory,
   isLoadingClubs = false,
+  selectedDay,
+  setSelectedDay,
 }: MapSideBarProps) {
   const router = useRouter();
   const [hoveredAddress, setHoveredAddress] = useState<string | null>(null);
@@ -78,40 +92,45 @@ export default function MapSideBar({
   return (
     <div>
       <div className={`fixed left-0 top-0 h-screen bg-white/5 z-20 transition-all duration-300 ${sidebarOpen ? 'w-85' : 'w-0 pointer-events-none'}`}>
-        <div onClick={() => router.back()} className="p-6 pl-6">
+        <div onClick={() => router.back()} className="p-5 pl-6">
           <ArrowLeftToLine size={24} className="text-[#0A427A] hover:text-black cursor-pointer" />
         </div>
-        <div className="flex gap-2 px-4 pb-3">
-          {categories.map((cat) => {
-            const active = selectedCategory === cat;
-
-            return (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(active ? null : cat)}
-                className={`px-3 py-1 rounded-full text-sm font-bold transition
-          ${active ? 'bg-orange-500 text-white' : 'bg-orange-100 text-orange-600 hover:bg-orange-200'}`}
-              >
-                {cat}
-              </button>
-            );
-          })}
-        </div>
-        <div className="flex gap-2 px-4 pb-3">
-          {(['Elementary', 'Middle', 'High'] as ClassLevelsType[]).map((level) => {
-            const active = selectedLevel === level;
-
-            return (
-              <button
-                key={level}
-                onClick={() => setSelectedLevel(active ? null : level)}
-                className={`px-3 py-1 rounded-full text-sm font-bold transition
-          ${active ? 'bg-orange-500 text-white' : 'bg-orange-100 text-orange-600 hover:bg-orange-200'}`}
-              >
-                {getClassLevelMN(level)}
-              </button>
-            );
-          })}
+        <div className="p-6 border-t border-b">
+          <label className="text-sm font-bold flex gap-1 text-orange-500">
+            <SlidersHorizontal /> Шүүлтүүр:
+          </label>
+          <div className="flex items-center gap-1">
+            <select
+              value={selectedLevel || ''}
+              onChange={(e) => setSelectedLevel(e.target.value as ClassLevelsType)}
+              className="w-fit p-2 border rounded-md text-sm font-bold bg-white text-[#0A427A] cursor-pointer"
+            >
+              <option value="">Ангиар</option>
+              <option value="Elementary">Бага</option>
+              <option value="Middle">Дунд</option>
+              <option value="High">Ахлах</option>
+            </select>
+            <select value={selectedDay || ''} onChange={(e) => setSelectedDay(e.target.value || null)} className="w-fit p-2 border rounded-md font-bold text-sm bg-white text-[#0A427A] cursor-pointer">
+              <option value="">Өдрөөр</option>
+              {days.map((day) => (
+                <option key={day.value} value={day.value}>
+                  {day.label}
+                </option>
+              ))}
+            </select>
+            <select
+              value={selectedCategory || ''}
+              onChange={(e) => setSelectedCategory(e.target.value || null)}
+              className="w-fit p-2 border rounded-md font-bold text-sm bg-white text-[#0A427A] cursor-pointer"
+            >
+              <option value="">Ангилалаар</option>
+              {categories.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
         <div className="flex items-center ml-4 p-5">
@@ -127,8 +146,7 @@ export default function MapSideBar({
 
         <div className="overflow-y-auto overflow-visible h-full flex flex-col gap-1 py-1 px-3">
           {isLoadingClubs
-            ? // Skeleton loading state
-              Array.from({ length: 3 }).map((_, index) => <MapCardSkeleton key={index} />)
+            ? Array.from({ length: 3 }).map((_, index) => <MapCardSkeleton key={index} />)
             : filteredClubs.map((club) => {
                 const imageSrc = typeof club.clubImage === 'string' ? club.clubImage : '/placeholder.jpg';
 

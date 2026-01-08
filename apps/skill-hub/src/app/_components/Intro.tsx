@@ -7,7 +7,6 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { ImSearch } from 'react-icons/im';
 
-// Counter Animation Component
 const AnimatedCounter = ({ target, duration = 2, shouldStart }: { target: number; duration?: number; shouldStart: boolean }) => {
   const count = useMotionValue(0);
   const rounded = useTransform(count, (latest) => Math.round(latest));

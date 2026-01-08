@@ -19,7 +19,7 @@ export const Footer = () => {
             <Link href="/">
               <span
                 className="text-xl sm:text-2xl font-extrabold uppercase tracking-wider
-              text-transparent bg-clip-text bg-gradient-to-r
+              text-transparent bg-clip-text bg-linear-to-r
               from-pink-500 via-red-500 to-yellow-400
               hover:scale-110 duration-300 cursor-pointer"
               >
