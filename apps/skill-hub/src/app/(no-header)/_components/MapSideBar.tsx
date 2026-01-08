@@ -22,18 +22,26 @@ type MapSideBarProps = {
   setSelectedLevel: React.Dispatch<React.SetStateAction<ClassLevelsType | null>>;
   selectedCategory: string | null;
   setSelectedCategory: React.Dispatch<React.SetStateAction<string | null>>;
-};
-export default function MapSideBar({ visibleClubs, sidebarOpen, onToggle, hoveredClubId, setHoveredClubId, selectedLevel, setSelectedLevel, selectedCategory, setSelectedCategory }: MapSideBarProps) {
   isLoadingClubs?: boolean;
 };
-export default function MapSideBar({ visibleClubs, sidebarOpen, onToggle, hoveredClubId, setHoveredClubId, isLoadingClubs = false }: MapSideBarProps) {
+export default function MapSideBar({
+  visibleClubs,
+  sidebarOpen,
+  onToggle,
+  hoveredClubId,
+  setHoveredClubId,
+  selectedLevel,
+  setSelectedLevel,
+  selectedCategory,
+  setSelectedCategory,
+  isLoadingClubs = false,
+}: MapSideBarProps) {
   const router = useRouter();
   const [hoveredAddress, setHoveredAddress] = useState<string | null>(null);
   const [hoveredPrice, setHoveredPrice] = useState<{ clubId: string; level: ClassLevelsType } | null>(null);
   const [hoveredHeart, setHoveredHeart] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [showLoginAlert, setShowLoginAlert] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [savedFavorites, setSavedFavorites] = useState<string[]>([]);
   const { getToken } = useAuth();
