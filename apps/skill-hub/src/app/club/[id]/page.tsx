@@ -44,11 +44,24 @@ export default function ClubDetailPage({ params }: PageProps) {
   };
 
   /* ----------------------------------
+     DAY LABELS (English to Mongolian)
+  ---------------------------------- */
+  const dayLabels: Record<string, string> = {
+    MON: 'Да',
+    TUE: 'Мя',
+    WED: 'Лх',
+    THU: 'Пү',
+    FRI: 'Ба',
+    SAT: 'Бя',
+    SUN: 'Ня',
+  };
+
+  /* ----------------------------------
      selectedLevel-тэй таарч буй project-уудыг шүүх
   ---------------------------------- */
   const filteredProjects = useMemo(() => {
-    if (!selectedLevel) return [];
-    return projects.filter((project) => project.classLevel === selectedLevel);
+    if (!selectedLevel || !projects) return [];
+    return projects.filter((project) => project.classLevel.includes(selectedLevel as any));
   }, [projects, selectedLevel]);
 
   /* ----------------------------------
@@ -196,7 +209,7 @@ export default function ClubDetailPage({ params }: PageProps) {
                     const timeObj = time as { startTime: string; endTime: string };
                     return (
                       <div key={day} className="bg-white rounded-lg px-3 py-2 border border-blue-200">
-                        <span className="text-xs font-black text-blue-600">{day}</span>
+                        <span className="text-xs font-black text-blue-600">{dayLabels[day] || day}</span>
                         <span className="text-xs font-bold text-slate-700 ml-2">
                           {timeObj.startTime} - {timeObj.endTime}
                         </span>
@@ -222,8 +235,6 @@ export default function ClubDetailPage({ params }: PageProps) {
           </div>
         </div>
       </div>
-
-      <RegisterLoginAlertDialog showLoginAlert={showLoginAlert} setShowLoginAlert={setShowLoginAlert} id={id} message={'Дугуйланд бүртгүүлэхийн тулд эхлээд нэвтрэх шаардлагатай.'} />
     </div>
   );
 }

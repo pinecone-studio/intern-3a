@@ -1,21 +1,11 @@
 'use client';
 
+import { ClubProjectType } from '@/lib/utils/types';
 import { Button } from '@intern-3a/shadcn';
 import { Award, Calendar, ChevronRight, FolderKanban, Trophy, Users, Zap } from 'lucide-react';
 
-interface Project {
-  _id: string;
-  projectName: string;
-  difficultyLevel: 'Beginner' | 'Intermediate' | 'Pro';
-  description: string;
-  classLevel: string;
-  childrenCount: number;
-  startDate: Date | string;
-  finishDate: Date | string;
-}
-
 interface Props {
-  projects: Project[];
+  projects: ClubProjectType[];
   onViewProject: (projectId: string) => void;
 }
 
@@ -23,12 +13,18 @@ const DIFFICULTY_MN: Record<string, string> = {
   Beginner: 'Анхан',
   Intermediate: 'Дунд',
   Pro: 'Ахисан',
+  B: 'Анхан',
+  I: 'Дунд',
+  P: 'Ахисан',
 };
 
 const DIFFICULTY_ICONS: Record<string, React.ReactNode> = {
   Beginner: <Award className="w-3.5 h-3.5 text-green-600" />,
   Intermediate: <Zap className="w-3.5 h-3.5 text-orange-600" />,
   Pro: <Trophy className="w-3.5 h-3.5 text-purple-600" />,
+  B: <Award className="w-3.5 h-3.5 text-green-600" />,
+  I: <Zap className="w-3.5 h-3.5 text-orange-600" />,
+  P: <Trophy className="w-3.5 h-3.5 text-purple-600" />,
 };
 
 export default function ClubOngoingProjects({ projects, onViewProject }: Props) {
@@ -59,6 +55,7 @@ export default function ClubOngoingProjects({ projects, onViewProject }: Props) 
       {/* LIST */}
       <div className="space-y-3">
         {displayProjects.map((project, index) => {
+          const difficulty = project.difficultyLevel[0]; // Get first difficulty level
           return (
             <div
               key={project._id}
@@ -71,8 +68,8 @@ export default function ClubOngoingProjects({ projects, onViewProject }: Props) 
                   <div className="flex items-center gap-2">
                     <span className="text-[10px] font-bold text-slate-500 uppercase">Түвшин:</span>
                     <div className="flex items-center gap-1.5">
-                      {DIFFICULTY_ICONS[project.difficultyLevel]}
-                      <span className="text-xs font-bold text-slate-900">{DIFFICULTY_MN[project.difficultyLevel] || project.difficultyLevel}</span>
+                      {difficulty && DIFFICULTY_ICONS[difficulty]}
+                      <span className="text-xs font-bold text-slate-900">{difficulty && DIFFICULTY_MN[difficulty] ? DIFFICULTY_MN[difficulty] : difficulty}</span>
                     </div>
                   </div>
 
@@ -100,7 +97,7 @@ export default function ClubOngoingProjects({ projects, onViewProject }: Props) 
 
               {/* CTA BUTTON */}
               <Button
-                onClick={() => onViewProject(project._id)}
+                onClick={() => onViewProject(project._id || '')}
                 size="sm"
                 className="w-full sm:w-auto rounded-xl font-bold text-xs h-11 sm:h-10 px-6 transition-all cursor-pointer bg-orange-500 hover:bg-blue-600 text-white"
               >
