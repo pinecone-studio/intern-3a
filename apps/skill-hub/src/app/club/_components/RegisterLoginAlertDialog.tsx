@@ -17,7 +17,7 @@ export const RegisterLoginAlertDialog = ({
 }) => {
   return (
     <AlertDialog open={showLoginAlert} onOpenChange={setShowLoginAlert}>
-      <AlertDialogContent className="w-fit gap-10 z-[10000]">
+      <AlertDialogContent className="w-fit gap-10 z-10000">
         <AlertDialogHeader className="gap-0">
           <AlertDialogTitle>Та нэвтэрч орно уу</AlertDialogTitle>
           <AlertDialogDescription>{message}</AlertDialogDescription>

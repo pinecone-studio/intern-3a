@@ -6,7 +6,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React, { useState } from 'react';
-import { CategoryDropdown } from './CategoryDropdown';
 import { ClubRegisterBtnDialogContent } from './ClubRegisterBtnDialogContent';
 import { MyUserButton } from './MyUserButton';
 
@@ -32,11 +31,6 @@ export const Header = () => {
             Growly
           </span>
         </Link>
-      </div>
-      <div className="flex gap-4">
-        <div className="hidden sm:block">
-          <CategoryDropdown />
-        </div>
       </div>
 
       <div className="flex gap-2 sm:gap-5 items-center pl-4">

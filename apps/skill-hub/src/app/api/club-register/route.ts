@@ -37,7 +37,6 @@
 //   } catch {}
 // }
 
-import { NewClub } from '@/lib/models/Club';
 import { Project } from '@/lib/models/Project';
 import { Register } from '@/lib/models/Register';
 import { User } from '@/lib/models/User';

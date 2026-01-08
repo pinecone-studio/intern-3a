@@ -31,7 +31,7 @@ const ClubAdminPage = () => {
             <div key={idx} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6">
               <div className="bg-white rounded-2xl border-2 border-slate-200 overflow-hidden flex flex-col h-full">
                 <div className="aspect-video bg-slate-200 w-full" />
-                <div className="p-6 flex flex-col flex-grow space-y-4">
+                <div className="p-6 flex flex-col grow space-y-4">
                   <div className="h-6 w-3/4 bg-slate-200 rounded" />
                   <div className="space-y-2">
                     <div className="h-3 w-full bg-slate-200 rounded" />

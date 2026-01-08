@@ -110,7 +110,11 @@ export default function MapSideBar({
               <option value="Middle">Дунд</option>
               <option value="High">Ахлах</option>
             </select>
-            <select value={selectedDay || ''} onChange={(e) => setSelectedDay(e.target.value || null)} className="w-fit p-2 border rounded-md font-bold text-sm bg-white text-[#0A427A] cursor-pointer">
+            <select
+              value={selectedDay ?? ''}
+              onChange={(e) => setSelectedDay(e.target.value === '' ? null : (e.target.value as WeekDayType))}
+              className="w-fit p-2 border rounded-md font-bold text-sm bg-white text-[#0A427A] cursor-pointer"
+            >
               <option value="">Өдрөөр</option>
               {days.map((day) => (
                 <option key={day.value} value={day.value}>

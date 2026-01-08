@@ -3,7 +3,7 @@
 import { ClassLevelsType, NewClubType, WeekDayType } from '@/lib/utils/types';
 import { Button } from '@intern-3a/shadcn';
 import { Calendar, ChevronDown, ChevronUp, Layers, MapPin, Phone, Wallet, X } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { IoIosMail } from 'react-icons/io';
 
@@ -34,22 +34,22 @@ export const ClubCard = ({ club }: { club: NewClubType }) => {
   const [modalDescExpanded, setModalDescExpanded] = useState(false);
 
   const [expandedClass, setExpandedClass] = useState<ClassLevelsType | null>(null);
-  const router = useRouter();
+  // const router = useRouter();
 
-  const levelLabel = useMemo(() => club.selectedClassLevelNames?.map((l) => CLASS_LEVEL_LABEL_MN[l]).join(' · ') || '—', [club.selectedClassLevelNames]);
+  // const levelLabel = useMemo(() => club.selectedClassLevelNames?.map((l) => CLASS_LEVEL_LABEL_MN[l]).join(' · ') || '—', [club.selectedClassLevelNames]);
   const CLASS_PRIORITY: ClassLevelsType[] = ['Elementary', 'Middle', 'High'];
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      setOpen(true);
-    }
-  };
+  // const handleKeyDown = (e: React.KeyboardEvent) => {
+  //   if (e.key === 'Enter' || e.key === ' ') {
+  //     e.preventDefault();
+  //     setOpen(true);
+  //   }
+  // };
 
   const [selectedClass, setSelectedClass] = useState<ClassLevelsType | null>(null);
   // const [selectedDay, setSelectedDay] = useState<WeekDayType | null>(null);
 
-  const classLevels: ClassLevelsType[] = ['Elementary', 'Middle', 'High'];
+  // const classLevels: ClassLevelsType[] = ['Elementary', 'Middle', 'High'];
 
   const toggleClassDetails = (level: ClassLevelsType) => {
     setExpandedClass(expandedClass === level ? null : level);
@@ -115,7 +115,7 @@ export const ClubCard = ({ club }: { club: NewClubType }) => {
           {club.clubImage && <img src={typeof club.clubImage === 'string' ? club.clubImage : ''} alt={club.clubName} className="w-full h-full object-cover" />}
         </div>
 
-        <div className="p-6 flex flex-col flex-grow">
+        <div className="p-6 flex flex-col grow">
           {/* Club Name - дээд талд */}
           <h4 className="text-xl font-bold text-[#0A427A] mb-2 line-clamp-1">{club.clubName}</h4>
 
