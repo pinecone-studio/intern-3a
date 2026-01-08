@@ -1,35 +1,30 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { Award, BookOpen, ClipboardCheck, GraduationCap, LayoutDashboard } from 'lucide-react';
+import { BookOpen, ClipboardCheck, GraduationCap, LayoutDashboard } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const menuItems = [
   {
-    label: 'Dashboard',
+    label: 'Удирдлагын самбар',
     icon: LayoutDashboard,
     href: '/admin/dashboard',
   },
   {
-    label: 'Universities',
+    label: 'Их сургуулиуд',
     icon: GraduationCap,
     href: '/admin/universities',
   },
   {
-    label: 'Majors',
+    label: 'Мэргэжлүүд',
     icon: BookOpen,
     href: '/admin/majors',
   },
   {
-    label: 'Admission Requirements',
+    label: 'Элсэлтийн шаардлага',
     icon: ClipboardCheck,
     href: '/admin/requirements',
-  },
-  {
-    label: 'Scholarship Rules',
-    icon: Award,
-    href: '/admin/scholarships',
   },
 ];
 
@@ -38,13 +33,17 @@ export function AdminSidebar() {
 
   return (
     <aside className="w-64 border-r border-border bg-card">
+      {/* HEADER */}
       <div className="flex h-16 items-center border-b border-border px-6">
-        <h1 className="text-lg font-semibold text-foreground">University Admin</h1>
+        <h1 className="text-lg font-semibold">Их сургуулийн удирдлага</h1>
       </div>
+
+      {/* MENU */}
       <nav className="space-y-1 p-4">
         {menuItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href;
+
           return (
             <Link
               key={item.href}

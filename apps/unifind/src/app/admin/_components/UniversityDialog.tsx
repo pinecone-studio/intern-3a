@@ -104,7 +104,7 @@ export function UniversityDialog({ open, onOpenChange, university, onSaved }: Un
           </div>
 
           <div className="grid gap-2">
-            <Label>Website</Label>
+            <Label>Website/optional</Label>
             <Input value={form.website} onChange={(e) => setForm({ ...form, website: e.target.value })} />
           </div>
 

@@ -42,7 +42,7 @@ export default function MajorsPage() {
 
   const handleAdd = () => {
     if (!selectedUniversity) {
-      alert('Please select a university first');
+      alert('Эхлээд их сургууль сонгоно уу');
       return;
     }
     setSelectedMajor(null);
@@ -55,7 +55,7 @@ export default function MajorsPage() {
   };
 
   async function handleDelete(id: number) {
-    if (!confirm('Delete this major?')) return;
+    if (!confirm('Энэ мэргэжлийг устгах уу?')) return;
 
     await fetch(`/api/majors/${id}`, { method: 'DELETE' });
     fetchMajors(selectedUniversity);
@@ -66,24 +66,24 @@ export default function MajorsPage() {
       {/* HEADER */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold">Majors</h1>
-          <p className="text-muted-foreground mt-1">Manage academic majors and degree programs</p>
+          <h1 className="text-3xl font-bold">Мэргэжлүүд</h1>
+          <p className="text-muted-foreground mt-1">Их сургуулиудын мэргэжил, боловсролын зэрэг удирдах</p>
         </div>
         <Button onClick={handleAdd}>
           <Plus className="mr-2 h-4 w-4" />
-          Add Major
+          Мэргэжил нэмэх
         </Button>
       </div>
 
       {/* SELECT UNIVERSITY */}
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle>Select University</CardTitle>
+          <CardTitle>Их сургууль сонгох</CardTitle>
         </CardHeader>
         <CardContent>
           <Select value={selectedUniversity} onValueChange={setSelectedUniversity}>
             <SelectTrigger className="max-w-md">
-              <SelectValue placeholder="Select a university" />
+              <SelectValue placeholder="Их сургууль сонгоно уу" />
             </SelectTrigger>
             <SelectContent>
               {universities.map((u) => (
@@ -99,15 +99,16 @@ export default function MajorsPage() {
       {/* MAJORS TABLE */}
       <Card>
         <CardHeader>
-          <CardTitle>Majors</CardTitle>
+          <CardTitle>Мэргэжлийн жагсаалт</CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Major Name</TableHead>
-                <TableHead>University</TableHead>
-                <TableHead>Degree</TableHead>
+                <TableHead>Мэргэжлийн нэр</TableHead>
+                <TableHead>Их сургууль</TableHead>
+                <TableHead>Зэрэг</TableHead>
+                <TableHead className="text-right">Үйлдэл</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -136,8 +137,8 @@ export default function MajorsPage() {
 
               {!majors.length && (
                 <TableRow>
-                  <TableCell colSpan={3} className="text-center text-muted-foreground">
-                    No majors found
+                  <TableCell colSpan={4} className="text-center text-muted-foreground py-6">
+                    Одоогоор бүртгэлтэй мэргэжил алга байна
                   </TableCell>
                 </TableRow>
               )}
@@ -146,6 +147,7 @@ export default function MajorsPage() {
         </CardContent>
       </Card>
 
+      {/* DIALOG */}
       <MajorDialog open={dialogOpen} onOpenChange={setDialogOpen} major={selectedMajor} universityId={selectedUniversity} onSaved={() => fetchMajors(selectedUniversity)} />
     </div>
   );

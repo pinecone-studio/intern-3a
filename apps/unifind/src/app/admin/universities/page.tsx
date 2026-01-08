@@ -19,7 +19,7 @@ export default function UniversitiesPage() {
   }
 
   async function handleDelete(id: number) {
-    if (!confirm('Delete this university?')) return;
+    if (!confirm('Энэ их сургуулийг устгах уу?')) return;
 
     await fetch(`/api/universities/${id}`, {
       method: 'DELETE',
@@ -44,30 +44,32 @@ export default function UniversitiesPage() {
 
   return (
     <div className="p-8">
+      {/* HEADER */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Universities</h1>
-          <p className="text-muted-foreground mt-1">Manage university information and registration periods</p>
+          <h1 className="text-3xl font-bold">Их сургуулиуд</h1>
+          <p className="text-muted-foreground mt-1">Их сургуулийн мэдээлэл болон элсэлтийн хугацааг удирдах</p>
         </div>
         <Button onClick={handleAdd}>
           <Plus className="mr-2 h-4 w-4" />
-          Add University
+          Их сургууль нэмэх
         </Button>
       </div>
 
+      {/* TABLE */}
       <Card>
         <CardHeader>
-          <CardTitle>All Universities</CardTitle>
+          <CardTitle>Бүртгэлтэй их сургуулиуд</CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>University Name</TableHead>
-                <TableHead>City</TableHead>
-                <TableHead>Registration Period</TableHead>
-                <TableHead>Number of Majors</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead>Их сургуулийн нэр</TableHead>
+                <TableHead>Хот</TableHead>
+                <TableHead>Элсэлтийн хугацаа</TableHead>
+                <TableHead>Мэргэжлийн тоо</TableHead>
+                <TableHead className="text-right">Үйлдэл</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -78,7 +80,7 @@ export default function UniversitiesPage() {
                   <TableCell>
                     {u.burtgelehleh_start_date} – {u.burtgelduusah_end_date}
                   </TableCell>
-                  <TableCell>{u._count?.majors}</TableCell>
+                  <TableCell>{u._count?.majors ?? 0}</TableCell>
 
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
@@ -92,11 +94,20 @@ export default function UniversitiesPage() {
                   </TableCell>
                 </TableRow>
               ))}
+
+              {universities.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center text-muted-foreground py-6">
+                    Одоогоор бүртгэлтэй их сургууль алга байна
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </CardContent>
       </Card>
 
+      {/* DIALOG */}
       <UniversityDialog open={dialogOpen} onOpenChange={setDialogOpen} university={selectedUniversity} onSaved={fetchUniversities} />
     </div>
   );

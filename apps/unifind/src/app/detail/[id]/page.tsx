@@ -56,11 +56,9 @@ export default function UniversityDetailPage2({ params }: Props) {
       });
   }, []);
 
-  // ✅ Resolve params FIRST
   const resolvedParams = React.use(params);
   const uniId = Number(resolvedParams.id);
 
-  // ✅ Now it's safe to use uniId
   useEffect(() => {
     if (!uniId) return;
 
@@ -95,6 +93,7 @@ export default function UniversityDetailPage2({ params }: Props) {
   };
 
   const { data: majors, error: majorsError, isLoading: majorsLoading } = useSWR<Major[]>(`/api/majors?university_id=${uniId}`, fetcher);
+
   const { isSignedIn, user } = useUser();
   console.log({ majors });
 
@@ -107,7 +106,6 @@ export default function UniversityDetailPage2({ params }: Props) {
     }
 
     try {
-      // 1️⃣ Clerk user → MRUser id авах
       const mrRes = await fetch('/api/mruser', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
