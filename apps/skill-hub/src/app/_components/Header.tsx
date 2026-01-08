@@ -9,7 +9,6 @@ import React, { useState } from 'react';
 import { CategoryDropdown } from './CategoryDropdown';
 import { ClubRegisterBtnDialogContent } from './ClubRegisterBtnDialogContent';
 import { MyUserButton } from './MyUserButton';
-import { SearchBar } from './SearchBar';
 
 export const Header = () => {
   const [open, setOpen] = useState(false);

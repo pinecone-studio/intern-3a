@@ -1,6 +1,6 @@
 'use client';
 
-import { NewClubType } from '@/lib/utils/types';
+import { ClassLevelsType, NewClubType } from '@/lib/utils/types';
 import { LatLngBounds } from 'leaflet';
 import React, { useState } from 'react';
 import MapSideBar from './MapSideBar';
@@ -11,8 +11,18 @@ export const BookingStyleMap = ({ allClubs, userLocation, isLoading }: { allClub
   const [bounds, setBounds] = useState<LatLngBounds | null>(null);
   const [hoveredClubId, setHoveredClubId] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [selectedLevel, setSelectedLevel] = useState<ClassLevelsType | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  const visibleClubs = bounds ? allClubs.filter((c) => bounds.contains([c.clubLat, c.clubLong])) : allClubs;
+  let visibleClubs = bounds ? allClubs.filter((c) => bounds.contains([c.clubLat, c.clubLong])) : allClubs;
+
+  if (selectedLevel) {
+    visibleClubs = visibleClubs.filter((club) => club.selectedClassLevelNames?.some((lvl) => selectedLevel.includes(lvl)));
+  }
+
+  if (selectedCategory) {
+    visibleClubs = visibleClubs.filter((club) => club.clubCategoryName === selectedCategory);
+  }
 
   return (
     <div className="relative w-full h-screen overflow-hidden">
@@ -22,6 +32,10 @@ export const BookingStyleMap = ({ allClubs, userLocation, isLoading }: { allClub
         onToggle={() => setSidebarOpen((v) => !v)}
         hoveredClubId={hoveredClubId}
         setHoveredClubId={setHoveredClubId}
+        selectedLevel={selectedLevel}
+        setSelectedLevel={setSelectedLevel}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
         isLoadingClubs={isLoading}
       />
       <div className={`absolute top-0 bottom-0 right-0 transiton-all duration-300 ${sidebarOpen ? 'left-85' : 'left-0'}`}>
