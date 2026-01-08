@@ -54,7 +54,7 @@ export default function ClubOngoingProjects({ projects, onViewProject }: Props) 
       {/* HEADER */}
       <h3 className="text-base md:text-lg font-black flex items-center gap-2 text-slate-800 uppercase tracking-tight px-1">
         <FolderKanban className="w-5 h-5 text-orange-600" />
-        Хэрэгжүүлж буй төслүүд
+        Хэрэгжүүлж буй хөтөлбөрүүд
       </h3>
 
       {/* LIST */}
