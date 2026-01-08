@@ -89,3 +89,5 @@ out
 
 /generated/prisma
 .vercel
+
+.env.production.local

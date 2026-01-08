@@ -30,7 +30,7 @@ type Scholarship = {
 export default function UniversityDetailPage2({ params }: Props) {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState<NumDates | null>(null);
-  const [activeTab, setActiveTab] = useState<'overview' | 'scholarships' | 'majors'>('majors');
+  const [activeTab, setActiveTab] = useState<'overview' | 'scholarships' | 'majors'>('overview');
   const [data2, setData2] = useState<Scholarship[]>([]);
   const [, setLoading] = useState(true);
   const [, setError] = useState('');
@@ -418,10 +418,10 @@ export default function UniversityDetailPage2({ params }: Props) {
               <section>
                 <h2 className="text-2xl font-bold mb-6">Мэргэжлүүд & Элсэлтийн оноо</h2>
 
-                <div className="space-y-6">
+                <div className="space-y-2 flex flex-col">
                   {majors.map((major) => (
                     <Link key={major.id} href={`/mergejil/${major.id}`}>
-                      <Card className="p-6 hover:shadow-lg transition cursor-pointer">
+                      <Card className="p-6 hover:shadow-lg transition cursor-pointer dark:bg-gray-900">
                         <div className="flex justify-between">
                           <div>
                             <h3 className="font-semibold">{major.name}</h3>
