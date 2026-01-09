@@ -409,6 +409,42 @@ export default function UniversityDetailPage2({ params }: Props) {
                     </div>
                   </div>
                 </section>
+                <section>
+                  <h2 className="text-2xl font-bold mb-6">Мэргэжлүүд & Элсэлтийн оноо</h2>
+
+                  <div className="space-y-2 flex flex-col">
+                    {majors.map((major) => (
+                      <Link key={major.id} href={`/mergejil/${major.id}`}>
+                        <Card className="p-6 hover:shadow-lg transition cursor-pointer dark:bg-gray-900">
+                          <div className="flex justify-between">
+                            <div>
+                              <h3 className="font-semibold">{major.name}</h3>
+                              <div className="flex flex-wrap gap-2 mt-2">
+                                {major.major_requirements && major.major_requirements.length > 0 ? (
+                                  major.major_requirements.map((req) => (
+                                    <Badge key={req.id}>
+                                      {req.subjects.name} – {req.min_score}
+                                    </Badge>
+                                  ))
+                                ) : (
+                                  <>
+                                    <Badge>Математик – 500</Badge>
+                                    <Badge>Англи хэл – 550</Badge>
+                                  </>
+                                )}
+                              </div>
+                            </div>
+
+                            <div className="text-right">
+                              <div className="text-xs text-gray-500">Хамгийн бага оноо</div>
+                              <div className="text-xl font-bold">{major.major_requirements.length > 0 ? Math.min(...major.major_requirements.map((r) => r.min_score)) : 500}</div>
+                            </div>
+                          </div>
+                        </Card>
+                      </Link>
+                    ))}
+                  </div>
+                </section>
               </section>
             )}
 
@@ -424,17 +460,24 @@ export default function UniversityDetailPage2({ params }: Props) {
                           <div>
                             <h3 className="font-semibold">{major.name}</h3>
                             <div className="flex flex-wrap gap-2 mt-2">
-                              {major.major_requirements.map((req) => (
-                                <Badge key={req.id}>
-                                  {req.subjects.name} – {req.min_score}
-                                </Badge>
-                              ))}
+                              {major.major_requirements && major.major_requirements.length > 0 ? (
+                                major.major_requirements.map((req) => (
+                                  <Badge key={req.id}>
+                                    {req.subjects.name} – {req.min_score}
+                                  </Badge>
+                                ))
+                              ) : (
+                                <>
+                                  <Badge>Математик – 500</Badge>
+                                  <Badge>Англи хэл – 550</Badge>
+                                </>
+                              )}
                             </div>
                           </div>
 
                           <div className="text-right">
                             <div className="text-xs text-gray-500">Хамгийн бага оноо</div>
-                            <div className="text-xl font-bold">{Math.min(...major.major_requirements.map((r) => r.min_score))}</div>
+                            <div className="text-xl font-bold">{major.major_requirements.length > 0 ? Math.min(...major.major_requirements.map((r) => r.min_score)) : 500}</div>
                           </div>
                         </div>
                       </Card>
