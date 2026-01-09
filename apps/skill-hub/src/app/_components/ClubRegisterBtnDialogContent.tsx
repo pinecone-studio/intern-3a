@@ -433,7 +433,7 @@ export const ClubRegisterBtnDialogContent = ({ setOpen }: { setOpen: Dispatch<Re
             };
 
             return (
-              <div className="flex flex-col gap-3">
+              <div key={level} className="flex flex-col gap-3">
                 <Label>{level} анги</Label>
                 <div className="flex gap-10">
                   <div className="flex gap-4 flex-col">

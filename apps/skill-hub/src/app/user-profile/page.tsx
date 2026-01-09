@@ -2,6 +2,7 @@
 
 import { useFavoriteClubs } from '@/app/hook/use-favorite-clubs';
 import { useUser } from '@clerk/nextjs';
+import { Button } from '@intern-3a/shadcn';
 import { CircleUser, Heart, Mail, MapPin, MessageSquare, Phone, Save, User } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -9,7 +10,7 @@ import React, { useState } from 'react';
 
 const ProfilePage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('Хувийн мэдээлэл');
-  const { isLoaded, isSignedIn } = useUser();
+  const { isLoaded, isSignedIn, user } = useUser();
   const { favoriteClubs, loading } = useFavoriteClubs();
 
   console.log('Profile Page - Clerk Loaded:', isLoaded);
@@ -17,10 +18,9 @@ const ProfilePage: React.FC = () => {
   console.log('Profile Page - Loading:', loading);
   console.log('Profile Page - Favorite Clubs:', favoriteClubs);
   console.log('Profile Page - Favorite Clubs Length:', favoriteClubs.length);
-
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
-      <div className="relative h-48 bg-[#0A427A] overflow-hidden">
+      <div className="relative h-28 bg-[#0A427A] overflow-hidden">
         <div className="absolute top-[-20%] left-[-5%] w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
         <div className="absolute top-[20%] right-[10%] w-32 h-32 bg-white/5 rounded-full blur-2xl"></div>
       </div>
@@ -29,7 +29,7 @@ const ProfilePage: React.FC = () => {
         <div className="flex flex-col md:flex-row items-center gap-6">
           <div className="relative">
             <div className="w-32 h-32 rounded-full border-4 border-white bg-gray-200 overflow-hidden shadow-lg">
-              <img src="https://via.placeholder.com/128" alt="Profile" className="w-full h-full object-cover" />
+              <img src={user?.imageUrl} alt="Profile" className="w-full h-full object-cover" />
             </div>
             <button className="absolute bottom-1 right-1 bg-orange-600 p-2 rounded-full text-white shadow-md hover:bg-orange-700 transition">
               <User size={16} />
@@ -38,7 +38,7 @@ const ProfilePage: React.FC = () => {
 
           <div className="flex-1 text-center md:text-left text-white md:text-gray-800">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
-              <h1 className="text-xl font-bold md:text-white">Тавтай морилно уу : 88252229</h1>
+              <h1 className="text-xl font-bold md:text-white">Тавтай морилно уу : {user?.primaryEmailAddress?.emailAddress}</h1>
             </div>
 
             <div className="flex flex-wrap justify-center md:justify-start gap-4">
@@ -68,7 +68,7 @@ const ProfilePage: React.FC = () => {
                 </div>
               </div>
 
-              <div
+              {/* <div
                 onClick={() => setActiveTab('Миний сэтгэгдэлүүд')}
                 className={`cursor-pointer p-3 rounded-xl shadow-sm border flex items-center gap-4 min-w-45 transition-all ${activeTab === 'Миний сэтгэгдэлүүд' ? 'bg-orange-50 border-orange-600' : 'bg-white border-gray-100'}`}
               >
@@ -79,7 +79,7 @@ const ProfilePage: React.FC = () => {
                   <p className="text-xs text-gray-500">Миний сэтгэгдэлүүд</p>
                   <p className="font-bold text-orange-600">0</p>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
@@ -101,7 +101,7 @@ const ProfilePage: React.FC = () => {
                 </div>
                 <div className="mt-4">
                   <button className="bg-[#0A427A] text-white px-8 py-3 rounded-xl flex items-center gap-3 hover:bg-[#083562] transition shadow-lg shadow-blue-900/20">
-                    <span>Хадгалах</span>
+                    <Button disabled>Хадгалах</Button>
                     <Save size={18} className="text-orange-600" />
                   </button>
                 </div>
