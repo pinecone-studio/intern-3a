@@ -1,7 +1,15 @@
 'use client';
 
-import { AdminMyClubsComponent } from '@/app/_components/adminPage';
+import dynamicImport from 'next/dynamic';
 import React from 'react';
+
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
+const AdminMyClubsComponent = dynamicImport(() => import('@/app/_components/adminPage').then((mod) => ({ default: mod.AdminMyClubsComponent })), {
+  ssr: false,
+  loading: () => <div>Loading...</div>,
+});
 
 const Page = () => {
   return (

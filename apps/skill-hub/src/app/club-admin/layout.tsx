@@ -1,5 +1,11 @@
+'use client';
+
 import { SidebarProvider } from '@intern-3a/shadcn';
-import { SideBarComponent } from '../_components/adminPage';
+import dynamicImport from 'next/dynamic';
+
+const SideBarComponent = dynamicImport(() => import('../_components/adminPage').then((mod) => ({ default: mod.SideBarComponent })), {
+  ssr: false,
+});
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
