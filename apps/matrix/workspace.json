@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "projects": {
+    "matrix": {
+      "root": "apps/matrix",
+      "sourceRoot": "apps/matrix/src",
+      "projectType": "application",
+      "targets": {
+        "dev": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              {
+                "command": "yarn --cwd apps/matrix start"
+              }
+            ],
+            "cwd": "apps/matrix",
+            "parallel": false
+          }
+        },
+        "web": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              {
+                "command": "yarn --cwd apps/matrix web"
+              }
+            ],
+            "cwd": "apps/matrix",
+            "parallel": false
+          }
+        }
+      }
+    }
+  }
+}
