@@ -29,6 +29,12 @@
     },
     {
       "path": "./apps/sample"
+    },
+    {
+      "path": "./apps/management4everyone-e2e"
+    },
+    {
+      "path": "./apps/management4everyone"
     }
   ]
 }

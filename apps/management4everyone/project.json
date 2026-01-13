@@ -1,0 +1,9 @@
+{
+  "name": "management4everyone",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/management4everyone",
+  "projectType": "application",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project management4everyone --web",
+  "targets": {}
+}
