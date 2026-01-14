@@ -35,6 +35,12 @@
     },
     {
       "path": "./apps/management4everyone"
+    },
+    {
+      "path": "./apps/referu-hr-fe-e2e"
+    },
+    {
+      "path": "./apps/referu-hr-fe"
     }
   ]
 }
