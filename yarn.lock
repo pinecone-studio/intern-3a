@@ -6637,12 +6637,12 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-16.18.11.tgz#cbb15c12ca7c16c85a72b6bdc4d4b01151bb3cae"
   integrity sha512-3oJbGBUWuS6ahSnEq1eN2XrCyf4YsWI8OyCvo7c64zQJNplk3mO84t53o8lfTk+2ji59g5ycfc6qQ3fdHliHuA==
 
-"@types/node@20.11.30":
-  version "20.11.30"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.11.30.tgz#9c33467fc23167a347e73834f788f4b9f399d66f"
-  integrity sha512-dHM6ZxwlmuZaRmUPfv1p+KrdD1Dci04FbdEm/9wEMouFqxYoFl5aMkt0VMAUtYRQDyYvD41WJLukhq/ha3YuTw==
+"@types/node@20.19.9":
+  version "20.19.9"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.19.9.tgz#ca9a58193fec361cc6e859d88b52261853f1f0d3"
+  integrity sha512-cuVNgarYWZqxRJDQHEB58GEONhOK79QVR/qYx4S7kcUObQvUwvFnYxJuuHUKm2aieN9X3yZB4LZsuYNU1Qphsw==
   dependencies:
-    undici-types "~5.26.4"
+    undici-types "~6.21.0"
 
 "@types/node@^22.8.7":
   version "22.19.3"
@@ -13578,7 +13578,7 @@ jest-environment-node@30.0.2:
     jest-util "30.0.2"
     jest-validate "30.0.2"
 
-jest-environment-node@30.2.0:
+jest-environment-node@30.2.0, jest-environment-node@^30.0.2:
   version "30.2.0"
   resolved "https://registry.yarnpkg.com/jest-environment-node/-/jest-environment-node-30.2.0.tgz#3def7980ebd2fd86e74efd4d2e681f55ab38da0f"
   integrity sha512-ElU8v92QJ9UrYsKrxDIKCxu6PfNj4Hdcktcn0JX12zqNdqWHB0N+hwOnnBBXvjLd2vApZtuLUGs1QSY+MsXoNA==
@@ -19440,11 +19440,6 @@ unbzip2-stream@^1.4.3:
   dependencies:
     buffer "^5.2.1"
     through "^2.3.8"
-
-undici-types@~5.26.4:
-  version "5.26.5"
-  resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-5.26.5.tgz#bcd539893d00b56e964fd2657a4866b221a65617"
-  integrity sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==
 
 undici-types@~6.21.0:
   version "6.21.0"

@@ -46,7 +46,8 @@
       "plugin": "@nx/jest/plugin",
       "options": {
         "targetName": "test"
-      }
+      },
+      "exclude": ["apps/referu-be-e2e/**/*"]
     },
     {
       "plugin": "@nx/next/plugin",
