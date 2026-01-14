@@ -41,10 +41,18 @@
     },
     {
       "path": "./apps/referu-be"
+    },
+    {
       "path": "./apps/referu-hr-fe-e2e"
     },
     {
       "path": "./apps/referu-hr-fe"
+    },
+    {
+      "path": "./apps/matrix-backend2-e2e"
+    },
+    {
+      "path": "./apps/matrix-be-2"
     }
   ]
 }
