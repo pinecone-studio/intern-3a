@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Announcement {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @db.Timestamp(6)
+}
+
+model Attendance {
+  id        Int       @id @default(autoincrement())
+  userId    String
+  date      DateTime  @db.Timestamp(6)
+  clockIn   DateTime  @db.Timestamp(6)
+  clockOut  DateTime? @db.Timestamp(6)
+  createdAt DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt DateTime  @default(now()) @db.Timestamp(6)
+  User      User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model Department {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @db.Timestamp(6)
+  User      User[]
+}
+
+model Leave {
+  id        Int         @id @default(autoincrement())
+  userId    String
+  startDate DateTime    @db.Timestamp(6)
+  endDate   DateTime    @db.Timestamp(6)
+  reason    String
+  status    LeaveStatus @default(PENDING)
+  createdAt DateTime    @default(now()) @db.Timestamp(6)
+  updatedAt DateTime    @default(now()) @db.Timestamp(6)
+  User      User        @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model Payroll {
+  id          Int           @id @default(autoincrement())
+  userId      String
+  salary      Float
+  periodStart DateTime      @db.Timestamp(6)
+  periodEnd   DateTime      @db.Timestamp(6)
+  status      PayrollStatus @default(PENDING)
+  createdAt   DateTime      @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime      @default(now()) @db.Timestamp(6)
+  User        User          @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model User {
+  id           String       @id
+  username     String       @unique
+  firstName    String
+  lastName     String
+  email        String       @unique
+  birthday     DateTime     @db.Timestamp(6)
+  experience   Int
+  salary       Float
+  role         Role         @default(WORKER)
+  bankAccount  String?
+  bankName     String?
+  departmentId Int?
+  createdAt    DateTime     @default(now()) @db.Timestamp(6)
+  updatedAt    DateTime     @default(now()) @db.Timestamp(6)
+  Attendance   Attendance[]
+  Leave        Leave[]
+  Payroll      Payroll[]
+  Department   Department?  @relation(fields: [departmentId], references: [id], onUpdate: NoAction)
+}
+
+enum LeaveStatus {
+  PENDING
+  APPROVED
+  DENIED
+}
+
+enum PayrollStatus {
+  PENDING
+  PAID
+}
+
+enum Role {
+  ADMIN
+  WORKER
+}

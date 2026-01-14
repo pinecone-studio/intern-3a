@@ -1233,7 +1233,7 @@
     snakecase-keys "8.0.1"
     tslib "2.8.1"
 
-"@clerk/backend@^2.29.0":
+"@clerk/backend@^2.29.0", "@clerk/backend@^2.29.2":
   version "2.29.2"
   resolved "https://registry.yarnpkg.com/@clerk/backend/-/backend-2.29.2.tgz#7715ad900d69674ccf92e97e3e6438d154b5501f"
   integrity sha512-HflWfWG0jfnOB++3bu1N0lzAgOuapJRmkfX1jdtF3M+Wn4QVHczLMt2To9VIGiTt62+kRUWLV4SONzVvCoOcsA==
@@ -1243,7 +1243,7 @@
     standardwebhooks "^1.0.0"
     tslib "2.8.1"
 
-"@clerk/clerk-react@^5.59.2":
+"@clerk/clerk-react@^5.59.2", "@clerk/clerk-react@^5.59.3":
   version "5.59.3"
   resolved "https://registry.yarnpkg.com/@clerk/clerk-react/-/clerk-react-5.59.3.tgz#4c71a1b8955173221c932832addd5996c75b92af"
   integrity sha512-r1gmAYxhXs+QkXjDwj5Eqvm0Io8PtJ4FKkA45khiAzIQXcaQLFq/wFy7d1K8OSIYAIdFbuO0bnIOU/FdgWOc+A==
@@ -1270,6 +1270,18 @@
     "@clerk/clerk-react" "^5.59.2"
     "@clerk/shared" "^3.41.1"
     "@clerk/types" "^4.101.9"
+    server-only "0.0.1"
+    tslib "2.8.1"
+
+"@clerk/nextjs@^6.36.7":
+  version "6.36.7"
+  resolved "https://registry.yarnpkg.com/@clerk/nextjs/-/nextjs-6.36.7.tgz#3de74589f462e21cb0a2c2fb9198c447f5d0076c"
+  integrity sha512-sH+bZsdKAdxAL6/E6w3QZarDz6Y2F1pavp1eAZRVitckiZFZJMzBDdNC6K1vOyQdzke1Y3jUwLcHfIF+oswBOA==
+  dependencies:
+    "@clerk/backend" "^2.29.2"
+    "@clerk/clerk-react" "^5.59.3"
+    "@clerk/shared" "^3.42.0"
+    "@clerk/types" "^4.101.10"
     server-only "0.0.1"
     tslib "2.8.1"
 
@@ -8212,7 +8224,7 @@ axe-core@^4.10.0:
   resolved "https://registry.yarnpkg.com/axe-core/-/axe-core-4.11.1.tgz#052ff9b2cbf543f5595028b583e4763b40c78ea7"
   integrity sha512-BASOg+YwO2C+346x3LZOeoovTIoTrRqEsqMa6fmfAV0P+U9mFr9NsyOEpiYvFjbc64NMrSswhV50WdXzdb/Z5A==
 
-axios@1.13.2, axios@^1.12.0:
+axios@1.13.2, axios@^1.12.0, axios@^1.13.2:
   version "1.13.2"
   resolved "https://registry.yarnpkg.com/axios/-/axios-1.13.2.tgz#9ada120b7b5ab24509553ec3e40123521117f687"
   integrity sha512-VPk9ebNqPcy5lRGuSlKx752IlDatOjT9paPlm8A7yOuW2Fbvp4X3JznJtT4f0GzGLLiWE9W8onz51SqLYwzGaA==
