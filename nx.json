@@ -47,7 +47,7 @@
       "options": {
         "targetName": "test"
       },
-      "exclude": ["apps/referu-be-e2e/**/*"]
+      "exclude": ["apps/referu-be-e2e/**/*", "apps/matrix-be-e2e/**/*"]
     },
     {
       "plugin": "@nx/next/plugin",
