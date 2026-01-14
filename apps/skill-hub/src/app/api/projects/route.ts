@@ -10,12 +10,10 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { clubId, adminId, title, description, classLevel, difficultyLevel, childrenCount, startDate, finishDate } = body;
 
-    // Validate required fields
     if (!clubId || !adminId || !title || !description || !classLevel || !difficultyLevel || childrenCount === undefined || childrenCount === null || childrenCount === '') {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    // Create new project
     const newProject = await Project.create({
       clubId,
       adminId,
@@ -45,7 +43,6 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// GET all projects for a specific club
 export async function GET(request: NextRequest) {
   try {
     await connectDB();

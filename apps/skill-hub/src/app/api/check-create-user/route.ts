@@ -50,7 +50,6 @@ export const POST = async () => {
     return NextResponse.json({ message: 'Failed to check or create user!' }, { status: 500 });
   }
 
-  // Always update Clerk publicMetadata with MongoDB user ID to ensure it's set
   try {
     const clerkClient = createClerkClient({
       secretKey: process.env.CLERK_SECRET_KEY,

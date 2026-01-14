@@ -90,7 +90,6 @@ export default function MapContent({ clubs, userLocation, nearbyClubs, selectedR
         const btn = document.getElementById(`btn-${club._id}`);
         if (btn) {
           btn.onclick = () => {
-            console.log('Clicked club:', club);
             router.push(`/club/${club._id}`);
           };
         }
