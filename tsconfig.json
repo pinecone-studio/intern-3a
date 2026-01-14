@@ -41,6 +41,10 @@
     },
     {
       "path": "./apps/referu-be"
+      "path": "./apps/referu-hr-fe-e2e"
+    },
+    {
+      "path": "./apps/referu-hr-fe"
     }
   ]
 }
