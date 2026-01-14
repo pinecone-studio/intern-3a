@@ -35,6 +35,12 @@
     },
     {
       "path": "./apps/management4everyone"
+    },
+    {
+      "path": "./apps/referu-be-e2e"
+    },
+    {
+      "path": "./apps/referu-be"
     }
   ]
 }
