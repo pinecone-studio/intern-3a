@@ -1,10 +1,14 @@
+'use client';
+
 import { mockJobs } from '@/lib/get-data';
 import { Button, cn } from '@intern-3a/shadcn';
 import { Bell, Home, Plus } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
 export const Footer = () => {
   const totalReferrals = mockJobs.reduce((sum, job) => sum + (job.referralCount || 0), 0);
+  const router = useRouter();
   return (
     <div>
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg">
@@ -19,7 +23,7 @@ export const Footer = () => {
             <span className="text-xs font-medium">Нэмэх</span>
           </Button>
 
-          <Button variant="ghost" className={cn('flex flex-col items-center gap-1 h-auto py-2 px-6 relative')}>
+          <Button variant="ghost" className={cn('flex flex-col items-center gap-1 h-auto py-2 px-6 relative')} onClick={() => router.push('/hr-myPage')}>
             <div className="relative">
               <Bell className="w-6 h-6" />
               {totalReferrals > 0 && (
