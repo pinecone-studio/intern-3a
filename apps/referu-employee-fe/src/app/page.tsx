@@ -8,7 +8,8 @@ const HomePage = () => {
   return (
     <div className="w-full bg-red-100">
       <Badge></Badge>
-      <Button onClick={() => router.push('/mySection')}>Миний</Button>
+      <Button onClick={() => router.push('/my-section')}>Миний</Button>
+      {/* <Button onClick={() => router.push('/my-section')}>Миний</Button> */}
     </div>
   );
 };

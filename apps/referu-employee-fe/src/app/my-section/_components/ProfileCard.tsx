@@ -2,7 +2,7 @@ import { Card, CardContent } from '@intern-3a/shadcn';
 import { User } from 'lucide-react';
 import React from 'react';
 
-const ProfileCard = () => {
+export const ProfileCard = () => {
   return (
     <Card className="border">
       <CardContent className="p-5">
@@ -20,5 +20,3 @@ const ProfileCard = () => {
     </Card>
   );
 };
-
-export default ProfileCard;
