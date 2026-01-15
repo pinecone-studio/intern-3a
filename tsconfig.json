@@ -53,6 +53,12 @@
     },
     {
       "path": "./apps/matrix-be-2"
+    },
+    {
+      "path": "./apps/referu-employee-fe-e2e"
+    },
+    {
+      "path": "./apps/referu-employee-fe"
     }
   ]
 }
