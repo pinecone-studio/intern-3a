@@ -4,8 +4,6 @@ import { useUser } from '@clerk/nextjs';
 import { SidebarProvider, SidebarTrigger } from '@intern-3a/shadcn';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import HomeSideBar from '../_components/home/HomeSideBar';
-import { Header } from '../_components/main/Header';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const { user, isLoaded } = useUser();
