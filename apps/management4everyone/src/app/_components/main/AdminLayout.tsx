@@ -1,4 +1,5 @@
 import { Building2, CalendarCheck, Home, LogOut, Megaphone, Users, Wallet } from 'lucide-react';
+import { Header } from './Header';
 
 export function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -29,6 +30,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
             <div className="w-8 h-8 rounded-full bg-gray-300" />
           </div>
         </header>
+        <Header />
 
         {/* Content */}
         <main className="flex-1 p-6 overflow-auto">{children}</main>
