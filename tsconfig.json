@@ -65,6 +65,9 @@
     },
     {
       "path": "./apps/referu-employee-fe"
+    },
+    {
+      "path": "./apps/referu-expo-employee-fe"
     }
   ]
 }
