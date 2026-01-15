@@ -45,10 +45,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <Header />
       <SidebarProvider className="bg-white" open={open} onOpenChange={setOpen}>
-        <HomeSideBar open={open} />
-
         <main>
           <div>
             {!open && (
