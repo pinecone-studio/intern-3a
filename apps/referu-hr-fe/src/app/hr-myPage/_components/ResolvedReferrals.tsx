@@ -42,14 +42,14 @@ const ResolvedReferrals = () => {
               <Card className="py-4 space-y-3 cursor-pointer hover:shadow-md transition-shadow">
                 {/* <CardTitle>{jobs.title}</CardTitle> */}
                 <CardContent>
-                  <div className="flex flex-col gap-2">
+                  <div>
                     <div className="flex justify-between items-center">
                       <div className="font-semibold text-md">{jobs.title}</div>
                       {/* <Badge className={`${jobs.status === 'Accepted' ? 'bg-green-500' : 'bg-red-500'}`}>{jobs.status} </Badge> */}
                       <Badge className="bg-[#005295]">{jobs.status}</Badge>
                     </div>
 
-                    <div className="text-[#005295] font-medium text-sm">{jobs.salaryRange}</div>
+                    {/* <div className="text-[#005295] font-medium text-sm">{jobs.salaryRange}</div> */}
 
                     <div className="text-sm text-muted-foreground mt-3">{jobs.department}</div>
                   </div>

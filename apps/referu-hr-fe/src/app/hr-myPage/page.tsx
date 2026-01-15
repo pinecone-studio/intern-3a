@@ -17,8 +17,8 @@ const Page = () => {
         </Button>
         <p className="text-md font-semibold">Миний</p>
       </div>
-      <Tabs defaultValue="account">
-        <TabsList className="w-full mb-5">
+      <Tabs defaultValue="account" className="gap-0">
+        <TabsList className="w-full mb-7">
           <TabsTrigger value="account">Ирсэн саналууд</TabsTrigger>
           <TabsTrigger value="password">Шийдвэрлэгдсэн</TabsTrigger>
         </TabsList>
