@@ -1,0 +1,25 @@
+{
+  "name": "@intern-3a/referu-expo-employee-fe",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "eas-build-post-install": "cd ../../ && node tools/scripts/eas-build-post-install.mjs . apps/referu-expo-employee-fe"
+  },
+  "dependencies": {
+    "@expo/metro-config": "*",
+    "@testing-library/react-native": "*",
+    "babel-preset-expo": "54.0.9",
+    "expo": "~54.0.21",
+    "expo-splash-screen": "*",
+    "expo-status-bar": "*",
+    "expo-system-ui": "*",
+    "jest-expo": "*",
+    "metro-config": "*",
+    "metro-resolver": "*",
+    "react": "19.1.0",
+    "react-native": "0.81.5",
+    "react-native-svg": "15.12.1",
+    "react-native-svg-transformer": "*",
+    "react-native-web": "*"
+  }
+}
