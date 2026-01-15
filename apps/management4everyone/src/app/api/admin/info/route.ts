@@ -1,12 +1,14 @@
 import { NextResponse } from 'next/server';
 import prisma from '../../../lib/prisma';
 
+//Бүх хэрэглэгчийн мэдээллийг авах API
 export async function GET() {
   try {
-    const allusers = prisma.user.findMany();
+    const allusers = await prisma.user.findMany();
+
     return NextResponse.json({ allusers });
-  } catch (error) {
-    console.error('Error fetching users:', error);
-    return NextResponse.json({ error: 'Failed to fetch users' }, { status: 500 });
+  } catch (error: any) {
+    console.error('Prisma Error:', error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
