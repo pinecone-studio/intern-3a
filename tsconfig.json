@@ -55,6 +55,12 @@
       "path": "./apps/matrix-be-2"
     },
     {
+      "path": "./apps/referu-expo-hr-fe-e2e"
+    },
+    {
+      "path": "./apps/referu-expo-hr-fe"
+    },
+    {
       "path": "./apps/referu-employee-fe-e2e"
     },
     {
