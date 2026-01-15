@@ -21,7 +21,7 @@ export const App = () => {
         <View style={styles.section}>
           <Text style={styles.textLg}>Hello there,</Text>
           <Text style={[styles.textXL, styles.appTitleText]} testID="heading" role="heading">
-            bla bla
+            bla bla blasljkcn
           </Text>
         </View>
         <View style={styles.section}>
