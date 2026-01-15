@@ -197,8 +197,8 @@ export type AttendanceGroupByOutputType = {
   date: Date
   clockIn: Date
   clockOut: Date | null
-  createdAt: Date
-  updatedAt: Date
+  createdAt: Date | null
+  updatedAt: Date | null
   _count: AttendanceCountAggregateOutputType | null
   _avg: AttendanceAvgAggregateOutputType | null
   _sum: AttendanceSumAggregateOutputType | null
@@ -230,8 +230,8 @@ export type AttendanceWhereInput = {
   date?: Prisma.DateTimeFilter<"Attendance"> | Date | string
   clockIn?: Prisma.DateTimeFilter<"Attendance"> | Date | string
   clockOut?: Prisma.DateTimeNullableFilter<"Attendance"> | Date | string | null
-  createdAt?: Prisma.DateTimeFilter<"Attendance"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Attendance"> | Date | string
+  createdAt?: Prisma.DateTimeNullableFilter<"Attendance"> | Date | string | null
+  updatedAt?: Prisma.DateTimeNullableFilter<"Attendance"> | Date | string | null
   User?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
@@ -241,13 +241,14 @@ export type AttendanceOrderByWithRelationInput = {
   date?: Prisma.SortOrder
   clockIn?: Prisma.SortOrder
   clockOut?: Prisma.SortOrderInput | Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  updatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   User?: Prisma.UserOrderByWithRelationInput
 }
 
 export type AttendanceWhereUniqueInput = Prisma.AtLeast<{
   id?: number
+  userId_date?: Prisma.AttendanceUserIdDateCompoundUniqueInput
   AND?: Prisma.AttendanceWhereInput | Prisma.AttendanceWhereInput[]
   OR?: Prisma.AttendanceWhereInput[]
   NOT?: Prisma.AttendanceWhereInput | Prisma.AttendanceWhereInput[]
@@ -255,10 +256,10 @@ export type AttendanceWhereUniqueInput = Prisma.AtLeast<{
   date?: Prisma.DateTimeFilter<"Attendance"> | Date | string
   clockIn?: Prisma.DateTimeFilter<"Attendance"> | Date | string
   clockOut?: Prisma.DateTimeNullableFilter<"Attendance"> | Date | string | null
-  createdAt?: Prisma.DateTimeFilter<"Attendance"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Attendance"> | Date | string
+  createdAt?: Prisma.DateTimeNullableFilter<"Attendance"> | Date | string | null
+  updatedAt?: Prisma.DateTimeNullableFilter<"Attendance"> | Date | string | null
   User?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-}, "id">
+}, "id" | "userId_date">
 
 export type AttendanceOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -266,8 +267,8 @@ export type AttendanceOrderByWithAggregationInput = {
   date?: Prisma.SortOrder
   clockIn?: Prisma.SortOrder
   clockOut?: Prisma.SortOrderInput | Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  updatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.AttendanceCountOrderByAggregateInput
   _avg?: Prisma.AttendanceAvgOrderByAggregateInput
   _max?: Prisma.AttendanceMaxOrderByAggregateInput
@@ -284,16 +285,16 @@ export type AttendanceScalarWhereWithAggregatesInput = {
   date?: Prisma.DateTimeWithAggregatesFilter<"Attendance"> | Date | string
   clockIn?: Prisma.DateTimeWithAggregatesFilter<"Attendance"> | Date | string
   clockOut?: Prisma.DateTimeNullableWithAggregatesFilter<"Attendance"> | Date | string | null
-  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Attendance"> | Date | string
-  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Attendance"> | Date | string
+  createdAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Attendance"> | Date | string | null
+  updatedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Attendance"> | Date | string | null
 }
 
 export type AttendanceCreateInput = {
   date: Date | string
   clockIn: Date | string
   clockOut?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
+  createdAt?: Date | string | null
+  updatedAt?: Date | string | null
   User: Prisma.UserCreateNestedOneWithoutAttendanceInput
 }
 
@@ -303,16 +304,16 @@ export type AttendanceUncheckedCreateInput = {
   date: Date | string
   clockIn: Date | string
   clockOut?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
+  createdAt?: Date | string | null
+  updatedAt?: Date | string | null
 }
 
 export type AttendanceUpdateInput = {
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   clockIn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   clockOut?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   User?: Prisma.UserUpdateOneRequiredWithoutAttendanceNestedInput
 }
 
@@ -322,8 +323,8 @@ export type AttendanceUncheckedUpdateInput = {
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   clockIn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   clockOut?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type AttendanceCreateManyInput = {
@@ -332,16 +333,16 @@ export type AttendanceCreateManyInput = {
   date: Date | string
   clockIn: Date | string
   clockOut?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
+  createdAt?: Date | string | null
+  updatedAt?: Date | string | null
 }
 
 export type AttendanceUpdateManyMutationInput = {
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   clockIn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   clockOut?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type AttendanceUncheckedUpdateManyInput = {
@@ -350,8 +351,13 @@ export type AttendanceUncheckedUpdateManyInput = {
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   clockIn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   clockOut?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type AttendanceUserIdDateCompoundUniqueInput = {
+  userId: string
+  date: Date | string
 }
 
 export type AttendanceCountOrderByAggregateInput = {
@@ -402,8 +408,8 @@ export type AttendanceOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
+export type DateTimeFieldUpdateOperationsInput = {
+  set?: Date | string
 }
 
 export type AttendanceCreateNestedManyWithoutUserInput = {
@@ -452,8 +458,8 @@ export type AttendanceCreateWithoutUserInput = {
   date: Date | string
   clockIn: Date | string
   clockOut?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
+  createdAt?: Date | string | null
+  updatedAt?: Date | string | null
 }
 
 export type AttendanceUncheckedCreateWithoutUserInput = {
@@ -461,8 +467,8 @@ export type AttendanceUncheckedCreateWithoutUserInput = {
   date: Date | string
   clockIn: Date | string
   clockOut?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
+  createdAt?: Date | string | null
+  updatedAt?: Date | string | null
 }
 
 export type AttendanceCreateOrConnectWithoutUserInput = {
@@ -500,8 +506,8 @@ export type AttendanceScalarWhereInput = {
   date?: Prisma.DateTimeFilter<"Attendance"> | Date | string
   clockIn?: Prisma.DateTimeFilter<"Attendance"> | Date | string
   clockOut?: Prisma.DateTimeNullableFilter<"Attendance"> | Date | string | null
-  createdAt?: Prisma.DateTimeFilter<"Attendance"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Attendance"> | Date | string
+  createdAt?: Prisma.DateTimeNullableFilter<"Attendance"> | Date | string | null
+  updatedAt?: Prisma.DateTimeNullableFilter<"Attendance"> | Date | string | null
 }
 
 export type AttendanceCreateManyUserInput = {
@@ -509,16 +515,16 @@ export type AttendanceCreateManyUserInput = {
   date: Date | string
   clockIn: Date | string
   clockOut?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
+  createdAt?: Date | string | null
+  updatedAt?: Date | string | null
 }
 
 export type AttendanceUpdateWithoutUserInput = {
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   clockIn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   clockOut?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type AttendanceUncheckedUpdateWithoutUserInput = {
@@ -526,8 +532,8 @@ export type AttendanceUncheckedUpdateWithoutUserInput = {
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   clockIn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   clockOut?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type AttendanceUncheckedUpdateManyWithoutUserInput = {
@@ -535,8 +541,8 @@ export type AttendanceUncheckedUpdateManyWithoutUserInput = {
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   clockIn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   clockOut?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -606,8 +612,8 @@ export type $AttendancePayload<ExtArgs extends runtime.Types.Extensions.Internal
     date: Date
     clockIn: Date
     clockOut: Date | null
-    createdAt: Date
-    updatedAt: Date
+    createdAt: Date | null
+    updatedAt: Date | null
   }, ExtArgs["result"]["attendance"]>
   composites: {}
 }

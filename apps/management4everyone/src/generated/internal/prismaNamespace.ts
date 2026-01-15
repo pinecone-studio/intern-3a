@@ -388,7 +388,6 @@ export const ModelName = {
   Attendance: 'Attendance',
   Department: 'Department',
   Leave: 'Leave',
-  Payroll: 'Payroll',
   User: 'User'
 } as const
 
@@ -405,7 +404,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "announcement" | "attendance" | "department" | "leave" | "payroll" | "user"
+    modelProps: "announcement" | "attendance" | "department" | "leave" | "user"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -705,80 +704,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    Payroll: {
-      payload: Prisma.$PayrollPayload<ExtArgs>
-      fields: Prisma.PayrollFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.PayrollFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PayrollPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.PayrollFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PayrollPayload>
-        }
-        findFirst: {
-          args: Prisma.PayrollFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PayrollPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.PayrollFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PayrollPayload>
-        }
-        findMany: {
-          args: Prisma.PayrollFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PayrollPayload>[]
-        }
-        create: {
-          args: Prisma.PayrollCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PayrollPayload>
-        }
-        createMany: {
-          args: Prisma.PayrollCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.PayrollCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PayrollPayload>[]
-        }
-        delete: {
-          args: Prisma.PayrollDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PayrollPayload>
-        }
-        update: {
-          args: Prisma.PayrollUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PayrollPayload>
-        }
-        deleteMany: {
-          args: Prisma.PayrollDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.PayrollUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.PayrollUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PayrollPayload>[]
-        }
-        upsert: {
-          args: Prisma.PayrollUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$PayrollPayload>
-        }
-        aggregate: {
-          args: Prisma.PayrollAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregatePayroll>
-        }
-        groupBy: {
-          args: Prisma.PayrollGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.PayrollGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.PayrollCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.PayrollCountAggregateOutputType> | number
-        }
-      }
-    }
     User: {
       payload: Prisma.$UserPayload<ExtArgs>
       fields: Prisma.UserFieldRefs
@@ -896,8 +821,7 @@ export const AnnouncementScalarFieldEnum = {
   id: 'id',
   title: 'title',
   content: 'content',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  createdAt: 'createdAt'
 } as const
 
 export type AnnouncementScalarFieldEnum = (typeof AnnouncementScalarFieldEnum)[keyof typeof AnnouncementScalarFieldEnum]
@@ -940,32 +864,13 @@ export const LeaveScalarFieldEnum = {
 export type LeaveScalarFieldEnum = (typeof LeaveScalarFieldEnum)[keyof typeof LeaveScalarFieldEnum]
 
 
-export const PayrollScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  salary: 'salary',
-  periodStart: 'periodStart',
-  periodEnd: 'periodEnd',
-  status: 'status',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type PayrollScalarFieldEnum = (typeof PayrollScalarFieldEnum)[keyof typeof PayrollScalarFieldEnum]
-
-
 export const UserScalarFieldEnum = {
   id: 'id',
-  username: 'username',
+  clerkUserId: 'clerkUserId',
+  email: 'email',
   firstName: 'firstName',
   lastName: 'lastName',
-  email: 'email',
-  birthday: 'birthday',
-  experience: 'experience',
-  salary: 'salary',
   role: 'role',
-  bankAccount: 'bankAccount',
-  bankName: 'bankName',
   departmentId: 'departmentId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -1061,34 +966,6 @@ export type ListEnumLeaveStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$
 
 
 /**
- * Reference to a field of type 'Float'
- */
-export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
-    
-
-
-/**
- * Reference to a field of type 'Float[]'
- */
-export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
-    
-
-
-/**
- * Reference to a field of type 'PayrollStatus'
- */
-export type EnumPayrollStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PayrollStatus'>
-    
-
-
-/**
- * Reference to a field of type 'PayrollStatus[]'
- */
-export type ListEnumPayrollStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PayrollStatus[]'>
-    
-
-
-/**
  * Reference to a field of type 'Role'
  */
 export type EnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role'>
@@ -1099,6 +976,20 @@ export type EnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'Role[]'
  */
 export type ListEnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Float'
+ */
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'Float[]'
+ */
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 /**
@@ -1200,7 +1091,6 @@ export type GlobalOmitConfig = {
   attendance?: Prisma.AttendanceOmit
   department?: Prisma.DepartmentOmit
   leave?: Prisma.LeaveOmit
-  payroll?: Prisma.PayrollOmit
   user?: Prisma.UserOmit
 }
 

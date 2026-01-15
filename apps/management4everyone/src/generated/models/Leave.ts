@@ -203,9 +203,9 @@ export type LeaveGroupByOutputType = {
   startDate: Date
   endDate: Date
   reason: string
-  status: $Enums.LeaveStatus
-  createdAt: Date
-  updatedAt: Date
+  status: $Enums.LeaveStatus | null
+  createdAt: Date | null
+  updatedAt: Date | null
   _count: LeaveCountAggregateOutputType | null
   _avg: LeaveAvgAggregateOutputType | null
   _sum: LeaveSumAggregateOutputType | null
@@ -237,9 +237,9 @@ export type LeaveWhereInput = {
   startDate?: Prisma.DateTimeFilter<"Leave"> | Date | string
   endDate?: Prisma.DateTimeFilter<"Leave"> | Date | string
   reason?: Prisma.StringFilter<"Leave"> | string
-  status?: Prisma.EnumLeaveStatusFilter<"Leave"> | $Enums.LeaveStatus
-  createdAt?: Prisma.DateTimeFilter<"Leave"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Leave"> | Date | string
+  status?: Prisma.EnumLeaveStatusNullableFilter<"Leave"> | $Enums.LeaveStatus | null
+  createdAt?: Prisma.DateTimeNullableFilter<"Leave"> | Date | string | null
+  updatedAt?: Prisma.DateTimeNullableFilter<"Leave"> | Date | string | null
   User?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
@@ -249,9 +249,9 @@ export type LeaveOrderByWithRelationInput = {
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   reason?: Prisma.SortOrder
-  status?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
+  status?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  updatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   User?: Prisma.UserOrderByWithRelationInput
 }
 
@@ -264,9 +264,9 @@ export type LeaveWhereUniqueInput = Prisma.AtLeast<{
   startDate?: Prisma.DateTimeFilter<"Leave"> | Date | string
   endDate?: Prisma.DateTimeFilter<"Leave"> | Date | string
   reason?: Prisma.StringFilter<"Leave"> | string
-  status?: Prisma.EnumLeaveStatusFilter<"Leave"> | $Enums.LeaveStatus
-  createdAt?: Prisma.DateTimeFilter<"Leave"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Leave"> | Date | string
+  status?: Prisma.EnumLeaveStatusNullableFilter<"Leave"> | $Enums.LeaveStatus | null
+  createdAt?: Prisma.DateTimeNullableFilter<"Leave"> | Date | string | null
+  updatedAt?: Prisma.DateTimeNullableFilter<"Leave"> | Date | string | null
   User?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id">
 
@@ -276,9 +276,9 @@ export type LeaveOrderByWithAggregationInput = {
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   reason?: Prisma.SortOrder
-  status?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
+  status?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  updatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.LeaveCountOrderByAggregateInput
   _avg?: Prisma.LeaveAvgOrderByAggregateInput
   _max?: Prisma.LeaveMaxOrderByAggregateInput
@@ -295,18 +295,18 @@ export type LeaveScalarWhereWithAggregatesInput = {
   startDate?: Prisma.DateTimeWithAggregatesFilter<"Leave"> | Date | string
   endDate?: Prisma.DateTimeWithAggregatesFilter<"Leave"> | Date | string
   reason?: Prisma.StringWithAggregatesFilter<"Leave"> | string
-  status?: Prisma.EnumLeaveStatusWithAggregatesFilter<"Leave"> | $Enums.LeaveStatus
-  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Leave"> | Date | string
-  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Leave"> | Date | string
+  status?: Prisma.EnumLeaveStatusNullableWithAggregatesFilter<"Leave"> | $Enums.LeaveStatus | null
+  createdAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Leave"> | Date | string | null
+  updatedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Leave"> | Date | string | null
 }
 
 export type LeaveCreateInput = {
   startDate: Date | string
   endDate: Date | string
   reason: string
-  status?: $Enums.LeaveStatus
-  createdAt?: Date | string
-  updatedAt?: Date | string
+  status?: $Enums.LeaveStatus | null
+  createdAt?: Date | string | null
+  updatedAt?: Date | string | null
   User: Prisma.UserCreateNestedOneWithoutLeaveInput
 }
 
@@ -316,18 +316,18 @@ export type LeaveUncheckedCreateInput = {
   startDate: Date | string
   endDate: Date | string
   reason: string
-  status?: $Enums.LeaveStatus
-  createdAt?: Date | string
-  updatedAt?: Date | string
+  status?: $Enums.LeaveStatus | null
+  createdAt?: Date | string | null
+  updatedAt?: Date | string | null
 }
 
 export type LeaveUpdateInput = {
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reason?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumLeaveStatusFieldUpdateOperationsInput | $Enums.LeaveStatus
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.NullableEnumLeaveStatusFieldUpdateOperationsInput | $Enums.LeaveStatus | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   User?: Prisma.UserUpdateOneRequiredWithoutLeaveNestedInput
 }
 
@@ -337,9 +337,9 @@ export type LeaveUncheckedUpdateInput = {
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reason?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumLeaveStatusFieldUpdateOperationsInput | $Enums.LeaveStatus
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.NullableEnumLeaveStatusFieldUpdateOperationsInput | $Enums.LeaveStatus | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type LeaveCreateManyInput = {
@@ -348,18 +348,18 @@ export type LeaveCreateManyInput = {
   startDate: Date | string
   endDate: Date | string
   reason: string
-  status?: $Enums.LeaveStatus
-  createdAt?: Date | string
-  updatedAt?: Date | string
+  status?: $Enums.LeaveStatus | null
+  createdAt?: Date | string | null
+  updatedAt?: Date | string | null
 }
 
 export type LeaveUpdateManyMutationInput = {
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reason?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumLeaveStatusFieldUpdateOperationsInput | $Enums.LeaveStatus
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.NullableEnumLeaveStatusFieldUpdateOperationsInput | $Enums.LeaveStatus | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type LeaveUncheckedUpdateManyInput = {
@@ -368,9 +368,9 @@ export type LeaveUncheckedUpdateManyInput = {
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reason?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumLeaveStatusFieldUpdateOperationsInput | $Enums.LeaveStatus
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.NullableEnumLeaveStatusFieldUpdateOperationsInput | $Enums.LeaveStatus | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type LeaveCountOrderByAggregateInput = {
@@ -424,8 +424,8 @@ export type LeaveOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type EnumLeaveStatusFieldUpdateOperationsInput = {
-  set?: $Enums.LeaveStatus
+export type NullableEnumLeaveStatusFieldUpdateOperationsInput = {
+  set?: $Enums.LeaveStatus | null
 }
 
 export type LeaveCreateNestedManyWithoutUserInput = {
@@ -474,9 +474,9 @@ export type LeaveCreateWithoutUserInput = {
   startDate: Date | string
   endDate: Date | string
   reason: string
-  status?: $Enums.LeaveStatus
-  createdAt?: Date | string
-  updatedAt?: Date | string
+  status?: $Enums.LeaveStatus | null
+  createdAt?: Date | string | null
+  updatedAt?: Date | string | null
 }
 
 export type LeaveUncheckedCreateWithoutUserInput = {
@@ -484,9 +484,9 @@ export type LeaveUncheckedCreateWithoutUserInput = {
   startDate: Date | string
   endDate: Date | string
   reason: string
-  status?: $Enums.LeaveStatus
-  createdAt?: Date | string
-  updatedAt?: Date | string
+  status?: $Enums.LeaveStatus | null
+  createdAt?: Date | string | null
+  updatedAt?: Date | string | null
 }
 
 export type LeaveCreateOrConnectWithoutUserInput = {
@@ -524,9 +524,9 @@ export type LeaveScalarWhereInput = {
   startDate?: Prisma.DateTimeFilter<"Leave"> | Date | string
   endDate?: Prisma.DateTimeFilter<"Leave"> | Date | string
   reason?: Prisma.StringFilter<"Leave"> | string
-  status?: Prisma.EnumLeaveStatusFilter<"Leave"> | $Enums.LeaveStatus
-  createdAt?: Prisma.DateTimeFilter<"Leave"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Leave"> | Date | string
+  status?: Prisma.EnumLeaveStatusNullableFilter<"Leave"> | $Enums.LeaveStatus | null
+  createdAt?: Prisma.DateTimeNullableFilter<"Leave"> | Date | string | null
+  updatedAt?: Prisma.DateTimeNullableFilter<"Leave"> | Date | string | null
 }
 
 export type LeaveCreateManyUserInput = {
@@ -534,18 +534,18 @@ export type LeaveCreateManyUserInput = {
   startDate: Date | string
   endDate: Date | string
   reason: string
-  status?: $Enums.LeaveStatus
-  createdAt?: Date | string
-  updatedAt?: Date | string
+  status?: $Enums.LeaveStatus | null
+  createdAt?: Date | string | null
+  updatedAt?: Date | string | null
 }
 
 export type LeaveUpdateWithoutUserInput = {
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reason?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumLeaveStatusFieldUpdateOperationsInput | $Enums.LeaveStatus
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.NullableEnumLeaveStatusFieldUpdateOperationsInput | $Enums.LeaveStatus | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type LeaveUncheckedUpdateWithoutUserInput = {
@@ -553,9 +553,9 @@ export type LeaveUncheckedUpdateWithoutUserInput = {
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reason?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumLeaveStatusFieldUpdateOperationsInput | $Enums.LeaveStatus
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.NullableEnumLeaveStatusFieldUpdateOperationsInput | $Enums.LeaveStatus | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type LeaveUncheckedUpdateManyWithoutUserInput = {
@@ -563,9 +563,9 @@ export type LeaveUncheckedUpdateManyWithoutUserInput = {
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reason?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumLeaveStatusFieldUpdateOperationsInput | $Enums.LeaveStatus
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.NullableEnumLeaveStatusFieldUpdateOperationsInput | $Enums.LeaveStatus | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -639,9 +639,9 @@ export type $LeavePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     startDate: Date
     endDate: Date
     reason: string
-    status: $Enums.LeaveStatus
-    createdAt: Date
-    updatedAt: Date
+    status: $Enums.LeaveStatus | null
+    createdAt: Date | null
+    updatedAt: Date | null
   }, ExtArgs["result"]["leave"]>
   composites: {}
 }
