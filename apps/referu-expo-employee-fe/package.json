@@ -10,6 +10,7 @@
     "@testing-library/react-native": "*",
     "babel-preset-expo": "54.0.9",
     "expo": "~54.0.21",
+    "expo-router": "^6.0.21",
     "expo-splash-screen": "*",
     "expo-status-bar": "*",
     "expo-system-ui": "*",
@@ -18,6 +19,7 @@
     "metro-resolver": "*",
     "react": "19.1.0",
     "react-native": "0.81.5",
+    "react-native-safe-area-context": "~5.6.0",
     "react-native-svg": "15.12.1",
     "react-native-svg-transformer": "*",
     "react-native-web": "*"
