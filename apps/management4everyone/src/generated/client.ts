@@ -60,11 +60,6 @@ export type Department = Prisma.DepartmentModel
  */
 export type Leave = Prisma.LeaveModel
 /**
- * Model Payroll
- * 
- */
-export type Payroll = Prisma.PayrollModel
-/**
  * Model User
  * 
  */

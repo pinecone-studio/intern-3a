@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client"
-  output   = "./src/generated"
+  output   = "../src/generated"
 }
 
 datasource db {
@@ -8,86 +8,64 @@ datasource db {
 }
 
 model Announcement {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   title     String
   content   String
-  createdAt DateTime @default(now()) @db.Timestamp(6)
-  updatedAt DateTime @default(now()) @db.Timestamp(6)
+  createdAt DateTime? @default(now()) @db.Timestamp(6)
 }
 
 model Attendance {
   id        Int       @id @default(autoincrement())
   userId    String
-  date      DateTime  @db.Timestamp(6)
+  date      DateTime  @db.Date
   clockIn   DateTime  @db.Timestamp(6)
   clockOut  DateTime? @db.Timestamp(6)
-  createdAt DateTime  @default(now()) @db.Timestamp(6)
-  updatedAt DateTime  @default(now()) @db.Timestamp(6)
-  User      User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  createdAt DateTime? @default(now()) @db.Timestamp(6)
+  updatedAt DateTime? @default(now()) @db.Timestamp(6)
+  User      User      @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([userId, date])
 }
 
 model Department {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  createdAt DateTime @default(now()) @db.Timestamp(6)
-  updatedAt DateTime @default(now()) @db.Timestamp(6)
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  createdAt DateTime? @default(now()) @db.Timestamp(6)
+  updatedAt DateTime? @default(now()) @db.Timestamp(6)
   User      User[]
 }
 
 model Leave {
-  id        Int         @id @default(autoincrement())
+  id        Int          @id @default(autoincrement())
   userId    String
-  startDate DateTime    @db.Timestamp(6)
-  endDate   DateTime    @db.Timestamp(6)
+  startDate DateTime     @db.Timestamp(6)
+  endDate   DateTime     @db.Timestamp(6)
   reason    String
-  status    LeaveStatus @default(PENDING)
-  createdAt DateTime    @default(now()) @db.Timestamp(6)
-  updatedAt DateTime    @default(now()) @db.Timestamp(6)
-  User      User        @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-}
-
-model Payroll {
-  id          Int           @id @default(autoincrement())
-  userId      String
-  salary      Float
-  periodStart DateTime      @db.Timestamp(6)
-  periodEnd   DateTime      @db.Timestamp(6)
-  status      PayrollStatus @default(PENDING)
-  createdAt   DateTime      @default(now()) @db.Timestamp(6)
-  updatedAt   DateTime      @default(now()) @db.Timestamp(6)
-  User        User          @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  status    LeaveStatus? @default(PENDING)
+  createdAt DateTime?    @default(now()) @db.Timestamp(6)
+  updatedAt DateTime?    @default(now()) @db.Timestamp(6)
+  User      User         @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model User {
   id           String       @id
-  username     String       @unique
-  firstName    String
-  lastName     String
+  clerkUserId  String       @unique
   email        String       @unique
-  birthday     DateTime     @db.Timestamp(6)
-  experience   Int
-  salary       Float
-  role         Role         @default(WORKER)
-  bankAccount  String?
-  bankName     String?
+  firstName    String?
+  lastName     String?
+  role         Role?        @default(WORKER)
   departmentId Int?
-  createdAt    DateTime     @default(now()) @db.Timestamp(6)
-  updatedAt    DateTime     @default(now()) @db.Timestamp(6)
+  createdAt    DateTime?    @default(now()) @db.Timestamp(6)
+  updatedAt    DateTime?    @default(now()) @db.Timestamp(6)
   Attendance   Attendance[]
   Leave        Leave[]
-  Payroll      Payroll[]
-  Department   Department?  @relation(fields: [departmentId], references: [id], onUpdate: NoAction)
+  Department   Department?  @relation(fields: [departmentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 enum LeaveStatus {
   PENDING
   APPROVED
   DENIED
-}
-
-enum PayrollStatus {
-  PENDING
-  PAID
 }
 
 enum Role {

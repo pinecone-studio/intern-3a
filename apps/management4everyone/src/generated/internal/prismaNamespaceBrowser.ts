@@ -55,7 +55,6 @@ export const ModelName = {
   Attendance: 'Attendance',
   Department: 'Department',
   Leave: 'Leave',
-  Payroll: 'Payroll',
   User: 'User'
 } as const
 
@@ -79,8 +78,7 @@ export const AnnouncementScalarFieldEnum = {
   id: 'id',
   title: 'title',
   content: 'content',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  createdAt: 'createdAt'
 } as const
 
 export type AnnouncementScalarFieldEnum = (typeof AnnouncementScalarFieldEnum)[keyof typeof AnnouncementScalarFieldEnum]
@@ -123,32 +121,13 @@ export const LeaveScalarFieldEnum = {
 export type LeaveScalarFieldEnum = (typeof LeaveScalarFieldEnum)[keyof typeof LeaveScalarFieldEnum]
 
 
-export const PayrollScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  salary: 'salary',
-  periodStart: 'periodStart',
-  periodEnd: 'periodEnd',
-  status: 'status',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type PayrollScalarFieldEnum = (typeof PayrollScalarFieldEnum)[keyof typeof PayrollScalarFieldEnum]
-
-
 export const UserScalarFieldEnum = {
   id: 'id',
-  username: 'username',
+  clerkUserId: 'clerkUserId',
+  email: 'email',
   firstName: 'firstName',
   lastName: 'lastName',
-  email: 'email',
-  birthday: 'birthday',
-  experience: 'experience',
-  salary: 'salary',
   role: 'role',
-  bankAccount: 'bankAccount',
-  bankName: 'bankName',
   departmentId: 'departmentId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
