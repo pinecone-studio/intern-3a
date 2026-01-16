@@ -1,6 +1,6 @@
 'use client';
 
-import { UserButton, useUser } from '@clerk/nextjs';
+import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from '@clerk/nextjs';
 import { Bell, Menu, Search } from 'lucide-react';
 import { Button } from '../components/ui/button';
 
@@ -9,7 +9,11 @@ interface HeaderProps {
 }
 
 export function Header({ onMenuClick }: HeaderProps) {
-  const { user } = useUser();
+  const { user, isLoaded } = useUser();
+
+  console.log('user deer yu irj bna', user);
+
+  if (!isLoaded) return null;
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background">
@@ -34,17 +38,26 @@ export function Header({ onMenuClick }: HeaderProps) {
           </Button>
 
           <div className="flex items-center gap-3 border-l border-border pl-3 ml-1">
-            <div className="hidden md:block text-right">
-              <p className="text-sm font-medium leading-none">{user?.fullName || user?.username || 'User'}</p>
-              <p className="text-xs text-muted-foreground mt-1">{user?.primaryEmailAddress?.emailAddress}</p>
-            </div>
-            <UserButton
-              appearance={{
-                elements: {
-                  avatarBox: 'h-9 w-9',
-                },
-              }}
-            />
+            {/* Нэвтэрсэн үед */}
+            <SignedIn>
+              <div className="hidden md:block text-right">
+                <p className="text-sm font-medium leading-none">{user?.fullName || user?.username || 'User'}</p>
+                <p className="text-xs text-muted-foreground mt-1">{user?.primaryEmailAddress?.emailAddress}</p>
+              </div>
+              <UserButton
+                appearance={{
+                  elements: {
+                    avatarBox: 'h-9 w-9',
+                  },
+                }}
+              />
+            </SignedIn>
+            {/* Нэвтрээгүй үед */}
+            <SignedOut>
+              <SignInButton>
+                <Button size="sm">Sign in</Button>
+              </SignInButton>
+            </SignedOut>
           </div>
         </div>
       </div>
