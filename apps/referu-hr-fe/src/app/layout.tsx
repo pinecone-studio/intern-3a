@@ -1,3 +1,4 @@
+import { Toaster } from '../../../../libs/shared/shadcn/src/components/ui/sonner';
 import './global.css';
 
 export const metadata = {
@@ -15,7 +16,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className="min-h-screen overflow-x-hidden">
-        <main className="w-full max-w-\[430px]\ min-h-\[932px]\ bg-white">{children}</main>
+        <main className="w-full max-w-\[430px]\ min-h-\[932px]\ bg-white">
+          {children}
+          <Toaster />
+        </main>
       </body>
     </html>
   );

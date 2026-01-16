@@ -1,9 +1,11 @@
 import { mockJobs } from '@/lib/get-data';
 import { Badge, Card } from '@intern-3a/shadcn';
-import router from 'next/router';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
 export const Jobs = () => {
+  const router = useRouter();
+
   const handleJobClick = (jobId: string) => {
     router.push(`/job/${jobId}`);
   };
@@ -22,7 +24,9 @@ export const Jobs = () => {
             </div>
             <p className="text-sm text-gray-600">{job.department}</p>
             <div className="flex items-center justify-between text-sm">
-              <span className="text-blue-600 font-medium">{job.salaryRange}</span>
+              <span className="text-blue-600 font-medium">
+                ₮{job.salaryMin.toLocaleString()} - ₮{job.salaryMax.toLocaleString()}
+              </span>
               <span className="text-gray-500">{job.postedDate}</span>
             </div>
           </Card>
