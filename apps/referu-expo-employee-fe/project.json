@@ -1,9 +1,0 @@
-{
-  "name": "referu-expo-employee-fe",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/referu-expo-employee-fe/src",
-  "projectType": "application",
-  "tags": [],
-  "// targets": "to see all targets run: nx show project referu-expo-employee-fe --web",
-  "targets": {}
-}
