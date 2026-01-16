@@ -11,11 +11,7 @@
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    './{src,pages,components,app}/**/*.{ts,tsx,js,jsx,html}',
-    '!./{src,pages,components,app}/**/*.{stories,spec}.{ts,tsx,js,jsx,html}',
-    //     ...createGlobPatternsForDependencies(__dirname)
-  ],
+  content: ['./apps/management4everyone/src/**/*.{js,ts,jsx,tsx}', './apps/management4everyone/src/app/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {},
   },
