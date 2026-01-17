@@ -18,7 +18,7 @@ export const Footer = () => {
             <span className="text-xs font-medium">Нүүр</span>
           </Button>
 
-          <Button variant="ghost" className={cn('flex flex-col items-center gap-1 h-auto py-2 px-6')}>
+          <Button variant="ghost" className={cn('flex flex-col items-center gap-1 h-auto py-2 px-6')} onClick={() => router.push('/job/add')}>
             <Plus className="w-6 h-6" />
             <span className="text-xs font-medium">Нэмэх</span>
           </Button>
