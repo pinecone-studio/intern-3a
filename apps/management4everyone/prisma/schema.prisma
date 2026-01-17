@@ -48,11 +48,12 @@ model Leave {
 }
 
 model User {
-  id           String       @id
+  id           String       @id @default(uuid())
   clerkUserId  String       @unique
   email        String       @unique
   firstName    String?
   lastName     String?
+  status       UserStatus  @default(PENDING)
   role         Role?        @default(WORKER)
   departmentId Int?
   createdAt    DateTime?    @default(now()) @db.Timestamp(6)
@@ -71,4 +72,10 @@ enum LeaveStatus {
 enum Role {
   ADMIN
   WORKER
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  PENDING
 }
