@@ -1,4 +1,6 @@
 //apps/management4everyone/src/app/api/webhooks/clerk/route.ts
+//Энэ файл нь Clerk вэбхүүкийг хүлээн авч, хэрэглэгч шинээр үүсэх үед түүний метадатаг шинэчлэх зориулалттай.
+//REST API маршрутыг ашиглан вэбхүүкийг хүлээн авна.
 import { createClerkClient, WebhookEvent } from '@clerk/nextjs/server';
 import { headers } from 'next/headers';
 import { Webhook } from 'svix';
