@@ -5,7 +5,7 @@ import { Loader } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 import { hrPostedJobs } from '../libs/utils/get-datas';
-import { FooterNav, Header } from './_components';
+import { FooterNav, Header, PostedJobCard, PostedJobsHeading } from './_components';
 
 export default function HomePage() {
   const { user, isLoaded } = useUser();
@@ -25,12 +25,14 @@ export default function HomePage() {
     );
 
   return (
-    <div className="w-full h-full flex flex-col">
+    <div className="w-full h-full flex flex-col pb-20">
       <Header />
 
-      <div>
+      <PostedJobsHeading hrPostedJobs={hrPostedJobs} />
+
+      <div className="p-5 flex flex-col gap-3">
         {hrPostedJobs.map((job) => (
-          <div key={job._id}>{job.jobTitle}</div>
+          <PostedJobCard job={job} key={job._id} />
         ))}
       </div>
 

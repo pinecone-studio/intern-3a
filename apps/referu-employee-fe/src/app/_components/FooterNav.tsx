@@ -12,7 +12,7 @@ export const FooterNav = () => {
       <div className="m-1 bg-white">
         <div
           onClick={() => router.push('/')}
-          className={`flex flex-col items-center justify-center h-fit hover:text-[#005295] gap-0 px-4 py-2 cursor-pointer ${pathname === '/' ? 'text-[#005295]' : 'text-[#6d7277]'} hover:bg-accent hover:rounded-md`}
+          className={`flex flex-col items-center justify-center h-fit hover:text-[#005295] gap-0 px-5 py-2 cursor-pointer ${pathname === '/' ? 'text-[#005295]' : 'text-[#6d7277]'} hover:bg-accent hover:rounded-xl`}
         >
           <House size={24} />
           <p className="text-xs font-medium">Нүүр</p>
@@ -22,7 +22,7 @@ export const FooterNav = () => {
       <div className="m-1 bg-white">
         <div
           onClick={() => router.push('/my-section')}
-          className={`flex flex-col items-center justify-center h-fit hover:text-[#005295] gap-0 px-4 py-2 cursor-pointer ${pathname === '/' ? 'text-[#005295]' : 'text-[#6d7277]'} hover:bg-accent hover:rounded-md`}
+          className={`flex flex-col items-center justify-center h-fit hover:text-[#005295] gap-0 px-4 py-2 cursor-pointer ${pathname === '/' ? 'text-[#005295]' : 'text-[#6d7277]'} hover:bg-accent hover:rounded-xl`}
         >
           <User size={24} />
           <span className="text-xs font-medium">Миний</span>
