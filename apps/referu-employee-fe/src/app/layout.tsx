@@ -1,5 +1,6 @@
 import { ClerkProvider } from '@clerk/nextjs';
 import type { Viewport } from 'next';
+import { Header } from './_components/Header';
 import './global.css';
 
 export const metadata = {
@@ -20,7 +21,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <ClerkProvider>
       <html lang="en">
         <body className="min-h-screen overflow-x-hidden">
-          <main className="w-full max-w-\[430px]\ min-h-\[932px]\ bg-[#005295]/5">{children}</main>
+          <main className="w-full max-w-\[430px]\ min-h-\[932px]\ bg-[#005295]/5">
+            <Header />
+            {children}
+          </main>
         </body>
       </html>
     </ClerkProvider>

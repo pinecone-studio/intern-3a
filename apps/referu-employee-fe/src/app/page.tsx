@@ -5,7 +5,7 @@ import { Loader } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 import { hrPostedJobs } from '../libs/utils/get-datas';
-import { FooterNav, Header, PostedJobCard, PostedJobsHeading } from './_components';
+import { FooterNav, PostedJobCard, PostedJobsHeading } from './_components';
 
 export default function HomePage() {
   const { user, isLoaded } = useUser();
@@ -26,8 +26,6 @@ export default function HomePage() {
 
   return (
     <div className="w-full h-full flex flex-col pb-20">
-      <Header />
-
       <PostedJobsHeading hrPostedJobs={hrPostedJobs} />
 
       <div className="p-5 flex flex-col gap-3">
