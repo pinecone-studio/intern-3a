@@ -1,12 +1,67 @@
-import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@intern-3a/shadcn';
+import { Card, CardContent } from '@intern-3a/shadcn';
+import { HrPostedJobsType } from 'apps/referu-employee-fe/src/libs/utils/type';
 import React from 'react';
 
-export const JobCardDetailPartMain = () => {
+export const JobCardDetailPartMain = ({ selectedJob }: { selectedJob: HrPostedJobsType }) => {
   return (
-    <div>
-      <Card>
-        <CardContent>uur card hiih eseh</CardContent>
-      </Card>
-    </div>
+    <Card>
+      <CardContent className="flex flex-col gap-4">
+        <div className="flex flex-col gap-2">
+          <h3 className="text-md font-semibold">Гүйцэтгэх үндсэн үүрэг</h3>
+          <div className="flex flex-col gap-2 text-sm">
+            {selectedJob.keyDuties.map((duty) => (
+              <div className="flex gap-2 items-center">
+                <span className="text-[#005295]">•</span>
+                <span className="text-muted-foreground">{duty}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <h3 className="text-md font-semibold">Ажлын байранд тавигдах шаардлага</h3>
+          <div className="flex flex-col gap-2 text-sm">
+            {selectedJob.requirements.map((requirement) => (
+              <div className="flex gap-2 items-center">
+                <span className="text-[#005295]">•</span>
+                <span className="text-muted-foreground">{requirement}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <h3 className="text-md font-semibold">Нэмэлт мэдээлэл</h3>
+          <div className="flex gap-2 text-sm items-center">
+            <span className="text-[#005295]">•</span>
+            <span className="text-muted-foreground">{selectedJob.additionalNotes}</span>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <h3 className="text-md font-semibold">Шаардлагатай ур чадварууд</h3>
+          <div className="flex flex-col gap-2 text-sm">
+            {selectedJob.requiredSkills.map((skill) => (
+              <div className="flex gap-2 items-center">
+                <span className="text-[#005295]">•</span>
+                <span className="text-muted-foreground">{skill}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <h3 className="text-md font-semibold">Хангамж урамшуулал</h3>
+          <div className="flex flex-col gap-2 text-sm">
+            {selectedJob.benefits.map((benefit) => (
+              <div className="flex gap-2 items-center">
+                <span className="text-[#005295]">•</span>
+                <span className="text-muted-foreground">{benefit}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 };

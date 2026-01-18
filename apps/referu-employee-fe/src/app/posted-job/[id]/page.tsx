@@ -2,8 +2,7 @@
 
 import { hrPostedJobs } from 'apps/referu-employee-fe/src/libs/utils/get-datas';
 import { use } from 'react';
-import { PostedJobCard } from '../../_components';
-import { JobCardDetailFooterNav, JobCardDetailHeading, JobCardDetailPartIntro, JobCardDetailPartMain } from '../_components';
+import { JobCardDetailFooterNav, JobCardDetailHeading, JobCardDetailPartInfo, JobCardDetailPartIntro, JobCardDetailPartMain } from '../_components';
 
 export default function PostedJobPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -19,9 +18,9 @@ export default function PostedJobPage({ params }: { params: Promise<{ id: string
       <JobCardDetailHeading />
 
       <div className="p-5 flex flex-col gap-3">
-        {selectedJob && <PostedJobCard job={selectedJob} key={selectedJob._id} />}
-        <JobCardDetailPartIntro />
-        <JobCardDetailPartMain />
+        <JobCardDetailPartIntro selectedJob={selectedJob} />
+        <JobCardDetailPartMain selectedJob={selectedJob} />
+        <JobCardDetailPartInfo selectedJob={selectedJob} />
       </div>
 
       <JobCardDetailFooterNav selectedJob={selectedJob} />
