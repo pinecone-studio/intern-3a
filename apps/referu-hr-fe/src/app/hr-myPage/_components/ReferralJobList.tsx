@@ -1,4 +1,7 @@
+'use client';
+
 import { Badge, Card, CardContent, CardTitle, TabsContent } from '@intern-3a/shadcn';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
 type JobWithReferrals = {
@@ -24,13 +27,18 @@ const mockJobsWithReferrals: JobWithReferrals[] = [
 ];
 
 const ReferralJobList = () => {
+  const router = useRouter();
+
+  const handleJodRefferal = (jobId: string) => {
+    router.push(`/hr-myPage/${jobId}`);
+  };
   return (
     <div>
       <TabsContent value="account">
         <div className="flex flex-col gap-4">
           {mockJobsWithReferrals.map((jobs) => (
             <div key={jobs.id}>
-              <Card className="py-4 space-y-3 cursor-pointer hover:shadow-md transition-shadow">
+              <Card className="py-4 space-y-3 cursor-pointer hover:shadow-md transition-shadow" onClick={() => handleJodRefferal(jobs.id)}>
                 {/* <CardTitle>{jobs.title}</CardTitle> */}
                 <CardContent>
                   <div className="flex justify-between items-center">
