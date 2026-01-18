@@ -10,6 +10,8 @@
     "tunnel": "ngrok http 3000"
   },
   "dependencies": {
+    "@apollo/server": "^5.2.0",
+    "@as-integrations/next": "^4.1.0",
     "@clerk/nextjs": "^6.36.7",
     "@hookform/resolvers": "^3.10.0",
     "@prisma/client": "^7.2.0",
@@ -47,6 +49,8 @@
     "cmdk": "1.0.4",
     "date-fns": "4.1.0",
     "embla-carousel-react": "8.5.1",
+    "graphql": "^16.12.0",
+    "graphql-tag": "^2.12.6",
     "input-otp": "1.4.1",
     "lucide-react": "^0.454.0",
     "next": "15.2.4",

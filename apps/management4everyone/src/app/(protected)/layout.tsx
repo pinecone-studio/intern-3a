@@ -5,7 +5,6 @@ import { SidebarProvider, SidebarTrigger } from '@intern-3a/shadcn';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { ClerkHeader } from '../_components/ClerkHeader';
-import SyncUser from '../_components/client/SyncUser';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const { user, isLoaded } = useUser();
@@ -39,7 +38,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             )}
           </div>
         </main>
-        <SyncUser />
 
         {children}
       </SidebarProvider>
