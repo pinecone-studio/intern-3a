@@ -7,7 +7,7 @@ export const JobCardDetailPartMain = ({ selectedJob }: { selectedJob: HrPostedJo
     <Card>
       <CardContent className="flex flex-col gap-4">
         <div className="flex flex-col gap-2">
-          <h3 className="text-md font-semibold">Гүйцэтгэх үндсэн үүрэг</h3>
+          <h3 className="font-semibold">Гүйцэтгэх үндсэн үүрэг</h3>
           <div className="flex flex-col gap-2 text-sm">
             {selectedJob.keyDuties.map((duty) => (
               <div className="flex gap-2 items-center">
@@ -19,7 +19,7 @@ export const JobCardDetailPartMain = ({ selectedJob }: { selectedJob: HrPostedJo
         </div>
 
         <div className="flex flex-col gap-2">
-          <h3 className="text-md font-semibold">Ажлын байранд тавигдах шаардлага</h3>
+          <h3 className="font-semibold">Ажлын байранд тавигдах шаардлага</h3>
           <div className="flex flex-col gap-2 text-sm">
             {selectedJob.requirements.map((requirement) => (
               <div className="flex gap-2 items-center">
@@ -31,7 +31,7 @@ export const JobCardDetailPartMain = ({ selectedJob }: { selectedJob: HrPostedJo
         </div>
 
         <div className="flex flex-col gap-2">
-          <h3 className="text-md font-semibold">Нэмэлт мэдээлэл</h3>
+          <h3 className="font-semibold">Нэмэлт мэдээлэл</h3>
           <div className="flex gap-2 text-sm items-center">
             <span className="text-[#005295]">•</span>
             <span className="text-muted-foreground">{selectedJob.additionalNotes}</span>
@@ -39,7 +39,7 @@ export const JobCardDetailPartMain = ({ selectedJob }: { selectedJob: HrPostedJo
         </div>
 
         <div className="flex flex-col gap-2">
-          <h3 className="text-md font-semibold">Шаардлагатай ур чадварууд</h3>
+          <h3 className="font-semibold">Шаардлагатай ур чадварууд</h3>
           <div className="flex flex-col gap-2 text-sm">
             {selectedJob.requiredSkills.map((skill) => (
               <div className="flex gap-2 items-center">
@@ -51,7 +51,7 @@ export const JobCardDetailPartMain = ({ selectedJob }: { selectedJob: HrPostedJo
         </div>
 
         <div className="flex flex-col gap-2">
-          <h3 className="text-md font-semibold">Хангамж урамшуулал</h3>
+          <h3 className="font-semibold">Хангамж урамшуулал</h3>
           <div className="flex flex-col gap-2 text-sm">
             {selectedJob.benefits.map((benefit) => (
               <div className="flex gap-2 items-center">

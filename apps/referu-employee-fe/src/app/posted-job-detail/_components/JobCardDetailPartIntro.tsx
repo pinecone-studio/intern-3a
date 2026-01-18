@@ -7,7 +7,7 @@ export const JobCardDetailPartIntro = ({ selectedJob }: { selectedJob: HrPostedJ
   return (
     <Card>
       <CardContent className="flex flex-col gap-3">
-        <div className="text-base font-bold">{selectedJob.jobTitle}</div>
+        <div className="text-lg font-bold">{selectedJob.jobTitle}</div>
         <div className="flex flex-col gap-2">
           <div className="text-sm text-muted-foreground">{selectedJob.jobDepartment} хэлтэс</div>
 

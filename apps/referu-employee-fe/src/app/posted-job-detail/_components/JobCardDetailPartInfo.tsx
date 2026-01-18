@@ -7,7 +7,7 @@ export const JobCardDetailPartInfo = ({ selectedJob }: { selectedJob: HrPostedJo
     <Card>
       <CardContent className="flex flex-col gap-4">
         <div className="flex flex-col gap-2">
-          <h3 className="text-md font-semibold">Холбоо барих</h3>
+          <h3 className="font-semibold">Холбоо барих</h3>
           <div className="flex gap-2 text-sm items-center">
             <span className="text-[#005295]">•</span>
             <span className="text-muted-foreground">{selectedJob.contactInfo}</span>
@@ -15,7 +15,7 @@ export const JobCardDetailPartInfo = ({ selectedJob }: { selectedJob: HrPostedJo
         </div>
 
         <div className="flex flex-col gap-2">
-          <h3 className="text-md font-semibold">Байршил</h3>
+          <h3 className="font-semibold">Байршил</h3>
           <div className="flex gap-2 text-sm items-center">
             <span className="text-[#005295]">•</span>
             <span className="text-muted-foreground">{selectedJob.location}</span>
