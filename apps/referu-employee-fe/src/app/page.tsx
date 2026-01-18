@@ -1,30 +1,40 @@
 'use client';
-import { Badge, Button } from '@intern-3a/shadcn';
-import { House, User } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import React from 'react';
-import { Footer, Header } from './_components';
 
-const HomePage = () => {
+import { useUser } from '@clerk/nextjs';
+import { Loader } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import React, { useEffect } from 'react';
+import { hrPostedJobs } from '../libs/utils/get-datas';
+import { FooterNav, Header } from './_components';
+
+export default function HomePage() {
+  const { user, isLoaded } = useUser();
   const router = useRouter();
+
+  useEffect(() => {
+    if (isLoaded && !user) {
+      router.push('/sign-in');
+    }
+  }, [user, isLoaded, router]);
+
+  if (!user && !isLoaded)
+    return (
+      <div className="flex justify-center items-center">
+        <Loader className="animate-spin" />
+      </div>
+    );
+
   return (
     <div className="w-full h-full flex flex-col">
       <Header />
-      <Badge></Badge>
-      <div className="flex items-center justify-around">
-        <Button variant={'ghost'} className="flex-col h-fit text-[#6d7277] hover:text-[#005295]  gap-0">
-          <House />
-          <span>Нүүр</span>
-        </Button>
-        <Button variant={'ghost'} onClick={() => router.push('/my-section')} className="flex-col h-fit text-[#6d7277] hover:text-[#005295]  gap-0">
-          <User />
-          <span>Миний</span>
-        </Button>
+
+      <div>
+        {hrPostedJobs.map((job) => (
+          <div key={job._id}>{job.jobTitle}</div>
+        ))}
       </div>
-      {/* <Button onClick={() => router.push('/my-section')}>Миний</Button> */}
-      <Footer />
+
+      <FooterNav />
     </div>
   );
-};
-
-export default HomePage;
+}
