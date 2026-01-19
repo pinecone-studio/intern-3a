@@ -1,3 +1,4 @@
+//apps/management4everyone/src/graphql/resolvers/announcement.ts
 import { requireAuth, requireRole } from 'apps/management4everyone/src/lib/auth';
 
 export const announcementResolvers = {

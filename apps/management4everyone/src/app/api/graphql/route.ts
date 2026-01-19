@@ -1,3 +1,4 @@
+//app/src/app/api/graphql/route.ts
 import { ApolloServer } from '@apollo/server';
 import { startServerAndCreateNextHandler } from '@as-integrations/next';
 import { auth } from '@clerk/nextjs/server';

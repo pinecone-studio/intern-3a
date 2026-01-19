@@ -1,3 +1,4 @@
+//apps/management4everyone/src/graphql/resolvers/index.ts
 import { announcementResolvers } from './announcement';
 
 export const resolvers = {

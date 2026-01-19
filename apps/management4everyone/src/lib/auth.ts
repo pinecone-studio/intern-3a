@@ -1,3 +1,4 @@
+// apps/management4everyone/src/lib/auth.ts
 export function requireAuth(ctx: any) {
   if (!ctx.userId) {
     throw new Error('UNAUTHORIZED');

@@ -1,3 +1,4 @@
+//apps/management4everyone/src/graphql/schema/announcement.ts
 import { gql } from 'graphql-tag';
 
 export const announcementTypeDefs = gql`
