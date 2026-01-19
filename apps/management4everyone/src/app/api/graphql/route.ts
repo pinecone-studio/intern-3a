@@ -7,14 +7,20 @@ import { typeDefs } from 'apps/management4everyone/src/graphql/schema';
 
 import prisma from '../../lib/prisma';
 
+export const dynamic = 'force-dynamic';
+
 const server = new ApolloServer({
   resolvers,
   typeDefs,
 });
 
 const handler = startServerAndCreateNextHandler(server, {
-  context: async () => {
+  context: async (req: any) => {
     const { userId, sessionClaims } = await auth();
+
+    if (!userId) {
+      console.warn('WARNING: Request received without valid session');
+    }
 
     return {
       userId,

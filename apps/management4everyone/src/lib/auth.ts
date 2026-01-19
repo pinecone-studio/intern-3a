@@ -1,7 +1,11 @@
 // apps/management4everyone/src/lib/auth.ts
+import { GraphQLError } from 'graphql';
+
 export function requireAuth(ctx: any) {
   if (!ctx.userId) {
-    throw new Error('UNAUTHORIZED');
+    throw new GraphQLError('User is not authenticated', {
+      extensions: { code: 'UNAUTHENTICATED' },
+    });
   }
 }
 
