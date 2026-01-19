@@ -21,7 +21,7 @@ export const ReferPageConfirmation = () => {
             <div>
               <Label htmlFor="hasCandidateConsent" className="font-normal text-muted-foreground">
                 <p>
-                  Санал болгож буй хүний зөвшөөрлийг урьдчилан авсан.<span className="text-destructive ml-2">*</span>
+                  Санал болгож буй хүний зөвшөөрлийг урьдчилан авсан.<span className="text-destructive ml-1.5">*</span>
                 </p>
               </Label>
             </div>
@@ -31,7 +31,7 @@ export const ReferPageConfirmation = () => {
             <Checkbox id="isNotCurrentEmployee" checked={isNotCurrentEmployee} onCheckedChange={(checked) => setIsNotCurrentEmployee(checked as boolean)} />
             <Label className="font-normal text-muted-foreground">
               <p>
-                Санал болгож буй хүн одоо энэхүү компанид ажилладаггүй.<span className="text-destructive ml-2">*</span>
+                Санал болгож буй хүн одоо энэхүү компанид ажилладаггүй.<span className="text-destructive ml-1.5">*</span>
               </p>
             </Label>
           </div>

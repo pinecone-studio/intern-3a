@@ -1,6 +1,7 @@
 'use client';
 
 import { Button, Card, CardContent, Input, Label } from '@intern-3a/shadcn';
+import { statusOptions } from 'apps/referu-employee-fe/src/libs/utils/status-options ';
 import { Upload, X } from 'lucide-react';
 import React, { ChangeEvent, useState } from 'react';
 
@@ -9,7 +10,7 @@ export const ReferPageCandidateDetail = () => {
   const [candidateFirstName, setCandidateFirstName] = useState<string>('');
   const [candidateTelNumber, setCandidateTelNumber] = useState<string>('');
   const [candidateEmail, setCandidateEmail] = useState<string>('');
-  const [candidateLinkedinUrl, setCandidateLinkedinUrl] = useState<string>('null');
+  const [candidateLinkedinUrl, setCandidateLinkedinUrl] = useState<string>('');
   const [candidateFieldOfInterest, setCandidateFieldOfInterest] = useState<string>('');
   const [candidateCurrentStatus, setCandidateCurrentStatus] = useState<string>('');
   const [candidateResume, setCandidateResume] = useState<File | undefined>();
@@ -75,11 +76,23 @@ export const ReferPageCandidateDetail = () => {
             <Input value={candidateFieldOfInterest} onChange={(e) => setCandidateFieldOfInterest(e.target.value)} className="text-sm" />
           </div>
           <div className="flex flex-col gap-2">
-            <Label className="font-normal">
+            <Label htmlFor="candidateCurrentStatus" className="font-normal">
               Одоогийн ажлын байдал
               <span className="text-destructive">*</span>
             </Label>
-            <Input value={candidateCurrentStatus} onChange={(e) => setCandidateCurrentStatus(e.target.value)} className="text-sm" />
+            <Input
+              id="candidateCurrentStatus"
+              list="recommendedStatusOptions"
+              value={candidateCurrentStatus}
+              onChange={(e) => setCandidateCurrentStatus(e.target.value)}
+              className="text-sm"
+              placeholder="Сонгох / оруулах"
+            />
+            <datalist id="recommendedStatusOptions">
+              {statusOptions.map((status) => (
+                <option key={status.value} value={status.label} />
+              ))}
+            </datalist>
           </div>
           <div className="flex flex-col gap-2 relative">
             <Label className="font-normal">

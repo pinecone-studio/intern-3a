@@ -1,5 +1,7 @@
 import { Card, CardContent } from '@intern-3a/shadcn';
 import { mockEmployeeData } from 'apps/referu-employee-fe/src/libs/utils/get-datas';
+import { getJobLevelMN } from 'apps/referu-employee-fe/src/libs/utils/get-job-level-mn';
+import { getJobTypeMN } from 'apps/referu-employee-fe/src/libs/utils/get-job-type-mn';
 import React from 'react';
 
 export const ReferPageEmployeeDetail = () => {
@@ -27,14 +29,14 @@ export const ReferPageEmployeeDetail = () => {
           <div className="flex justify-between">
             <p className="text-muted-foreground">Түвшин:</p>
             <p className="font-medium">
-              <span>{mockEmployeeData.employeeJobLevel}</span>
+              <span>{getJobLevelMN(mockEmployeeData.employeeJobLevel)}</span>
             </p>
           </div>
 
           <div className="flex justify-between">
             <p className="text-muted-foreground">Төрөл:</p>
             <p className="font-medium">
-              <span>{mockEmployeeData.employeeJobType}</span>
+              <span>{getJobTypeMN(mockEmployeeData.employeeJobType)}</span>
             </p>
           </div>
 

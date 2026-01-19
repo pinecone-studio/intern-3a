@@ -1,5 +1,6 @@
 'use client';
 import { Card, CardContent, Input, Label, Textarea } from '@intern-3a/shadcn';
+import { relationOptions } from 'apps/referu-employee-fe/src/libs/utils/relation-options';
 import React, { useState } from 'react';
 
 export const ReferPageEmployeeTypeSection = () => {
@@ -15,18 +16,30 @@ export const ReferPageEmployeeTypeSection = () => {
 
         <div className="flex flex-col gap-3 text-sm">
           <div className="flex flex-col gap-2">
-            <Label className="font-normal">
+            <Label htmlFor="relationWithCandidate" className="font-normal">
               <p>
-                Санал болгож буй хүнтэй миний холбоо <span className="text-destructive">*</span>
+                Санал болгож буй хүнтэй миний холбоо <span className="text-destructive ml-1.5">*</span>
               </p>
             </Label>
-            <Input value={relationWithCandidate} onChange={(e) => setRelationWithCandidate(e.target.value)} className="text-sm" />
+            <Input
+              id="relationWithCandidate"
+              list="recommendedRelationOptions"
+              value={relationWithCandidate}
+              onChange={(e) => setRelationWithCandidate(e.target.value)}
+              className="text-sm"
+              placeholder="Сонгох / оруулах"
+            />
+            <datalist id="recommendedRelationOptions">
+              {relationOptions.map((relation) => (
+                <option key={relation.value} value={relation.label} />
+              ))}
+            </datalist>
           </div>
 
           <div className="flex flex-col gap-2">
             <Label className="font-normal">
               <p>
-                Энэ хүнийг санал болгосон шалтгаан <span className="text-destructive">*</span>
+                Энэ хүнийг санал болгосон шалтгаан <span className="text-destructive ml-1.5">*</span>
               </p>
             </Label>
             <Textarea value={refferalReason} onChange={(e) => setRefferalReason(e.target.value)} className="text-sm" />

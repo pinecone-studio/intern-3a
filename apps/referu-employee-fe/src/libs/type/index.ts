@@ -2,8 +2,8 @@ export type HrPostedJobsType = {
   _id: string;
   jobTitle: string;
   jobDepartment: string;
-  jobType: string;
-  jobLevel: string;
+  jobType: EmployeeJobType;
+  jobLevel: EmployeeJobLevel;
   salaryMin: number;
   salaryMax: number;
   keyDuties: string[];
@@ -17,6 +17,9 @@ export type HrPostedJobsType = {
   updatedAt: string;
 };
 
+export type EmployeeJobType = 'FULL_TIME' | 'PART_TIME' | 'ROSTER' | 'SHIFT' | 'REMOTE' | 'SEASONAL' | 'OTHER';
+export type EmployeeJobLevel = 'EXECUTIVE' | 'SENIOR' | 'MID_LEVEL' | 'JUNIOR' | 'CONTRACTOR' | 'INTERN' | 'VOLUNTEER' | 'OTHER';
+
 export type EmployeeType = {
   _id: string;
   employeeClerkId: string;
@@ -26,8 +29,8 @@ export type EmployeeType = {
   employeeEmail: string;
   employeeDepartment: string;
   employeeJobTitle: string;
-  employeeJobType: 'FULL_TIME' | 'PART_TIME' | 'CONTRACT';
-  employeeJobLevel: 'SPECIALIST' | 'MANAGER' | 'OTHER';
+  employeeJobType: EmployeeJobType;
+  employeeJobLevel: EmployeeJobLevel;
   createdAt: string;
   updatedAt: string;
 };
@@ -43,7 +46,7 @@ export type ReferralType = {
   candidateTelNumber: string;
   candidateEmail: string;
   candidateLinkedinUrl?: string;
-  candidateCurrentStatus: 'CURRENTLY_EMPLOYED' | 'UNEMPLOYED' | 'STUDENT' | 'OTHER';
+  candidateCurrentStatus: 'CURRENTLY_EMPLOYED' | 'UNEMPLOYED' | 'SELF_EMPLOYED' | 'STUDENT' | 'INTERN' | 'OTHER';
   candidateFieldOfInterest: string;
   candidateResume: string;
   hasCandidateConsent: boolean;
