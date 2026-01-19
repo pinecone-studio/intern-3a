@@ -5,7 +5,8 @@ import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
 import { Briefcase, Building2, Calendar, ChevronLeft, FileText, LayoutDashboard, Settings, Users } from 'lucide-react';
-import { Button } from '../components/ui/button';
+
+import { Button } from 'libs/shared/shadcn/src';
 import { cn } from '../lib/utils';
 
 const navigation = [

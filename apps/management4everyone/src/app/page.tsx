@@ -1,6 +1,6 @@
+import { Card } from 'libs/shared/shadcn/src';
 import { Building2, Calendar, TrendingUp, Users } from 'lucide-react';
 import { AppLayout } from './_components/AppLayout';
-import { Card } from './components/ui/card';
 
 export default function DashboardPage() {
   const stats = [

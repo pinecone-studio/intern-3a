@@ -1,8 +1,8 @@
 'use client';
 
 import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from '@clerk/nextjs';
+import { Button } from 'libs/shared/shadcn/src';
 import { Bell, Menu, Search } from 'lucide-react';
-import { Button } from '../components/ui/button';
 
 interface HeaderProps {
   onMenuClick: () => void;
