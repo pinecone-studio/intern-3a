@@ -19,7 +19,7 @@ export default function HomePage() {
 
   if (!user && !isLoaded)
     return (
-      <div className="flex justify-center items-center">
+      <div className="min-h-screen flex justify-center items-center">
         <Loader className="animate-spin" />
       </div>
     );

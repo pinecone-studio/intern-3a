@@ -10,7 +10,7 @@ export const JobCardDetailPartMain = ({ selectedJob }: { selectedJob: HrPostedJo
           <h3 className="font-semibold">Гүйцэтгэх үндсэн үүрэг</h3>
           <div className="flex flex-col gap-2 text-sm">
             {selectedJob.keyDuties.map((duty) => (
-              <div className="flex gap-2 items-center">
+              <div key={duty} className="flex gap-2 items-center">
                 <span className="text-[#005295]">•</span>
                 <span className="text-muted-foreground">{duty}</span>
               </div>
@@ -22,7 +22,7 @@ export const JobCardDetailPartMain = ({ selectedJob }: { selectedJob: HrPostedJo
           <h3 className="font-semibold">Ажлын байранд тавигдах шаардлага</h3>
           <div className="flex flex-col gap-2 text-sm">
             {selectedJob.requirements.map((requirement) => (
-              <div className="flex gap-2 items-center">
+              <div key={requirement} className="flex gap-2 items-center">
                 <span className="text-[#005295]">•</span>
                 <span className="text-muted-foreground">{requirement}</span>
               </div>
@@ -42,7 +42,7 @@ export const JobCardDetailPartMain = ({ selectedJob }: { selectedJob: HrPostedJo
           <h3 className="font-semibold">Шаардлагатай ур чадварууд</h3>
           <div className="flex flex-col gap-2 text-sm">
             {selectedJob.requiredSkills.map((skill) => (
-              <div className="flex gap-2 items-center">
+              <div key={skill} className="flex gap-2 items-center">
                 <span className="text-[#005295]">•</span>
                 <span className="text-muted-foreground">{skill}</span>
               </div>
@@ -54,7 +54,7 @@ export const JobCardDetailPartMain = ({ selectedJob }: { selectedJob: HrPostedJo
           <h3 className="font-semibold">Хангамж урамшуулал</h3>
           <div className="flex flex-col gap-2 text-sm">
             {selectedJob.benefits.map((benefit) => (
-              <div className="flex gap-2 items-center">
+              <div key={benefit} className="flex gap-2 items-center">
                 <span className="text-[#005295]">•</span>
                 <span className="text-muted-foreground">{benefit}</span>
               </div>
