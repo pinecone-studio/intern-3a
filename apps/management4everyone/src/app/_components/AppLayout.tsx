@@ -3,8 +3,8 @@
 import type React from 'react';
 
 import { useState } from 'react';
-import { Header } from './header';
-import { Sidebar } from './Sidebar';
+import { Header } from './Header';
+import { Sidebar } from './sidebar';
 
 interface AppLayoutProps {
   children: React.ReactNode;
