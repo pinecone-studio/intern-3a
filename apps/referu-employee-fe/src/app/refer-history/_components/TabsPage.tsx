@@ -61,21 +61,17 @@ export function TabsPage() {
         </div>
 
         <div className="p-4">
-          <TabsContent value="sent" className="space-y-4">
+          <TabsContent value="sent" className="space-y-3">
             {historyData.sent.map((item) => (
               <Card key={item.id} className="border-border/50">
-                <CardContent className="p-4">
+                <CardContent className="px-3 py-1">
                   <div className="flex items-start gap-3">
                     <div className="w-3 h-3 rounded-full bg-orange-400 shrink-0 mt-2" />
-                    <div className="flex-1 space-y-1">
+                    <div>
                       <h3 className="font-semibold text-base">{item.jobName}</h3>
                       <p className="text-sm text-muted-foreground">Нэр дэвшигч: {item.candidateName}</p>
-                      <Badge variant="secondary" className="text-xs mt-2">
-                        {new Date(item.sentDate).toLocaleDateString('mn-MN', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric',
-                        })}
+                      <Badge variant="secondary" className="text-xs mt-1">
+                        {item.sentDate}
                       </Badge>
                     </div>
                   </div>
@@ -84,33 +80,27 @@ export function TabsPage() {
             ))}
           </TabsContent>
 
-          <TabsContent value="approved" className="mt-0 space-y-3">
+          <TabsContent value="approved" className="space-y-3">
             {historyData.approved.map((item) => (
               <Card key={item.id} className="border-border/50">
-                <CardContent className="p-4">
+                <CardContent className="px-3 py-1">
                   <div className="flex items-start gap-3">
                     <div className="w-3 h-3 rounded-full bg-green-500 shrink-0 mt-2" />
 
-                    <div className="flex-1 space-y-1">
+                    <div>
                       <div className="flex items-start justify-between gap-2">
                         <h3 className="font-semibold text-base">{item.jobName}</h3>
-                        <span className="text-sm font-semibold text-status-green whitespace-nowrap">{item.bonus}</span>
+                        <span className="text-sm font-semibold text-green-500">{item.bonus}</span>
                       </div>
                       <p className="text-sm text-muted-foreground">Нэр дэвшигч: {item.candidateName}</p>
                       <div className="flex gap-2 flex-wrap mt-2">
                         <Badge variant="secondary" className="text-xs">
-                          Илгээсэн:{' '}
-                          {new Date(item.sentDate).toLocaleDateString('mn-MN', {
-                            month: 'short',
-                            day: 'numeric',
-                          })}
+                          Илгээгдсэн:
+                          {item.sentDate}
                         </Badge>
                         <Badge variant="secondary" className="text-xs">
                           Зөвшөөрсөн:
-                          {new Date(item.approvedDate).toLocaleDateString('mn-MN', {
-                            month: 'short',
-                            day: 'numeric',
-                          })}
+                          {item.sentDate}
                         </Badge>
                       </div>
                     </div>
@@ -120,30 +110,23 @@ export function TabsPage() {
             ))}
           </TabsContent>
 
-          <TabsContent value="rejected" className="mt-0 space-y-3">
+          <TabsContent value="rejected" className=" space-y-3">
             {historyData.rejected.map((item) => (
               <Card key={item.id} className="border-border/50">
-                <CardContent className="p-4">
+                <CardContent className="px-3 py-1">
                   <div className="flex items-start gap-3">
                     <div className="w-3 h-3 rounded-full bg-red-500 shrink-0 mt-2" />
 
-                    <div className="flex-1 space-y-1">
+                    <div>
                       <h3 className="font-semibold text-base">{item.jobName}</h3>
                       <p className="text-sm text-muted-foreground">Нэр дэвшигч: {item.candidateName}</p>
                       <div className="flex gap-2 flex-wrap mt-2">
                         <Badge variant="secondary" className="text-xs">
-                          Илгээсэн:{' '}
-                          {new Date(item.sentDate).toLocaleDateString('mn-MN', {
-                            month: 'short',
-                            day: 'numeric',
-                          })}
+                          Илгээгдсэн:
+                          {item.sentDate}
                         </Badge>
                         <Badge variant="secondary" className="text-xs">
-                          Хариу:{' '}
-                          {new Date(item.responseDate).toLocaleDateString('mn-MN', {
-                            month: 'short',
-                            day: 'numeric',
-                          })}
+                          Цуцлагдсан: {item.sentDate}
                         </Badge>
                       </div>
                     </div>
