@@ -1,6 +1,7 @@
 import { SignOutButton } from '@clerk/nextjs';
 import { auth, currentUser } from '@clerk/nextjs/server';
 import { Clock, LogOut, ShieldAlert } from 'lucide-react';
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 export default async function WaitingApprovalPage() {
@@ -36,12 +37,14 @@ export default async function WaitingApprovalPage() {
         <div className="pt-6 border-t border-gray-100 flex flex-col gap-3">
           <p className="text-xs text-gray-400">Хэрэв та өөр хаягаар нэвтрэх бол доорх товчийг ашиглана уу</p>
 
-          <SignOutButton>
-            <button className="flex items-center justify-center gap-2 w-full rounded-xl bg-gray-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-gray-800">
-              <LogOut className="h-4 w-4" />
-              Системээс гарах
-            </button>
-          </SignOutButton>
+          <Link href={'/'}>
+            <SignOutButton>
+              <button className="flex items-center justify-center gap-2 w-full rounded-xl bg-gray-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-gray-800">
+                <LogOut className="h-4 w-4" />
+                Системээс гарах
+              </button>
+            </SignOutButton>
+          </Link>
         </div>
       </div>
 
