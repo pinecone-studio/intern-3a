@@ -10,6 +10,8 @@ export const ReferPageCandidateDetail = () => {
   const [candidateTelNumber, setCandidateTelNumber] = useState<string>('');
   const [candidateEmail, setCandidateEmail] = useState<string>('');
   const [candidateLinkedinUrl, setCandidateLinkedinUrl] = useState<string>('null');
+  const [candidateFieldOfInterest, setCandidateFieldOfInterest] = useState<string>('');
+  const [candidateCurrentStatus, setCandidateCurrentStatus] = useState<string>('');
   const [candidateResume, setCandidateResume] = useState<File | undefined>();
   const [resumeFilePreview, setResumeFilePreview] = useState<string>('');
 
@@ -25,6 +27,8 @@ export const ReferPageCandidateDetail = () => {
   console.log({ candidateTelNumber });
   console.log({ candidateEmail });
   console.log({ candidateLinkedinUrl });
+  console.log({ candidateFieldOfInterest });
+  console.log({ candidateCurrentStatus });
   console.log({ candidateResume });
   console.log({ resumeFilePreview });
 
@@ -57,18 +61,29 @@ export const ReferPageCandidateDetail = () => {
           </div>
           <div className="flex flex-col gap-2">
             <Label className="font-normal">
-              Имэйл
+              Имэйл хаяг
               <span className="text-destructive">*</span>
             </Label>
             <Input value={candidateEmail} onChange={(e) => setCandidateEmail(e.target.value)} className="text-sm" />
           </div>
           <div className="flex flex-col gap-2">
-            <Label className="font-normal">Linkedin</Label>
+            <Label className="font-normal">Linkedin хаяг</Label>
             <Input value={candidateLinkedinUrl} onChange={(e) => setCandidateLinkedinUrl(e.target.value)} className="text-sm px-4 py-3" />
+          </div>
+          <div className="flex flex-col gap-2">
+            <Label className="font-normal">Сонирхож буй ажлын чиглэл</Label>
+            <Input value={candidateFieldOfInterest} onChange={(e) => setCandidateFieldOfInterest(e.target.value)} className="text-sm" />
+          </div>
+          <div className="flex flex-col gap-2">
+            <Label className="font-normal">
+              Одоогийн ажлын байдал
+              <span className="text-destructive">*</span>
+            </Label>
+            <Input value={candidateCurrentStatus} onChange={(e) => setCandidateCurrentStatus(e.target.value)} className="text-sm" />
           </div>
           <div className="flex flex-col gap-2 relative">
             <Label className="font-normal">
-              Анкет (PDF)
+              Анкет (PDF) хавсаргах
               <span className="text-destructive">*</span>
             </Label>
             <div>
