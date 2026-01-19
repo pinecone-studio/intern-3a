@@ -162,3 +162,18 @@ export const hrPostedJobs = [
     updatedAt: '2026-01-18T00:00:00.000Z',
   },
 ];
+
+export const mockEmployeeData = {
+  _id: '65a1f001a123456789000001',
+  employeeClerkId: 'user_2aBcDeFgH123',
+  employeeFirstName: 'Оюунмягмар',
+  employeeLastName: 'Ганбаатар',
+  employeeTelNumber: '99192615',
+  employeeEmail: 'oyunmyagmar.g@gmail.com',
+  employeeDepartment: 'Хөгжүүлэлт',
+  employeeJobTitle: 'Full-Stack хөгжүүлэгч',
+  employeeJobType: 'FULL_TIME',
+  employeeJobLevel: 'SPECIALIST',
+  createdAt: '2026-01-18T00:00:00.000Z',
+  updatedAt: '2026-01-18T00:00:00.000Z',
+};
