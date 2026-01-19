@@ -112,7 +112,7 @@ export const ReferPageCandidateDetail = () => {
 
             {candidateResume ? (
               <>
-                <iframe src={resumeFilePreview} className="w-full h-[400px] border rounded-md relative" />
+                <iframe src={resumeFilePreview} className="w-full h-100 border rounded-md relative" />
                 <Button onClick={() => setCandidateResume(undefined)} variant={'outline'} className="absolute w-8 h-8 rounded-full right-2 bottom-2 cursor-pointer">
                   <X />
                 </Button>
