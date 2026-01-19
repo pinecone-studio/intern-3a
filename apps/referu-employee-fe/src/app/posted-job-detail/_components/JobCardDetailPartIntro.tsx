@@ -18,15 +18,15 @@ export const JobCardDetailPartIntro = ({ selectedJob }: { selectedJob: HrPostedJ
           <div className="text-base text-[#005295] font-semibold">
             <span>₮{selectedJob.salaryMin?.toLocaleString()}</span> - <span>₮{selectedJob.salaryMax?.toLocaleString()}</span>
           </div>
-          <Badge variant={'secondary'} className="text-xs hover:text-white bg-[#005295]/10 hover:bg-[#005295] transition-all delay-300s cursor-pointer">
+          <Badge variant={'secondary'} className="text-xs hover:text-white bg-[#005295]/10 hover:bg-[#005295] transition-all duration-300 cursor-pointer">
             <span>Төрөл: </span>
             {selectedJob.jobType}
           </Badge>
-          <Badge variant={'secondary'} className="text-xs hover:text-white bg-[#005295]/10 hover:bg-[#005295] transition-all delay-300s cursor-pointer">
+          <Badge variant={'secondary'} className="text-xs hover:text-white bg-[#005295]/10 hover:bg-[#005295] transition-all duration-300 cursor-pointer">
             <span>Түвшин:</span>
             {selectedJob.jobLevel}
           </Badge>
-          <Badge variant={'secondary'} className="text-xs font-normal">
+          <Badge variant={'secondary'} className="text-xs font-normal hover:text-white hover:bg-black transition-all duration-300 cursor-pointer">
             <span>Нийтэлсэн огноо: </span>
             {formatDate(selectedJob.createdAt)}
           </Badge>

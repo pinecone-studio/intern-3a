@@ -13,8 +13,8 @@ export default function ReferPersonPage({ params }: { params: Promise<{ id: stri
 
       <div className="p-5 flex flex-col gap-3">
         <ReferPageEmployeeDetail />
-        <ReferPageEmployeeTypeSection />
         <ReferPageCandidateDetail />
+        <ReferPageEmployeeTypeSection />
         <ReferPageConfirmation />
       </div>
 
