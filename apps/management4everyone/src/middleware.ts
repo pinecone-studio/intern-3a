@@ -7,6 +7,7 @@ declare global {
   interface CustomJwtSessionClaims {
     metadata?: {
       approved?: boolean;
+      role?: string;
     };
   }
 }

@@ -319,7 +319,7 @@ export type UserScalarWhereWithAggregatesInput = {
 }
 
 export type UserCreateInput = {
-  id: string
+  id?: string
   clerkUserId: string
   email: string
   firstName?: string | null
@@ -333,7 +333,7 @@ export type UserCreateInput = {
 }
 
 export type UserUncheckedCreateInput = {
-  id: string
+  id?: string
   clerkUserId: string
   email: string
   firstName?: string | null
@@ -375,7 +375,7 @@ export type UserUncheckedUpdateInput = {
 }
 
 export type UserCreateManyInput = {
-  id: string
+  id?: string
   clerkUserId: string
   email: string
   firstName?: string | null
@@ -555,7 +555,7 @@ export type NullableIntFieldUpdateOperationsInput = {
 }
 
 export type UserCreateWithoutAttendanceInput = {
-  id: string
+  id?: string
   clerkUserId: string
   email: string
   firstName?: string | null
@@ -568,7 +568,7 @@ export type UserCreateWithoutAttendanceInput = {
 }
 
 export type UserUncheckedCreateWithoutAttendanceInput = {
-  id: string
+  id?: string
   clerkUserId: string
   email: string
   firstName?: string | null
@@ -623,7 +623,7 @@ export type UserUncheckedUpdateWithoutAttendanceInput = {
 }
 
 export type UserCreateWithoutDepartmentInput = {
-  id: string
+  id?: string
   clerkUserId: string
   email: string
   firstName?: string | null
@@ -636,7 +636,7 @@ export type UserCreateWithoutDepartmentInput = {
 }
 
 export type UserUncheckedCreateWithoutDepartmentInput = {
-  id: string
+  id?: string
   clerkUserId: string
   email: string
   firstName?: string | null
@@ -690,7 +690,7 @@ export type UserScalarWhereInput = {
 }
 
 export type UserCreateWithoutLeaveInput = {
-  id: string
+  id?: string
   clerkUserId: string
   email: string
   firstName?: string | null
@@ -703,7 +703,7 @@ export type UserCreateWithoutLeaveInput = {
 }
 
 export type UserUncheckedCreateWithoutLeaveInput = {
-  id: string
+  id?: string
   clerkUserId: string
   email: string
   firstName?: string | null
@@ -758,7 +758,7 @@ export type UserUncheckedUpdateWithoutLeaveInput = {
 }
 
 export type UserCreateManyDepartmentInput = {
-  id: string
+  id?: string
   clerkUserId: string
   email: string
   firstName?: string | null
