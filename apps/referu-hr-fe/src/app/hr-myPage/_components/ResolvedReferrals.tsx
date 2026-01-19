@@ -1,4 +1,5 @@
 import { Badge, Card, CardContent, TabsContent } from '@intern-3a/shadcn';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
 type Job = {
@@ -8,8 +9,10 @@ type Job = {
   postedDate: string;
   salaryRange: string;
   referralCount?: number;
-  status: string;
+  status: Status;
 };
+
+type Status = 'RESOLVED';
 
 const mockJobs: Job[] = [
   {
@@ -18,8 +21,7 @@ const mockJobs: Job[] = [
     department: 'Дизайны алба',
     postedDate: '1-р сарын 5',
     salaryRange: '₮2,500,000 - ₮4,000,000',
-    // status: 'Accepted',
-    status: 'Resolved',
+    status: 'RESOLVED',
   },
   {
     id: '4',
@@ -27,29 +29,37 @@ const mockJobs: Job[] = [
     department: 'Өгөгдлийн алба',
     postedDate: '1-р сарын 3',
     salaryRange: '₮3,000,000 - ₮4,500,000',
-    // status: 'Rejected',
-    status: 'Resolved',
+    status: 'RESOLVED',
   },
 ];
 
+const statusColors: Record<Status, string> = {
+  RESOLVED: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+};
+
+const statusLabels: Record<Status, string> = {
+  RESOLVED: 'Шийдэгдсэн',
+};
+
 const ResolvedReferrals = () => {
+  const router = useRouter();
+
+  const handleResolvedJob = (jobId: string) => {
+    router.push(`/hr-myPage/${jobId}`);
+  };
   return (
     <div>
       <TabsContent value="password">
         <div className="flex flex-col gap-4">
           {mockJobs.map((jobs) => (
             <div key={jobs.id}>
-              <Card className="py-4 space-y-3 cursor-pointer hover:shadow-md transition-shadow">
-                {/* <CardTitle>{jobs.title}</CardTitle> */}
+              <Card className="py-4 space-y-3 cursor-pointer hover:shadow-md transition-shadow" onClick={() => handleResolvedJob(jobs.id)}>
                 <CardContent>
                   <div>
                     <div className="flex justify-between items-center">
                       <div className="font-semibold text-md">{jobs.title}</div>
-                      {/* <Badge className={`${jobs.status === 'Accepted' ? 'bg-green-500' : 'bg-red-500'}`}>{jobs.status} </Badge> */}
-                      <Badge className="bg-[#005295]">{jobs.status}</Badge>
+                      <Badge className={statusColors[jobs.status as keyof typeof statusColors]}>{statusLabels[jobs.status as keyof typeof statusLabels]}</Badge>
                     </div>
-
-                    {/* <div className="text-[#005295] font-medium text-sm">{jobs.salaryRange}</div> */}
 
                     <div className="text-sm text-muted-foreground mt-3">{jobs.department}</div>
                   </div>

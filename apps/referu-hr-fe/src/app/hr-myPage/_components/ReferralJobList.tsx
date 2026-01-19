@@ -39,12 +39,10 @@ const ReferralJobList = () => {
           {mockJobsWithReferrals.map((jobs) => (
             <div key={jobs.id}>
               <Card className="py-4 space-y-3 cursor-pointer hover:shadow-md transition-shadow" onClick={() => handleJodRefferal(jobs.id)}>
-                {/* <CardTitle>{jobs.title}</CardTitle> */}
                 <CardContent>
                   <div className="flex justify-between items-center">
                     <div className="font-semibold text-md">{jobs.title}</div>
-                    <Badge className="bg-[#005295]">{jobs.referralCount} санал</Badge>
-                    {/* <div>{jobs.referralCount} санал</div> */}
+                    <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">{jobs.referralCount} санал</Badge>
                   </div>
 
                   <div className="text-sm text-muted-foreground mt-3">{jobs.department}</div>
