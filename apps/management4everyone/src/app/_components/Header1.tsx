@@ -8,7 +8,7 @@ interface HeaderProps {
   onMenuClick: () => void;
 }
 
-export function Header({ onMenuClick }: HeaderProps) {
+export function Header1({ onMenuClick }: HeaderProps) {
   const { user, isLoaded } = useUser();
 
   if (!isLoaded) return null;

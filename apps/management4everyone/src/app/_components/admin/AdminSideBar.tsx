@@ -52,7 +52,7 @@ interface SidebarProps {
   onClose: () => void;
 }
 
-export function Sidebar({ isOpen, onClose }: SidebarProps) {
+export function AdminSideBar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = useState(false);
 
