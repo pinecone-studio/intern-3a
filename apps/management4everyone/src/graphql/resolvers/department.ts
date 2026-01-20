@@ -1,0 +1,71 @@
+// apps/management4everyone/src/graphql/resolvers/department.ts
+import { PrismaPg } from '@prisma/adapter-pg';
+import { PrismaClient } from '../../generated/client';
+import { requireAuth, requireRole } from '../../lib/auth';
+
+const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
+
+const prisma = new PrismaClient({ adapter });
+
+export const departmentResolvers = {
+  Query: {
+    // 🔒 ADMIN – бүх хэлтэс
+    departments: async (_: any, __: any, ctx: any) => {
+      requireRole(ctx, 'ADMIN');
+
+      return prisma.department.findMany({
+        orderBy: { id: 'asc' },
+      });
+    },
+
+    // 🔒 ADMIN – нэг хэлтэс
+    department: async (_: any, args: { id: number }, ctx: any) => {
+      requireRole(ctx, 'ADMIN');
+
+      return prisma.department.findUnique({
+        where: { id: args.id },
+      });
+    },
+  },
+
+  Mutation: {
+    // 🔒 ADMIN – засах
+    updateDepartment: async (_: any, args: { id: number; input: { name: string } }, ctx: any) => {
+      requireRole(ctx, 'ADMIN');
+
+      return prisma.department.update({
+        where: { id: args.id },
+        data: {
+          name: args.input.name,
+          updatedAt: new Date(),
+        },
+      });
+    },
+
+    // 🔒 ADMIN – устгах
+    deleteDepartment: async (_: any, args: { id: number }, ctx: any) => {
+      requireRole(ctx, 'ADMIN');
+
+      await prisma.department.delete({
+        where: { id: args.id },
+      });
+
+      return true;
+    },
+
+    // 👤 USER – өөрийн хэлтсээ сонгох
+    selectMyDepartment: async (_: any, args: { departmentId: number }, ctx: any) => {
+      requireAuth(ctx);
+
+      await prisma.user.update({
+        where: { id: ctx.userId },
+        data: {
+          departmentId: args.departmentId,
+          updatedAt: new Date(),
+        },
+      });
+
+      return true;
+    },
+  },
+};
