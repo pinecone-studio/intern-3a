@@ -7,11 +7,11 @@ import React from 'react';
 export const MenuItem = () => {
   const router = useRouter();
   return (
-    <Card onClick={() => router.push('/refer-history')} className="border">
+    <Card onClick={() => router.push('/refer-history')} className="border-none">
       <CardContent>
-        <button className="w-full flex items-center justify-between hover:bg-accent transition-colors">
+        <button className=" w-full flex items-center justify-between hover:bg-accent transition-colors">
           <span className="font-medium">Санал болгосон түүх</span>
-          <ChevronRight className="w-5 h-5 text-muted-foreground" />
+          <ChevronRight className="w-6 h-6 text-muted-foreground" />
         </button>
       </CardContent>
     </Card>

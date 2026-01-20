@@ -1,10 +1,9 @@
 import React from 'react';
-import { Header, TabsPage } from './_components';
+import { TabsPage } from './_components/TabsPage';
 
 const ReferHistoryPage = () => {
   return (
     <div>
-      <Header />
       <TabsPage />
     </div>
   );

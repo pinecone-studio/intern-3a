@@ -2,8 +2,8 @@ import React from 'react';
 
 export const Header = () => {
   return (
-    <div className="bg-card border-b border h-13 shadow-sm flex items-center">
-      <h1 className="text-lg pl-2 font-semibold">Миний хэсэг</h1>
+    <div className="flex items-center px-4 bg-white  border-b w-full border-border">
+      <h1 className="px-4 py-3 text-xl font-bold tracking-tight">Миний хэсэг</h1>
     </div>
   );
 };
