@@ -5,17 +5,17 @@ export function getJobTypeMN(type: EmployeeJobType): string {
     case 'FULL_TIME':
       return 'Бүтэн цагийн';
     case 'PART_TIME':
-      return 'Бүтэн бус цагийн';
-    case 'ROSTER':
-      return 'Уртын ээлжийн';
-    case 'SHIFT':
+      return 'Цагийн ажил';
+    case 'SHIFT_BASED':
       return 'Ээлжийн';
-    case 'REMOTE':
-      return 'Гэрээсээ / зайнаас ажиллах';
     case 'SEASONAL':
       return 'Улирлын';
-    case 'OTHER':
+    case 'CONTRACT':
+      return 'Гэрээт';
+    case 'TEMPORARY':
       return 'Бусад';
+    case 'OTHER':
+      return 'Түр ажил';
     default:
       return type;
   }

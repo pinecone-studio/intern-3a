@@ -17,8 +17,8 @@ export type HrPostedJobsType = {
   updatedAt: string;
 };
 
-export type EmployeeJobType = 'FULL_TIME' | 'PART_TIME' | 'ROSTER' | 'SHIFT' | 'REMOTE' | 'SEASONAL' | 'OTHER';
-export type EmployeeJobLevel = 'EXECUTIVE' | 'SENIOR' | 'MID_LEVEL' | 'JUNIOR' | 'CONTRACTOR' | 'INTERN' | 'VOLUNTEER' | 'OTHER';
+export type EmployeeJobType = 'FULL_TIME' | 'PART_TIME' | 'SHIFT_BASED' | 'SEASONAL' | 'CONTRACT' | 'TEMPORARY' | 'OTHER';
+export type EmployeeJobLevel = 'EXECUTIVE' | 'UNIT_DIRECTOR' | 'UNIT_HEAD' | 'SENIOR_MANAGER' | 'MANAGER' | 'SENIOR_SPECIALIST' | 'SPECIALIST' | 'SENIOR_STAFF' | 'EMPLOYEE' | 'INTERN' | 'OTHER';
 
 export type EmployeeType = {
   _id: string;
@@ -39,14 +39,14 @@ export type ReferralType = {
   _id: string;
   postedJobId: string;
   referringEmployeeId: string;
-  relationWithCandidate: 'FRIEND' | 'FORMER_COLLEAGUE' | 'PARENT' | 'SIBLING' | 'RELATIVE' | 'OTHER';
+  relationWithCandidate: 'FORMER_COLLEAGUE' | 'ALUMNI' | ' FRIEND' | 'FAMILY_RELATIVES' | 'OTHER';
   refferalReason: string;
   candidateFirstName: string;
   candidateLastName: string;
   candidateTelNumber: string;
   candidateEmail: string;
   candidateLinkedinUrl?: string;
-  candidateCurrentStatus: 'CURRENTLY_EMPLOYED' | 'UNEMPLOYED' | 'SELF_EMPLOYED' | 'STUDENT' | 'INTERN' | 'OTHER';
+  candidateCurrentStatus: 'CURRENTLY_EMPLOYED' | 'STUDENT' | 'UNEMPLOYED' | 'OTHER';
   candidateFieldOfInterest: string;
   candidateResume: string;
   hasCandidateConsent: boolean;

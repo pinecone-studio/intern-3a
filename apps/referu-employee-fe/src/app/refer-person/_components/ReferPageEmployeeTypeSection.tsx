@@ -18,7 +18,7 @@ export const ReferPageEmployeeTypeSection = () => {
           <div className="flex flex-col gap-2">
             <Label htmlFor="relationWithCandidate" className="font-normal">
               <p>
-                Санал болгож буй хүнтэй миний холбоо <span className="text-destructive ml-1.5">*</span>
+                Та санал болгож буй хүнтэй ямар хамааралтай вэ?<span className="text-destructive ml-1.5">*</span>
               </p>
             </Label>
             <Input
@@ -39,7 +39,7 @@ export const ReferPageEmployeeTypeSection = () => {
           <div className="flex flex-col gap-2">
             <Label className="font-normal">
               <p>
-                Энэ хүнийг санал болгосон шалтгаан <span className="text-destructive ml-1.5">*</span>
+                Дээрх ажлын байранд тухайн хүнийг санал болгож буй шалтгаанаа бичнэ үү.<span className="text-destructive ml-1.5">*</span>
               </p>
             </Label>
             <Textarea value={refferalReason} onChange={(e) => setRefferalReason(e.target.value)} className="text-sm" />

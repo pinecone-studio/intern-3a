@@ -47,7 +47,7 @@ export const ReferPageEmployeeDetail = () => {
             </p>
           </div>
           <div className="flex justify-between">
-            <p className="text-muted-foreground">Имэйл хаяг:</p>
+            <p className="text-muted-foreground">И-мэйл хаяг:</p>
             <p className="font-medium">
               <span>{mockEmployeeData.employeeEmail}</span>
             </p>
