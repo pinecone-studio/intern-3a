@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@intern-3a/shadcn';
-import { HrPostedJobsType } from 'apps/referu-employee-fe/src/libs/utils/type';
+import { HrPostedJobsType } from 'apps/referu-employee-fe/src/libs/type';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 

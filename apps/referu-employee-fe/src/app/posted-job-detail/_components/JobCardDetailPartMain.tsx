@@ -1,5 +1,5 @@
 import { Card, CardContent } from '@intern-3a/shadcn';
-import { HrPostedJobsType } from 'apps/referu-employee-fe/src/libs/utils/type';
+import { HrPostedJobsType } from 'apps/referu-employee-fe/src/libs/type';
 import React from 'react';
 
 export const JobCardDetailPartMain = ({ selectedJob }: { selectedJob: HrPostedJobsType }) => {

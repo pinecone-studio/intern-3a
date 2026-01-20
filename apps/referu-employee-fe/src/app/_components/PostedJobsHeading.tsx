@@ -1,6 +1,6 @@
 import React from 'react';
 import { LuBuilding2 } from 'react-icons/lu';
-import { HrPostedJobsType } from '../../libs/utils/type';
+import { HrPostedJobsType } from '../../libs/type';
 
 export const PostedJobsHeading = ({ hrPostedJobs }: { hrPostedJobs: HrPostedJobsType[] }) => {
   return (

@@ -2,8 +2,8 @@ import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle } from
 import { ChevronRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React from 'react';
+import { HrPostedJobsType } from '../../libs/type';
 import { formatDate } from '../../libs/utils/get-date';
-import { HrPostedJobsType } from '../../libs/utils/type';
 
 export const PostedJobCard = ({ job }: { job: HrPostedJobsType }) => {
   const router = useRouter();
