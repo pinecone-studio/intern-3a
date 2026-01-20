@@ -1,6 +1,7 @@
 'use client';
 
 import { Button, Card, CardContent, Input, Label } from '@intern-3a/shadcn';
+import { statusOptions } from 'apps/referu-employee-fe/src/libs/utils/status-options ';
 import { Upload, X } from 'lucide-react';
 import React, { ChangeEvent, useState } from 'react';
 
@@ -9,7 +10,9 @@ export const ReferPageCandidateDetail = () => {
   const [candidateFirstName, setCandidateFirstName] = useState<string>('');
   const [candidateTelNumber, setCandidateTelNumber] = useState<string>('');
   const [candidateEmail, setCandidateEmail] = useState<string>('');
-  const [candidateLinkedinUrl, setCandidateLinkedinUrl] = useState<string>('null');
+  const [candidateLinkedinUrl, setCandidateLinkedinUrl] = useState<string>('');
+  const [candidateFieldOfInterest, setCandidateFieldOfInterest] = useState<string>('');
+  const [candidateCurrentStatus, setCandidateCurrentStatus] = useState<string>('');
   const [candidateResume, setCandidateResume] = useState<File | undefined>();
   const [resumeFilePreview, setResumeFilePreview] = useState<string>('');
 
@@ -25,6 +28,8 @@ export const ReferPageCandidateDetail = () => {
   console.log({ candidateTelNumber });
   console.log({ candidateEmail });
   console.log({ candidateLinkedinUrl });
+  console.log({ candidateFieldOfInterest });
+  console.log({ candidateCurrentStatus });
   console.log({ candidateResume });
   console.log({ resumeFilePreview });
 
@@ -57,18 +62,41 @@ export const ReferPageCandidateDetail = () => {
           </div>
           <div className="flex flex-col gap-2">
             <Label className="font-normal">
-              Имэйл
+              Имэйл хаяг
               <span className="text-destructive">*</span>
             </Label>
             <Input value={candidateEmail} onChange={(e) => setCandidateEmail(e.target.value)} className="text-sm" />
           </div>
           <div className="flex flex-col gap-2">
-            <Label className="font-normal">Linkedin</Label>
+            <Label className="font-normal">Linkedin хаяг</Label>
             <Input value={candidateLinkedinUrl} onChange={(e) => setCandidateLinkedinUrl(e.target.value)} className="text-sm px-4 py-3" />
+          </div>
+          <div className="flex flex-col gap-2">
+            <Label className="font-normal">Сонирхож буй ажлын чиглэл</Label>
+            <Input value={candidateFieldOfInterest} onChange={(e) => setCandidateFieldOfInterest(e.target.value)} className="text-sm" />
+          </div>
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="candidateCurrentStatus" className="font-normal">
+              Одоогийн ажлын байдал
+              <span className="text-destructive">*</span>
+            </Label>
+            <Input
+              id="candidateCurrentStatus"
+              list="recommendedStatusOptions"
+              value={candidateCurrentStatus}
+              onChange={(e) => setCandidateCurrentStatus(e.target.value)}
+              className="text-sm"
+              placeholder="Сонгох / оруулах"
+            />
+            <datalist id="recommendedStatusOptions">
+              {statusOptions.map((status) => (
+                <option key={status.value} value={status.label} />
+              ))}
+            </datalist>
           </div>
           <div className="flex flex-col gap-2 relative">
             <Label className="font-normal">
-              Анкет (PDF)
+              Анкет (PDF) хавсаргах
               <span className="text-destructive">*</span>
             </Label>
             <div>
@@ -84,7 +112,7 @@ export const ReferPageCandidateDetail = () => {
 
             {candidateResume ? (
               <>
-                <iframe src={resumeFilePreview} className="w-full h-[400px] border rounded-md relative" />
+                <iframe src={resumeFilePreview} className="w-full h-100 border rounded-md relative" />
                 <Button onClick={() => setCandidateResume(undefined)} variant={'outline'} className="absolute w-8 h-8 rounded-full right-2 bottom-2 cursor-pointer">
                   <X />
                 </Button>

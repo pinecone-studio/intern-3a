@@ -1,14 +1,16 @@
 import { Card, CardContent } from '@intern-3a/shadcn';
 import { mockEmployeeData } from 'apps/referu-employee-fe/src/libs/utils/get-datas';
+import { getJobLevelMN } from 'apps/referu-employee-fe/src/libs/utils/get-job-level-mn';
+import { getJobTypeMN } from 'apps/referu-employee-fe/src/libs/utils/get-job-type-mn';
 import React from 'react';
 
 export const ReferPageEmployeeDetail = () => {
   return (
     <Card>
       <CardContent className="flex flex-col gap-3 text-sm">
-        <div className="text-[15px] text-muted-foreground font-semibold">Санал болгогч ажилтны мэдээлэл</div>
+        <div className="text-lg text-muted-foreground font-semibold">Санал болгогч ажилтны мэдээлэл</div>
 
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-1">
           <div className="flex justify-between">
             <p className="text-muted-foreground">Нэр:</p>
             <p className="font-medium">
@@ -27,14 +29,14 @@ export const ReferPageEmployeeDetail = () => {
           <div className="flex justify-between">
             <p className="text-muted-foreground">Түвшин:</p>
             <p className="font-medium">
-              <span>{mockEmployeeData.employeeJobLevel}</span>
+              <span>{getJobLevelMN(mockEmployeeData.employeeJobLevel)}</span>
             </p>
           </div>
 
           <div className="flex justify-between">
             <p className="text-muted-foreground">Төрөл:</p>
             <p className="font-medium">
-              <span>{mockEmployeeData.employeeJobType}</span>
+              <span>{getJobTypeMN(mockEmployeeData.employeeJobType)}</span>
             </p>
           </div>
 
@@ -45,7 +47,7 @@ export const ReferPageEmployeeDetail = () => {
             </p>
           </div>
           <div className="flex justify-between">
-            <p className="text-muted-foreground">Цахим хаяг:</p>
+            <p className="text-muted-foreground">Имэйл хаяг:</p>
             <p className="font-medium">
               <span>{mockEmployeeData.employeeEmail}</span>
             </p>

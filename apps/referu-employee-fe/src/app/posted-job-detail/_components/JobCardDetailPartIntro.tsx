@@ -1,6 +1,8 @@
 import { Badge, Card, CardContent } from '@intern-3a/shadcn';
+import { HrPostedJobsType } from 'apps/referu-employee-fe/src/libs/type';
 import { formatDate } from 'apps/referu-employee-fe/src/libs/utils/get-date';
-import { HrPostedJobsType } from 'apps/referu-employee-fe/src/libs/utils/type';
+import { getJobLevelMN } from 'apps/referu-employee-fe/src/libs/utils/get-job-level-mn';
+import { getJobTypeMN } from 'apps/referu-employee-fe/src/libs/utils/get-job-type-mn';
 import React from 'react';
 
 export const JobCardDetailPartIntro = ({ selectedJob }: { selectedJob: HrPostedJobsType }) => {
@@ -20,11 +22,11 @@ export const JobCardDetailPartIntro = ({ selectedJob }: { selectedJob: HrPostedJ
           </div>
           <Badge variant={'secondary'} className="text-xs hover:text-white bg-[#005295]/10 hover:bg-[#005295] transition-all duration-300 cursor-pointer">
             <span>Төрөл: </span>
-            {selectedJob.jobType}
+            {getJobTypeMN(selectedJob.jobType)}
           </Badge>
           <Badge variant={'secondary'} className="text-xs hover:text-white bg-[#005295]/10 hover:bg-[#005295] transition-all duration-300 cursor-pointer">
             <span>Түвшин:</span>
-            {selectedJob.jobLevel}
+            {getJobLevelMN(selectedJob.jobLevel)}
           </Badge>
           <Badge variant={'secondary'} className="text-xs font-normal hover:text-white hover:bg-black transition-all duration-300 cursor-pointer">
             <span>Нийтэлсэн огноо: </span>
