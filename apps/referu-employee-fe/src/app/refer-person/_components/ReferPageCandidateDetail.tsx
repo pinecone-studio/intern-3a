@@ -62,7 +62,7 @@ export const ReferPageCandidateDetail = () => {
           </div>
           <div className="flex flex-col gap-2">
             <Label className="font-normal">
-              Имэйл хаяг
+              И-мэйл хаяг
               <span className="text-destructive">*</span>
             </Label>
             <Input value={candidateEmail} onChange={(e) => setCandidateEmail(e.target.value)} className="text-sm" />
@@ -77,7 +77,7 @@ export const ReferPageCandidateDetail = () => {
           </div>
           <div className="flex flex-col gap-2">
             <Label htmlFor="candidateCurrentStatus" className="font-normal">
-              Одоогийн ажлын байдал
+              Одоогийн ажил эрхлэлтийн байдал
               <span className="text-destructive">*</span>
             </Label>
             <Input
