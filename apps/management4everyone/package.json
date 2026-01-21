@@ -10,6 +10,7 @@
     "tunnel": "ngrok http 3000"
   },
   "dependencies": {
+    "@apollo/client": "^4.1.1",
     "@apollo/server": "^5.2.0",
     "@as-integrations/next": "^4.1.0",
     "@clerk/nextjs": "^6.36.7",
