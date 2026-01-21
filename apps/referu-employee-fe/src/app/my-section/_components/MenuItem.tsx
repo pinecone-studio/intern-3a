@@ -9,7 +9,7 @@ export const MenuItem = () => {
   return (
     <Card onClick={() => router.push('/refer-history')} className="border-none">
       <CardContent>
-        <button className=" w-full flex items-center justify-between hover:bg-accent transition-colors">
+        <button className="w-full flex items-center justify-between hover:bg-[#005295]/5 transition-colors cursor-pointer p-2 rounded-lg">
           <span className="font-medium">Санал болгосон түүх</span>
           <ChevronRight className="w-6 h-6 text-muted-foreground" />
         </button>

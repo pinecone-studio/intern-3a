@@ -1,6 +1,6 @@
-import { EmployeeType } from '../type';
+import { EmployeeType, HrPostedJobsType } from '../type';
 
-export const hrPostedJobs = [
+export const hrPostedJobs: HrPostedJobsType[] = [
   {
     _id: 'job001',
     jobTitle: 'Веб хөгжүүлэгч',
