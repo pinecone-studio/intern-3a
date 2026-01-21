@@ -1,8 +1,12 @@
+'use client';
+import { useUser } from '@clerk/nextjs';
 import { ArrowRight, BarChart3, ShieldCheck, Users } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 
 const MainPage = () => {
+  const { user } = useUser();
+
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-slate-900 font-sans selection:bg-blue-100">
       {/* Навигацийн хэсэг */}
@@ -29,7 +33,7 @@ const MainPage = () => {
           <p className="text-lg text-slate-600 leading-relaxed max-w-lg">Байгууллагын ажилтнуудын мэдээлэл, ирц болон гүйцэтгэлийг нэг дороос хянах хамгийн хялбар шийдэл.</p>
 
           <div className="flex flex-col sm:flex-row gap-4">
-            <Link href="login">
+            <Link href={user?.publicMetadata?.role === 'ADMIN' ? '/admin' : '/employee'}>
               <button className="group px-8 py-4 bg-slate-900 text-white rounded-2xl font-semibold hover:bg-slate-800 transition-all flex items-center justify-center gap-2 shadow-xl shadow-slate-200">
                 Системд нэвтрэх
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
