@@ -50,8 +50,8 @@ export const ProfileCard = ({ employee }: ProfileCardProps) => {
             </div>
           </div>
         </div>
-        <div className="bg-slate-100 px-5 mx-5 py-2 rounded-xl border-t border-slate-100">
-          <p className="text-[11px] font-medium text-slate-500 uppercase">{employee.employeeDepartment}</p>
+        <div className="px-2 mx-5 pt-2 border-t border-dotted border-slate-200">
+          <p className="text-[12px] pt-2 font-medium text-slate-600 uppercase">{employee.employeeDepartment}</p>
         </div>
       </CardContent>
     </Card>
