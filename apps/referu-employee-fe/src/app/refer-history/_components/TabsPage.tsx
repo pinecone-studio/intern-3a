@@ -48,22 +48,22 @@ export function TabsPage() {
   return (
     <div className="min-h-screen">
       <div className="flex items-center px-4 py-3 gap-3 bg-white">
-        <button onClick={() => router.back()} className="p-1 hover:bg-accent rounded-full">
+        <button onClick={() => router.back()} className="p-1 hover:bg-accent rounded-full cursor-pointer">
           <ChevronLeft className="w-6 h-6 text-foreground" />
         </button>
-        <h1 className="text-xl font-bold tracking-tight">Санал болгосон түүх</h1>
+        <h1 className="text-lg font-bold tracking-tight">Санал болгосон түүх</h1>
       </div>
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full min-h-screen bg-blue-50/50">
         <div className="bg-blue-50/50 border-t border-border px-4 pt-5">
           <TabsList className="w-full flex h-11">
-            <TabsTrigger value="sent" className="text-sm/tight">
+            <TabsTrigger value="sent" className="text-sm/tight cursor-pointer">
               Илгээсэн
             </TabsTrigger>
-            <TabsTrigger value="approved" className="text-sm/tight">
+            <TabsTrigger value="approved" className="text-sm/tight cursor-pointer">
               Зөвшөөрсөн
             </TabsTrigger>
-            <TabsTrigger value="rejected" className="text-sm/tight">
+            <TabsTrigger value="rejected" className="text-sm/tight cursor-pointer">
               Цуцлагдсан
             </TabsTrigger>
           </TabsList>

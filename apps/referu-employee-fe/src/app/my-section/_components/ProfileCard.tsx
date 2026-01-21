@@ -32,7 +32,7 @@ export const ProfileCard = ({ employee }: ProfileCardProps) => {
 
           <div className="flex-1 space-y-1">
             <div className="flex items-center justify-between">
-              <h3 className="font-bold text-slate-800 text-lg leading-tight">
+              <h3 className="font-bold text-slate-800 text-base leading-tight">
                 {employee.employeeLastName.charAt(0)}. {employee.employeeFirstName}
               </h3>
               <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2 py-1 rounded-md">{employee.employeeJobLevel}</span>

@@ -6,12 +6,12 @@ import { mockEmployee } from './_components/mockEmployee';
 const MySection = () => {
   return (
     <div className="min-h-screen bg-blue-50/50">
-      <Header></Header>
+      <Header />
       <div className="p-4 space-y-4">
         {mockEmployee.map((emp) => (
           <ProfileCard key={emp._id} employee={emp} />
         ))}
-        <MenuItem></MenuItem>
+        <MenuItem />
       </div>
     </div>
   );
