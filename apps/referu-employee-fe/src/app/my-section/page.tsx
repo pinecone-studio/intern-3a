@@ -1,12 +1,16 @@
 import React from 'react';
+
 import { Header, MenuItem, ProfileCard } from './_components';
+import { mockEmployee } from './_components/mockEmployee';
 
 const MySection = () => {
   return (
     <div className="min-h-screen bg-blue-50/50">
       <Header></Header>
       <div className="p-4 space-y-4">
-        <ProfileCard></ProfileCard>
+        {mockEmployee.map((emp) => (
+          <ProfileCard key={emp._id} employee={emp} />
+        ))}
         <MenuItem></MenuItem>
       </div>
     </div>
