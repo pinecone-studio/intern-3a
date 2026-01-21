@@ -2,6 +2,7 @@
 import { announcementResolvers } from './announcement';
 import { attendanceResolvers } from './attendance';
 import { departmentResolvers } from './department';
+import { leaveResolvers } from './leave';
 import { userResolvers } from './user';
 
 export const resolvers = {
@@ -10,11 +11,13 @@ export const resolvers = {
     ...userResolvers.Query,
     ...departmentResolvers.Query,
     ...attendanceResolvers.Query,
+    ...leaveResolvers.Query,
   },
   Mutation: {
     ...announcementResolvers.Mutation,
     ...userResolvers.Mutation,
     ...departmentResolvers.Mutation,
     ...attendanceResolvers.Mutation,
+    ...leaveResolvers.Mutation,
   },
 };
