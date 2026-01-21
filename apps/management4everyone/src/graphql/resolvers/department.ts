@@ -9,7 +9,7 @@ const prisma = new PrismaClient({ adapter });
 
 export const departmentResolvers = {
   Query: {
-    // 🔒 ADMIN – бүх хэлтэс
+    //  бүх хэлтэс
     departments: async (_: any, __: any, ctx: any) => {
       requireAuth(ctx);
 
@@ -24,6 +24,17 @@ export const departmentResolvers = {
 
       return prisma.department.findUnique({
         where: { id: args.id },
+      });
+    },
+    myDepartment: async (_: any, __: any, ctx: any) => {
+      requireAuth(ctx);
+      const user = await prisma.user.findUnique({
+        where: { id: ctx.userId },
+        select: { department: true },
+      });
+      if (!user || !user.department) return null;
+      return prisma.department.findUnique({
+        where: { id: user.department.id },
       });
     },
   },

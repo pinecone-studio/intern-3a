@@ -22,6 +22,7 @@ export const departmentTypeDefs = gql`
     # ADMIN
     departments: [Department!]!
     department(id: Int!): Department
+    myDepartment: Department
   }
 
   type Mutation {
