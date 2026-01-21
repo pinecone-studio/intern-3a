@@ -11,7 +11,7 @@ export const departmentResolvers = {
   Query: {
     // 🔒 ADMIN – бүх хэлтэс
     departments: async (_: any, __: any, ctx: any) => {
-      requireRole(ctx, 'ADMIN');
+      requireAuth(ctx);
 
       return prisma.department.findMany({
         orderBy: { id: 'asc' },
@@ -29,6 +29,17 @@ export const departmentResolvers = {
   },
 
   Mutation: {
+    // 🔒ADMIN - шинэ хэлтэс нэмэх
+    createDepartment: async (_: any, args: { input: { name: string } }, ctx: any) => {
+      requireRole(ctx, 'ADMIN');
+
+      return prisma.department.create({
+        data: {
+          name: args.input.name,
+        },
+      });
+    },
+
     // 🔒 ADMIN – засах
     updateDepartment: async (_: any, args: { id: number; input: { name: string } }, ctx: any) => {
       requireRole(ctx, 'ADMIN');

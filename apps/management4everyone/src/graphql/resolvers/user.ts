@@ -68,6 +68,8 @@ export const userResolvers = {
           firstName: true,
           lastName: true,
           role: true,
+          departmentId: true,
+          Department: true,
         },
       });
     },

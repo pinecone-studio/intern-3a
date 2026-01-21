@@ -13,6 +13,8 @@ export const userTypeDefs = gql`
     firstName: String
     lastName: String
     role: Role
+    departmentId: Int
+    department: Department
   }
 
   input UpdateUserInput {
