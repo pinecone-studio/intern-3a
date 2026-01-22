@@ -38,5 +38,8 @@ export const leaveTypeDefs = gql`
 
     # Админ хүсэлтийн төлөв өөрчлөх (APPROVED, DENIED)
     updateLeaveStatus(id: Int!, status: LeaveStatus!): Leave!
+
+    #Хэрэглэгч өөрийн хүсэлтээ устгах
+    deleteLeave(id: Int!): Leave!
   }
 `;
