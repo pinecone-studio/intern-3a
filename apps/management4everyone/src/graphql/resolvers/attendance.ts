@@ -104,6 +104,15 @@ export const attendanceResolvers = {
   },
 
   Attendance: {
-    user: (parent: any) => parent.User,
+    user: (parent: any) => {
+      // Prisma-аас ирэхдээ 'User' эсвэл 'user' гэж ирж байгааг хоёуланг нь шалгах
+      const userData = parent.User || parent.user;
+
+      if (!userData) {
+        console.error(`DATA ERROR: Attendance ID ${parent.id} has userId ${parent.userId} but NO User found in database!`);
+        return null; // Хэрэв TypeDefs дээр ! байгаа бол энд null буцаахад алдаа заасан хэвээр байна
+      }
+      return userData;
+    },
   },
 };
