@@ -4,3 +4,10 @@
 //     status
 //   }
 // }
+import React from 'react';
+
+const page = () => {
+  return <div>All users' leave</div>;
+};
+
+export default page;

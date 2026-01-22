@@ -4,46 +4,46 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
-import { Briefcase, Building2, Calendar, ChevronLeft, FileText, LayoutDashboard, Settings, Users } from 'lucide-react';
+import { Briefcase, Building2, Calendar, ChevronLeft, FileText, LayoutDashboard, Megaphone, Users } from 'lucide-react';
 
 import { Button } from 'libs/shared/shadcn/src';
 import { cn } from '../../lib/utils';
 
 const navigation = [
   {
+    name: 'Announcements',
+    href: '/admin/announcement',
+    icon: Megaphone,
+  },
+  {
     name: 'Dashboard',
-    href: '/dashboard',
+    href: '/admin/all-users',
     icon: LayoutDashboard,
   },
   {
-    name: 'Employees',
-    href: '/employees',
+    name: 'Employee hiring',
+    href: '/admin/permission',
     icon: Users,
   },
   {
     name: 'Departments',
-    href: '/departments',
+    href: '/admin/departments',
     icon: Building2,
   },
   {
-    name: 'Attendance',
-    href: '/attendance',
+    name: 'Info',
+    href: '/admin/info',
     icon: Calendar,
   },
   {
-    name: 'Payroll',
-    href: '/payroll',
+    name: 'Leave Management',
+    href: '/admin/leave',
     icon: Briefcase,
   },
   {
-    name: 'Reports',
-    href: '/reports',
+    name: 'Attendance Reports',
+    href: '/admin/attendance',
     icon: FileText,
-  },
-  {
-    name: 'Settings',
-    href: '/settings',
-    icon: Settings,
   },
 ];
 
