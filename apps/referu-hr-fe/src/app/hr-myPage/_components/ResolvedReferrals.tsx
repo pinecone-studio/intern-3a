@@ -34,11 +34,11 @@ const mockJobs: Job[] = [
 ];
 
 const statusColors: Record<Status, string> = {
-  RESOLVED: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+  RESOLVED: 'bg-[#3a3b3d]/20 text-[#3a3b3d] ',
 };
 
 const statusLabels: Record<Status, string> = {
-  RESOLVED: 'Шийдэгдсэн',
+  RESOLVED: 'Шийдвэрлэгдсэн',
 };
 
 const ResolvedReferrals = () => {

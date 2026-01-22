@@ -323,23 +323,29 @@ const Page = () => {
   };
 
   const handleApprove = () => {
-    setStatus('APPROVED');
+    // setStatus('APPROVED');
     toast.success('Амжилттай', {
       description: 'Санал зөвшөөрөгдлөө. Урамшууллын хүсэлт санхүү хэлтэст илгээгдлээ.',
     });
 
     setShowApproveDialog(false);
-    setTimeout(() => router.back(), 1500);
+    setTimeout(() => {
+      setStatus('APPROVED');
+      router.back();
+    }, 1500);
   };
 
   const handleReject = () => {
-    setStatus('REJECTED');
+    // setStatus('REJECTED');
     toast.error('Татгалзлаа', {
       description: 'Татгалзсан тухай мэдэгдэл ажилчинд илгээгдлээ.',
     });
 
     setShowRejectDialog(false);
-    setTimeout(() => router.back(), 1500);
+    setTimeout(() => {
+      setStatus('REJECTED');
+      router.back();
+    }, 1500);
   };
 
   return (
@@ -351,11 +357,9 @@ const Page = () => {
         <p className="text-md font-semibold">Саналын дэлгэрэнгүй</p>
       </div>
 
-      <Card className="p-4 space-y-3">
+      <Card className="p-4 flex flex-col gap-4">
         <div className="flex items-center justify-between">
-          <h2 className="font-semibold">Санал болгогч ажилтан</h2>
-          {/* {status !== 'SUBMITTED' && <Badge className={status === 'APPROVED' ? 'bg-green-500' : 'bg-red-500'}>{status === 'APPROVED' ? 'Зөвшөөрсөн' : 'Татгалзсан'}</Badge>} */}
-          <Badge className={statusColors[referrals.status]}>{statusLabels[referrals.status]}</Badge>
+          <h2 className="font-semibold">Санал болгогч ажилтны мэдээлэл</h2>
         </div>
 
         <div className="space-y-2 text-sm">
@@ -390,7 +394,7 @@ const Page = () => {
           </div>
 
           <div className="pt-2 border-t border-border">
-            <span className="text-muted-foreground">Нэр дэвшигчтэй харилцаа:</span>
+            <span className="text-muted-foreground">Санал болгож буй хүнтэй харилцаа:</span>
             <p className="font-medium mt-0.5">{referrals.relationshipWithCandidate}</p>
           </div>
 
@@ -400,7 +404,7 @@ const Page = () => {
           </div>
 
           <div>
-            <span className="text-muted-foreground">Зөвшөөрөл авсан:</span>
+            <span className="text-muted-foreground">Зөвшөөрөл авсан эсэх:</span>
             <p className="font-medium mt-0.5">{referrals.consentReceived ? 'Тийм' : 'Үгүй'}</p>
           </div>
 
@@ -411,13 +415,18 @@ const Page = () => {
         </div>
       </Card>
 
-      <Card className="p-4 space-y-3">
-        <h2 className="font-semibold">Нэр дэвшигчийн мэдээлэл</h2>
+      <Card className="p-4 flex flex-col gap-4">
+        <h2 className="font-semibold">Санал болгож буй хүний мэдээлэл</h2>
 
         <div className="space-y-2 text-sm">
-          <div>
-            <span className="text-muted-foreground">Нэр:</span>
-            <p className="font-medium mt-0.5">{referrals.candidateName}</p>
+          <div className="flex justify-between items-center">
+            <div>
+              <span className="text-muted-foreground">Нэр:</span>
+              <p className="font-medium mt-0.5">{referrals.candidateName}</p>
+            </div>
+            <div>
+              <Badge className={statusColors[referrals.status]}>{statusLabels[referrals.status]}</Badge>
+            </div>
           </div>
 
           <div>
@@ -438,7 +447,7 @@ const Page = () => {
           )}
 
           <div>
-            <span className="text-muted-foreground">Одоогийн ажил:</span>
+            <span className="text-muted-foreground">Ажил эрхлэлтийн байдал:</span>
             <p className="font-medium mt-0.5">{referrals.candidateCurrentEmployment}</p>
           </div>
 
@@ -486,7 +495,8 @@ const Page = () => {
           <AlertDialogHeader>
             <AlertDialogTitle>Ажилд авах уу?</AlertDialogTitle>
             <AlertDialogDescription>
-              Нэр дэвшигчийг ажилд авах тохиолдолд урамшууллын хүсэлт санхүү хэлтэст илгээгдэх ба санал болгосон ажилчинд баталгаажуулалтын мэдэгдэл очих болно.
+              Нэр дэвшигчийг ажилд авах тохиолдолд <span className="font-semibold text-gray-600">урамшууллын хүсэлт санхүү хэлтэст</span> илгээгдэх ба санал болгосон{' '}
+              <span className="font-semibold text-gray-600">ажилчинд баталгаажуулалтын мэдэгдэл</span> очих болно.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -502,7 +512,9 @@ const Page = () => {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Татгалзах уу?</AlertDialogTitle>
-            <AlertDialogDescription> Татгалзсан тохиолдолд санал болгосон ажилчинд татгалзсан тухай мэдэгдэл очих болно.</AlertDialogDescription>
+            <AlertDialogDescription>
+              Татгалзсан тохиолдолд <span className="font-semibold text-gray-600">санал болгосон ажилчинд</span> татгалзсан тухай мэдэгдэл очих болно.
+            </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Буцах</AlertDialogCancel>

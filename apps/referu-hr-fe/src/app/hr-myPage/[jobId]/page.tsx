@@ -151,7 +151,7 @@ const Page = () => {
         </Button>
         <div>
           <p className="text-md font-semibold">Санал ирсэн хүмүүс</p>
-          <p>songoson ajliin ner</p>
+          {/* <p>songoson ajliin ner</p> */}
         </div>
       </div>
       <div>
@@ -163,7 +163,7 @@ const Page = () => {
                   <div className="flex justify-between items-center">
                     <div>
                       <div className="font-semibold text-md">{referrals.candidateName}</div>
-                      <p className="text-xs text-muted-foreground">Нэр дэвшигч</p>
+                      <p className="text-xs text-muted-foreground"> Санал болгосон</p>
                     </div>
 
                     <Badge className={statusColors[referrals.status]}>{statusLabels[referrals.status]}</Badge>
