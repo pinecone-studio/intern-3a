@@ -56,6 +56,29 @@ export const leaveResolvers = {
         },
       });
     },
+
+    // Хэрэглэгчийн хүсэлтээ устгах
+    deleteLeave: async (_: any, args: { id: number }, ctx: any) => {
+      requireAuth(ctx);
+
+      // Хүсэлт байгаа эсэхийг шалгах
+      const leave = await prisma.leave.findUnique({
+        where: { id: args.id },
+      });
+
+      if (!leave) {
+        throw new Error("Хүсэлт олдсонгүй.");
+      }
+
+      // Зөвхөн өөрийнхөө хүсэлтийг эсвэл ADMIN устгах боломжтой болгох
+      if (leave.userId !== ctx.userId && ctx.role !== 'ADMIN') {
+        throw new Error("Танд энэ хүсэлтийг устгах эрх байхгүй.");
+      }
+
+      return prisma.leave.delete({
+        where: { id: args.id },
+      });
+    },
   },
 
   // Field Resolver: Leave объект доторх User-ийг жижиг "user" талбарт холбох
