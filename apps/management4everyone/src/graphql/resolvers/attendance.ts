@@ -20,7 +20,7 @@ export const attendanceResolvers = {
       return prisma.attendance.findMany({
         where: { userId: ctx.userId },
         orderBy: { date: 'desc' },
-        include: { User: true },
+        include: { user: true },
       });
     },
 
@@ -40,7 +40,7 @@ export const attendanceResolvers = {
         },
         orderBy: { date: 'desc' },
         include: {
-          User: { include: { department: true } },
+          user: { include: { department: true } },
         },
       });
     },
@@ -70,7 +70,7 @@ export const attendanceResolvers = {
           date: today(),
           clockIn: new Date(),
         },
-        include: { User: true },
+        include: { user: true },
       });
     },
 
@@ -98,21 +98,27 @@ export const attendanceResolvers = {
       return prisma.attendance.update({
         where: { id: attendance.id },
         data: { clockOut: new Date() },
-        include: { User: true },
+        include: { user: true },
       });
     },
   },
 
   Attendance: {
-    user: (parent: any) => {
-      // Prisma-аас ирэхдээ 'User' эсвэл 'user' гэж ирж байгааг хоёуланг нь шалгах
-      const userData = parent.User || parent.user;
+    user: async (parent: any) => {
+      // 1. Хэрэв parent (Prisma-аас ирсэн өгөгдөл) дотор 'user' объект байвал шууд буцаана
+      if (parent.user) return parent.user;
 
-      if (!userData) {
-        console.error(`DATA ERROR: Attendance ID ${parent.id} has userId ${parent.userId} but NO User found in database!`);
-        return null; // Хэрэв TypeDefs дээр ! байгаа бол энд null буцаахад алдаа заасан хэвээр байна
+      // 2. Хэрэв 'User' (томоор) байвал (Prisma заримдаа автоматаар ингэж ирүүлдэг)
+      if (parent.User) return parent.User;
+
+      // 3. Хэрэв аль нь ч байхгүй бол userId-аар нь баазаас дахин хайж олно
+      if (parent.userId) {
+        return await prisma.user.findUnique({
+          where: { id: parent.userId },
+          include: { department: true },
+        });
       }
-      return userData;
+      return null;
     },
   },
 };

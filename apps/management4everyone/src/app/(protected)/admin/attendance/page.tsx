@@ -66,14 +66,6 @@ export default function AdminAttendancePage() {
     },
   });
 
-  const formatTime = (iso: string | null | undefined) => (iso ? new Date(iso).toLocaleTimeString('mn-MN', { hour: '2-digit', minute: '2-digit' }) : '-');
-
-  // 2. Алдаа засалт: undefined байж болох утгыг Date руу дамжуулахаас өмнө шалгах
-  const formatDate = (dateStr: string) => {
-    if (!dateStr) return '-';
-    return new Date(dateStr).toLocaleDateString('mn-MN');
-  };
-
   const filteredData =
     data?.attendances?.filter((at) => {
       const fullName = `${at.user?.lastName || ''} ${at.user?.firstName || ''}`.toLowerCase();
@@ -84,6 +76,29 @@ export default function AdminAttendancePage() {
     console.error('GraphQL Error:', error);
     return <div className="p-8 text-red-500">Алдаа: {error.message}</div>;
   }
+
+  const formatDate = (dateValue: string | number) => {
+    const date = new Date(Number(dateValue) || dateValue);
+    return date.toLocaleDateString('mn-MN', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    });
+  };
+  const formatTime = (timeValue: string | number | null | undefined) => {
+    if (!timeValue) return '-';
+
+    const date = new Date(Number(timeValue) || timeValue);
+
+    if (isNaN(date.getTime())) return '-';
+
+    return date.toLocaleTimeString('mn-MN', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
+
+  console.log('filteredData', filteredData);
 
   return (
     <div className="p-8 bg-gray-50 min-h-screen text-black">

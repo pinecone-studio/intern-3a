@@ -240,7 +240,7 @@ export type LeaveWhereInput = {
   status?: Prisma.EnumLeaveStatusNullableFilter<"Leave"> | $Enums.LeaveStatus | null
   createdAt?: Prisma.DateTimeNullableFilter<"Leave"> | Date | string | null
   updatedAt?: Prisma.DateTimeNullableFilter<"Leave"> | Date | string | null
-  User?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type LeaveOrderByWithRelationInput = {
@@ -252,7 +252,7 @@ export type LeaveOrderByWithRelationInput = {
   status?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrderInput | Prisma.SortOrder
   updatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  User?: Prisma.UserOrderByWithRelationInput
+  user?: Prisma.UserOrderByWithRelationInput
 }
 
 export type LeaveWhereUniqueInput = Prisma.AtLeast<{
@@ -267,7 +267,7 @@ export type LeaveWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.EnumLeaveStatusNullableFilter<"Leave"> | $Enums.LeaveStatus | null
   createdAt?: Prisma.DateTimeNullableFilter<"Leave"> | Date | string | null
   updatedAt?: Prisma.DateTimeNullableFilter<"Leave"> | Date | string | null
-  User?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id">
 
 export type LeaveOrderByWithAggregationInput = {
@@ -307,7 +307,7 @@ export type LeaveCreateInput = {
   status?: $Enums.LeaveStatus | null
   createdAt?: Date | string | null
   updatedAt?: Date | string | null
-  User: Prisma.UserCreateNestedOneWithoutLeaveInput
+  user: Prisma.UserCreateNestedOneWithoutLeaveInput
 }
 
 export type LeaveUncheckedCreateInput = {
@@ -328,7 +328,7 @@ export type LeaveUpdateInput = {
   status?: Prisma.NullableEnumLeaveStatusFieldUpdateOperationsInput | $Enums.LeaveStatus | null
   createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  User?: Prisma.UserUpdateOneRequiredWithoutLeaveNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutLeaveNestedInput
 }
 
 export type LeaveUncheckedUpdateInput = {
@@ -579,7 +579,7 @@ export type LeaveSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["leave"]>
 
 export type LeaveSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -591,7 +591,7 @@ export type LeaveSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["leave"]>
 
 export type LeaveSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -603,7 +603,7 @@ export type LeaveSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["leave"]>
 
 export type LeaveSelectScalar = {
@@ -619,19 +619,19 @@ export type LeaveSelectScalar = {
 
 export type LeaveOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "startDate" | "endDate" | "reason" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["leave"]>
 export type LeaveInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type LeaveIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type LeaveIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $LeavePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Leave"
   objects: {
-    User: Prisma.$UserPayload<ExtArgs>
+    user: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1036,7 +1036,7 @@ readonly fields: LeaveFieldRefs;
  */
 export interface Prisma__LeaveClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  User<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
