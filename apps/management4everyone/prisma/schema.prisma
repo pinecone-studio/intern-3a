@@ -59,7 +59,7 @@ model User {
   updatedAt    DateTime?    @default(now()) @db.Timestamp(6)
   Attendance   Attendance[]
   Leave        Leave[]
-  Department   Department?  @relation(fields: [departmentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  department   Department?  @relation(fields: [departmentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 enum LeaveStatus {

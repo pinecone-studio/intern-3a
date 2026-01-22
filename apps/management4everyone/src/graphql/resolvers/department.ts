@@ -9,9 +9,9 @@ const prisma = new PrismaClient({ adapter });
 
 export const departmentResolvers = {
   Query: {
-    // 🔒 ADMIN – бүх хэлтэс
+    //  бүх хэлтэс
     departments: async (_: any, __: any, ctx: any) => {
-      requireRole(ctx, 'ADMIN');
+      requireAuth(ctx);
 
       return prisma.department.findMany({
         orderBy: { id: 'asc' },
@@ -26,9 +26,31 @@ export const departmentResolvers = {
         where: { id: args.id },
       });
     },
+    myDepartment: async (_: any, __: any, ctx: any) => {
+      requireAuth(ctx);
+      const user = await prisma.user.findUnique({
+        where: { id: ctx.userId },
+        select: { department: true },
+      });
+      if (!user || !user.department) return null;
+      return prisma.department.findUnique({
+        where: { id: user.department.id },
+      });
+    },
   },
 
   Mutation: {
+    // 🔒ADMIN - шинэ хэлтэс нэмэх
+    createDepartment: async (_: any, args: { input: { name: string } }, ctx: any) => {
+      requireRole(ctx, 'ADMIN');
+
+      return prisma.department.create({
+        data: {
+          name: args.input.name,
+        },
+      });
+    },
+
     // 🔒 ADMIN – засах
     updateDepartment: async (_: any, args: { id: number; input: { name: string } }, ctx: any) => {
       requireRole(ctx, 'ADMIN');
