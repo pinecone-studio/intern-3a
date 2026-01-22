@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import express from 'express';
 import * as path from 'path';
-import connectDB from './libs/mongodb';
+import connectDB from './db/mongodb';
 
 dotenv.config();
 
