@@ -1,5 +1,6 @@
 import { ClerkProvider } from '@clerk/nextjs';
 import type { Viewport } from 'next';
+import { Toaster } from 'node_modules/@intern-3a/shadcn/src/components/ui/sonner';
 import { Header } from './_components/Header';
 import './global.css';
 
@@ -24,6 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <main className="w-full max-w-\[430px]\ min-h-\[932px]\ bg-[#005295]/5">
             <Header />
             {children}
+            <Toaster position="top-center" />
           </main>
         </body>
       </html>

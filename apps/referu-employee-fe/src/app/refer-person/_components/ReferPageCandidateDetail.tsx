@@ -3,19 +3,47 @@
 import { Button, Card, CardContent, Input, Label } from '@intern-3a/shadcn';
 import { statusOptions } from 'apps/referu-employee-fe/src/libs/utils/status-options ';
 import { Upload, X } from 'lucide-react';
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, Dispatch } from 'react';
 
-export const ReferPageCandidateDetail = () => {
-  const [candidateLastName, setCandidateLastName] = useState<string>('');
-  const [candidateFirstName, setCandidateFirstName] = useState<string>('');
-  const [candidateTelNumber, setCandidateTelNumber] = useState<string>('');
-  const [candidateEmail, setCandidateEmail] = useState<string>('');
-  const [candidateLinkedinUrl, setCandidateLinkedinUrl] = useState<string>('');
-  const [candidateFieldOfInterest, setCandidateFieldOfInterest] = useState<string>('');
-  const [candidateCurrentStatus, setCandidateCurrentStatus] = useState<string>('');
-  const [candidateResume, setCandidateResume] = useState<File | undefined>();
-  const [resumeFilePreview, setResumeFilePreview] = useState<string>('');
-
+export const ReferPageCandidateDetail = ({
+  candidateLastName,
+  setCandidateLastName,
+  candidateFirstName,
+  setCandidateFirstName,
+  candidateTelNumber,
+  setCandidateTelNumber,
+  candidateEmail,
+  setCandidateEmail,
+  candidateLinkedinUrl,
+  setCandidateLinkedinUrl,
+  candidateFieldOfInterest,
+  setCandidateFieldOfInterest,
+  candidateCurrentStatus,
+  setCandidateCurrentStatus,
+  candidateResume,
+  setCandidateResume,
+  resumeFilePreview,
+  setResumeFilePreview,
+}: {
+  candidateLastName: string;
+  setCandidateLastName: Dispatch<React.SetStateAction<string>>;
+  candidateFirstName: string;
+  setCandidateFirstName: Dispatch<React.SetStateAction<string>>;
+  candidateTelNumber: string;
+  setCandidateTelNumber: Dispatch<React.SetStateAction<string>>;
+  candidateEmail: string;
+  setCandidateEmail: Dispatch<React.SetStateAction<string>>;
+  candidateLinkedinUrl: string;
+  setCandidateLinkedinUrl: Dispatch<React.SetStateAction<string>>;
+  candidateFieldOfInterest: string;
+  setCandidateFieldOfInterest: Dispatch<React.SetStateAction<string>>;
+  candidateCurrentStatus: string;
+  setCandidateCurrentStatus: Dispatch<React.SetStateAction<string>>;
+  candidateResume: File | undefined;
+  setCandidateResume: Dispatch<React.SetStateAction<File | undefined>>;
+  resumeFilePreview: string;
+  setResumeFilePreview: Dispatch<React.SetStateAction<string>>;
+}) => {
   const resumeFileChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setCandidateResume(e.target.files[0]);
