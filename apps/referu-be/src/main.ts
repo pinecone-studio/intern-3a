@@ -8,10 +8,10 @@ dotenv.config();
 const app = express();
 
 app.use(express.json());
-app.use('/assets', express.static(path.join(__dirname, 'assets')));
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
 app.get('/api', (req, res) => {
-  res.send({ message: 'Welcomex to-be!' });
+  res.send({ message: 'Welddcomex to-be!' });
 });
 
 const port = process.env.PORT || 3333;
