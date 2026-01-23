@@ -11,7 +11,7 @@ export const leaveResolvers = {
     allLeaves: async (_: any, __: any, ctx: any) => {
       requireRole(ctx, 'ADMIN');
       return prisma.leave.findMany({
-        include: { User: true },
+        include: { user: true },
         orderBy: { createdAt: 'desc' },
       });
     },
@@ -67,12 +67,12 @@ export const leaveResolvers = {
       });
 
       if (!leave) {
-        throw new Error("Хүсэлт олдсонгүй.");
+        throw new Error('Хүсэлт олдсонгүй.');
       }
 
       // Зөвхөн өөрийнхөө хүсэлтийг эсвэл ADMIN устгах боломжтой болгох
       if (leave.userId !== ctx.userId && ctx.role !== 'ADMIN') {
-        throw new Error("Танд энэ хүсэлтийг устгах эрх байхгүй.");
+        throw new Error('Танд энэ хүсэлтийг устгах эрх байхгүй.');
       }
 
       return prisma.leave.delete({

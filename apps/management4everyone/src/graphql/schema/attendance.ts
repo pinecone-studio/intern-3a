@@ -6,7 +6,7 @@ export const attendanceTypeDefs = gql`
     date: String!
     clockIn: String!
     clockOut: String
-    user: User!
+    user: User
   }
 
   extend type Query {

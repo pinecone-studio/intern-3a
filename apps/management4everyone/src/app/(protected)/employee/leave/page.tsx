@@ -4,7 +4,7 @@ import { useMutation, useQuery } from '@apollo/client/react';
 import React, { ChangeEvent, FormEvent, useState } from 'react';
 
 // 1. Чөлөөний төлөвт зориулсан Enum (Сонголттой бол)
-type LeaveStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
+type LeaveStatus = 'PENDING' | 'APPROVED' | 'DENIED';
 
 // 2. Leave объектын үндсэн бүтэц
 interface Leave {

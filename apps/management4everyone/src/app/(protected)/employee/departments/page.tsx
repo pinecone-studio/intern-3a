@@ -2,9 +2,9 @@
 
 import { gql } from '@apollo/client';
 import { useMutation, useQuery } from '@apollo/client/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-// --- Types ---
+// --- TypeScript Interfaces ---
 interface Department {
   id: number;
   name: string;
@@ -14,12 +14,33 @@ interface DepartmentsData {
   departments: Department[];
 }
 
-// --- GraphQL ---
+interface MyProfileData {
+  me: {
+    id: string;
+    departmentId: number | null;
+    department?: Department;
+  } | null;
+}
+
+// --- GraphQL Queries ---
 const GET_DEPARTMENTS = gql`
   query GetDepartments {
     departments {
       id
       name
+    }
+  }
+`;
+
+const GET_MY_PROFILE = gql`
+  query GetMyProfile {
+    me {
+      id
+      departmentId
+      department {
+        id
+        name
+      }
     }
   }
 `;
@@ -31,71 +52,83 @@ const SELECT_MY_DEPARTMENT = gql`
 `;
 
 const EmployeeDepartmentPage = () => {
-  // null утга авч чаддаг болгосноор сонголтыг арилгах боломжтой болно
   const [selectedId, setSelectedId] = useState<string>('');
 
-  const { loading, data } = useQuery<DepartmentsData>(GET_DEPARTMENTS);
+  // 1. Бүх хэлтэс татах
+  const { data: deptsData } = useQuery<DepartmentsData>(GET_DEPARTMENTS);
 
-  const [selectDept, { loading: mutationLoading }] = useMutation(SELECT_MY_DEPARTMENT, {
-    onCompleted: () => alert('Хэлтэс амжилттай хадгалагдлаа!'),
-    onError: (err) => alert('Алдаа: ' + err.message),
+  // 2. Профайл татах (onCompleted-ийг хасаж, useEffect ашиглана)
+  const { loading, data: profileData, refetch: refetchProfile } = useQuery<MyProfileData>(GET_MY_PROFILE);
+
+  // Профайл ачаалагдаж дуусмагц selectedId-г оноох
+  useEffect(() => {
+    if (profileData?.me?.departmentId) {
+      setSelectedId(profileData.me.departmentId.toString());
+    }
+  }, [profileData]);
+
+  // 3. Mutation (Энд onCompleted хэвээрээ байж болно)
+  const [selectDept, { loading: mutationLoading }] = useMutation<{ selectMyDepartment: boolean }, { departmentId: number }>(SELECT_MY_DEPARTMENT, {
+    onCompleted: () => {
+      alert('Амжилттай хадгалагдлаа!');
+      refetchProfile();
+    },
+    onError: (error) => {
+      alert('Алдаа: ' + error.message);
+    },
   });
 
-  const handleConfirm = () => {
-    if (!selectedId) return;
-    selectDept({ variables: { departmentId: parseInt(selectedId) } });
-  };
+  if (loading) return <p className="p-10 text-center">Уншиж байна...</p>;
 
-  // Сонголтыг арилгах функц
-  const handleClear = () => {
-    setSelectedId('');
-  };
-
-  if (loading) return <p className="p-10 text-center">Ачаалж байна...</p>;
+  const currentDeptName = profileData?.me?.department?.name;
 
   return (
     <div className="max-w-2xl mx-auto p-6">
       <div className="bg-amber-50 rounded-2xl p-8 border border-amber-200 shadow-sm">
         <h1 className="text-2xl font-bold text-amber-900 mb-2">Миний хэлтэс</h1>
-        <p className="text-amber-700 mb-6">Жагсаалтаас сонголтоо хийнэ үү. Хүсвэл "Арилгах" товчоор сонголтыг цуцалж болно.</p>
 
-        <div className="space-y-6">
-          <div className="relative">
-            <select
-              value={selectedId}
-              onChange={(e) => setSelectedId(e.target.value)}
-              className="w-full p-4 border-2 border-gray-200 rounded-xl bg-white text-gray-800 appearance-none focus:border-amber-500 focus:outline-none transition-all cursor-pointer"
-            >
-              <option value="">-- Хэлтэс сонгоогүй --</option>
-              {data?.departments.map((dept) => (
-                <option key={dept.id} value={dept.id}>
-                  {dept.name}
-                </option>
-              ))}
-            </select>
-
-            {/* Dropdown сумны дүрс */}
-            <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
-              <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </div>
+        {currentDeptName ? (
+          <div className="mb-6 p-4 bg-green-100 border border-green-200 rounded-xl">
+            <p className="text-green-800 font-medium flex items-center">
+              <span className="mr-2">✅</span>
+              Таны одоогийн хэлтэс: <strong className="ml-1 uppercase text-lg">{currentDeptName}</strong>
+            </p>
           </div>
+        ) : (
+          <p className="text-amber-700 mb-6 italic">Та одоогоор ямар нэгэн хэлтэст харьяалагдаагүй байна.</p>
+        )}
 
-          <div className="flex gap-3">
-            {/* Сонголтыг арилгах товч (зөвхөн сонголт хийсэн үед харагдана) */}
+        <div className="space-y-4">
+          <select
+            value={selectedId}
+            onChange={(e) => setSelectedId(e.target.value)}
+            className="w-full p-4 border-2 border-gray-200 rounded-xl bg-white focus:border-amber-500 outline-none transition-all cursor-pointer text-gray-800"
+          >
+            <option value="">-- Хэлтэс сонгох --</option>
+            {deptsData?.departments.map((dept) => (
+              <option key={dept.id} value={dept.id}>
+                {dept.name}
+              </option>
+            ))}
+          </select>
+
+          <div className="flex gap-2">
             {selectedId && (
-              <button onClick={handleClear} className="px-6 py-4 bg-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-300 transition-all">
+              <button onClick={() => setSelectedId('')} className="px-4 py-4 bg-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-300">
                 Арилгах
               </button>
             )}
-
             <button
-              onClick={handleConfirm}
+              onClick={() => {
+                const id = parseInt(selectedId);
+                if (!isNaN(id)) {
+                  selectDept({ variables: { departmentId: id } });
+                }
+              }}
               disabled={!selectedId || mutationLoading}
-              className="flex-1 bg-amber-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-amber-700 disabled:bg-gray-300 transition-all shadow-md active:scale-[0.98]"
+              className="flex-1 bg-amber-600 text-white py-4 rounded-xl font-bold hover:bg-amber-700 disabled:bg-gray-300 transition-all shadow-md"
             >
-              {mutationLoading ? 'Хадгалж байна...' : 'Сонголтоо баталгаажуулах'}
+              {mutationLoading ? 'Хадгалж байна...' : 'Хадгалах'}
             </button>
           </div>
         </div>
