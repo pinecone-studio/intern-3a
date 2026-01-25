@@ -15,6 +15,33 @@ export const userTypeDefs = gql`
     role: Role
     departmentId: Int
     department: Department
+    attendances: [Attendance!]!
+    leaves: [Leave!]!
+  }
+  type Attendance {
+    id: Int!
+    date: String!
+    clockIn: String!
+    clockOut: String
+    user: User
+  }
+  type Leave {
+    id: Int!
+    userId: String!
+    startDate: String!
+    endDate: String!
+    reason: String!
+    status: LeaveStatus!
+    user: User
+  }
+  enum LeaveStatus {
+    PENDING
+    APPROVED
+    DENIED
+  }
+  enum Role {
+    ADMIN
+    WORKER
   }
 
   input UpdateUserInput {

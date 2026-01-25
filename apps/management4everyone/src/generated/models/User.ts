@@ -248,8 +248,8 @@ export type UserWhereInput = {
   departmentId?: Prisma.IntNullableFilter<"User"> | number | null
   createdAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   updatedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
-  Attendance?: Prisma.AttendanceListRelationFilter
-  Leave?: Prisma.LeaveListRelationFilter
+  attendance?: Prisma.AttendanceListRelationFilter
+  leave?: Prisma.LeaveListRelationFilter
   department?: Prisma.XOR<Prisma.DepartmentNullableScalarRelationFilter, Prisma.DepartmentWhereInput> | null
 }
 
@@ -263,8 +263,8 @@ export type UserOrderByWithRelationInput = {
   departmentId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrderInput | Prisma.SortOrder
   updatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  Attendance?: Prisma.AttendanceOrderByRelationAggregateInput
-  Leave?: Prisma.LeaveOrderByRelationAggregateInput
+  attendance?: Prisma.AttendanceOrderByRelationAggregateInput
+  leave?: Prisma.LeaveOrderByRelationAggregateInput
   department?: Prisma.DepartmentOrderByWithRelationInput
 }
 
@@ -281,8 +281,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   departmentId?: Prisma.IntNullableFilter<"User"> | number | null
   createdAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   updatedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
-  Attendance?: Prisma.AttendanceListRelationFilter
-  Leave?: Prisma.LeaveListRelationFilter
+  attendance?: Prisma.AttendanceListRelationFilter
+  leave?: Prisma.LeaveListRelationFilter
   department?: Prisma.XOR<Prisma.DepartmentNullableScalarRelationFilter, Prisma.DepartmentWhereInput> | null
 }, "id" | "clerkUserId" | "email">
 
@@ -327,8 +327,8 @@ export type UserCreateInput = {
   role?: $Enums.Role | null
   createdAt?: Date | string | null
   updatedAt?: Date | string | null
-  Attendance?: Prisma.AttendanceCreateNestedManyWithoutUserInput
-  Leave?: Prisma.LeaveCreateNestedManyWithoutUserInput
+  attendance?: Prisma.AttendanceCreateNestedManyWithoutUserInput
+  leave?: Prisma.LeaveCreateNestedManyWithoutUserInput
   department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
 }
 
@@ -342,8 +342,8 @@ export type UserUncheckedCreateInput = {
   departmentId?: number | null
   createdAt?: Date | string | null
   updatedAt?: Date | string | null
-  Attendance?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
-  Leave?: Prisma.LeaveUncheckedCreateNestedManyWithoutUserInput
+  attendance?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
+  leave?: Prisma.LeaveUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -355,8 +355,8 @@ export type UserUpdateInput = {
   role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
   createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Attendance?: Prisma.AttendanceUpdateManyWithoutUserNestedInput
-  Leave?: Prisma.LeaveUpdateManyWithoutUserNestedInput
+  attendance?: Prisma.AttendanceUpdateManyWithoutUserNestedInput
+  leave?: Prisma.LeaveUpdateManyWithoutUserNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
 }
 
@@ -370,8 +370,8 @@ export type UserUncheckedUpdateInput = {
   departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Attendance?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
-  Leave?: Prisma.LeaveUncheckedUpdateManyWithoutUserNestedInput
+  attendance?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
+  leave?: Prisma.LeaveUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -563,7 +563,7 @@ export type UserCreateWithoutAttendanceInput = {
   role?: $Enums.Role | null
   createdAt?: Date | string | null
   updatedAt?: Date | string | null
-  Leave?: Prisma.LeaveCreateNestedManyWithoutUserInput
+  leave?: Prisma.LeaveCreateNestedManyWithoutUserInput
   department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
 }
 
@@ -577,7 +577,7 @@ export type UserUncheckedCreateWithoutAttendanceInput = {
   departmentId?: number | null
   createdAt?: Date | string | null
   updatedAt?: Date | string | null
-  Leave?: Prisma.LeaveUncheckedCreateNestedManyWithoutUserInput
+  leave?: Prisma.LeaveUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAttendanceInput = {
@@ -605,7 +605,7 @@ export type UserUpdateWithoutAttendanceInput = {
   role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
   createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Leave?: Prisma.LeaveUpdateManyWithoutUserNestedInput
+  leave?: Prisma.LeaveUpdateManyWithoutUserNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
 }
 
@@ -619,7 +619,7 @@ export type UserUncheckedUpdateWithoutAttendanceInput = {
   departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Leave?: Prisma.LeaveUncheckedUpdateManyWithoutUserNestedInput
+  leave?: Prisma.LeaveUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutDepartmentInput = {
@@ -631,8 +631,8 @@ export type UserCreateWithoutDepartmentInput = {
   role?: $Enums.Role | null
   createdAt?: Date | string | null
   updatedAt?: Date | string | null
-  Attendance?: Prisma.AttendanceCreateNestedManyWithoutUserInput
-  Leave?: Prisma.LeaveCreateNestedManyWithoutUserInput
+  attendance?: Prisma.AttendanceCreateNestedManyWithoutUserInput
+  leave?: Prisma.LeaveCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDepartmentInput = {
@@ -644,8 +644,8 @@ export type UserUncheckedCreateWithoutDepartmentInput = {
   role?: $Enums.Role | null
   createdAt?: Date | string | null
   updatedAt?: Date | string | null
-  Attendance?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
-  Leave?: Prisma.LeaveUncheckedCreateNestedManyWithoutUserInput
+  attendance?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
+  leave?: Prisma.LeaveUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDepartmentInput = {
@@ -698,7 +698,7 @@ export type UserCreateWithoutLeaveInput = {
   role?: $Enums.Role | null
   createdAt?: Date | string | null
   updatedAt?: Date | string | null
-  Attendance?: Prisma.AttendanceCreateNestedManyWithoutUserInput
+  attendance?: Prisma.AttendanceCreateNestedManyWithoutUserInput
   department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
 }
 
@@ -712,7 +712,7 @@ export type UserUncheckedCreateWithoutLeaveInput = {
   departmentId?: number | null
   createdAt?: Date | string | null
   updatedAt?: Date | string | null
-  Attendance?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
+  attendance?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLeaveInput = {
@@ -740,7 +740,7 @@ export type UserUpdateWithoutLeaveInput = {
   role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
   createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Attendance?: Prisma.AttendanceUpdateManyWithoutUserNestedInput
+  attendance?: Prisma.AttendanceUpdateManyWithoutUserNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
 }
 
@@ -754,7 +754,7 @@ export type UserUncheckedUpdateWithoutLeaveInput = {
   departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Attendance?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
+  attendance?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyDepartmentInput = {
@@ -777,8 +777,8 @@ export type UserUpdateWithoutDepartmentInput = {
   role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
   createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Attendance?: Prisma.AttendanceUpdateManyWithoutUserNestedInput
-  Leave?: Prisma.LeaveUpdateManyWithoutUserNestedInput
+  attendance?: Prisma.AttendanceUpdateManyWithoutUserNestedInput
+  leave?: Prisma.LeaveUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDepartmentInput = {
@@ -790,8 +790,8 @@ export type UserUncheckedUpdateWithoutDepartmentInput = {
   role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
   createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  Attendance?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
-  Leave?: Prisma.LeaveUncheckedUpdateManyWithoutUserNestedInput
+  attendance?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
+  leave?: Prisma.LeaveUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutDepartmentInput = {
@@ -811,13 +811,13 @@ export type UserUncheckedUpdateManyWithoutDepartmentInput = {
  */
 
 export type UserCountOutputType = {
-  Attendance: number
-  Leave: number
+  attendance: number
+  leave: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  Attendance?: boolean | UserCountOutputTypeCountAttendanceArgs
-  Leave?: boolean | UserCountOutputTypeCountLeaveArgs
+  attendance?: boolean | UserCountOutputTypeCountAttendanceArgs
+  leave?: boolean | UserCountOutputTypeCountLeaveArgs
 }
 
 /**
@@ -855,8 +855,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   departmentId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  Attendance?: boolean | Prisma.User$AttendanceArgs<ExtArgs>
-  Leave?: boolean | Prisma.User$LeaveArgs<ExtArgs>
+  attendance?: boolean | Prisma.User$attendanceArgs<ExtArgs>
+  leave?: boolean | Prisma.User$leaveArgs<ExtArgs>
   department?: boolean | Prisma.User$departmentArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
@@ -901,8 +901,8 @@ export type UserSelectScalar = {
 
 export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clerkUserId" | "email" | "firstName" | "lastName" | "role" | "departmentId" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  Attendance?: boolean | Prisma.User$AttendanceArgs<ExtArgs>
-  Leave?: boolean | Prisma.User$LeaveArgs<ExtArgs>
+  attendance?: boolean | Prisma.User$attendanceArgs<ExtArgs>
+  leave?: boolean | Prisma.User$leaveArgs<ExtArgs>
   department?: boolean | Prisma.User$departmentArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -916,8 +916,8 @@ export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {
-    Attendance: Prisma.$AttendancePayload<ExtArgs>[]
-    Leave: Prisma.$LeavePayload<ExtArgs>[]
+    attendance: Prisma.$AttendancePayload<ExtArgs>[]
+    leave: Prisma.$LeavePayload<ExtArgs>[]
     department: Prisma.$DepartmentPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1324,8 +1324,8 @@ readonly fields: UserFieldRefs;
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  Attendance<T extends Prisma.User$AttendanceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$AttendanceArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  Leave<T extends Prisma.User$LeaveArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$LeaveArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeavePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  attendance<T extends Prisma.User$attendanceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$attendanceArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  leave<T extends Prisma.User$leaveArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$leaveArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeavePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   department<T extends Prisma.User$departmentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$departmentArgs<ExtArgs>>): Prisma.Prisma__DepartmentClient<runtime.Types.Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1761,9 +1761,9 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
- * User.Attendance
+ * User.attendance
  */
-export type User$AttendanceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type User$attendanceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the Attendance
    */
@@ -1785,9 +1785,9 @@ export type User$AttendanceArgs<ExtArgs extends runtime.Types.Extensions.Interna
 }
 
 /**
- * User.Leave
+ * User.leave
  */
-export type User$LeaveArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type User$leaveArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the Leave
    */

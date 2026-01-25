@@ -67,5 +67,21 @@ export const userResolvers = {
         where: { id: parent.departmentId },
       });
     },
+    // 💡 Энд заавал async/await ашиглаад, үр дүнг массив эсэхийг баталгаажуулна
+    attendances: async (parent: any) => {
+      const data = await prisma.attendance.findMany({
+        where: { userId: parent.id },
+        orderBy: { date: 'desc' },
+      });
+      return data || []; // null-ийн оронд [] буцаана
+    },
+
+    leaves: async (parent: any) => {
+      const data = await prisma.leave.findMany({
+        where: { userId: parent.id },
+        orderBy: { createdAt: 'desc' },
+      });
+      return data || []; // null-ийн оронд [] буцаана
+    },
   },
 };
