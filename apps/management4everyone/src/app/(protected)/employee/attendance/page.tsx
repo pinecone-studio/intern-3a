@@ -1,6 +1,7 @@
 'use client';
 import { gql } from '@apollo/client';
 import { useMutation, useQuery } from '@apollo/client/react';
+import { formatDate, formatTime } from 'apps/management4everyone/src/utils/dateUtils';
 import React from 'react';
 
 // --- TYPES ---
@@ -57,16 +58,6 @@ export default function WorkerAttendancePage() {
     }
   };
 
-  const formatTime = (iso: string | null | undefined) => {
-    if (!iso) return '-';
-
-    // Хэрэв iso нь зөвхөн тооноос бүрдсэн текст бол (жишээ нь "1768..."),
-    // түүнийг тоо (Number) болгож хөрвүүлнэ. Үгүй бол шууд Date руу хийнэ.
-    const dateObj = isNaN(Number(iso)) ? new Date(iso) : new Date(Number(iso));
-
-    return dateObj.toString() === 'Invalid Date' ? '-' : dateObj.toLocaleTimeString('mn-MN', { hour: '2-digit', minute: '2-digit' });
-  };
-
   console.log('data', data);
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-8 text-black">
@@ -107,12 +98,7 @@ export default function WorkerAttendancePage() {
           <tbody className="divide-y divide-gray-50">
             {data?.myAttendances.map((at) => (
               <tr key={at.id} className="hover:bg-blue-50/30 transition-colors">
-                <td className="p-5 font-medium">
-                  {(() => {
-                    const d = isNaN(Number(at.date)) ? new Date(at.date) : new Date(Number(at.date));
-                    return d.toLocaleDateString('mn-MN');
-                  })()}
-                </td>
+                <td className="p-5 font-medium">{formatDate(at.date)}</td>
                 <td className="p-5 font-bold text-blue-600">{formatTime(at.clockIn)}</td>
                 <td className="p-5 font-bold text-gray-500">{formatTime(at.clockOut)}</td>
               </tr>

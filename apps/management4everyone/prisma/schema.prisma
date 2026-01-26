@@ -57,8 +57,8 @@ model User {
   departmentId Int?
   createdAt    DateTime?    @default(now()) @db.Timestamp(6)
   updatedAt    DateTime?    @default(now()) @db.Timestamp(6)
-  Attendance   Attendance[]
-  Leave        Leave[]
+  attendance   Attendance[]
+  leave        Leave[]
   department   Department?  @relation(fields: [departmentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 

@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
 const client = new ApolloClient({
-  link: new HttpLink({ uri: process.env.NEXT_PUBLIC_GRAPHQL_URI || 'http://localhost:3000/api/graphql' }),
+  link: new HttpLink({ uri: '/api/graphql' }),
   //URI нь граф киү эл бакэндийг тавьж өгнө.
   cache: new InMemoryCache(),
 });

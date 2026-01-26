@@ -20,4 +20,7 @@ export const resolvers = {
     ...attendanceResolvers.Mutation,
     ...leaveResolvers.Mutation,
   },
+  User: userResolvers.User,
+  Attendance: attendanceResolvers.Attendance,
+  Leave: leaveResolvers.Leave,
 };

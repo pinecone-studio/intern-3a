@@ -1,6 +1,7 @@
 'use client';
 import { gql } from '@apollo/client';
 import { useMutation, useQuery } from '@apollo/client/react';
+import { formatDate } from 'apps/management4everyone/src/utils/dateUtils';
 import React, { ChangeEvent, FormEvent, useState } from 'react';
 
 // 1. Чөлөөний төлөвт зориулсан Enum (Сонголттой бол)
@@ -104,16 +105,6 @@ const LeavePage = () => {
     if (confirm('Та энэ хүсэлтийг устгахдаа итгэлтэй байна уу?')) {
       deleteLeave({ variables: { id } });
     }
-  };
-
-  const formatDate = (dateValue: string | number) => {
-    const date = new Date(Number(dateValue));
-    return date.toLocaleDateString('mn-MN', {
-      // Монгол формат
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-    });
   };
 
   return (
