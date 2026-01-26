@@ -1,18 +1,26 @@
 'use client';
+
 import { Card, CardContent, Input, Label, Textarea } from '@intern-3a/shadcn';
 import { relationOptions } from 'apps/referu-employee-fe/src/libs/utils/relation-options';
-import React, { useState } from 'react';
+import React, { Dispatch } from 'react';
 
-export const ReferPageEmployeeTypeSection = () => {
-  const [relationWithCandidate, setRelationWithCandidate] = useState('');
-  const [refferalReason, setRefferalReason] = useState('');
-
+export const ReferPageEmployeeTypeSection = ({
+  relationWithCandidate,
+  setRelationWithCandidate,
+  refferalReason,
+  setRefferalReason,
+}: {
+  relationWithCandidate: string;
+  setRelationWithCandidate: Dispatch<React.SetStateAction<string>>;
+  refferalReason: string;
+  setRefferalReason: Dispatch<React.SetStateAction<string>>;
+}) => {
   console.log({ relationWithCandidate });
   console.log({ refferalReason });
   return (
     <Card>
       <CardContent className="flex flex-col gap-3">
-        <div className="text-lg font-semibold">Холбоо хамаарал үндэслэл шалтгаан</div>
+        <div className="text-lg font-semibold">Асуумж</div>
 
         <div className="flex flex-col gap-3 text-sm">
           <div className="flex flex-col gap-2">

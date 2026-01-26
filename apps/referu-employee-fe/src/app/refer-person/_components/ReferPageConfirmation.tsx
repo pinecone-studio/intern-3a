@@ -1,12 +1,19 @@
 'use client';
 
 import { Card, CardContent, Checkbox, Label } from '@intern-3a/shadcn';
-import React, { useState } from 'react';
+import React, { Dispatch } from 'react';
 
-export const ReferPageConfirmation = () => {
-  const [hasCandidateConsent, setHasCandidateConsent] = useState<boolean>(false);
-  const [isNotCurrentEmployee, setIsNotCurrentEmployee] = useState<boolean>(false);
-
+export const ReferPageConfirmation = ({
+  hasCandidateConsent,
+  setHasCandidateConsent,
+  isNotCurrentEmployee,
+  setIsNotCurrentEmployee,
+}: {
+  hasCandidateConsent: boolean;
+  setHasCandidateConsent: Dispatch<React.SetStateAction<boolean>>;
+  isNotCurrentEmployee: boolean;
+  setIsNotCurrentEmployee: Dispatch<React.SetStateAction<boolean>>;
+}) => {
   console.log({ hasCandidateConsent });
   console.log({ isNotCurrentEmployee });
 
