@@ -19,6 +19,41 @@ export const userResolvers = {
       });
     },
 
+    adminUserStats: async (_parent: any, _args: any, ctx: any) => {
+      requireRole(ctx, 'ADMIN');
+
+      // Өнөөдрийн эхлэх цаг (00:00:00)
+      const todayStart = new Date();
+      todayStart.setHours(0, 0, 0, 0);
+
+      // Маргаашийн эхлэх цаг (00:00:00) - Зөвхөн өнөөдрийнхнийг авахын тулд
+      const tomorrowStart = new Date(todayStart);
+      tomorrowStart.setDate(tomorrowStart.getDate() + 1);
+
+      const [totalUsers, totalAdmins, totalWorkers, pendingLeaves, todayAttendance] = await Promise.all([
+        prisma.user.count(),
+        prisma.user.count({ where: { role: 'ADMIN' } }),
+        prisma.user.count({ where: { role: 'WORKER' } }),
+        prisma.leave.count({ where: { status: 'PENDING' } }),
+        prisma.attendance.count({
+          where: {
+            date: {
+              gte: todayStart, // String биш Date объект дамжуулна
+              lt: tomorrowStart, // Маргаашаас өмнөх буюу зөвхөн өнөөдөр
+            },
+          },
+        }),
+      ]);
+
+      return {
+        totalUsers,
+        totalAdmins,
+        totalWorkers,
+        pendingLeaves,
+        todayAttendance,
+      };
+    },
+
     // Зөвхөн session-тэй хэрэглэгч
     me: async (_parent: any, _args: any, ctx: any) => {
       requireAuth(ctx);

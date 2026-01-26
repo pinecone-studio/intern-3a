@@ -57,4 +57,17 @@ export const userTypeDefs = gql`
   type Mutation {
     updateMe(input: UpdateUserInput!): User!
   }
+  # Статистик мэдээллийн төрөл
+  type UserStats {
+    totalUsers: Int!
+    totalAdmins: Int!
+    totalWorkers: Int!
+    pendingLeaves: Int! # Хүлээгдэж буй чөлөөний хүсэлт
+    todayAttendance: Int! # Өнөөдрийн ирц
+  }
+
+  extend type Query {
+    # Админд зориулсан статистик мэдээлэл
+    adminUserStats: UserStats!
+  }
 `;
