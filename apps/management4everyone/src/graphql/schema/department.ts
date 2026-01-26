@@ -9,6 +9,11 @@ export const departmentTypeDefs = gql`
     updatedAt: String
   }
 
+  # Шинээр нэмэхэд ашиглах input
+  input CreateDepartmentInput {
+    name: String!
+  }
+
   input UpdateDepartmentInput {
     name: String!
   }
@@ -17,9 +22,13 @@ export const departmentTypeDefs = gql`
     # ADMIN
     departments: [Department!]!
     department(id: Int!): Department
+    myDepartment: Department
   }
 
   type Mutation {
+    # ADMIN => шинэ хэлтэс нэмэх
+    createDepartment(input: CreateDepartmentInput!): Department!
+
     # ADMIN
     updateDepartment(id: Int!, input: UpdateDepartmentInput!): Department!
     deleteDepartment(id: Int!): Boolean!

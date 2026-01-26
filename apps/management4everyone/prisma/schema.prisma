@@ -22,7 +22,7 @@ model Attendance {
   clockOut  DateTime? @db.Timestamp(6)
   createdAt DateTime? @default(now()) @db.Timestamp(6)
   updatedAt DateTime? @default(now()) @db.Timestamp(6)
-  User      User      @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user      User      @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@unique([userId, date])
 }
@@ -44,7 +44,7 @@ model Leave {
   status    LeaveStatus? @default(PENDING)
   createdAt DateTime?    @default(now()) @db.Timestamp(6)
   updatedAt DateTime?    @default(now()) @db.Timestamp(6)
-  User      User         @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user      User         @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model User {
@@ -57,9 +57,9 @@ model User {
   departmentId Int?
   createdAt    DateTime?    @default(now()) @db.Timestamp(6)
   updatedAt    DateTime?    @default(now()) @db.Timestamp(6)
-  Attendance   Attendance[]
-  Leave        Leave[]
-  Department   Department?  @relation(fields: [departmentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  attendance   Attendance[]
+  leave        Leave[]
+  department   Department?  @relation(fields: [departmentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 enum LeaveStatus {

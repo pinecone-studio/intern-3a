@@ -1,7 +1,7 @@
 'use client';
 
 import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from '@clerk/nextjs';
-import { Button } from 'libs/shared/shadcn/src';
+import { Button } from '@intern-3a/shadcn';
 import { Bell, Menu, Search } from 'lucide-react';
 
 interface HeaderProps {

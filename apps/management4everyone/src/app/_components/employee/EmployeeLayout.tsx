@@ -4,7 +4,7 @@ import type React from 'react';
 
 import { useState } from 'react';
 import { Header1 } from '../Header1';
-import { EmployeeSideBar } from './EmployeeSideBar';
+import { EmployeeSideBar } from './EmployeeSidebar';
 
 interface AppLayoutProps {
   children: React.ReactNode;

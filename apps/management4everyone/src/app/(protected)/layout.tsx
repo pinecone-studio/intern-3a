@@ -2,8 +2,16 @@
 
 import { useUser } from '@clerk/nextjs';
 
+import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
+import { ApolloProvider } from '@apollo/client/react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+
+const client = new ApolloClient({
+  link: new HttpLink({ uri: '/api/graphql' }),
+  //URI нь граф киү эл бакэндийг тавьж өгнө.
+  cache: new InMemoryCache(),
+});
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const { user, isLoaded } = useUser();
@@ -22,5 +30,5 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     return <div className="w-full h-full flex items-center justify-center">Loading...</div>;
   }
 
-  return <>{children}</>;
+  return <ApolloProvider client={client}>{children}</ApolloProvider>;
 }

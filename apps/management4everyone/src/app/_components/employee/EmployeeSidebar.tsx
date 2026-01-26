@@ -4,30 +4,40 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
-import { Building2, Calendar, ChevronLeft, LayoutDashboard, Users } from 'lucide-react';
+import { Building2, Calendar, CalendarCheck, ChevronLeft, LayoutDashboard, Megaphone, Users } from 'lucide-react';
 
 import { Button } from 'libs/shared/shadcn/src';
 import { cn } from '../../lib/utils';
 
 const navigation = [
   {
-    name: 'Dashboard',
-    href: '/dashboard',
+    name: 'Announcements',
+    href: '/employee/announcement',
+    icon: Megaphone,
+  },
+  {
+    name: 'Department',
+    href: '/employee/departments',
     icon: LayoutDashboard,
   },
   {
-    name: 'Employees',
-    href: '/employees',
+    name: 'Information',
+    href: '/employee/info',
     icon: Users,
   },
   {
-    name: 'Departments',
-    href: '/departments',
+    name: 'Leave requests',
+    href: '/employee/leave',
     icon: Building2,
   },
   {
-    name: 'Attendance',
-    href: '/attendance',
+    name: 'My attendance',
+    href: '/employee/attendance',
+    icon: CalendarCheck,
+  },
+  {
+    name: 'My profile',
+    href: '/employee/my-profile',
     icon: Calendar,
   },
 ];
