@@ -4,9 +4,7 @@ import { useAuth, useUser } from '@clerk/nextjs';
 import axios from 'axios';
 import { Loader } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
-import { toast } from 'sonner';
-import { EmployeeType } from '../libs/type';
+import React, { useEffect } from 'react';
 import { hrPostedJobs } from '../libs/utils/get-datas';
 import { FooterNav, PostedJobCard, PostedJobsHeading } from './_components';
 
@@ -25,15 +23,13 @@ export default function HomePage() {
     }
 
     const checkUser = async () => {
+      const token = await getToken();
       try {
-        const token = await getToken();
-        await axios.get('http://localhost:4000/user/me', {
+        await axios.get('http://localhost:4000/user/check', {
           headers: { Authorization: `Bearer ${token}` },
         });
       } catch (error: any) {
-        if (error.response?.status === 404) {
-          router.push('/complete-profile');
-        }
+        if (error.response?.status === 404) router.push('/complete-profile');
       }
     };
 

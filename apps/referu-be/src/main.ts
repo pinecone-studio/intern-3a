@@ -3,9 +3,11 @@ import dotenv from 'dotenv';
 import express from 'express';
 import { createReferral } from './controller/referral/createReferral.controller';
 import { getAllReferrals } from './controller/referral/getReferrals.controller';
+import { checkUser } from './controller/user/checkUser.controller';
 import { createUser } from './controller/user/createUser.controller';
 import { getUserById } from './controller/user/getUserById.controller';
 import connectDB from './db/mongodb';
+import { clerkAuth } from './middleware/clerkAuth';
 
 dotenv.config();
 const app = express();
@@ -27,7 +29,9 @@ app.post('/referral', createReferral);
 
 app.get('/referral', getAllReferrals);
 
-app.post('/user', createUser);
+app.get('/user/check', clerkAuth, checkUser);
+
+app.post('/user', clerkAuth, createUser);
 
 app.get('/user/:id', getUserById);
 

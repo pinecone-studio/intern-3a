@@ -19,8 +19,8 @@ export default function CompleteProfilePage() {
     employeeTelNumber: '',
     employeeDepartment: '',
     employeeJobTitle: '',
-    employeeJobType: '',
     employeeJobLevel: '',
+    employeeJobType: '',
   });
 
   const handleSaveUserInfo = async () => {
@@ -85,21 +85,6 @@ export default function CompleteProfilePage() {
 
               <div className="flex flex-col gap-2">
                 <Label className="font-normal">
-                  Төрөл
-                  <span className="text-destructive">*</span>
-                </Label>
-                <Input list="jobTypeOptions" value={form.employeeJobType} onChange={(e) => setForm({ ...form, employeeJobType: e.target.value })} className="text-sm" placeholder="Сонгох / оруулах" />
-                <datalist id="jobTypeOptions">
-                  {jobTypeOptions.map((type) => (
-                    <option key={type.value} value={type.label}>
-                      {type.label}
-                    </option>
-                  ))}
-                </datalist>
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <Label className="font-normal">
                   Түвшин
                   <span className="text-destructive">*</span>
                 </Label>
@@ -119,6 +104,21 @@ export default function CompleteProfilePage() {
                   ))}
                 </datalist>
               </div>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <Label className="font-normal">
+                Төрөл
+                <span className="text-destructive">*</span>
+              </Label>
+              <Input list="jobTypeOptions" value={form.employeeJobType} onChange={(e) => setForm({ ...form, employeeJobType: e.target.value })} className="text-sm" placeholder="Сонгох / оруулах" />
+              <datalist id="jobTypeOptions">
+                {jobTypeOptions.map((type) => (
+                  <option key={type.value} value={type.label}>
+                    {type.label}
+                  </option>
+                ))}
+              </datalist>
             </div>
           </CardContent>
           <CardFooter>

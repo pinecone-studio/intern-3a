@@ -8,8 +8,8 @@ export type UserSchemaType = {
   employeeTelNumber: string;
   employeeDepartment: string;
   employeeJobTitle: string;
-  employeeJobType: 'FULL_TIME' | 'PART_TIME' | 'SHIFT_BASED' | 'SEASONAL' | 'CONTRACT' | 'TEMPORARY' | 'OTHER';
   employeeJobLevel: ' EXECUTIVE' | 'UNIT_DIRECTOR' | 'UNIT_HEAD' | 'SENIOR_MANAGER' | 'MANAGER' | 'SENIOR_SPECIALIST' | 'SPECIALIST' | 'SENIOR_STAFF' | 'EMPLOYEE' | 'INTERN' | 'OTHER';
+  employeeJobType: 'FULL_TIME' | 'PART_TIME' | 'SHIFT_BASED' | 'SEASONAL' | 'CONTRACT' | 'TEMPORARY' | 'OTHER';
 };
 
 export const UserSchema = new Schema(
@@ -21,11 +21,11 @@ export const UserSchema = new Schema(
     employeeTelNumber: { type: String },
     employeeDepartment: { type: String },
     employeeJobTitle: { type: String },
-    employeeJobType: { type: String, enum: ['FULL_TIME', 'PART_TIME', 'SHIFT_BASED', 'SEASONAL', 'CONTRACT', 'TEMPORARY', 'OTHER'] },
     employeeJobLevel: {
       type: String,
       enum: ['EXECUTIVE', 'UNIT_DIRECTOR', 'UNIT_HEAD', 'SENIOR_MANAGER', 'MANAGER', 'SENIOR_SPECIALIST', 'SPECIALIST', 'SENIOR_STAFF', 'EMPLOYEE', 'INTERN', 'OTHER'],
     },
+    employeeJobType: { type: String, enum: ['FULL_TIME', 'PART_TIME', 'SHIFT_BASED', 'SEASONAL', 'CONTRACT', 'TEMPORARY', 'OTHER'] },
   },
   {
     timestamps: true,
