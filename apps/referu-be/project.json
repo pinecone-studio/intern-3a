@@ -34,11 +34,13 @@
       "dependsOn": ["build"],
       "options": {
         "buildTarget": "referu-be:build",
-        "runBuildTargetDependencies": false
+        "runBuildTargetDependencies": false,
+        "watch": true
       },
       "configurations": {
         "development": {
-          "buildTarget": "referu-be:build:development"
+          "buildTarget": "referu-be:build:development",
+          "watch": true
         },
         "production": {
           "buildTarget": "referu-be:build:production"

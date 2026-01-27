@@ -21,7 +21,7 @@ export type EmployeeJobType = 'FULL_TIME' | 'PART_TIME' | 'SHIFT_BASED' | 'SEASO
 export type EmployeeJobLevel = 'EXECUTIVE' | 'UNIT_DIRECTOR' | 'UNIT_HEAD' | 'SENIOR_MANAGER' | 'MANAGER' | 'SENIOR_SPECIALIST' | 'SPECIALIST' | 'SENIOR_STAFF' | 'EMPLOYEE' | 'INTERN' | 'OTHER';
 
 export type EmployeeType = {
-  _id: string;
+  _id?: string;
   employeeClerkId: string;
   employeeFirstName: string;
   employeeLastName: string;
@@ -31,8 +31,8 @@ export type EmployeeType = {
   employeeJobTitle: string;
   employeeJobType: EmployeeJobType;
   employeeJobLevel: EmployeeJobLevel;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 export type ReferralType = {

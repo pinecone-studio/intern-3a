@@ -1,27 +1,37 @@
+import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
-import * as path from 'path';
+import { createReferral } from './controller/referral/createReferral.controller';
+import { getAllReferrals } from './controller/referral/getReferrals.controller';
+import { createUser } from './controller/user/createUser.controller';
+import { getUserById } from './controller/user/getUserById.controller';
 import connectDB from './db/mongodb';
 
 dotenv.config();
-
 const app = express();
 
 app.use(express.json());
-app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
+app.use(express.urlencoded({ extended: true }));
 
-app.get('/api', (req, res) => {
-  res.send({ message: 'Welddcomex to-be!' });
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
+  }),
+);
+
+app.get('/', (req, res) => {
+  res.send('server id1 runing');
 });
 
-const port = process.env.PORT || 3333;
+app.post('/referral', createReferral);
 
-connectDB()
-  .then(() => {
-    app.listen(port, () => {
-      console.log(`Server running at http://localhost:${port}/api`);
-    });
-  })
-  .catch((err) => {
-    console.error('MongoDB connection failed ❌', err);
-  });
+app.get('/referral', getAllReferrals);
+
+app.post('/user', createUser);
+
+app.get('/user/:id', getUserById);
+
+app.listen(4000, async () => {
+  await connectDB();
+  console.log('Server is running on http://localhost:4000');
+});

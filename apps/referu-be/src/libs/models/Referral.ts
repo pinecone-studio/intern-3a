@@ -7,11 +7,11 @@ export type ReferralSchemaType = {
   candidateEmail: string;
   candidateLinkedinUrl: string;
   candidateFieldOfInterest: string;
-  candidateCurrentStatus: string;
+  candidateCurrentStatus: 'CURRENTLY_EMPLOYED' | 'STUDENT' | 'UNEMPLOYED' | 'OTHER';
   candidateResume: { type: String; required: true };
   hasCandidateConsent: { type: String; required: true };
   isNotCurrentEmployee: { type: String; required: true };
-  relationWithCandidate: { type: String; required: true };
+  relationWithCandidate: 'FORMER_COLLEAGUE' | 'ALUMNI' | 'FRIEND' | 'FAMILY_RELATIVES' | 'OTHER';
   refferalReason: { type: String; required: true };
 };
 
@@ -21,13 +21,13 @@ export const ReferralSchema = new Schema(
     candidateFirstName: { type: String, required: true },
     candidateTelNumber: { type: String, required: true },
     candidateEmail: { type: String, required: true },
-    candidateLinkedinUrl: { type: String, required: true },
+    candidateLinkedinUrl: { type: String },
     candidateFieldOfInterest: { type: String },
-    candidateCurrentStatus: { type: String, required: true },
+    candidateCurrentStatus: { type: String, enum: ['CURRENTLY_EMPLOYED', 'STUDENT', 'UNEMPLOYED', 'OTHER'], required: true },
     candidateResume: { type: String, required: true },
     hasCandidateConsent: { type: Boolean, required: true },
     isNotCurrentEmployee: { type: Boolean, required: true },
-    relationWithCandidate: { type: String, required: true },
+    relationWithCandidate: { type: String, enum: ['FORMER_COLLEAGUE', 'ALUMNI', 'FRIEND', 'FAMILY_RELATIVES', 'OTHER'], required: true },
     refferalReason: { type: String, required: true },
   },
   { timestamps: true, versionKey: false },
