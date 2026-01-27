@@ -1,35 +1,25 @@
-/// <reference types="cypress" />
+// cypress/support/commands.ts
 
-// ***********************************************
-// This example commands.ts shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-
-// eslint-disable-next-line @typescript-eslint/no-namespace
-declare namespace Cypress {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  interface Chainable<Subject> {
-    login(email: string, password: string): void;
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      /**
+       * Хэрэглэгчийн имейл болон нууц үгээр системд нэвтрэх custom команд.
+       * @example cy.login('email@example.com', 'password123')
+       */
+      login(email: string, password: string): Chainable<void>;
+    }
   }
 }
 
-// -- This is a parent command --
+// Командын логик
 Cypress.Commands.add('login', (email, password) => {
-  console.log('Custom command example: Login', email, password);
+  cy.visit('/login');
+  cy.get('input[name="identifier"]').type(email);
+  cy.contains('Continue').click();
+  cy.get('input[name="password"]').type(password);
+  cy.contains('Continue').click();
+  cy.contains('Системд нэвтрэх').click();
 });
-//
-// -- This is a child command --
-// Cypress.Commands.add("drag", { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add("dismiss", { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+
+export {}; // TypeScript файл гэдгийг баталгаажуулна
