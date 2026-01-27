@@ -1,5 +1,7 @@
+import { ClerkProvider } from '@clerk/nextjs';
 import { Toaster } from '../../../../libs/shared/shadcn/src/components/ui/sonner';
 import './global.css';
+import { LayoutHeader } from './homepage/_components/LayoutHeader';
 
 export const metadata = {
   title: 'Welcome to ReferU',
@@ -14,13 +16,16 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
+      <ClerkProvider>
     <html lang="en">
       <body className="min-h-screen overflow-x-hidden">
         <main className="w-full max-w-\[430px]\ min-h-\[932px]\ bg-white">
+          <LayoutHeader/>
           {children}
           <Toaster position="top-center" />
         </main>
       </body>
     </html>
+    </ClerkProvider>
   );
 }
