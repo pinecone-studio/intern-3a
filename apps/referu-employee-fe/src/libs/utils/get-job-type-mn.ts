@@ -13,9 +13,9 @@ export function getJobTypeMN(type: EmployeeJobType): string {
     case 'CONTRACT':
       return 'Гэрээт';
     case 'TEMPORARY':
-      return 'Бусад';
-    case 'OTHER':
       return 'Түр ажил';
+    case 'OTHER':
+      return 'Бусад';
     default:
       return type;
   }

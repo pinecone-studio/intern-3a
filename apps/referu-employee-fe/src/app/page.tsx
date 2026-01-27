@@ -1,6 +1,6 @@
 'use client';
 
-import { useUser } from '@clerk/nextjs';
+import { useAuth, useUser } from '@clerk/nextjs';
 import axios from 'axios';
 import { Loader } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -13,51 +13,70 @@ import { FooterNav, PostedJobCard, PostedJobsHeading } from './_components';
 export default function HomePage() {
   const { user, isLoaded } = useUser();
   const router = useRouter();
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  // const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const { getToken } = useAuth();
 
   useEffect(() => {
-    if (isLoaded && !user) {
+    if (!isLoaded) return;
+
+    if (!user) {
       router.push('/sign-in');
+      return;
     }
+
+    const checkUser = async () => {
+      try {
+        const token = await getToken();
+        await axios.get('http://localhost:4000/user/me', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      } catch (error: any) {
+        if (error.response?.status === 404) {
+          router.push('/complete-profile');
+        }
+      }
+    };
+
+    checkUser();
   }, [user, isLoaded, router]);
 
   useEffect(() => {
     if (!isLoaded || !user) return;
 
-    const createUser = async () => {
-      setIsSubmitting(true);
+    // const createUser = async () => {
+    //   setIsSubmitting(true);
 
-      const userData: EmployeeType = {
-        employeeClerkId: '1',
-        employeeLastName: '2',
-        employeeFirstName: '3',
-        employeeEmail: '4444444',
-        employeeTelNumber: '5',
-        employeeDepartment: '6',
-        employeeJobTitle: '7',
-        employeeJobType: 'SHIFT_BASED',
-        employeeJobLevel: 'UNIT_HEAD',
-      };
+    //   const userData: EmployeeType = {
+    //     employeeClerkId: '1',
+    //     employeeLastName: '2',
+    //     employeeFirstName: '3',
+    //     employeeEmail: '4444444',
+    //     employeeTelNumber: '5',
+    //     employeeDepartment: '6',
+    //     employeeJobTitle: '7',
+    //     employeeJobType: 'SHIFT_BASED',
+    //     employeeJobLevel: 'UNIT_HEAD',
+    //   };
 
-      try {
-        const response = await axios.post('http://localhost:4000/user', userData, { headers: { 'Content-Type': 'application/json' } });
+    //   try {
+    //     const response = await axios.post('http://localhost:4000/user', userData, { headers: { 'Content-Type': 'application/json' } });
 
-        toast.success(response.data.message);
-      } catch (error: any) {
-        if (error.response?.data?.error) {
-          toast.error(`Алдаа: ${JSON.stringify(error.response.data.error)}`);
-        } else {
-          toast.error('Алдаа гарлаа');
-        }
-        console.error('User creation error:', error);
-      } finally {
-        setIsSubmitting(false);
-      }
-    };
-    createUser();
+    //     toast.success(response.data.message);
+    //   } catch (error: any) {
+    //     if (error.response?.data?.error) {
+    //       toast.error(`Алдаа: ${JSON.stringify(error.response.data.error)}`);
+    //     } else {
+    //       toast.error('Алдаа гарлаа');
+    //     }
+    //     console.error('User creation error:', error);
+    //   } finally {
+    //     setIsSubmitting(false);
+    //   }
+    // };
+    // createUser();
   }, [isLoaded, user]);
 
-  if (!user || !isLoaded || isSubmitting)
+  if (!user || !isLoaded)
     return (
       <div className="min-h-screen flex justify-center items-center">
         <Loader className="animate-spin" size={32} />
