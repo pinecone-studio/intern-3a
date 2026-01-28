@@ -8,13 +8,14 @@ export function useEmployeeData() {
   const { user } = useUser();
   const [employeeData, setEmployeeData] = useState<EmployeeType>();
   const { getToken } = useAuth();
+
   useEffect(() => {
     if (!user) return;
 
     const getEmployeeData = async () => {
       try {
         const token = await getToken();
-        console.log({ token });
+
         const res = await axios.get('http://localhost:4000/user', {
           headers: { Authorization: `Bearer ${token}` },
         });

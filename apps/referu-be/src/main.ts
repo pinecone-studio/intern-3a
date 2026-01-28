@@ -28,7 +28,7 @@ app.use(
   }),
 );
 
-app.get('/', (req, res) => {
+app.get('/', (_, res) => {
   res.send('server is running');
 });
 

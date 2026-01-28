@@ -1,5 +1,7 @@
+import { getAuth } from '@clerk/express';
 import { Request, Response } from 'express';
 import { Referral } from '../../libs/models/Referral';
+import { User } from '../../libs/models/User';
 import { uploadResumeToCloudinary } from '../../libs/uploadPdf';
 
 export const createReferral = async (req: Request, res: Response) => {
@@ -9,16 +11,23 @@ export const createReferral = async (req: Request, res: Response) => {
     if (req.file) {
       resumeUrl = await uploadResumeToCloudinary(req.file.buffer, req.file.originalname);
     }
-    console.log('FILE 👉', req.file);
+
+    const { userId } = getAuth(req);
+
+    if (!userId) {
+      return res.status(401).json({ error: 'User not authenticated' });
+    }
+    const existingUser = await User.findOne({ employeeClerkId: userId });
+
+    const referringEmployeeId = existingUser._id;
 
     const referralData = {
       ...req.body,
       candidateResume: resumeUrl,
+      referringEmployeeId,
     };
-    console.log('BODY 👉', req.body);
 
     const referral = await Referral.create(referralData);
-    console.log(referral);
 
     res.status(201).json({ message: 'Referral created successfully', referral });
   } catch (error) {

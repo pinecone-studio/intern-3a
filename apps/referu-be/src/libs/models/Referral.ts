@@ -10,11 +10,11 @@ export type ReferralSchemaType = {
   candidateLinkedinUrl: string;
   candidateFieldOfInterest: string;
   candidateCurrentStatus: 'CURRENTLY_EMPLOYED' | 'STUDENT' | 'UNEMPLOYED' | 'OTHER';
-  candidateResume: { type: String; required: true };
-  hasCandidateConsent: { type: String; required: true };
-  isNotCurrentEmployee: { type: String; required: true };
+  candidateResume: string;
+  hasCandidateConsent: boolean;
+  isNotCurrentEmployee: boolean;
   relationWithCandidate: 'FORMER_COLLEAGUE' | 'ALUMNI' | 'FRIEND' | 'FAMILY_RELATIVES' | 'OTHER';
-  refferalReason: { type: String; required: true };
+  refferalReason: string;
 };
 
 export const ReferralSchema = new Schema(

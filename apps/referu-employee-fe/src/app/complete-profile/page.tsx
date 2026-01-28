@@ -11,7 +11,7 @@ import { jobLevelOptions } from '../../libs/utils/job-level-options';
 import { jobTypeOptions } from '../../libs/utils/job-type-options';
 
 export default function CompleteProfilePage() {
-  const { user, isLoaded } = useUser();
+  const { isLoaded } = useUser();
   const router = useRouter();
   const { getToken } = useAuth();
 
@@ -23,7 +23,6 @@ export default function CompleteProfilePage() {
     employeeJobType: '',
   });
 
-  console.log({ form });
   const handleSaveUserInfo = async () => {
     try {
       const token = await getToken();
@@ -34,8 +33,8 @@ export default function CompleteProfilePage() {
 
       toast.success('Мэдээлэл амжилттай хадгалагдлаа!');
       router.push('/');
-    } catch (error: any) {
-      toast.error(error?.response?.data?.error || 'Алдаа гарлаа');
+    } catch (error) {
+      toast.error('Алдаа гарлаа');
     }
   };
   if (!isLoaded)
