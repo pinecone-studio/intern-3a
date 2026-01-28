@@ -42,6 +42,7 @@ type ReferralDetail = {
 
   submittedDate: string;
   status: 'SUBMITTED' | 'APPROVED' | 'REJECTED';
+  // status: 'SUBMITTED' | 'PERMANENT' |'PROBATION' | 'REJECTED';
 };
 
 export const mockReferralDetails: ReferralDetail[] = [
@@ -330,10 +331,24 @@ const Page = () => {
 
     setShowApproveDialog(false);
     setTimeout(() => {
+      // setStatus('PERMANENT');
       setStatus('APPROVED');
       router.back();
     }, 1500);
   };
+
+  // const handleApproveProbation = () => {
+  //   // setStatus('APPROVED');
+  //   toast.success('Амжилттай', {
+  //     description: 'Санал зөвшөөрөгдлөө. Урамшууллын хүсэлт санхүү хэлтэст илгээгдлээ.',
+  //   });
+
+  //   setShowApproveDialog(false);
+  //   setTimeout(() => {
+  //     setStatus('PROBATION');
+  //     router.back();
+  //   }, 1500);
+  // };
 
   const handleReject = () => {
     // setStatus('REJECTED');
@@ -499,11 +514,24 @@ const Page = () => {
               <span className="font-semibold text-gray-600">ажилчинд баталгаажуулалтын мэдэгдэл</span> очих болно.
             </AlertDialogDescription>
           </AlertDialogHeader>
+
           <AlertDialogFooter>
-            <AlertDialogCancel>Цуцлах</AlertDialogCancel>
-            <AlertDialogAction onClick={handleApprove} className="bg-green-600 hover:bg-green-700">
-              Ажилд авах
-            </AlertDialogAction>
+            <div className="flex flex-col gap-4 w-full">
+              <div className="flex justify-center gap-4 w-full">
+                <AlertDialogAction
+                  // onClick={handleApproveProbation}
+                  className="bg-green-600 hover:bg-green-700 flex-1"
+                >
+                  Туршилтын хугацаа
+                </AlertDialogAction>
+
+                <AlertDialogAction onClick={handleApprove} className="bg-green-600 hover:bg-green-700 flex-1">
+                  Бүтэн цагаар
+                </AlertDialogAction>
+              </div>
+
+              <AlertDialogCancel className="w-full">Цуцлах</AlertDialogCancel>
+            </div>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
