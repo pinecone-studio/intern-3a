@@ -26,14 +26,13 @@ export const departmentTypeDefs = gql`
   }
 
   type Mutation {
-    # ADMIN => шинэ хэлтэс нэмэх
+    # 🔒 ADMIN: Шинэ хэлтэс үүсгэх, засах, устгах
     createDepartment(input: CreateDepartmentInput!): Department!
-
-    # ADMIN
     updateDepartment(id: Int!, input: UpdateDepartmentInput!): Department!
     deleteDepartment(id: Int!): Boolean!
 
-    # USER
-    selectMyDepartment(departmentId: Int!): Boolean!
+    # 🔒 ADMIN: Тодорхой нэг ажилтанд хэлтэс оноох (userId ашиглана)
+    # Өмнөх selectMyDepartment-ийн оронд үүнийг ашиглана
+    assignUserDepartment(userId: String!, departmentId: Int!): Boolean!
   }
 `;

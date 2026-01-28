@@ -1,9 +1,4 @@
 describe('management4everyone-e2e', () => {
-  beforeEach(() => {
-    // Тест болгоны өмнө нэвтрэх шаардлагатай бол энд бичиж болно
-    // cy.login('hbbaatar@gmail.com', '99150488Ab');
-  });
-
   it('Нэвтрэх үйлдлийг амжилттай хийж байна', () => {
     // Нэвтрэх функцийг дуудах
     cy.login('hbbaatar@gmail.com', '');
