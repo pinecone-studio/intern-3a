@@ -1,34 +1,42 @@
+import { clerkClient, getAuth } from '@clerk/express';
 import { Request, Response } from 'express';
 import { User } from '../../libs/models/User';
+import { jobLevelMNtoEN } from '../../types/get-job-level-en';
 import { jobTypeMNtoEN } from '../../types/get-job-type-en';
 
 export const createUser = async (req: any, res: Response) => {
   try {
-    const clerkId = req.clerkId;
-    const clerkUser = req.clerkUser;
+    const { userId } = getAuth(req);
 
-    const existing = await User.findOne({ employeeClerkId: clerkId });
+    if (!userId) {
+      return res.status(401).json({ error: 'User not authenticated' });
+    }
+
+    const existing = await User.findOne({ employeeClerkId: userId });
 
     if (existing) return res.status(409).json({ error: 'User already exists!' });
+
+    const clerkUser = await clerkClient.users.getUser(userId);
 
     const { employeeTelNumber, employeeDepartment, employeeJobTitle, employeeJobLevel, employeeJobType } = req.body;
 
     if (!employeeTelNumber || !employeeDepartment || !employeeJobTitle || !employeeJobLevel || !employeeJobType) {
       return res.status(400).json({ error: 'All fields are required' });
     }
-
-    console.log('BODY 👉', req.body);
-    console.log('HEADERS 👉', req.headers);
-
+    console.log({ employeeTelNumber, employeeDepartment, employeeJobTitle, employeeJobLevel, employeeJobType });
+    const employeeFirstName = clerkUser.firstName ?? 'Employee';
+    const employeeLastName = clerkUser.lastName ?? 'Dear';
+    const employeeEmail = clerkUser.emailAddresses?.[0]?.emailAddress;
+    console.log({ employeeFirstName, employeeLastName, employeeEmail });
     const newUser = await User.create({
-      employeeClerkId: clerkId,
-      employeeLastName: clerkUser.employeeLastName,
-      employeeFirstName: clerkUser.employeeFirstName,
-      employeeEmail: clerkUser.employeeEmail,
+      employeeClerkId: userId,
+      employeeLastName,
+      employeeFirstName,
+      employeeEmail,
       employeeTelNumber,
       employeeDepartment,
       employeeJobTitle,
-      employeeJobLevel,
+      employeeJobLevel: jobLevelMNtoEN(employeeJobLevel),
       employeeJobType: jobTypeMNtoEN(employeeJobType),
     });
 

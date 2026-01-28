@@ -13,6 +13,7 @@
     "@apollo/server": "5.2.0",
     "@clerk/backend": "^2.29.0",
     "@clerk/clerk-sdk-node": "5.1.6",
+    "@clerk/express": "^1.7.65",
     "@clerk/nextjs": "6.36.5",
     "@expo/metro-config": "~54.0.9",
     "@expo/metro-runtime": "~6.1.2",

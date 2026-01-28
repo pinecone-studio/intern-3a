@@ -13,7 +13,7 @@ export default function HomePage() {
   const router = useRouter();
   const [checkingUser, setCheckingUser] = useState<boolean>(true);
   const { getToken } = useAuth();
-
+  console.log({ user });
   useEffect(() => {
     if (!isLoaded) return;
 

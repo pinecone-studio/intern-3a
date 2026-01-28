@@ -19,7 +19,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <ClerkProvider>
+    <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY!}>
       <html lang="en">
         <body className="min-h-screen overflow-x-hidden">
           <main className="w-full max-w-\[430px]\ min-h-\[932px]\ bg-[#005295]/5">
