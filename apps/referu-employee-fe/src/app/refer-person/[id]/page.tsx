@@ -1,12 +1,12 @@
 'use client';
 
-import { useAuth, useUser } from '@clerk/nextjs';
 import { Button } from '@intern-3a/shadcn';
-import { EmployeeType } from 'apps/referu-employee-fe/src/libs/type';
+
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import React, { use, useEffect, useState } from 'react';
+import React, { use, useState } from 'react';
 import { toast } from 'sonner';
+import { useEmployeeData } from '../../hook/use-employee-data';
 import { ReferPageCandidateDetail, ReferPageConfirmation, ReferPageEmployeeDetail, ReferPageEmployeeTypeSection, ReferPageHeading } from '../_components';
 
 export default function ReferPersonPage({ params }: { params: Promise<{ id: string }> }) {
@@ -26,30 +26,7 @@ export default function ReferPersonPage({ params }: { params: Promise<{ id: stri
   const [loading, setLoading] = useState<boolean>(false);
   const { id } = use(params);
   const router = useRouter();
-  const { user } = useUser();
-  const [employeeData, setEmployeeData] = useState<EmployeeType>();
-  const { getToken } = useAuth();
-  console.log({ id });
-
-  useEffect(() => {
-    if (!user) return;
-
-    const getEmployeeData = async () => {
-      try {
-        const token = await getToken();
-        console.log({ token });
-        const res = await axios.get('http://localhost:4000/user', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        setEmployeeData(res.data.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    getEmployeeData();
-  }, [user]);
+  const { employeeData } = useEmployeeData();
 
   const handleSendReferRequest = async () => {
     try {
