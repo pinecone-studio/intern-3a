@@ -7,13 +7,17 @@ import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { hrPostedJobs } from '../libs/utils/get-datas';
 import { FooterNav, PostedJobCard, PostedJobsHeading } from './_components';
+import { useReferral } from './hook/use-referral';
 
 export default function HomePage() {
+  const { allReferrals } = useReferral();
   const { user, isLoaded } = useUser();
   const router = useRouter();
   const [checkingUser, setCheckingUser] = useState<boolean>(true);
   const { getToken } = useAuth();
   console.log({ user });
+  console.log({ allReferrals });
+
   useEffect(() => {
     if (!isLoaded) return;
 

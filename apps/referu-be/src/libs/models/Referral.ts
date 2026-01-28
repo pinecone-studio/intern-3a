@@ -1,6 +1,8 @@
 import mongoose, { Schema } from 'mongoose';
 
 export type ReferralSchemaType = {
+  postedJobId: string;
+  referringEmployeeId: mongoose.Types.ObjectId;
   candidateLastName: string;
   candidateFirstName: string;
   candidateTelNumber: string;
@@ -17,6 +19,8 @@ export type ReferralSchemaType = {
 
 export const ReferralSchema = new Schema(
   {
+    postedJobId: { type: String, required: true },
+    referringEmployeeId: { type: Schema.ObjectId, ref: 'User', required: true },
     candidateLastName: { type: String, required: true },
     candidateFirstName: { type: String, required: true },
     candidateTelNumber: { type: String, required: true },

@@ -15,8 +15,8 @@ export const ReferPageEmployeeTypeSection = ({
   refferalReason: string;
   setRefferalReason: Dispatch<React.SetStateAction<string>>;
 }) => {
-  console.log({ relationWithCandidate });
-  console.log({ refferalReason });
+  // console.log({ relationWithCandidate });
+  // console.log({ refferalReason });
   return (
     <Card>
       <CardContent className="flex flex-col gap-3">
