@@ -23,11 +23,11 @@ export const createUser = async (req: Request, res: Response) => {
     if (!employeeTelNumber || !employeeDepartment || !employeeJobTitle || !employeeJobLevel || !employeeJobType) {
       return res.status(400).json({ error: 'All fields are required' });
     }
-    console.log({ employeeTelNumber, employeeDepartment, employeeJobTitle, employeeJobLevel, employeeJobType });
+
     const employeeFirstName = clerkUser.firstName ?? 'Employee';
     const employeeLastName = clerkUser.lastName ?? 'Dear';
     const employeeEmail = clerkUser.emailAddresses?.[0]?.emailAddress;
-    console.log({ employeeFirstName, employeeLastName, employeeEmail });
+
     const newUser = await User.create({
       employeeClerkId: userId,
       employeeLastName,

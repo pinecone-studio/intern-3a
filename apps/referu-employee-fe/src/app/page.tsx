@@ -16,6 +16,7 @@ export default function HomePage() {
   const [checkingUser, setCheckingUser] = useState<boolean>(true);
   const { getToken } = useAuth();
   console.log({ allReferrals });
+
   useEffect(() => {
     if (!isLoaded) return;
 
