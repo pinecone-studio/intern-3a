@@ -23,6 +23,7 @@ app.use(
 app.use(
   cors({
     origin: 'http://localhost:3000',
+    credentials: true,
   }),
 );
 
@@ -35,7 +36,7 @@ app.get('/referral', getAllReferrals);
 
 app.get('/user/check', checkUser);
 app.post('/user', createUser);
-app.get('/user/:id', getUserById);
+app.get('/user', getUserById);
 
 async function bootstrap() {
   try {

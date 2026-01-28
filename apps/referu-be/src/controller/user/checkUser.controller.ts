@@ -1,4 +1,4 @@
-import { clerkClient, getAuth } from '@clerk/express';
+import { getAuth } from '@clerk/express';
 import { Request, Response } from 'express';
 import { User } from '../../libs/models/User';
 

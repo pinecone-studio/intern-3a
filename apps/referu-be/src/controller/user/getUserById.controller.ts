@@ -1,14 +1,19 @@
+import { clerkClient, getAuth } from '@clerk/express';
 import { Request, Response } from 'express';
 import { User } from '../../libs/models/User';
 
 export const getUserById = async (req: Request, res: Response) => {
-  //req.body
-  //req.params
-  //req.query
+  const { userId } = getAuth(req);
+
+  if (!userId) {
+    return res.status(401).json({ error: 'User not authenticated' });
+  }
+
   try {
-    const uniqueUser = await User.find();
-    res.send({ message: 'Found user!', data: uniqueUser });
+    const existing = await User.findOne({ employeeClerkId: userId });
+
+    res.send({ message: 'Found user!', data: existing });
   } catch (error) {
-    res.status(500).send('Error while getting user!');
+    res.status(500).send('Error while finding user!');
   }
 };
