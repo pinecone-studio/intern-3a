@@ -1,23 +1,13 @@
+'use client';
 import { Card, CardContent } from '@intern-3a/shadcn';
+import { getJobLevelMN } from 'apps/referu-employee-fe/src/libs/utils/get-job-level-mn';
 import { Briefcase, Mail, User } from 'lucide-react';
 import React from 'react';
+import { useEmployeeData } from '../../hook/use-employee-data';
 
-type Employee = {
-  _id: string;
-  employeeClerkId: string;
-  employeeFirstName: string;
-  employeeLastName: string;
-  employeeDepartment: string;
-  employeeJobTitle: string;
-  employeeJobLevel: string;
-  employeeEmail: string;
-};
-
-type ProfileCardProps = {
-  employee: Employee;
-};
-
-export const ProfileCard = ({ employee }: ProfileCardProps) => {
+export const ProfileCard = () => {
+  const { employeeData } = useEmployeeData();
+  console.log('employee data', employeeData);
   return (
     <Card className="overflow-hidden border-none shadow-sm hover:shadow-md transition-all duration-300 bg-white">
       <CardContent className="p-0">
@@ -33,25 +23,28 @@ export const ProfileCard = ({ employee }: ProfileCardProps) => {
           <div className="flex-1 space-y-1">
             <div className="flex items-center justify-between">
               <h3 className="font-bold text-slate-800 text-base leading-tight">
-                {employee.employeeLastName.charAt(0)}. {employee.employeeFirstName}
+                {employeeData?.employeeLastName?.charAt(0)}. {employeeData?.employeeFirstName}
               </h3>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2 py-1 rounded-md">{employee.employeeJobLevel}</span>
+
+              {employeeData?.employeeJobLevel && (
+                <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2 py-1 rounded-md">{getJobLevelMN(employeeData.employeeJobLevel)}</span>
+              )}
             </div>
 
             <div className="flex flex-col gap-1">
               <div className="flex items-center text-sm text-slate-500">
                 <Briefcase className="w-3.5 h-3.5 mr-1.5 opacity-70" />
-                <span>{employee.employeeJobTitle}</span>
+                <span>{employeeData?.employeeJobTitle}</span>
               </div>
               <div className="flex items-center text-xs text-slate-400">
                 <Mail className="w-3.5 h-3.5 mr-1.5 opacity-70" />
-                <span>{employee.employeeEmail}</span>
+                <span>{employeeData?.employeeEmail}</span>
               </div>
             </div>
           </div>
         </div>
         <div className="px-2 mx-5 pt-2 border-t border-dotted border-slate-200">
-          <p className="text-[12px] pt-2 font-medium text-slate-600 uppercase">{employee.employeeDepartment}</p>
+          <p className="text-[12px] pt-2 font-medium text-slate-600 uppercase">{employeeData?.employeeDepartment}</p>
         </div>
       </CardContent>
     </Card>
