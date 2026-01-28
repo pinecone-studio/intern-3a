@@ -35,24 +35,21 @@ export default function ReferPersonPage({ params }: { params: Promise<{ id: stri
   const handleSendReferRequest = async () => {
     const token = await getToken();
 
-    try {
-      if (!candidateResume) {
-        toast.warning('Анкетаа хавсаргана уу!');
-      } else if (!hasCandidateConsent) {
-        toast.warning('Санал болгож буй хүний зөвшөөрлийг урьдчилан авсан байх ёстой!');
-      } else if (
-        !candidateLastName ||
-        !candidateFirstName ||
-        !candidateTelNumber ||
-        !candidateEmail ||
-        !candidateCurrentStatus ||
-        !isNotCurrentEmployee! ||
-        !relationWithCandidate ||
-        !refferalReason
-      ) {
-        toast.warning('Бүх шаардлагатай талбарыг бөглөнө үү!');
-      }
+    if (!candidateEmail.trim()) {
+      toast.warning('Имэйл хаяг заавал бөглөнө үү');
+      return;
+    }
+    if (!candidateResume) {
+      toast.warning('Анкетаа хавсаргана уу!');
+    }
+    if (!hasCandidateConsent) {
+      toast.warning('Санал болгож буй хүний зөвшөөрлийг урьдчилан авсан байх ёстой!');
+    }
+    if (!candidateLastName || !candidateFirstName || !candidateTelNumber || !candidateEmail || !candidateCurrentStatus || !isNotCurrentEmployee! || !relationWithCandidate || !refferalReason) {
+      toast.warning('Бүх шаардлагатай талбарыг бөглөнө үү!');
+    }
 
+    try {
       setLoading(true);
       const newFormData = new FormData();
       newFormData.append('postedJobId', id);
