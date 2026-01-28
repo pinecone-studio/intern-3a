@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { User } from '../../libs/models/User';
+import { jobTypeMNtoEN } from '../../types/get-job-type-en';
 
 export const createUser = async (req: any, res: Response) => {
   try {
@@ -28,7 +29,7 @@ export const createUser = async (req: any, res: Response) => {
       employeeDepartment,
       employeeJobTitle,
       employeeJobLevel,
-      employeeJobType,
+      employeeJobType: jobTypeMNtoEN(employeeJobType),
     });
 
     return res.status(201).json({

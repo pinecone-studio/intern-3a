@@ -23,6 +23,7 @@ export default function CompleteProfilePage() {
     employeeJobType: '',
   });
 
+  console.log({ form });
   const handleSaveUserInfo = async () => {
     try {
       const token = await getToken();
