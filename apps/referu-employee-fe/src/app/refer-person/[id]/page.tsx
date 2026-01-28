@@ -3,6 +3,8 @@
 import { useAuth, useUser } from '@clerk/nextjs';
 import { Button } from '@intern-3a/shadcn';
 import { EmployeeType } from 'apps/referu-employee-fe/src/libs/type';
+import { relationMNtoEN } from 'apps/referu-employee-fe/src/libs/utils/get-relation-en';
+import { statusMNtoEN } from 'apps/referu-employee-fe/src/libs/utils/get-status-en';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import React, { use, useEffect, useState } from 'react';
@@ -80,11 +82,11 @@ export default function ReferPersonPage({ params }: { params: Promise<{ id: stri
       newFormData.append('candidateEmail', candidateEmail);
       newFormData.append('candidateLinkedinUrl', candidateLinkedinUrl);
       newFormData.append('candidateFieldOfInterest', candidateFieldOfInterest);
-      newFormData.append('candidateCurrentStatus', candidateCurrentStatus);
+      newFormData.append('candidateCurrentStatus', statusMNtoEN(candidateCurrentStatus));
       newFormData.append('candidateResume', candidateResume as File);
       newFormData.append('hasCandidateConsent', String(hasCandidateConsent));
       newFormData.append('isNotCurrentEmployee', String(isNotCurrentEmployee));
-      newFormData.append('relationWithCandidate', relationWithCandidate);
+      newFormData.append('relationWithCandidate', relationMNtoEN(relationWithCandidate));
       newFormData.append('refferalReason', refferalReason);
 
       await axios.post('http://localhost:4000/referral', newFormData, {
@@ -94,9 +96,9 @@ export default function ReferPersonPage({ params }: { params: Promise<{ id: stri
       });
 
       toast.success('Санал амжилттай илгээгдлээ');
-      router.push('/');
-    } catch (error: any) {
-      toast.error(error?.response?.data?.error || 'Алдаа гарлаа');
+      // router.push('/');
+    } catch (error) {
+      toast.error('Алдаа гарлаа');
     } finally {
       setLoading(false);
     }

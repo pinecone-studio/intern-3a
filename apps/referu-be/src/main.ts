@@ -8,6 +8,7 @@ import { checkUser } from './controller/user/checkUser.controller';
 import { createUser } from './controller/user/createUser.controller';
 import { getUserById } from './controller/user/getUserById.controller';
 import connectDB from './db/mongodb';
+import { upload } from './middleware/multer';
 
 dotenv.config();
 const app = express();
@@ -31,7 +32,7 @@ app.get('/', (req, res) => {
   res.send('server is running');
 });
 
-app.post('/referral', createReferral);
+app.post('/referral', upload.single('candidateResume'), createReferral);
 app.get('/referral', getAllReferrals);
 
 app.get('/user/check', checkUser);

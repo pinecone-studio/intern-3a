@@ -51,15 +51,15 @@ export const ReferPageCandidateDetail = ({
     }
   };
 
-  console.log({ candidateLastName });
-  console.log({ candidateFirstName });
-  console.log({ candidateTelNumber });
-  console.log({ candidateEmail });
-  console.log({ candidateLinkedinUrl });
-  console.log({ candidateFieldOfInterest });
-  console.log({ candidateCurrentStatus });
-  console.log({ candidateResume });
-  console.log({ resumeFilePreview });
+  // console.log({ candidateLastName });
+  // console.log({ candidateFirstName });
+  // console.log({ candidateTelNumber });
+  // console.log({ candidateEmail });
+  // console.log({ candidateLinkedinUrl });
+  // console.log({ candidateFieldOfInterest });
+  // console.log({ candidateCurrentStatus });
+  // console.log({ candidateResume });
+  // console.log({ resumeFilePreview });
 
   return (
     <div className="p-5 flex flex-col gap-3">

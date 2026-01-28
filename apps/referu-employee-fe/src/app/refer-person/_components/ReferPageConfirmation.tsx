@@ -14,8 +14,8 @@ export const ReferPageConfirmation = ({
   isNotCurrentEmployee: boolean;
   setIsNotCurrentEmployee: Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  console.log({ hasCandidateConsent });
-  console.log({ isNotCurrentEmployee });
+  // console.log({ hasCandidateConsent });
+  // console.log({ isNotCurrentEmployee });
 
   return (
     <Card>
