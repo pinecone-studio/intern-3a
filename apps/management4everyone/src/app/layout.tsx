@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Employee Management System',
+  title: 'EMS',
   description: 'Manage your workforce efficiently',
   generator: 'v0.app',
   icons: {

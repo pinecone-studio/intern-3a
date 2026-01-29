@@ -2,7 +2,7 @@
 
 import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from '@clerk/nextjs';
 import { Button } from '@intern-3a/shadcn';
-import { Bell, Menu } from 'lucide-react';
+import { Menu } from 'lucide-react';
 
 interface HeaderProps {
   onMenuClick: () => void;
@@ -24,14 +24,6 @@ export function Header1({ onMenuClick }: HeaderProps) {
 
         {/* Right: Notifications and User */}
         <div className="flex items-center gap-3 ml-auto">
-          <Button variant="ghost" size="icon" className="relative hover:bg-primary/10 transition-colors group">
-            <div className="relative">
-              <Bell className="h-5 w-5 group-hover:scale-110 transition-transform" />
-              <span className="absolute top-0.5 right-0.5 h-2 w-2 rounded-full bg-destructive animate-pulse" />
-            </div>
-            <span className="sr-only">Notifications</span>
-          </Button>
-
           {/* Divider */}
           <div className="h-6 w-px bg-border/50" />
 

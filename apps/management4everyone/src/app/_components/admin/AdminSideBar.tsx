@@ -11,37 +11,37 @@ import { cn } from '../../lib/utils';
 
 const navigation = [
   {
-    name: 'Announcements',
+    name: 'Зарлалууд удирдах',
     href: '/admin/announcement',
     icon: Megaphone,
   },
   {
-    name: 'Dashboard',
+    name: 'Мэдээллийн самбар',
     href: '/admin/all-users',
     icon: LayoutDashboard,
   },
   {
-    name: 'Employee hiring',
+    name: 'Ажилтны зөвшөөрөл олгох',
     href: '/admin/permission',
     icon: Users,
   },
   {
-    name: 'Departments',
+    name: 'Хэлтэсүүдийн удирдлага',
     href: '/admin/departments',
     icon: Building2,
   },
   {
-    name: 'Info',
+    name: 'Ажилчдын мэдээлэл',
     href: '/admin/info',
     icon: Calendar,
   },
   {
-    name: 'Leave Management',
+    name: 'Чөлөөний удирдлага',
     href: '/admin/leave',
     icon: Briefcase,
   },
   {
-    name: 'Attendance Reports',
+    name: 'Ирцийн тайлан',
     href: '/admin/attendance',
     icon: FileText,
   },
