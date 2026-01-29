@@ -11,32 +11,32 @@ import { cn } from '../../lib/utils';
 
 const navigation = [
   {
-    name: 'Announcements',
+    name: 'Зарлалууд',
     href: '/employee/announcement',
     icon: Megaphone,
   },
   {
-    name: 'Department',
+    name: 'Миний харьяа хэлтэс',
     href: '/employee/departments',
     icon: LayoutDashboard,
   },
   {
-    name: 'Information',
+    name: 'Өөрийн мэдээллээ удирдах',
     href: '/employee/info',
     icon: Users,
   },
   {
-    name: 'Leave requests',
+    name: 'Чөлөөний хүсэлт явуулах',
     href: '/employee/leave',
     icon: Building2,
   },
   {
-    name: 'My attendance',
+    name: 'Ирцээ бүртгүүлэх',
     href: '/employee/attendance',
     icon: CalendarCheck,
   },
   {
-    name: 'My profile',
+    name: 'Миний профайл',
     href: '/employee/my-profile',
     icon: Calendar,
   },

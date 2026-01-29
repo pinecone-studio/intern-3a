@@ -10,7 +10,7 @@ export default async function WaitingApprovalPage() {
 
   // Хэрэв хэрэглэгч аль хэдийн зөвшөөрөгдсөн бол dashboard руу шилжүүлнэ
   if (sessionClaims?.metadata?.approved) {
-    redirect('/dashboard');
+    redirect('/employee');
   }
 
   return (

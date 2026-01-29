@@ -1,6 +1,7 @@
 'use client';
 import { gql, OperationVariables } from '@apollo/client';
 import { useQuery } from '@apollo/client/react';
+import { formatDate, formatTime } from 'apps/management4everyone/src/utils/dateUtils';
 import React, { useState } from 'react';
 
 // --- TYPES ---
@@ -77,31 +78,8 @@ export default function AdminAttendancePage() {
     return <div className="p-8 text-red-500">Алдаа: {error.message}</div>;
   }
 
-  const formatDate = (dateValue: string | number) => {
-    const date = new Date(Number(dateValue) || dateValue);
-    return date.toLocaleDateString('mn-MN', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-    });
-  };
-  const formatTime = (timeValue: string | number | null | undefined) => {
-    if (!timeValue) return '-';
-
-    const date = new Date(Number(timeValue) || timeValue);
-
-    if (isNaN(date.getTime())) return '-';
-
-    return date.toLocaleTimeString('mn-MN', {
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
-
-  console.log('filteredData', filteredData);
-
   return (
-    <div className="p-8 bg-gray-50 min-h-screen text-black">
+    <div className="p-8 min-h-screen text-black">
       <div className="max-w-6xl mx-auto space-y-6">
         <h1 className="text-2xl font-bold">Ирцийн нэгдсэн хяналт</h1>
 

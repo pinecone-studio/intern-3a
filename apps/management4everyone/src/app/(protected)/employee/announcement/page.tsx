@@ -34,7 +34,7 @@ const AnnouncementPage = () => {
   if (error) return <p className="p-10 text-center text-red-500">Алдаа: {error.message}</p>;
 
   return (
-    <div className="p-8 max-w-4xl mx-auto min-h-screen bg-gray-50">
+    <div className="p-8 max-w-4xl mx-auto min-h-screen ">
       <h1 className="text-3xl font-extrabold mb-8 text-center text-gray-800">Зарлалын Удирдлага</h1>
 
       {/* Зарлалын жагсаалт */}

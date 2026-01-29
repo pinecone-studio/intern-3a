@@ -1,9 +1,6 @@
-
-
-
 'use client';
 
-import { gql, } from '@apollo/client';
+import { gql } from '@apollo/client';
 import { useMutation, useQuery } from '@apollo/client/react';
 import React, { useState } from 'react';
 
@@ -79,34 +76,25 @@ const AnnouncementPage = () => {
   const { loading, error, data, refetch } = useQuery<AnnouncementsData>(GET_ANNOUNCEMENTS);
 
   // 2. Үүсгэх (Mutation)
-  const [createAnnouncement] = useMutation<{ createAnnouncement: Announcement }, CreateAnnouncementVars>(
-    CREATE_ANNOUNCEMENT,
-    {
-      onCompleted: () => {
-        refetch();
-        resetForm();
-      },
-    }
-  );
+  const [createAnnouncement] = useMutation<{ createAnnouncement: Announcement }, CreateAnnouncementVars>(CREATE_ANNOUNCEMENT, {
+    onCompleted: () => {
+      refetch();
+      resetForm();
+    },
+  });
 
   // 3. Засах (Mutation)
-  const [updateAnnouncement] = useMutation<{ updateAnnouncement: Announcement }, UpdateAnnouncementVars>(
-    UPDATE_ANNOUNCEMENT,
-    {
-      onCompleted: () => {
-        refetch();
-        resetForm();
-      },
-    }
-  );
+  const [updateAnnouncement] = useMutation<{ updateAnnouncement: Announcement }, UpdateAnnouncementVars>(UPDATE_ANNOUNCEMENT, {
+    onCompleted: () => {
+      refetch();
+      resetForm();
+    },
+  });
 
   // 4. Устгах (Mutation)
-  const [deleteAnnouncement] = useMutation<{ deleteAnnouncement: boolean }, DeleteAnnouncementVars>(
-    DELETE_ANNOUNCEMENT,
-    {
-      onCompleted: () => refetch(),
-    }
-  );
+  const [deleteAnnouncement] = useMutation<{ deleteAnnouncement: boolean }, DeleteAnnouncementVars>(DELETE_ANNOUNCEMENT, {
+    onCompleted: () => refetch(),
+  });
 
   const resetForm = () => {
     setTitle('');
@@ -150,14 +138,12 @@ const AnnouncementPage = () => {
   if (error) return <p className="p-10 text-center text-red-500">Алдаа: {error.message}</p>;
 
   return (
-    <div className="p-8 max-w-4xl mx-auto min-h-screen bg-gray-50">
+    <div className="p-8 max-w-4xl mx-auto min-h-screen">
       <h1 className="text-3xl font-extrabold mb-8 text-center text-gray-800">Зарлалын Удирдлага</h1>
 
       {/* Оруулах/Засах Форм */}
       <div className="bg-white p-6 rounded-xl shadow-lg border border-amber-200 mb-10 flex flex-col gap-4">
-        <h2 className="text-lg font-bold text-amber-700">
-          {editId ? '📝 Зарлал засах' : '➕ Шинэ зарлал нэмэх'}
-        </h2>
+        <h2 className="text-lg font-bold text-amber-700">{editId ? '📝 Зарлал засах' : '➕ Шинэ зарлал нэмэх'}</h2>
         <input
           className="border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-amber-400 outline-none transition-all"
           type="text"
@@ -172,18 +158,11 @@ const AnnouncementPage = () => {
           placeholder="Дэлгэрэнгүй мэдээлэл..."
         />
         <div className="flex gap-3">
-          <button
-            className={`flex-1 py-3 rounded-lg font-bold text-white transition-colors ${editId ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700'
-              }`}
-            onClick={handleSubmit}
-          >
+          <button className={`flex-1 py-3 rounded-lg font-bold text-white transition-colors ${editId ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700'}`} onClick={handleSubmit}>
             {editId ? 'Шинэчлэн хадгалах' : 'Нийтлэх'}
           </button>
           {editId && (
-            <button
-              className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
-              onClick={resetForm}
-            >
+            <button className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors" onClick={resetForm}>
               Цуцлах
             </button>
           )}
@@ -200,25 +179,17 @@ const AnnouncementPage = () => {
               <p className="text-gray-600 whitespace-pre-wrap">{item.content}</p>
             </div>
             <div className="flex gap-2 ml-4">
-              <button
-                className="bg-indigo-50 text-indigo-600 px-4 py-2 rounded-md hover:bg-indigo-100 font-medium transition-colors"
-                onClick={() => handleEdit(item)}
-              >
+              <button className="bg-indigo-50 text-indigo-600 px-4 py-2 rounded-md hover:bg-indigo-100 font-medium transition-colors" onClick={() => handleEdit(item)}>
                 Засах
               </button>
-              <button
-                className="bg-red-50 text-red-600 px-4 py-2 rounded-md hover:bg-red-100 font-medium transition-colors"
-                onClick={() => handleDelete(item.id)}
-              >
+              <button className="bg-red-50 text-red-600 px-4 py-2 rounded-md hover:bg-red-100 font-medium transition-colors" onClick={() => handleDelete(item.id)}>
                 Устгах
               </button>
             </div>
           </div>
         ))}
 
-        {data?.announcements.length === 0 && (
-          <p className="text-center text-gray-400 py-10">Одоогоор зарлал байхгүй байна.</p>
-        )}
+        {data?.announcements.length === 0 && <p className="text-center text-gray-400 py-10">Одоогоор зарлал байхгүй байна.</p>}
       </div>
     </div>
   );
