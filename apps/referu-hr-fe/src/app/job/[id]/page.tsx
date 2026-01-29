@@ -1,7 +1,9 @@
 'use client';
 
-import { mockJobData } from '@/lib/get-data';
-import { JobDetail } from '@/lib/types';
+// import { mockJobData } from '@/lib/get-data';
+// import { JobDetail } from '@/lib/types';
+import { HrPostedJobsType } from '@/lib/type';
+import { hrPostedJobs } from '@/lib/utils/get-data';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Bottom } from './_components/Bottom';
@@ -10,11 +12,12 @@ import { Header } from './_components/Header';
 
 export default function JobDetailPage() {
   const params = useParams();
-  const [jobDetail, setJobDetail] = useState<JobDetail | null>(null);
+  const [jobDetail, setJobDetail] = useState<HrPostedJobsType | null>(null);
+  console.log({ jobDetail });
 
   useEffect(() => {
-    const jobId = params.id as string;
-    const job = mockJobData[jobId];
+    const job = hrPostedJobs.find((job) => job._id === params.id);
+
     if (job) setJobDetail(job);
   }, [params.id]);
 

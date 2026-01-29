@@ -1,7 +1,10 @@
 'use client';
 
 import { useAllReferrals } from '@/app/hook/use-all-referrals';
-import { ReferralType } from '@/lib/type';
+import { EmployeeType, ReferralType } from '@/lib/type';
+import { mockEmployeeData } from '@/lib/utils/get-data';
+import { getJobLevelMN } from '@/lib/utils/get-job-level-mn';
+import { getJobTypeMN } from '@/lib/utils/get-job-type-mn';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -47,7 +50,8 @@ const Page = () => {
   const [showRejectDialog, setShowRejectDialog] = useState<boolean>(false);
   const [status, setStatus] = useState<ReferralType['referralStatus']>('SUBMITTED');
 
-  console.log({ status });
+  // const employee = mockEmployeeData.find((emp) => emp.employeeClerkId === referrals?.referringEmployeeId);
+  const employee: EmployeeType = mockEmployeeData;
 
   useEffect(() => {
     if (referrals) {
@@ -67,7 +71,7 @@ const Page = () => {
     return <div className="flex justify-center items-center m-auto">Санал олдсонгүй</div>;
   }
 
-  const handleBackToReferrals = async () => {
+  const handleBackToReferrals = () => {
     router.back();
   };
 
@@ -80,7 +84,6 @@ const Page = () => {
       });
       setShowApproveDialog(false);
       setTimeout(() => {
-        // setStatus('PERMANENT');
         setStatus('BONUS100');
         router.back();
       }, 1500);
@@ -98,7 +101,6 @@ const Page = () => {
       });
       setShowApproveDialog(false);
       setTimeout(() => {
-        // setStatus('PERMANENT');
         setStatus('BONUS200');
         router.back();
       }, 1500);
@@ -134,61 +136,39 @@ const Page = () => {
       </div>
 
       <Card className="p-4 flex flex-col gap-4">
-        <div className="flex items-center justify-between">
-          <h2 className="font-semibold">Санал болгогч ажилтны мэдээлэл</h2>
-        </div>
-
-        {/* <div className="space-y-2 text-sm">
-          <div>
-            <span className="text-muted-foreground">Нэр:</span>
-            <p className="font-medium mt-0.5">{referrals.employeeName}</p>
+        <h2 className="font-semibold">Санал болгогч ажилтны мэдээлэл</h2>
+        {employee ? (
+          <div className="space-y-2 text-sm">
+            <div>
+              <span className="text-muted-foreground">Нэр:</span>
+              <p className="font-medium mt-0.5">
+                {employee.employeeFirstName} {employee.employeeLastName}
+              </p>
+            </div>
+            <div>
+              <span className="text-muted-foreground">Утас:</span>
+              <p className="font-medium mt-0.5">{employee.employeeTelNumber}</p>
+            </div>
+            <div>
+              <span className="text-muted-foreground">И-мэйл:</span>
+              <p className="font-medium mt-0.5">{employee.employeeEmail}</p>
+            </div>
+            <div>
+              <span className="text-muted-foreground">Хэлтэс:</span>
+              <p className="font-medium mt-0.5">{employee.employeeDepartment}</p>
+            </div>
+            <div>
+              <span className="text-muted-foreground">Түвшин:</span>
+              <p className="font-medium mt-0.5">{getJobLevelMN(employee.employeeJobLevel)}</p>
+            </div>
+            <div>
+              <span className="text-muted-foreground">Ажлын төрөл:</span>
+              <p className="font-medium mt-0.5">{getJobTypeMN(employee.employeeJobType)}</p>
+            </div>
           </div>
-
-          <div>
-            <span className="text-muted-foreground">Утас:</span>
-            <p className="font-medium mt-0.5">{referrals.employeePhone}</p>
-          </div>
-
-          <div>
-            <span className="text-muted-foreground">И-мэйл:</span>
-            <p className="font-medium mt-0.5">{referrals.employeeEmail}</p>
-          </div>
-
-          <div>
-            <span className="text-muted-foreground">Хэлтэс:</span>
-            <p className="font-medium mt-0.5">{referrals.employeeDepartment}</p>
-          </div>
-
-          <div>
-            <span className="text-muted-foreground">Түвшин:</span>
-            <p className="font-medium mt-0.5">{referrals.employeeJobLevel}</p>
-          </div>
-
-          <div>
-            <span className="text-muted-foreground">Ажлын төрөл:</span>
-            <p className="font-medium mt-0.5">{referrals.employeeJobType}</p>
-          </div>
-
-          <div className="pt-2 border-t border-border">
-            <span className="text-muted-foreground">Санал болгож буй хүнтэй харилцаа:</span>
-            <p className="font-medium mt-0.5">{referrals.relationshipWithCandidate}</p>
-          </div>
-
-          <div>
-            <span className="text-muted-foreground">Санал болгох шалтгаан:</span>
-            <p className="font-medium mt-0.5">{referrals.referralReason}</p>
-          </div>
-
-          <div>
-            <span className="text-muted-foreground">Зөвшөөрөл авсан эсэх:</span>
-            <p className="font-medium mt-0.5">{referrals.consentReceived ? 'Тийм' : 'Үгүй'}</p>
-          </div>
-
-          <div>
-            <span className="text-muted-foreground">Одоо ажиллаж байгаа:</span>
-            <p className="font-medium mt-0.5">{referrals.currentlyWorking ? 'Тийм' : 'Үгүй'}</p>
-          </div>
-        </div> */}
+        ) : (
+          <p>Ажилтны мэдээлэл ачаалагдаж байна...</p>
+        )}
       </Card>
 
       <Card className="p-4 flex flex-col gap-4">

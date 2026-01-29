@@ -11,6 +11,8 @@ export const createReferralStatusBonusTwoHundred = async (req: Request, res: Res
       return res.status(400).json({ message: 'Referral not found' });
     }
 
+    await Referral.updateMany({ postedJobId: hrReferralStatus.postedJobId, _id: { $ne: hrReferralStatus._id } }, { referralStatus: 'REJECTED', referralStatusUpdatedAt: new Date() });
+
     res.status(200).json({
       message: 'Referral status updated successfully',
       data: hrReferralStatus,
