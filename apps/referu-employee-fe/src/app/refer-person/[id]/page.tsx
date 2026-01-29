@@ -1,10 +1,10 @@
 'use client';
 
 import { Button } from '@intern-3a/shadcn';
-import { EmployeeType } from 'apps/referu-employee-fe/src/libs/type';
 import { relationMNtoEN } from 'apps/referu-employee-fe/src/libs/utils/get-relation-en';
 import { statusMNtoEN } from 'apps/referu-employee-fe/src/libs/utils/get-status-en';
 
+import { useAuth } from '@clerk/nextjs';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import React, { use, useState } from 'react';
@@ -30,26 +30,26 @@ export default function ReferPersonPage({ params }: { params: Promise<{ id: stri
   const { id } = use(params);
   const router = useRouter();
   const { employeeData } = useEmployeeData();
+  const { getToken } = useAuth();
 
   const handleSendReferRequest = async () => {
-    try {
-      if (!candidateResume) {
-        toast.warning('Анкетаа хавсаргана уу!');
-      } else if (!hasCandidateConsent) {
-        toast.warning('Санал болгож буй хүний зөвшөөрлийг урьдчилан авсан байх ёстой!');
-      } else if (
-        !candidateLastName ||
-        !candidateFirstName ||
-        !candidateTelNumber ||
-        !candidateEmail ||
-        !candidateCurrentStatus ||
-        !isNotCurrentEmployee! ||
-        !relationWithCandidate ||
-        !refferalReason
-      ) {
-        toast.warning('Бүх шаардлагатай талбарыг бөглөнө үү!');
-      }
+    const token = await getToken();
 
+    if (!candidateEmail.trim()) {
+      toast.warning('Имэйл хаяг заавал бөглөнө үү');
+      return;
+    }
+    if (!candidateResume) {
+      toast.warning('Анкетаа хавсаргана уу!');
+    }
+    if (!hasCandidateConsent) {
+      toast.warning('Санал болгож буй хүний зөвшөөрлийг урьдчилан авсан байх ёстой!');
+    }
+    if (!candidateLastName || !candidateFirstName || !candidateTelNumber || !candidateEmail || !candidateCurrentStatus || !isNotCurrentEmployee! || !relationWithCandidate || !refferalReason) {
+      toast.warning('Бүх шаардлагатай талбарыг бөглөнө үү!');
+    }
+
+    try {
       setLoading(true);
       const newFormData = new FormData();
       newFormData.append('postedJobId', id);
@@ -69,12 +69,12 @@ export default function ReferPersonPage({ params }: { params: Promise<{ id: stri
 
       await axios.post('http://localhost:4000/referral', newFormData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`,
         },
       });
 
       toast.success('Санал амжилттай илгээгдлээ');
-      // router.push('/');
+      router.push('/');
     } catch (error) {
       toast.error('Алдаа гарлаа');
     } finally {

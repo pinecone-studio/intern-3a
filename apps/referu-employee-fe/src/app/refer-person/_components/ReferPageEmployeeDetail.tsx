@@ -27,6 +27,13 @@ export const ReferPageEmployeeDetail = ({ employeeData }: { employeeData: Employ
           </div>
 
           <div className="flex justify-between">
+            <p className="text-muted-foreground">Албан тушаал:</p>
+            <p className="font-medium">
+              <span>{employeeData.employeeJobTitle}</span>
+            </p>
+          </div>
+
+          <div className="flex justify-between">
             <p className="text-muted-foreground">Түвшин:</p>
             <p className="font-medium">
               <span>{getJobLevelMN(employeeData.employeeJobLevel)}</span>

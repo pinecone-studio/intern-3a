@@ -4,7 +4,7 @@ import { User } from '../../libs/models/User';
 import { jobLevelMNtoEN } from '../../types/get-job-level-en';
 import { jobTypeMNtoEN } from '../../types/get-job-type-en';
 
-export const createUser = async (req: any, res: Response) => {
+export const createUser = async (req: Request, res: Response) => {
   try {
     const { userId } = getAuth(req);
 
@@ -12,9 +12,9 @@ export const createUser = async (req: any, res: Response) => {
       return res.status(401).json({ error: 'User not authenticated' });
     }
 
-    const existing = await User.findOne({ employeeClerkId: userId });
+    const existingUser = await User.findOne({ employeeClerkId: userId });
 
-    if (existing) return res.status(409).json({ error: 'User already exists!' });
+    if (existingUser) return res.status(409).json({ error: 'User already exists!' });
 
     const clerkUser = await clerkClient.users.getUser(userId);
 
@@ -23,11 +23,11 @@ export const createUser = async (req: any, res: Response) => {
     if (!employeeTelNumber || !employeeDepartment || !employeeJobTitle || !employeeJobLevel || !employeeJobType) {
       return res.status(400).json({ error: 'All fields are required' });
     }
-    console.log({ employeeTelNumber, employeeDepartment, employeeJobTitle, employeeJobLevel, employeeJobType });
+
     const employeeFirstName = clerkUser.firstName ?? 'Employee';
     const employeeLastName = clerkUser.lastName ?? 'Dear';
     const employeeEmail = clerkUser.emailAddresses?.[0]?.emailAddress;
-    console.log({ employeeFirstName, employeeLastName, employeeEmail });
+
     const newUser = await User.create({
       employeeClerkId: userId,
       employeeLastName,

@@ -10,11 +10,12 @@ export type ReferralSchemaType = {
   candidateLinkedinUrl: string;
   candidateFieldOfInterest: string;
   candidateCurrentStatus: 'CURRENTLY_EMPLOYED' | 'STUDENT' | 'UNEMPLOYED' | 'OTHER';
-  candidateResume: { type: String; required: true };
-  hasCandidateConsent: { type: String; required: true };
-  isNotCurrentEmployee: { type: String; required: true };
+  candidateResume: string;
+  hasCandidateConsent: boolean;
+  isNotCurrentEmployee: boolean;
   relationWithCandidate: 'FORMER_COLLEAGUE' | 'ALUMNI' | 'FRIEND' | 'FAMILY_RELATIVES' | 'OTHER';
-  refferalReason: { type: String; required: true };
+  refferalReason: string;
+  referralStatus: 'SUBMITTED' | 'APPROVED_WITH_TRAINING_PERIOD' | 'APPROVED_AS_EMPLOYEE' | 'REJECTED';
 };
 
 export const ReferralSchema = new Schema(
@@ -33,6 +34,7 @@ export const ReferralSchema = new Schema(
     isNotCurrentEmployee: { type: Boolean, required: true },
     relationWithCandidate: { type: String, enum: ['FORMER_COLLEAGUE', 'ALUMNI', 'FRIEND', 'FAMILY_RELATIVES', 'OTHER'], required: true },
     refferalReason: { type: String, required: true },
+    referralStatus: { type: String, enum: ['SUBMITTED', 'APPROVED_WITH_TRAINING_PERIOD', 'APPROVED_AS_EMPLOYEE', 'REJECTED'], default: 'SUBMITTED', required: true },
   },
   { timestamps: true, versionKey: false },
 );
