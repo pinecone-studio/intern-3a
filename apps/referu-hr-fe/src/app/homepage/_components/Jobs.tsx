@@ -9,6 +9,13 @@ export const Jobs = () => {
   const handleJobClick = (jobId: string) => {
     router.push(`/job/${jobId}`);
   };
+
+  const formatDate = (iso: string) => {
+    const date = new Date(iso);
+
+    return `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
+  };
+
   return (
     <div>
       <div className="p-4 space-y-3">
@@ -27,7 +34,7 @@ export const Jobs = () => {
               <span className="text-blue-600 font-medium">
                 ₮{job.salaryMin.toLocaleString()} - ₮{job.salaryMax.toLocaleString()}
               </span>
-              <span className="text-gray-500">{job.createdAt}</span>
+              <span className="text-gray-500">{formatDate(job.createdAt)}</span>
             </div>
           </Card>
         ))}

@@ -1,6 +1,10 @@
+// export default Page;
+
 'use client';
 
 import { useAllReferrals } from '@/app/hook/use-all-referrals';
+import { ReferralType } from '@/lib/type';
+import { mockEmployeeData } from '@/lib/utils/get-data';
 import { Badge, Button, Card, CardContent, Separator } from '@intern-3a/shadcn';
 import { ArrowLeft } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
@@ -27,56 +31,67 @@ const Page = () => {
 
   const jobId = params.jobId;
 
-  const filteredReferrals = allReferralsHR.filter((referrals) => referrals.postedJobId === jobId);
+  const filteredReferrals: ReferralType[] = allReferralsHR.filter((referral) => referral.postedJobId === jobId);
 
   const handleReferralClick = (referralId: string) => {
     router.push(`/hr-myPage/${params.jobId}/${referralId}`);
   };
+
+  const formatDate = (iso: string) => {
+    const date = new Date(iso);
+
+    return `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
+  };
+
   return (
     <div className="flex flex-col gap-5 justify-center w-full p-7">
       <div className="flex gap-4 items-center">
-        <Button variant={'ghost'} onClick={() => router.push('/hr-myPage')}>
+        <Button variant="ghost" onClick={() => router.push('/hr-myPage')}>
           <ArrowLeft className="w-4" />
         </Button>
         <div>
           <p className="text-md font-semibold">Санал ирсэн хүмүүс</p>
-          {/* <p>songoson ajliin ner</p> */}
         </div>
       </div>
-      <div>
-        <div className="flex flex-col gap-4">
-          {filteredReferrals.map((referrals) => (
-            <div key={referrals._id}>
-              <Card className="py-4 space-y-3 cursor-pointer hover:shadow-md transition-shadow" onClick={() => handleReferralClick(referrals._id)}>
-                <CardContent className="flex flex-col gap-3">
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <div className="font-semibold text-md">
-                        {referrals.candidateFirstName} {referrals.candidateLastName}
-                      </div>
-                      <p className="text-xs text-muted-foreground"> Санал болгосон</p>
-                    </div>
 
-                    <Badge className={statusColors[referrals.referralStatus]}>{statusLabels[referrals.referralStatus]}</Badge>
+      <div className="flex flex-col gap-4">
+        {filteredReferrals.map((referral: ReferralType) => {
+          const employee = mockEmployeeData;
+
+          return (
+            <Card key={referral._id} className="py-4 space-y-3 cursor-pointer hover:shadow-md transition-shadow" onClick={() => handleReferralClick(referral._id)}>
+              <CardContent className="flex flex-col gap-3">
+                <div className="flex justify-between items-center">
+                  <div>
+                    <div className="font-semibold text-md">
+                      {referral.candidateFirstName} {referral.candidateLastName}
+                    </div>
+                    <p className="text-xs text-muted-foreground">Санал болгосон</p>
                   </div>
-                  <Separator />
-                  {/* <div className="flex flex-col justify-between h-20">
-                    <div className="">
-                      <div className="text-sm font-medium text-foreground">{referrals.name}</div>
+                  <Badge className={statusColors[referral.referralStatus]}>{statusLabels[referral.referralStatus]}</Badge>
+                </div>
+
+                <Separator />
+
+                {employee && (
+                  <div className="flex flex-col justify-between">
+                    <div>
+                      <div className="text-sm font-medium text-foreground">
+                        {employee.employeeFirstName} {employee.employeeLastName}
+                      </div>
                       <div className="flex gap-2 items-center -mt-2.5">
-                        <div className="text-sm text-muted-foreground mt-3">{referrals.employeeDepartment}</div>
+                        <div className="text-sm text-muted-foreground mt-3">{employee.employeeDepartment}</div>
                         <p>.</p>
-                        <div className="text-sm text-muted-foreground mt-3">{referrals.employeeJobTitle}</div>
+                        <div className="text-sm text-muted-foreground mt-3">{employee.employeeJobTitle}</div>
                       </div>
                     </div>
-
-                    <div className="text-sm text-muted-foreground mt-3">Огноо: {referrals.submittedDate}</div>
-                  </div> */}
-                </CardContent>
-              </Card>
-            </div>
-          ))}
-        </div>
+                    <div className="text-sm text-muted-foreground mt-3">Огноо: {formatDate(referral.createdAt)}</div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
     </div>
   );

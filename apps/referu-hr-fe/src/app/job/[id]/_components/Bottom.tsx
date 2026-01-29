@@ -1,4 +1,4 @@
-import { JobDetail } from '@/lib/types';
+import { HrPostedJobsType } from '@/lib/type';
 import { Button } from '@intern-3a/shadcn';
 import { Edit, Trash2 } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
@@ -6,7 +6,7 @@ import React from 'react';
 import { toast } from 'sonner';
 
 type Props = {
-  jobDetail: JobDetail;
+  jobDetail: HrPostedJobsType;
 };
 
 export const Bottom = ({ jobDetail }: Props) => {
@@ -16,10 +16,10 @@ export const Bottom = ({ jobDetail }: Props) => {
   const handleEdit = () => {
     if (!jobDetail) return;
 
-    if (jobDetail.hasReferrals) {
-      toast.error('Санал ирсэн зарыг засварлах боломжгүй');
-      return;
-    }
+    // if (jobDetail.hasReferrals) {
+    //   toast.error('Санал ирсэн зарыг засварлах боломжгүй');
+    //   return;
+    // }
 
     router.push(`/job/${params.id}/edit`);
   };

@@ -3,31 +3,9 @@
 import { useAllReferrals } from '@/app/hook/use-all-referrals';
 import { ReferralType } from '@/lib/type';
 import { hrPostedJobs } from '@/lib/utils/get-data';
-import { Badge, Card, CardContent, CardTitle, TabsContent } from '@intern-3a/shadcn';
+import { Badge, Card, CardContent, TabsContent } from '@intern-3a/shadcn';
 import { useRouter } from 'next/navigation';
 import React from 'react';
-
-// type JobWithReferrals = {
-//   id: string;
-//   title: string;
-//   department: string;
-//   referralCount: number;
-// };
-
-// const mockJobsWithReferrals: JobWithReferrals[] = [
-//   {
-//     id: '1',
-//     title: 'Senior Software Engineer',
-//     department: 'Технологийн хэлтэс',
-//     referralCount: 3,
-//   },
-//   {
-//     id: '2',
-//     title: 'Product Manager',
-//     department: 'Бүтээгдэхүүний хэлтэс',
-//     referralCount: 1,
-//   },
-// ];
 
 const ReferralJobList = () => {
   const { allReferralsHR } = useAllReferrals();
@@ -38,12 +16,20 @@ const ReferralJobList = () => {
     router.push(`/hr-myPage/${jobId}`);
   };
 
+  const submittedReferrals: ReferralType['referralStatus'][] = ['SUBMITTED'];
+
+  const submittedJobs = hrPostedJobs.filter((job) => allReferralsHR.find((referral) => referral.postedJobId === job._id && submittedReferrals.includes(referral.referralStatus)));
+  console.log({ submittedJobs });
+  if (!submittedJobs) {
+    return <div>Hooson</div>;
+  }
+
   return (
     <div>
       <TabsContent value="account">
         <div className="flex flex-col gap-4">
-          {hrPostedJobs.map((jobs) => {
-            const jobReferrals = allReferralsHR.filter((referral) => referral._id === jobs._id);
+          {submittedJobs.map((jobs) => {
+            const jobReferrals = allReferralsHR.filter((referral) => referral.postedJobId === jobs._id);
             return (
               <div key={jobs._id}>
                 <Card className="py-4 space-y-3 cursor-pointer hover:shadow-md transition-shadow" onClick={() => handleJodRefferal(jobs._id)}>
