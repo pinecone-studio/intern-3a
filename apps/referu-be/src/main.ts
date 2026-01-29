@@ -2,6 +2,7 @@ import { clerkMiddleware } from '@clerk/express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
+import { getJobs } from './controller/jobs/jobs.controller';
 import { createReferral } from './controller/referral/createReferral.controller';
 import { createReferralStatusBonusHundred } from './controller/referral/createReferralStatusBonusHundred.controller';
 import { createReferralStatusBonusTwoHundred } from './controller/referral/createReferralStatusBonusTwoHundred.controller';
@@ -12,6 +13,7 @@ import { getAllReferralsHR } from './controller/referral/getReferralsHR.controll
 import { checkUser } from './controller/user/checkUser.controller';
 import { createUser } from './controller/user/createUser.controller';
 import { getUserById } from './controller/user/getUserById.controller';
+import { startWorkiCron } from './cron/worki.cron';
 import connectDB from './db/mongodb';
 import { upload } from './middleware/multer';
 
@@ -37,6 +39,8 @@ app.get('/', (_, res) => {
   res.send('server is running');
 });
 
+app.get('/jobs/worki', getJobs);
+
 app.post('/referral', upload.single('candidateResume'), createReferral);
 app.get('/referral', getAllReferrals);
 app.get('/hr/referral', getAllReferralsHR);
@@ -56,6 +60,7 @@ async function bootstrap() {
 
     app.listen(4000, () => {
       console.log('Server running on http://localhost:4000');
+      startWorkiCron();
     });
   } catch (err) {
     console.error('Failed to start server', err);
