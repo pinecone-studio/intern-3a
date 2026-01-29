@@ -7,42 +7,6 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useAllReferrals } from '../../hook/use-all-referrals';
 
-const historyData = {
-  sent: [
-    {
-      id: '1',
-      jobName: 'Senior Software Engineer',
-      candidateName: 'А. Дорж',
-      sentDate: '2024-01-15',
-    },
-    {
-      id: '2',
-      jobName: 'Product Manager',
-      candidateName: 'Б. Сарнай',
-      sentDate: '2024-01-12',
-    },
-  ],
-  approved: [
-    {
-      id: '3',
-      jobName: 'UX Designer',
-      candidateName: 'Ц. Болд',
-      sentDate: '2024-01-05',
-      approvedDate: '2024-01-10',
-      bonus: '₮500,000',
-    },
-  ],
-  rejected: [
-    {
-      id: '4',
-      jobName: 'Data Analyst',
-      candidateName: 'Д. Өсөх',
-      sentDate: '2023-12-20',
-      responseDate: '2023-12-28',
-    },
-  ],
-};
-
 export function TabsPage() {
   const [activeTab, setActiveTab] = useState('sent');
   const router = useRouter();
@@ -76,77 +40,84 @@ export function TabsPage() {
 
         <div className="pl-4 pb-4 pr-4 bg-blue-50/50">
           <TabsContent value="sent" className="space-y-3">
-            {allReferrals.map((referral) => (
-              <Card key={referral._id} className="border-border/50">
-                <CardContent className="px-3 py-1">
-                  <div className="flex items-start gap-3">
-                    <div className="w-1.5 h-10 rounded-full bg-orange-400 shrink-0" />
-                    <div>
-                      <h3 className="font-semibold text-base">{referral.candidateFieldOfInterest}</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Санал болгосон:
-                        <h2 className="font-semibold text-base">{referral.candidateFirstName}</h2>
-                      </p>
-                      <Badge variant="secondary" className="mt-2 text-xs font-normal">
-                        Илгээсэн: {formatDate(referral.createdAt)}
-                      </Badge>
+            {allReferrals
+              .filter((ref) => ref.referralStatus === 'SUBMITTED')
+              .map((referral) => (
+                <Card key={referral._id} className="border-border/50">
+                  <CardContent className="px-3 py-1">
+                    <div className="flex items-start gap-3">
+                      <div className="w-1.5 h-10 rounded-full bg-orange-400 shrink-0" />
+                      <div>
+                        <h3 className="font-semibold text-base">{referral.candidateFieldOfInterest}</h3>
+                        <p className="text-sm text-muted-foreground">
+                          Санал болгосон:
+                          <h2 className="font-semibold text-base">{referral.candidateFirstName}</h2>
+                        </p>
+                        <Badge variant="secondary" className="mt-2 text-xs font-normal">
+                          Илгээсэн: {formatDate(referral.createdAt)}
+                        </Badge>
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              ))}
           </TabsContent>
 
           <TabsContent value="approved" className="space-y-3">
-            {historyData.approved.map((item) => (
-              <Card key={item.id} className="border-border/50">
-                <CardContent className="px-3 py-1">
-                  <div className="flex items-start gap-3">
-                    <div className="w-1.5 h-10 rounded-full bg-green-500 shrink-0" />
-                    <div>
-                      <div className="flex items-start justify-between gap-2">
-                        <h3 className="font-semibold text-base">{item.jobName}</h3>
-                        <span className="text-sm font-semibold text-green-600">{item.bonus}</span>
-                      </div>
-                      <p className="text-sm text-muted-foreground">Санал болгосон: {item.candidateName}</p>
-                      <div className="flex gap-2 flex-wrap mt-2">
-                        <Badge variant="secondary" className="text-xs font-normal">
-                          Илгээсэн: {item.sentDate}
-                        </Badge>
-                        <Badge variant="secondary" className="text-xs bg-green-50 font-normal text-green-700 border-green-100">
-                          Зөвшөөрсөн: {item.approvedDate}
-                        </Badge>
+            {allReferrals
+              .filter((ref) => ref.referralStatus === 'BONUS100' || ref.referralStatus === 'BONUS200')
+              .map((referral) => (
+                <Card key={referral._id} className="border-border/50">
+                  <CardContent className="px-3 py-1">
+                    <div className="flex items-start gap-3">
+                      <div className="w-1.5 h-10 rounded-full bg-green-500 shrink-0" />
+                      <div>
+                        <div className="flex items-center justify-between gap-2">
+                          <h3 className="font-semibold text-base">{referral.candidateFieldOfInterest}</h3>
+                          <div className="text-sm font-semibold text-green-600">{referral.bonusAmount}₮</div>
+                        </div>
+
+                        <p className="text-sm text-muted-foreground">Санал болгосон: {referral.candidateFirstName}</p>
+                        <div className="flex gap-2 flex-wrap mt-2">
+                          <Badge variant="secondary" className="text-xs font-normal">
+                            Илгээсэн: {formatDate(referral.createdAt)}
+                          </Badge>
+                          <Badge variant="secondary" className="text-xs bg-green-50 font-normal text-green-700 border-green-100">
+                            Зөвшөөрсөн: {formatDate(referral.updatedAt)}
+                          </Badge>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              ))}
           </TabsContent>
 
           <TabsContent value="rejected" className=" space-y-3">
-            {historyData.rejected.map((item) => (
-              <Card key={item.id} className="border-border/50">
-                <CardContent className="px-3 py-1">
-                  <div className="flex items-start gap-3">
-                    <div className="w-1.5 h-10 rounded-full bg-red-500 shrink-0" />
+            {allReferrals
+              .filter((ref) => ref.referralStatus === 'REJECTED')
+              .map((referral) => (
+                <Card key={referral._id} className="border-border/50">
+                  <CardContent className="px-3 py-1">
+                    <div className="flex items-start gap-3">
+                      <div className="w-1.5 h-10 rounded-full bg-red-500 shrink-0" />
 
-                    <div>
-                      <h3 className="font-semibold text-base">{item.jobName}</h3>
-                      <p className="text-sm text-muted-foreground">Нэр дэвшигч: {item.candidateName}</p>
-                      <div className="flex gap-2 flex-wrap mt-2">
-                        <Badge variant="secondary" className="text-xs font-normal">
-                          Илгээсэн: {item.sentDate}
-                        </Badge>
-                        <Badge variant="secondary" className="text-xs font-normal bg-red-50 text-red-700 border-red-100">
-                          Цуцлагдсан: {item.responseDate}
-                        </Badge>
+                      <div>
+                        <h3 className="font-semibold text-base">{referral.candidateFieldOfInterest}</h3>
+                        <p className="text-sm text-muted-foreground">Санал болгосон: {referral.candidateFirstName}</p>
+                        <div className="flex gap-2 flex-wrap mt-2">
+                          <Badge variant="secondary" className="text-xs font-normal">
+                            Илгээсэн: {formatDate(referral.createdAt)}
+                          </Badge>
+                          <Badge variant="secondary" className="text-xs font-normal bg-red-50 text-red-700 border-red-100">
+                            Цуцлагдсан: {formatDate(referral.updatedAt)}
+                          </Badge>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              ))}
           </TabsContent>
         </div>
       </Tabs>
