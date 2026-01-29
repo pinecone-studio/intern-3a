@@ -75,18 +75,20 @@ export const departmentResolvers = {
       return true;
     },
 
-    // 👤 USER – өөрийн хэлтсээ сонгох
-    selectMyDepartment: async (_: any, args: { departmentId: number }, ctx: any) => {
-      requireAuth(ctx);
+    // 🔒 ADMIN – Ажилтанд хэлтэс оноох
+    assignUserDepartment: async (_: any, args: { userId: string; departmentId: number }, ctx: any) => {
+      requireRole(ctx, 'ADMIN');
 
+      // prisma.user.update нь User обьект буцаадаг
       await prisma.user.update({
-        where: { id: ctx.userId },
+        where: { id: args.userId },
         data: {
           departmentId: args.departmentId,
           updatedAt: new Date(),
         },
       });
 
+      // Schema дээр Boolean! гэж заасан тул заавал true/false буцаах ёстой
       return true;
     },
   },
