@@ -20,7 +20,7 @@ import {
 } from '@intern-3a/shadcn';
 import axios from 'axios';
 import { ArrowLeft, CheckCircle, FileText, Loader, XCircle } from 'lucide-react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -41,7 +41,10 @@ const statusLabels = {
 const Page = () => {
   const router = useRouter();
   const params = useParams();
-  const referralId = params.referralId;
+  const searchParams = useSearchParams();
+
+  const referralId = params.referralId; // From the path segment [referralId]
+  const jobId = searchParams.get('jobId'); // From the ?jobId= query string
   const { allReferralsHR, loading } = useAllReferrals();
 
   const referrals = allReferralsHR.find((referral) => referral._id === referralId);
@@ -77,7 +80,7 @@ const Page = () => {
 
   const handleBonusHundred = async () => {
     try {
-      await axios.patch(`http://localhost:4000/hr/referral/${referralId}/bonus100`);
+      await axios.patch(`http://localhost:4000/hr/referral/${referralId}?jobId=${jobId}`);
 
       toast.success('Амжилттай', {
         description: 'Санал зөвшөөрөгдлөө. Урамшууллын хүсэлт санхүү хэлтэст илгээгдлээ.',

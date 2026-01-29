@@ -34,7 +34,7 @@ const Page = () => {
   const filteredReferrals: ReferralType[] = allReferralsHR.filter((referral) => referral.postedJobId === jobId);
 
   const handleReferralClick = (referralId: string) => {
-    router.push(`/hr-myPage/${params.jobId}/${referralId}`);
+    router.push(`/hr-myPage/${referralId}?jobId=${params.jobId}`);
   };
 
   const formatDate = (iso: string) => {
