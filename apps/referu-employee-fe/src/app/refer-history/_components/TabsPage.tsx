@@ -1,9 +1,11 @@
 'use client';
 
 import { Badge, Card, CardContent, Tabs, TabsContent, TabsList, TabsTrigger } from '@intern-3a/shadcn';
+import { formatDate } from 'apps/referu-employee-fe/src/libs/utils/get-date';
 import { ChevronLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { useAllReferrals } from '../../hook/use-all-referrals';
 
 const historyData = {
   sent: [
@@ -45,6 +47,9 @@ export function TabsPage() {
   const [activeTab, setActiveTab] = useState('sent');
   const router = useRouter();
 
+  const { allReferrals } = useAllReferrals();
+  console.log('allReferrals', allReferrals);
+
   return (
     <div className="min-h-screen">
       <div className="flex items-center px-4 py-3 gap-3 bg-white">
@@ -71,16 +76,19 @@ export function TabsPage() {
 
         <div className="pl-4 pb-4 pr-4 bg-blue-50/50">
           <TabsContent value="sent" className="space-y-3">
-            {historyData.sent.map((item) => (
-              <Card key={item.id} className="border-border/50">
+            {allReferrals.map((referral) => (
+              <Card key={referral._id} className="border-border/50">
                 <CardContent className="px-3 py-1">
                   <div className="flex items-start gap-3">
                     <div className="w-1.5 h-10 rounded-full bg-orange-400 shrink-0" />
                     <div>
-                      <h3 className="font-semibold text-base">{item.jobName}</h3>
-                      <p className="text-sm text-muted-foreground">Санал болгосон: {item.candidateName}</p>
+                      <h3 className="font-semibold text-base">{referral.candidateFieldOfInterest}</h3>
+                      <p className="text-sm text-muted-foreground">
+                        Санал болгосон:
+                        <h2 className="font-semibold text-base">{referral.candidateFirstName}</h2>
+                      </p>
                       <Badge variant="secondary" className="mt-2 text-xs font-normal">
-                        Илгээсэн: {item.sentDate}
+                        Илгээсэн: {formatDate(referral.createdAt)}
                       </Badge>
                     </div>
                   </div>
