@@ -3,7 +3,11 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
 import { createReferral } from './controller/referral/createReferral.controller';
+import { createReferralStatusBonusHundred } from './controller/referral/createReferralStatusBonusHundred.controller';
+import { createReferralStatusBonusTwoHundred } from './controller/referral/createReferralStatusBonusTwoHundred.controller';
+import { createReferralStatusRejected } from './controller/referral/createReferralStatusRejected.controller';
 import { getAllReferrals } from './controller/referral/getReferrals.controller';
+import { getAllReferralsHR } from './controller/referral/getReferralsHR.controller';
 import { checkUser } from './controller/user/checkUser.controller';
 import { createUser } from './controller/user/createUser.controller';
 import { getUserById } from './controller/user/getUserById.controller';
@@ -23,7 +27,7 @@ app.use(
 );
 app.use(
   cors({
-    origin: 'http://localhost:3000',
+    origin: true,
     credentials: true,
   }),
 );
@@ -34,6 +38,10 @@ app.get('/', (_, res) => {
 
 app.post('/referral', upload.single('candidateResume'), createReferral);
 app.get('/referral', getAllReferrals);
+app.get('/hr/referral', getAllReferralsHR);
+app.patch('/hr/referral/:id/bonus100', createReferralStatusBonusHundred);
+app.patch('/hr/referral/:id/bonus200', createReferralStatusBonusTwoHundred);
+app.patch('/hr/referral/:id/rejected', createReferralStatusRejected);
 
 app.get('/user/check', checkUser);
 app.post('/user', createUser);
