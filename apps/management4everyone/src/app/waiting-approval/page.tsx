@@ -8,6 +8,10 @@ export default async function WaitingApprovalPage() {
   const { sessionClaims } = await auth();
   const user = await currentUser();
 
+  if (!user) {
+    return redirect('/login');
+  }
+
   // Хэрэв хэрэглэгч аль хэдийн зөвшөөрөгдсөн бол dashboard руу шилжүүлнэ
   if (sessionClaims?.metadata?.approved) {
     redirect('/employee');

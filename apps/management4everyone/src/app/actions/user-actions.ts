@@ -39,7 +39,7 @@ export async function approveUserAction(userId: string) {
       },
     });
 
-    revalidatePath('/admin/users'); // Жагсаалтыг шинэчлэх
+    revalidatePath('/admin/permission'); // Жагсаалтыг шинэчлэх
     return { success: true };
   } catch (error) {
     console.error('Approve алдаа:', error);

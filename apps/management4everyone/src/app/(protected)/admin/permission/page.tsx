@@ -1,10 +1,11 @@
 import { createClerkClient } from '@clerk/nextjs/server';
 import { approveUserAction } from '../../../actions/user-actions';
 
+export const dynamic = 'force-dynamic';
 const clerkClient = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
 
 export default async function AdminUsersPage() {
-  // Clerk-ээс бүх хэрэглэгчдийг татах
+  // Clerk-ээс бүх хэрэглэгчдийг татах (Dynamic учраас кэшлэхгүй)
   const response = await clerkClient.users.getUserList();
 
   // Зөвшөөрөл хүлээж буй (approved !== true) хэрэглэгчдийг шүүх
