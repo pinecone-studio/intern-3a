@@ -23,6 +23,7 @@
 // //   }
 // // };
 
+import Ably from 'ably';
 import { Request, Response } from 'express';
 import { Types } from 'mongoose'; // Import Types
 import { Referral } from '../../libs/models/Referral';
@@ -117,6 +118,13 @@ export const createReferralStatusBonusHundred = async (req: Request, res: Respon
       );
     }
 
+    //ably
+    const ably = new Ably.Rest({ key: process.env.ABLY_API_KEY });
+    // Inside your createReferralStatusBonusHundred
+    await ably.channels.get('sessions').publish('session-created', {
+      refresh: true,
+      jobId: jobId,
+    });
     res.status(200).json({
       message: 'Winner selected; other candidates rejected.',
       data: hrReferralStatus,
