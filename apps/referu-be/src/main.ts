@@ -14,6 +14,7 @@ import { createUser } from './controller/user/createUser.controller';
 import { getUserById } from './controller/user/getUserById.controller';
 import connectDB from './db/mongodb';
 import { upload } from './middleware/multer';
+import scrapeRoutes from './routes/scrape.routes';
 
 dotenv.config();
 const app = express();
@@ -48,6 +49,8 @@ app.patch('/hr/referral/:id/rejected', createReferralStatusRejected);
 app.get('/user/check', checkUser);
 app.post('/user', createUser);
 app.get('/user', getUserById);
+
+app.use('/api', scrapeRoutes);
 
 async function bootstrap() {
   try {
