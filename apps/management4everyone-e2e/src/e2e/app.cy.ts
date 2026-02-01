@@ -1,7 +1,7 @@
 describe('management4everyone-e2e', () => {
   it('Нэвтрэх үйлдлийг амжилттай хийж байна', () => {
     // Нэвтрэх функцийг дуудах
-    cy.login('hbbaatar@gmail.com', '');
+    cy.login('hbbaatar@gmail.com', '99150488Ab');
 
     // Нэвтэрсний дараах шалгалтуудаа энд бичнэ
     cy.url().should('not.include', '/login');
