@@ -8,12 +8,13 @@ type PullRequest = {
   updatedAt: string;
   additions: number;
   deletions: number;
-  author: { login: string } | null;
+  author: { login: string; email: string | null } | null;
   commits: { totalCount: number } | null;
 }
 
 type UserMetrics = {
   username: string;
+  email: string | null;
   prs_opened: number;
   prs_merged: number;
   commits: number;
@@ -85,7 +86,7 @@ const QUERY = `
           updatedAt
           additions
           deletions
-          author { login }
+          author { login email }
           commits { totalCount }
         }
       }
@@ -128,14 +129,20 @@ async function main(): Promise<void> {
       if (!openedInWindow && !mergedInWindow) continue;
       prsRelevant += 1;
 
-      const user = perUser.get(login) ?? {
+      const existing = perUser.get(login);
+      const user = existing ?? {
         username: login,
+        email: pr.author?.email ?? null,
         prs_opened: 0,
         prs_merged: 0,
         commits: 0,
         additions: 0,
         deletions: 0,
       };
+      // Update email if we didn't have it before but now we do
+      if (!user.email && pr.author?.email) {
+        user.email = pr.author.email;
+      }
 
       if (openedInWindow) user.prs_opened += 1;
 
