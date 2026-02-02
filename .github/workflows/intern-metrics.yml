@@ -34,7 +34,7 @@ jobs:
         with:
           node-version: 20
 
-      # ✅ Install only @octokit/graphql in an isolated folder (no monorepo dependency resolution)
+      # Install only @octokit/graphql in an isolated folder (no monorepo dependency resolution)
       - name: Install deps (isolated)
         run: |
           set -euxo pipefail
@@ -51,10 +51,9 @@ jobs:
       - name: Compute PR metrics (per author)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NODE_PATH: ${{ github.workspace }}/.metrics-tool/node_modules
         run: |
           node - <<'NODE'
-          import { graphql } from "@octokit/graphql";
+          import { graphql } from "@octokit/graphql/dist-bundle/index.js";
           import fs from "node:fs";
 
           const {
@@ -66,6 +65,7 @@ jobs:
             KV_KEY,
           } = process.env;
 
+          // ---- Debug (never print secrets) ----
           const present = (v) => (v && String(v).length > 0 ? "✅" : "❌");
           console.log("[env] OWNER:", OWNER);
           console.log("[env] REPO:", REPO);
@@ -73,8 +73,8 @@ jobs:
           console.log("[env] END_DATE:", END_DATE);
           console.log("[env] KV_KEY:", KV_KEY);
           console.log("[env] GITHUB_TOKEN present:", present(GITHUB_TOKEN));
-          console.log("[env] NODE_PATH:", process.env.NODE_PATH);
 
+          // ---- Fail fast ----
           const missing = [];
           if (!GITHUB_TOKEN) missing.push("GITHUB_TOKEN");
           if (!OWNER) missing.push("OWNER");
