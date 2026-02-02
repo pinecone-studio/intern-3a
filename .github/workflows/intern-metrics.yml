@@ -1,0 +1,247 @@
+name: Intern Metrics → Cloudflare KV
+
+on:
+  schedule:
+    - cron: '0 1 * * *' # daily 01:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: intern-metrics
+  cancel-in-progress: true
+
+env:
+  OWNER: pinecone-studio
+  REPO: intern-3a
+
+  # Internship window (edit these)
+  START_DATE: '2026-01-01T00:00:00Z'
+  END_DATE: '2026-12-31T23:59:59Z'
+
+  # KV output key
+  KV_KEY: 'intern_metrics:2026'
+
+jobs:
+  metrics:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install deps
+        run: npm i @octokit/graphql
+
+      - name: Compute PR metrics (per author)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node - <<'NODE'
+          import { graphql } from "@octokit/graphql";
+          import fs from "node:fs";
+
+          const {
+            GITHUB_TOKEN,
+            OWNER,
+            REPO,
+            START_DATE,
+            END_DATE,
+            KV_KEY,
+          } = process.env;
+
+          // ---- Debug: show which envs are present (never print secrets) ----
+          const present = (v) => (v && String(v).length > 0 ? "✅" : "❌");
+          console.log("[env] OWNER:", OWNER);
+          console.log("[env] REPO:", REPO);
+          console.log("[env] START_DATE:", START_DATE);
+          console.log("[env] END_DATE:", END_DATE);
+          console.log("[env] KV_KEY:", KV_KEY);
+          console.log("[env] GITHUB_TOKEN present:", present(GITHUB_TOKEN));
+
+          // ---- Fail fast if anything required is missing ----
+          const missing = [];
+          if (!GITHUB_TOKEN) missing.push("GITHUB_TOKEN");
+          if (!OWNER) missing.push("OWNER");
+          if (!REPO) missing.push("REPO");
+          if (!START_DATE) missing.push("START_DATE");
+          if (!END_DATE) missing.push("END_DATE");
+          if (!KV_KEY) missing.push("KV_KEY");
+
+          if (missing.length) {
+            console.error("Missing required env vars:", missing.join(", "));
+            process.exit(1);
+          }
+
+          const startMs = new Date(START_DATE).getTime();
+          const endMs = new Date(END_DATE).getTime();
+          if (Number.isNaN(startMs) || Number.isNaN(endMs)) {
+            console.error("START_DATE or END_DATE is not a valid ISO date string");
+            process.exit(1);
+          }
+          if (startMs > endMs) {
+            console.error("START_DATE must be <= END_DATE");
+            process.exit(1);
+          }
+
+          const client = graphql.defaults({
+            headers: { authorization: `token ${GITHUB_TOKEN}` },
+          });
+
+          // Includes commit count via commits.totalCount
+          const QUERY = `
+            query($owner: String!, $repo: String!, $cursor: String) {
+              repository(owner: $owner, name: $repo) {
+                pullRequests(
+                  first: 100,
+                  after: $cursor,
+                  orderBy: { field: UPDATED_AT, direction: DESC },
+                  states: [OPEN, CLOSED, MERGED]
+                ) {
+                  pageInfo { hasNextPage endCursor }
+                  nodes {
+                    createdAt
+                    mergedAt
+                    updatedAt
+                    additions
+                    deletions
+                    author { login }
+                    commits { totalCount }
+                  }
+                }
+              }
+            }
+          `;
+
+          const inWindow = (iso) => {
+            if (!iso) return false;
+            const t = new Date(iso).getTime();
+            return t >= startMs && t <= endMs;
+          };
+
+          const perUser = new Map();
+          let cursor = null;
+          let stopSoon = false;
+
+          let pages = 0;
+          let prsScanned = 0;
+          let prsRelevant = 0;
+
+          while (true) {
+            pages += 1;
+            const data = await client(QUERY, { owner: OWNER, repo: REPO, cursor });
+            const conn = data.repository.pullRequests;
+
+            console.log(`[scan] page ${pages} — received ${conn.nodes.length} PRs`);
+
+            for (const pr of conn.nodes) {
+              prsScanned += 1;
+
+              const login = pr.author?.login;
+              if (!login) continue;
+              if (login.endsWith("[bot]")) continue;
+
+              const openedInWindow = inWindow(pr.createdAt);
+              const mergedInWindow = inWindow(pr.mergedAt);
+
+              if (!openedInWindow && !mergedInWindow) continue;
+              prsRelevant += 1;
+
+              const user = perUser.get(login) ?? {
+                username: login,
+                prs_opened: 0,
+                prs_merged: 0,
+                commits: 0,
+                additions: 0,
+                deletions: 0,
+              };
+
+              if (openedInWindow) user.prs_opened += 1;
+
+              // Credit commits/additions/deletions ONLY for PRs merged within the window
+              if (mergedInWindow) {
+                user.prs_merged += 1;
+                user.commits += pr.commits?.totalCount ?? 0;
+                user.additions += pr.additions ?? 0;
+                user.deletions += pr.deletions ?? 0;
+              }
+
+              perUser.set(login, user);
+
+              // Early stop: PRs are ordered by UPDATED_AT DESC
+              if (new Date(pr.updatedAt).getTime() < startMs) stopSoon = true;
+            }
+
+            if (!conn.pageInfo.hasNextPage) break;
+            cursor = conn.pageInfo.endCursor;
+            if (stopSoon) break;
+          }
+
+          const results = Array.from(perUser.values()).sort((a, b) => {
+            if (b.prs_merged !== a.prs_merged) return b.prs_merged - a.prs_merged;
+            return b.commits - a.commits;
+          });
+
+          console.log(`[done] scanned PRs: ${prsScanned}, relevant PRs: ${prsRelevant}, users: ${results.length}`);
+
+          const out = {
+            key: KV_KEY,
+            owner: OWNER,
+            repo: REPO,
+            window: { start: START_DATE, end: END_DATE },
+            generatedAt: new Date().toISOString(),
+            results,
+          };
+
+          fs.mkdirSync("metrics", { recursive: true });
+          fs.writeFileSync("metrics/intern-metrics.json", JSON.stringify(out, null, 2));
+          console.log("✅ Wrote metrics/intern-metrics.json");
+          NODE
+
+      - name: Upload to Cloudflare KV
+        env:
+          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+          CF_KV_NAMESPACE_ID: ${{ secrets.CF_KV_NAMESPACE_ID }}
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          # ---- Debug: show which envs are present (never print secrets) ----
+          present() { if [ -n "${1:-}" ]; then echo "✅"; else echo "❌"; fi; }
+          echo "[env] CF_ACCOUNT_ID present: $(present "${CF_ACCOUNT_ID:-}")"
+          echo "[env] CF_KV_NAMESPACE_ID present: $(present "${CF_KV_NAMESPACE_ID:-}")"
+          echo "[env] CF_API_TOKEN present: $(present "${CF_API_TOKEN:-}")"
+          echo "[env] KV_KEY: ${KV_KEY}"
+
+          if [ ! -f metrics/intern-metrics.json ]; then
+            echo "❌ metrics/intern-metrics.json not found"
+            exit 1
+          fi
+
+          if [ -z "${CF_ACCOUNT_ID:-}" ] || [ -z "${CF_KV_NAMESPACE_ID:-}" ] || [ -z "${CF_API_TOKEN:-}" ]; then
+            echo "❌ Missing Cloudflare secrets (CF_ACCOUNT_ID / CF_KV_NAMESPACE_ID / CF_API_TOKEN)"
+            exit 1
+          fi
+
+          echo "Uploading metrics to Cloudflare KV key: $KV_KEY"
+          curl -sS -X PUT \
+            "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/storage/kv/namespaces/$CF_KV_NAMESPACE_ID/values/$KV_KEY" \
+            -H "Authorization: Bearer $CF_API_TOKEN" \
+            -H "Content-Type: application/json" \
+            --data-binary @metrics/intern-metrics.json \
+            | tee /tmp/cf_kv_response.json
+
+          if ! grep -q '"success":true' /tmp/cf_kv_response.json; then
+            echo "❌ Cloudflare KV upload failed"
+            cat /tmp/cf_kv_response.json
+            exit 1
+          fi
+
+          echo "✅ Cloudflare KV upload success"
