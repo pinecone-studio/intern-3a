@@ -86,7 +86,7 @@ const QUERY = `
           updatedAt
           additions
           deletions
-          author { login email }
+          author { login ... on User { email } }
           commits { totalCount }
         }
       }
