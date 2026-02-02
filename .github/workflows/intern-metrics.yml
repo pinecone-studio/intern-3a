@@ -34,7 +34,7 @@ jobs:
         with:
           node-version: 20
 
-      # Install only @octokit/graphql in an isolated folder (no monorepo dependency resolution)
+      # ✅ Install only @octokit/graphql in an isolated folder (no monorepo dependency resolution)
       - name: Install deps (isolated)
         run: |
           set -euxo pipefail
@@ -43,17 +43,26 @@ jobs:
 
           rm -rf .metrics-tool
           mkdir -p .metrics-tool
-
           npm install --prefix .metrics-tool @octokit/graphql
 
+          # sanity check
           ls -la .metrics-tool/node_modules/@octokit/graphql
 
+      # ✅ Run the script FROM inside .metrics-tool so ESM resolves @octokit/graphql correctly
       - name: Compute PR metrics (per author)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OWNER: ${{ env.OWNER }}
+          REPO: ${{ env.REPO }}
+          START_DATE: ${{ env.START_DATE }}
+          END_DATE: ${{ env.END_DATE }}
+          KV_KEY: ${{ env.KV_KEY }}
         run: |
+          set -euxo pipefail
+          cd .metrics-tool
+
           node - <<'NODE'
-          import { graphql } from "@octokit/graphql/dist-bundle/index.js";
+          import { graphql } from "@octokit/graphql";
           import fs from "node:fs";
 
           const {
@@ -181,6 +190,7 @@ jobs:
 
               perUser.set(login, user);
 
+              // Early stop: PRs are ordered by UPDATED_AT DESC
               if (new Date(pr.updatedAt).getTime() < startMs) stopSoon = true;
             }
 
@@ -205,8 +215,9 @@ jobs:
             results,
           };
 
-          fs.mkdirSync("metrics", { recursive: true });
-          fs.writeFileSync("metrics/intern-metrics.json", JSON.stringify(out, null, 2));
+          // Write to repo root
+          fs.mkdirSync("../metrics", { recursive: true });
+          fs.writeFileSync("../metrics/intern-metrics.json", JSON.stringify(out, null, 2));
           console.log("✅ Wrote metrics/intern-metrics.json");
           NODE
 
