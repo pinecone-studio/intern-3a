@@ -68,6 +68,12 @@
     },
     {
       "path": "./apps/referu-expo-employee-fe"
+    },
+    {
+      "path": "./apps/pinecone-club-e2e"
+    },
+    {
+      "path": "./apps/pinecone-club"
     }
   ]
 }
