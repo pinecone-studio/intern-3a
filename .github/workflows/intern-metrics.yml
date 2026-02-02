@@ -16,12 +16,8 @@ concurrency:
 env:
   OWNER: pinecone-studio
   REPO: intern-3a
-
-  # Internship window (edit these)
   START_DATE: '2026-01-01T00:00:00Z'
   END_DATE: '2026-12-31T23:59:59Z'
-
-  # KV output key
   KV_KEY: 'intern_metrics:2026'
 
 jobs:
@@ -30,39 +26,27 @@ jobs:
     timeout-minutes: 20
 
     steps:
-      - name: Check out repository
+      - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      # Keep the same setup versions/pattern you already use in the monorepo
-      - name: Set up Node
-        uses: actions/setup-node@v3
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          node-version: '20.18.1'
+          node-version: 20
 
-      - name: Set up Bun
-        uses: oven-sh/setup-bun@v1
-        with:
-          bun-version: '1.1.45'
-
-      # ✅ Isolated install (does NOT touch monorepo deps)
-      - name: Install deps (isolated, Bun)
+      # ✅ Install only @octokit/graphql in an isolated folder (no monorepo dependency resolution)
+      - name: Install deps (isolated)
         run: |
           set -euxo pipefail
-          bun --version
-          node --version
+          node -v
+          npm -v
 
           rm -rf .metrics-tool
           mkdir -p .metrics-tool
-          cd .metrics-tool
 
-          # minimal tool package (no workspace install)
-          bun init -y
-          bun add @octokit/graphql
+          npm install --prefix .metrics-tool @octokit/graphql
 
-          # sanity check
-          ls -la node_modules/@octokit/graphql
+          ls -la .metrics-tool/node_modules/@octokit/graphql
 
       - name: Compute PR metrics (per author)
         env:
@@ -82,7 +66,6 @@ jobs:
             KV_KEY,
           } = process.env;
 
-          // ---- Debug (never print secrets) ----
           const present = (v) => (v && String(v).length > 0 ? "✅" : "❌");
           console.log("[env] OWNER:", OWNER);
           console.log("[env] REPO:", REPO);
@@ -92,7 +75,6 @@ jobs:
           console.log("[env] GITHUB_TOKEN present:", present(GITHUB_TOKEN));
           console.log("[env] NODE_PATH:", process.env.NODE_PATH);
 
-          // ---- Fail fast ----
           const missing = [];
           if (!GITHUB_TOKEN) missing.push("GITHUB_TOKEN");
           if (!OWNER) missing.push("OWNER");
