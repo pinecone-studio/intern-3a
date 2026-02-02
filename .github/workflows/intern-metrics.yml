@@ -18,7 +18,7 @@ env:
   REPO: intern-3a
   START_DATE: '2026-01-01T00:00:00Z'
   END_DATE: '2026-12-31T23:59:59Z'
-  KV_KEY: 'intern_metrics:2026'
+  KV_KEY: 'classId:8'
 
 jobs:
   metrics:
