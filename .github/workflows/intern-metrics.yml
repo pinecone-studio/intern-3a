@@ -37,12 +37,20 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install deps
-        run: npm i @octokit/graphql
+      # ✅ Install only @octokit/graphql in an isolated folder
+      # so it does NOT try to resolve your monorepo dependency tree.
+      - name: Install deps (isolated)
+        run: |
+          mkdir -p .metrics-tool
+          cd .metrics-tool
+          npm init -y >/dev/null 2>&1
+          npm i @octokit/graphql
 
       - name: Compute PR metrics (per author)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # ✅ Let Node find @octokit/graphql from isolated install
+          NODE_PATH: ${{ github.workspace }}/.metrics-tool/node_modules
         run: |
           node - <<'NODE'
           import { graphql } from "@octokit/graphql";
