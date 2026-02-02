@@ -8,12 +8,13 @@ type PullRequest = {
   updatedAt: string;
   additions: number;
   deletions: number;
-  author: { login: string; email: string | null } | null;
+  author: { login: string; url: string; email: string | null } | null;
   commits: { totalCount: number } | null;
 }
 
 type UserMetrics = {
   username: string;
+  profile_url: string;
   email: string | null;
   prs_opened: number;
   prs_merged: number;
@@ -86,7 +87,7 @@ const QUERY = `
           updatedAt
           additions
           deletions
-          author { login ... on User { email } }
+          author { login url ... on User { email } }
           commits { totalCount }
         }
       }
@@ -132,6 +133,7 @@ async function main(): Promise<void> {
       const existing = perUser.get(login);
       const user = existing ?? {
         username: login,
+        profile_url: pr.author?.url ?? `https://github.com/${login}`,
         email: pr.author?.email ?? null,
         prs_opened: 0,
         prs_merged: 0,
