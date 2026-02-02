@@ -49,9 +49,8 @@ jobs:
           START_DATE: ${{ env.START_DATE }}
           END_DATE: ${{ env.END_DATE }}
           KV_KEY: ${{ env.KV_KEY }}
-        run: |
-          cd .metrics-tool
-          npx tsx ../scripts/intern-metrics.ts
+          NODE_PATH: ${{ github.workspace }}/.metrics-tool/node_modules
+        run: .metrics-tool/node_modules/.bin/tsx scripts/intern-metrics.ts
 
       - name: Upload to Cloudflare KV
         env:
