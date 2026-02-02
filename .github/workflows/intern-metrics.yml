@@ -34,8 +34,12 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install dependencies
-        run: npm install @octokit/graphql tsx
+      # Install in isolated folder to avoid monorepo dependency resolution
+      - name: Install deps (isolated)
+        run: |
+          rm -rf .metrics-tool
+          mkdir -p .metrics-tool
+          npm install --prefix .metrics-tool @octokit/graphql tsx
 
       - name: Compute PR metrics (per author)
         env:
@@ -45,7 +49,9 @@ jobs:
           START_DATE: ${{ env.START_DATE }}
           END_DATE: ${{ env.END_DATE }}
           KV_KEY: ${{ env.KV_KEY }}
-        run: npx tsx scripts/intern-metrics.ts
+        run: |
+          cd .metrics-tool
+          npx tsx ../scripts/intern-metrics.ts
 
       - name: Upload to Cloudflare KV
         env:

@@ -174,8 +174,10 @@ async function main(): Promise<void> {
     results,
   };
 
-  // Write to repo root metrics folder
-  const metricsDir = path.join(process.cwd(), 'metrics');
+  // Write to repo root metrics folder (script is in /scripts, so go up one level)
+  const scriptDir = path.dirname(new URL(import.meta.url).pathname);
+  const repoRoot = path.join(scriptDir, '..');
+  const metricsDir = path.join(repoRoot, 'metrics');
   fs.mkdirSync(metricsDir, { recursive: true });
   fs.writeFileSync(path.join(metricsDir, 'intern-metrics.json'), JSON.stringify(out, null, 2));
   console.log('✅ Wrote metrics/intern-metrics.json');
