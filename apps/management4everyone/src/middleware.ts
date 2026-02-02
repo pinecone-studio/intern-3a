@@ -12,24 +12,28 @@ declare global {
   }
 }
 
-const isProtectedRoute = createRouteMatcher(['/dashboard(.*)', '/admin(.*)']);
+const isProtectedRoute = createRouteMatcher(['/employee(.*)', '/admin(.*)']);
 
 export default clerkMiddleware(async (auth, req) => {
-  const { sessionClaims } = await auth();
+  const { userId, sessionClaims } = await auth();
 
-  // Хамгаалагдсан зам мөн эсэхийг шалгах
+  // 1. Хэрэв хамгаалагдсан зам руу хандаж байвал
   if (isProtectedRoute(req)) {
-    // metadata-г төрөлжүүлсэн тул одоо алдаа заахгүй
-    const isApproved = sessionClaims?.metadata?.approved;
+    // Хэрэв хэрэглэгч нэвтрээгүй бол Clerk өөрөө login руу шилжүүлнэ.
+    // Хэрэв нэвтэрсэн бол metadata-г шалгана.
+    if (userId) {
+      const isApproved = sessionClaims?.metadata?.approved;
 
-    if (!isApproved) {
-      const approvalUrl = new URL('/waiting-approval', req.url);
-      return NextResponse.redirect(approvalUrl);
+      if (!isApproved) {
+        // Одоо байгаа зам нь хүлээх хуудас биш бол тийшээ шилжүүлнэ
+        if (req.nextUrl.pathname !== '/waiting-approval') {
+          const approvalUrl = new URL('/waiting-approval', req.url);
+          return NextResponse.redirect(approvalUrl);
+        }
+      }
     }
   }
 
-  // 2. Хэрэв дээрх нөхцөлүүд биелээгүй бол хэвийн үргэлжлүүлнэ
-  // "Not all code paths return a value" алдааг засаж байна
   return NextResponse.next();
 });
 
