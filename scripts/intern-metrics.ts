@@ -8,20 +8,29 @@ type PullRequest = {
   updatedAt: string;
   additions: number;
   deletions: number;
-  author: { login: string; url: string; email: string | null } | null;
+  author: { login: string; url: string; avatarUrl: string; email: string | null } | null;
   commits: { totalCount: number } | null;
-}
+};
 
-type UserMetrics = {
-  username: string;
-  profile_url: string;
-  email: string | null;
+type DayStatus = 'none' | 'pr' | 'merged';
+
+type DayData = {
+  status: DayStatus;
   prs_opened: number;
+  prs_merged: number;
+  commits: number;
+};
+
+type LeaderboardEntry = {
+  rank: number;
+  username: string;
+  avatar_url: string;
+  profile_url: string;
   prs_merged: number;
   commits: number;
   additions: number;
   deletions: number;
-}
+};
 
 type GraphQLResponse = {
   repository: {
@@ -30,7 +39,7 @@ type GraphQLResponse = {
       nodes: PullRequest[];
     };
   };
-}
+};
 
 const { GITHUB_TOKEN, OWNER, REPO, START_DATE, END_DATE, KV_KEY } = process.env;
 
@@ -87,7 +96,7 @@ const QUERY = `
           updatedAt
           additions
           deletions
-          author { login url ... on User { email } }
+          author { login url avatarUrl ... on User { email } }
           commits { totalCount }
         }
       }
@@ -95,17 +104,33 @@ const QUERY = `
   }
 `;
 
+// Convert UTC to Asia/Ulaanbaatar (UTC+8) and extract date
+const toDateKey = (iso: string): string => {
+  const date = new Date(iso);
+  return date.toLocaleDateString('en-CA', { timeZone: 'Asia/Ulaanbaatar' }); // "2026-01-15" format
+};
+
 const inWindow = (iso: string | null): boolean => {
   if (!iso) return false;
   const t = new Date(iso).getTime();
   return t >= startMs && t <= endMs;
 };
 
+type UserData = {
+  avatar_url: string;
+  profile_url: string;
+  prs_merged: number;
+  commits: number;
+  additions: number;
+  deletions: number;
+  days: Record<string, { prs_opened: number; prs_merged: number; commits: number }>;
+};
+
 async function main(): Promise<void> {
-  const perUser = new Map<string, UserMetrics>();
+  const users: Record<string, UserData> = {};
+
   let cursor: string | null = null;
   let stopSoon = false;
-
   let pages = 0;
   let prsScanned = 0;
   let prsRelevant = 0;
@@ -130,33 +155,42 @@ async function main(): Promise<void> {
       if (!openedInWindow && !mergedInWindow) continue;
       prsRelevant += 1;
 
-      const existing = perUser.get(login);
-      const user = existing ?? {
-        username: login,
-        profile_url: pr.author?.url ?? `https://github.com/${login}`,
-        email: pr.author?.email ?? null,
-        prs_opened: 0,
-        prs_merged: 0,
-        commits: 0,
-        additions: 0,
-        deletions: 0,
-      };
-      // Update email if we didn't have it before but now we do
-      if (!user.email && pr.author?.email) {
-        user.email = pr.author.email;
+      // Initialize user if needed
+      if (!users[login]) {
+        users[login] = {
+          avatar_url: pr.author?.avatarUrl ?? `https://github.com/${login}.png`,
+          profile_url: pr.author?.url ?? `https://github.com/${login}`,
+          prs_merged: 0,
+          commits: 0,
+          additions: 0,
+          deletions: 0,
+          days: {},
+        };
       }
 
-      if (openedInWindow) user.prs_opened += 1;
+      const user = users[login];
 
-      // Credit ONLY merged PRs for commits/additions/deletions
+      // Track PR opened (by createdAt date)
+      if (openedInWindow) {
+        const date = toDateKey(pr.createdAt);
+        if (!user.days[date]) user.days[date] = { prs_opened: 0, prs_merged: 0, commits: 0 };
+        user.days[date].prs_opened += 1;
+      }
+
+      // Track merged PR stats (by mergedAt date)
       if (mergedInWindow) {
+        const date = toDateKey(pr.mergedAt!);
+        if (!user.days[date]) user.days[date] = { prs_opened: 0, prs_merged: 0, commits: 0 };
+
+        const commits = pr.commits?.totalCount ?? 0;
+        user.days[date].prs_merged += 1;
+        user.days[date].commits += commits;
+
         user.prs_merged += 1;
-        user.commits += pr.commits?.totalCount ?? 0;
+        user.commits += commits;
         user.additions += pr.additions ?? 0;
         user.deletions += pr.deletions ?? 0;
       }
-
-      perUser.set(login, user);
 
       // Early stop: PRs are ordered by UPDATED_AT DESC
       if (new Date(pr.updatedAt).getTime() < startMs) stopSoon = true;
@@ -167,12 +201,50 @@ async function main(): Promise<void> {
     if (stopSoon) break;
   }
 
-  const results = Array.from(perUser.values()).sort((a, b) => {
-    if (b.prs_merged !== a.prs_merged) return b.prs_merged - a.prs_merged;
-    return b.commits - a.commits;
-  });
+  // Build leaderboard (sorted by prs_merged desc, then commits desc)
+  const leaderboard: LeaderboardEntry[] = Object.entries(users)
+    .map(([username, data]) => ({
+      rank: 0,
+      username,
+      avatar_url: data.avatar_url,
+      profile_url: data.profile_url,
+      prs_merged: data.prs_merged,
+      commits: data.commits,
+      additions: data.additions,
+      deletions: data.deletions,
+    }))
+    .sort((a, b) => {
+      if (b.prs_merged !== a.prs_merged) return b.prs_merged - a.prs_merged;
+      return b.commits - a.commits;
+    })
+    .map((entry, i) => ({ ...entry, rank: i + 1 }));
 
-  console.log(`[done] scanned PRs: ${prsScanned}, relevant PRs: ${prsRelevant}, users: ${results.length}`);
+  // Build calendar: { username: { "2026-01-15": { status, prs_opened, prs_merged, commits } } }
+  const calendar: Record<string, Record<string, DayData>> = {};
+
+  for (const [username, data] of Object.entries(users)) {
+    calendar[username] = {};
+
+    // Sort dates for this user
+    const sortedDates = Object.keys(data.days).sort();
+    for (const date of sortedDates) {
+      const day = data.days[date];
+      let status: DayStatus = 'none';
+      if (day.prs_merged > 0) {
+        status = 'merged';
+      } else if (day.prs_opened > 0) {
+        status = 'pr';
+      }
+      calendar[username][date] = {
+        status,
+        prs_opened: day.prs_opened,
+        prs_merged: day.prs_merged,
+        commits: day.commits,
+      };
+    }
+  }
+
+  console.log(`[done] scanned PRs: ${prsScanned}, relevant PRs: ${prsRelevant}, users: ${leaderboard.length}`);
 
   const out = {
     key: KV_KEY,
@@ -180,10 +252,11 @@ async function main(): Promise<void> {
     repo: REPO,
     window: { start: START_DATE, end: END_DATE },
     generatedAt: new Date().toISOString(),
-    results,
+    leaderboard, // Sorted array with rank, username, avatar_url, profile_url, stats
+    calendar, // { username: { "2026-01-15": { status, prs_opened, prs_merged, commits } } }
   };
 
-  // Write to repo root metrics folder (script is in /scripts, so go up one level)
+  // Write to repo root metrics folder
   const scriptDir = path.dirname(new URL(import.meta.url).pathname);
   const repoRoot = path.join(scriptDir, '..');
   const metricsDir = path.join(repoRoot, 'metrics');
