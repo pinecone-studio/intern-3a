@@ -14,17 +14,17 @@ type PullRequest = {
 
 type DayEntry = {
   date: string;
-  prs_opened: number;
-  prs_merged: number;
+  prsOpened: number;
+  prsMerged: number;
   commits: number;
 };
 
 type LeaderboardEntry = {
   rank: number;
   username: string;
-  avatar_url: string;
-  profile_url: string;
-  prs_merged: number;
+  avatarUrl: string;
+  profileUrl: string;
+  prsMerged: number;
   commits: number;
   additions: number;
   deletions: number;
@@ -116,13 +116,13 @@ const inWindow = (iso: string | null): boolean => {
 };
 
 type UserData = {
-  avatar_url: string;
-  profile_url: string;
-  prs_merged: number;
+  avatarUrl: string;
+  profileUrl: string;
+  prsMerged: number;
   commits: number;
   additions: number;
   deletions: number;
-  days: Record<string, { prs_opened: number; prs_merged: number; commits: number }>;
+  days: Record<string, { prsOpened: number; prsMerged: number; commits: number }>;
 };
 
 async function main(): Promise<void> {
@@ -157,9 +157,9 @@ async function main(): Promise<void> {
       // Initialize user if needed
       if (!users[login]) {
         users[login] = {
-          avatar_url: pr.author?.avatarUrl ?? `https://github.com/${login}.png`,
-          profile_url: pr.author?.url ?? `https://github.com/${login}`,
-          prs_merged: 0,
+          avatarUrl: pr.author?.avatarUrl ?? `https://github.com/${login}.png`,
+          profileUrl: pr.author?.url ?? `https://github.com/${login}`,
+          prsMerged: 0,
           commits: 0,
           additions: 0,
           deletions: 0,
@@ -172,20 +172,20 @@ async function main(): Promise<void> {
       // Track PR opened (by createdAt date)
       if (openedInWindow) {
         const date = toDateKey(pr.createdAt);
-        if (!user.days[date]) user.days[date] = { prs_opened: 0, prs_merged: 0, commits: 0 };
-        user.days[date].prs_opened += 1;
+        if (!user.days[date]) user.days[date] = { prsOpened: 0, prsMerged: 0, commits: 0 };
+        user.days[date].prsOpened += 1;
       }
 
       // Track merged PR stats (by mergedAt date)
       if (mergedInWindow) {
         const date = toDateKey(pr.mergedAt!);
-        if (!user.days[date]) user.days[date] = { prs_opened: 0, prs_merged: 0, commits: 0 };
+        if (!user.days[date]) user.days[date] = { prsOpened: 0, prsMerged: 0, commits: 0 };
 
         const commits = pr.commits?.totalCount ?? 0;
-        user.days[date].prs_merged += 1;
+        user.days[date].prsMerged += 1;
         user.days[date].commits += commits;
 
-        user.prs_merged += 1;
+        user.prsMerged += 1;
         user.commits += commits;
         user.additions += pr.additions ?? 0;
         user.deletions += pr.deletions ?? 0;
@@ -200,14 +200,14 @@ async function main(): Promise<void> {
     if (stopSoon) break;
   }
 
-  // Build leaderboard with days array (sorted by prs_merged desc, then commits desc)
+  // Build leaderboard with days array (sorted by prsMerged desc, then commits desc)
   const leaderboard: LeaderboardEntry[] = Object.entries(users)
     .map(([username, data]) => ({
       rank: 0,
       username,
-      avatar_url: data.avatar_url,
-      profile_url: data.profile_url,
-      prs_merged: data.prs_merged,
+      avatarUrl: data.avatarUrl,
+      profileUrl: data.profileUrl,
+      prsMerged: data.prsMerged,
       commits: data.commits,
       additions: data.additions,
       deletions: data.deletions,
@@ -216,7 +216,7 @@ async function main(): Promise<void> {
         .sort((a, b) => a.date.localeCompare(b.date)),
     }))
     .sort((a, b) => {
-      if (b.prs_merged !== a.prs_merged) return b.prs_merged - a.prs_merged;
+      if (b.prsMerged !== a.prsMerged) return b.prsMerged - a.prsMerged;
       return b.commits - a.commits;
     })
     .map((entry, i) => ({ ...entry, rank: i + 1 }));
