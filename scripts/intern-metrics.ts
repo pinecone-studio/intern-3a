@@ -12,10 +12,8 @@ type PullRequest = {
   commits: { totalCount: number } | null;
 };
 
-type DayStatus = 'none' | 'pr' | 'merged';
-
-type DayData = {
-  status: DayStatus;
+type DayEntry = {
+  date: string;
   prs_opened: number;
   prs_merged: number;
   commits: number;
@@ -30,6 +28,7 @@ type LeaderboardEntry = {
   commits: number;
   additions: number;
   deletions: number;
+  days: DayEntry[];
 };
 
 type GraphQLResponse = {
@@ -201,7 +200,7 @@ async function main(): Promise<void> {
     if (stopSoon) break;
   }
 
-  // Build leaderboard (sorted by prs_merged desc, then commits desc)
+  // Build leaderboard with days array (sorted by prs_merged desc, then commits desc)
   const leaderboard: LeaderboardEntry[] = Object.entries(users)
     .map(([username, data]) => ({
       rank: 0,
@@ -212,37 +211,15 @@ async function main(): Promise<void> {
       commits: data.commits,
       additions: data.additions,
       deletions: data.deletions,
+      days: Object.entries(data.days)
+        .map(([date, stats]) => ({ date, ...stats }))
+        .sort((a, b) => a.date.localeCompare(b.date)),
     }))
     .sort((a, b) => {
       if (b.prs_merged !== a.prs_merged) return b.prs_merged - a.prs_merged;
       return b.commits - a.commits;
     })
     .map((entry, i) => ({ ...entry, rank: i + 1 }));
-
-  // Build calendar: { username: { "2026-01-15": { status, prs_opened, prs_merged, commits } } }
-  const calendar: Record<string, Record<string, DayData>> = {};
-
-  for (const [username, data] of Object.entries(users)) {
-    calendar[username] = {};
-
-    // Sort dates for this user
-    const sortedDates = Object.keys(data.days).sort();
-    for (const date of sortedDates) {
-      const day = data.days[date];
-      let status: DayStatus = 'none';
-      if (day.prs_merged > 0) {
-        status = 'merged';
-      } else if (day.prs_opened > 0) {
-        status = 'pr';
-      }
-      calendar[username][date] = {
-        status,
-        prs_opened: day.prs_opened,
-        prs_merged: day.prs_merged,
-        commits: day.commits,
-      };
-    }
-  }
 
   console.log(`[done] scanned PRs: ${prsScanned}, relevant PRs: ${prsRelevant}, users: ${leaderboard.length}`);
 
@@ -252,8 +229,7 @@ async function main(): Promise<void> {
     repo: REPO,
     window: { start: START_DATE, end: END_DATE },
     generatedAt: new Date().toISOString(),
-    leaderboard, // Sorted array with rank, username, avatar_url, profile_url, stats
-    calendar, // { username: { "2026-01-15": { status, prs_opened, prs_merged, commits } } }
+    leaderboard,
   };
 
   // Write to repo root metrics folder
