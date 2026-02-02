@@ -253,10 +253,26 @@ jobs:
             --data-binary @metrics/intern-metrics.json \
             | tee /tmp/cf_kv_response.json
 
-          if ! grep -q '"success":true' /tmp/cf_kv_response.json; then
-            echo "❌ Cloudflare KV upload failed"
-            cat /tmp/cf_kv_response.json
-            exit 1
+          # ✅ Correct success check (handles whitespace)
+          if command -v jq >/dev/null 2>&1; then
+            if ! jq -e '.success == true' /tmp/cf_kv_response.json >/dev/null; then
+              echo "❌ Cloudflare KV upload failed"
+              cat /tmp/cf_kv_response.json
+              exit 1
+            fi
+          else
+            if ! grep -Eq '"success"[[:space:]]*:[[:space:]]*true' /tmp/cf_kv_response.json; then
+              echo "❌ Cloudflare KV upload failed"
+              cat /tmp/cf_kv_response.json
+              exit 1
+            fi
           fi
 
           echo "✅ Cloudflare KV upload success"
+
+          # ✅ Optional read-back verification (prints only first 200 chars)
+          echo "Verifying KV read-back..."
+          curl -sS \
+            "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/storage/kv/namespaces/$CF_KV_NAMESPACE_ID/values/$KV_KEY" \
+            -H "Authorization: Bearer $CF_API_TOKEN" \
+            | head -c 200 && echo
