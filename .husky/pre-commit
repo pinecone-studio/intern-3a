@@ -7,6 +7,7 @@ if [ "$branch" = "main" ]; then
     echo "You can't commit directly to main branch"
     exit 1
 fi
+#asd
 
 # Disable commit to branch created locally
 valid_chars="^([0-9]+)-([a-z0-9-]+)$"
