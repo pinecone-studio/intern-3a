@@ -62,7 +62,24 @@
       }
     },
     "test": {
-      "options": {}
+      "cache": true,
+      "inputs": [
+        "{projectRoot}/**/*"
+      ],
+      "executor": "@nx/jest:jest",
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
+      "options": {
+        "jestConfig": "apps/referu-be/jest.config.cts",
+        "passWithNoTests": true,
+        "codeCoverage": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true
+        }
+      }
     }
   }
 }

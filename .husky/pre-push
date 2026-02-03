@@ -17,6 +17,7 @@ echo "🔍 Running tests for affected Nx projects (100% coverage required)..."
 
 npm run test:affected
 RESULT=$?
+echo "RESULT: $RESULT"
 
 if [ $RESULT -ne 0 ]; then
   echo "❌ Commit blocked: Affected project tests failed or coverage < 100%"
