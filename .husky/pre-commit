@@ -14,3 +14,16 @@ if [[ ! $branch =~ $valid_chars ]]; then
     printf '%s\n' "$message"
     exit 1
 fi
+
+echo "🔍 Running tests for affected Nx projects (100% coverage required)..."
+
+npm run test:affected
+RESULT=$?
+
+if [ $RESULT -ne 0 ]; then
+  echo "❌ Commit blocked: Affected project tests failed or coverage < 100%"
+  exit 1
+fi
+
+echo "✅ All affected projects passed with 100% coverage"
+

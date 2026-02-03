@@ -13,17 +13,14 @@ if [ "$branch" = "main" ] || [ "$branch" = "master" ]; then
   exit 1
 fi
 
-echo "🔍 Running unit tests with 100% coverage requirement..."
+echo "🔍 Running tests for affected Nx projects (100% coverage required)..."
 
-npm run test:coverage
-
+npm run test:affected
 RESULT=$?
 
 if [ $RESULT -ne 0 ]; then
-  echo "❌ Commit blocked: Coverage must be 100%"
+  echo "❌ Commit blocked: Affected project tests failed or coverage < 100%"
   exit 1
 fi
 
-echo "✅ Coverage is 100%. Commit allowed."
-
-echo "✅ Pushing branch '$branch'..."
+echo "✅ All affected projects passed with 100% coverage"

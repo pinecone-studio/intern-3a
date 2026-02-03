@@ -4,6 +4,7 @@ module.exports = {
   ...nxPreset,
   snapshotFormat: { escapeString: true, printBasicPrototype: true },
   coverageReporters: ['text', 'html'],
+  coveragecoveragePathIgnorePatterns: ['/node_modules/', 'index.ts', 'main.ts', '.spec.ts'],
   coverageThreshold: {
     global: {
       branches: 100,
