@@ -6,7 +6,8 @@
     "u": "NX_SKIP_PROVENANCE_CHECK=true nx migrate latest",
     "m": "nx migrate --run-migrations",
     "n": "ncu --reject @babel/*,@eslint/*,@swc*,@typescript*,nx,@nx/*,eslint*,typescript*,react,react-dom,next,@next/eslint-plugin-next,tslib,ts-node,ts-jest,@types/*,autoprefixer,babel-jest,jest*,postcss,prettier -i",
-    "test:affected": "nx affected -t test --uncommitted --skip-nx-cache --parallel=1"
+    "test:affected": "nx affected -t test --uncommitted --skip-nx-cache --parallel=1",
+    "prepare": "husky"
   },
   "private": true,
   "dependencies": {
