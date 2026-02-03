@@ -13,4 +13,17 @@ if [ "$branch" = "main" ] || [ "$branch" = "master" ]; then
   exit 1
 fi
 
+echo "🔍 Running unit tests with 100% coverage requirement..."
+
+npm run test:coverage
+
+RESULT=$?
+
+if [ $RESULT -ne 0 ]; then
+  echo "❌ Commit blocked: Coverage must be 100%"
+  exit 1
+fi
+
+echo "✅ Coverage is 100%. Commit allowed."
+
 echo "✅ Pushing branch '$branch'..."
