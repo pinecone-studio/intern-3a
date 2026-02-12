@@ -10,6 +10,7 @@ type PullRequest = {
   deletions: number;
   author: { login: string; url: string; avatarUrl: string; email: string | null } | null;
   commits: { totalCount: number } | null;
+  labels: { nodes: { name: string }[] } | null;
 };
 
 type DayEntry = {
@@ -17,6 +18,11 @@ type DayEntry = {
   prsOpened: number;
   prsMerged: number;
   commits: number;
+};
+
+type LabelCount = {
+  label: string;
+  count: number;
 };
 
 type LeaderboardEntry = {
@@ -29,6 +35,7 @@ type LeaderboardEntry = {
   additions: number;
   deletions: number;
   days: DayEntry[];
+  labels: LabelCount[];
 };
 
 type GraphQLResponse = {
@@ -97,6 +104,7 @@ const QUERY = `
           deletions
           author { login url avatarUrl ... on User { email } }
           commits { totalCount }
+          labels(first: 20) { nodes { name } }
         }
       }
     }
@@ -123,6 +131,7 @@ type UserData = {
   additions: number;
   deletions: number;
   days: Record<string, { prsOpened: number; prsMerged: number; commits: number }>;
+  labels: Record<string, number>;
 };
 
 async function main(): Promise<void> {
@@ -164,6 +173,7 @@ async function main(): Promise<void> {
           additions: 0,
           deletions: 0,
           days: {},
+          labels: {},
         };
       }
 
@@ -189,6 +199,11 @@ async function main(): Promise<void> {
         user.commits += commits;
         user.additions += pr.additions ?? 0;
         user.deletions += pr.deletions ?? 0;
+
+        // Track labels from merged PRs
+        for (const label of pr.labels?.nodes ?? []) {
+          user.labels[label.name] = (user.labels[label.name] ?? 0) + 1;
+        }
       }
 
       // Early stop: PRs are ordered by UPDATED_AT DESC
@@ -214,12 +229,35 @@ async function main(): Promise<void> {
       days: Object.entries(data.days)
         .map(([date, stats]) => ({ date, ...stats }))
         .sort((a, b) => a.date.localeCompare(b.date)),
+      labels: Object.entries(data.labels)
+        .map(([label, count]) => ({ label, count }))
+        .sort((a, b) => b.count - a.count),
     }))
     .sort((a, b) => {
       if (b.prsMerged !== a.prsMerged) return b.prsMerged - a.prsMerged;
       return b.commits - a.commits;
     })
     .map((entry, i) => ({ ...entry, rank: i + 1 }));
+
+  // Build global label summary: total count + per-student breakdown
+  const globalLabels: Record<string, { total: number; students: Record<string, number> }> = {};
+  for (const [username, data] of Object.entries(users)) {
+    for (const [label, count] of Object.entries(data.labels)) {
+      if (!globalLabels[label]) globalLabels[label] = { total: 0, students: {} };
+      globalLabels[label].total += count;
+      globalLabels[label].students[username] = count;
+    }
+  }
+
+  const labelSummary = Object.entries(globalLabels)
+    .map(([label, info]) => ({
+      label,
+      total: info.total,
+      students: Object.entries(info.students)
+        .map(([username, count]) => ({ username, count }))
+        .sort((a, b) => b.count - a.count),
+    }))
+    .sort((a, b) => b.total - a.total);
 
   console.log(`[done] scanned PRs: ${prsScanned}, relevant PRs: ${prsRelevant}, users: ${leaderboard.length}`);
 
